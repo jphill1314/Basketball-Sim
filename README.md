@@ -1,0 +1,3 @@
+# Basketball Sim
+
+This is a rewrite of the basketball sim I wrote for my college basketball coach app. Long stoy short, mistakes were made when writing the original version. Class sizes were out of control, readability was poor, maintainability was worse, and I also threw around Android dependencies like it was candy. Therefore, I decided to rewrite the sim with a greater focus on writing code that would be easier to maintain, add features to, and tweak probabilities of events.

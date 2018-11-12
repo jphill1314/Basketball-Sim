@@ -1,0 +1,3 @@
+enum class CoachTalk {
+    NEUTRAL, AGGRESSIVE, CALM, OFFENSIVE, DEFENSIVE
+}
