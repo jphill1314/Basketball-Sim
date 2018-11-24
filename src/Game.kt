@@ -16,7 +16,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
     var homeFouls = 0
     var awayFouls = 0
 
-    var mediaTimeOuts = Array(10, {i -> false})
+    var mediaTimeOuts = Array(10) {false}
     var homeTeamHasBall = true
     var deadball = false
     var madeShot = false
@@ -24,6 +24,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
     var numberOfFreeThrows = 0
     var playerWithBall = 1
     var location = 0
+    var possesions = 0
 
     val gamePlays = ArrayList<BasketballPlay>()
 
@@ -47,11 +48,23 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
                 awayFouls = 0
             }
 
+            if(half == 2){
+                // half time
+                updateTimePlayed(0, false, true)
+            }
+            else{
+                // coach talk before game or between overtime periods
+                runTimeout()
+            }
+
             while(timeRemaining > 0) {
                 gamePlays.addAll(getNextPlay())
-                if(deadball && !madeShot && getMediaTimeout()){
-                    // TODO: use actual rules here
-                    runTimeout()
+                if(deadball && !madeShot){
+                    if(getMediaTimeout()) {
+                        runTimeout()
+                    }
+                    homeTeam.aiMakeSubs()
+                    awayTeam.aiMakeSubs()
                 }
             }
             half++
@@ -75,6 +88,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
             getGamePlay()
         }
 
+        updateTimePlayed(timeRemaining - plays[plays.size - 1].timeRemaining, false, false)
         timeRemaining = plays[plays.size - 1].timeRemaining
         shotClock = plays[plays.size - 1].shotClock
         location = plays[plays.size - 1].location
@@ -117,7 +131,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
         val plays = ArrayList<BasketballPlay>()
 
         madeShot = false
-        if(((shotClock < shotUrgency || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)){
+        if(((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)){
             plays.add(Shot(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, false, deadball))
             if(plays[0].points == 0 && plays[0].foul.foulType == FoulType.CLEAN){
                 // missed shot need to get a rebound
@@ -272,6 +286,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
     private fun runTimeout(){
         homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
         awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
+        updateTimePlayed(0, true, false)
     }
 
     private fun changePossession(){
@@ -280,5 +295,11 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
         if(location != 0){
             location = -location
         }
+        possesions++
+    }
+
+    private fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean){
+        homeTeam.updateTimePlayed(time, isTimeout, isHalftime)
+        awayTeam.updateTimePlayed(time, isTimeout, isHalftime)
     }
 }

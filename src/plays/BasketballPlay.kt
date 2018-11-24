@@ -14,6 +14,7 @@ abstract class BasketballPlay(var homeTeamHasBall: Boolean, // did the home team
     lateinit var type: Plays // what kind of play? Pass, turnover, shot, foul, etc
     var points = 0// were points scored on this play?
     val randomBound = 30
+    val homeTeamBonus = 10
     val r = Random()
     val timeUtil = TimeUtil()
 

@@ -8,6 +8,7 @@ class FreeThrows(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, h
     var madeLastShot = true
 
     init{
+        type = Plays.FREE_THROW
         foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.CLEAN)
         points = generatePlay()
     }

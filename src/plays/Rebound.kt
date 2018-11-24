@@ -6,6 +6,7 @@ class Rebound(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, home
         BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
     init{
+        type = Plays.REBOUND
         points = generatePlay()
     }
 
@@ -36,7 +37,7 @@ class Rebound(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, home
             }
         }
 
-        if(offChance[offHigh] - 30 > defChance[defHigh]){
+        if(offChance[offHigh] > defChance[defHigh] && r.nextInt() > 60){
             // offensive rebound
             playerWithBall = offHigh + 1 // convert index to basketball position
             foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.REBOUNDING)
