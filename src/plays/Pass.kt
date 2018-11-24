@@ -101,6 +101,10 @@ class Pass(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
 
             if(foul.foulType != FoulType.CLEAN){
                 playerStartsWithBall = foul.positionOfPlayerFouled
+                type = Plays.FOUL
+            }
+            else{
+                type = Plays.DRIBBLE
             }
 
             timeChange = timeUtil.smartTimeChange((4 - (offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)

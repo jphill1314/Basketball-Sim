@@ -1,13 +1,14 @@
 import java.util.*
-import kotlin.math.abs
 
 class Team(val Name: String, rating: Int){
 
-    val players = ArrayList<Player>()
+    var players = ArrayList<Player>()
+    val roster = ArrayList<Player>()
     var offenseFavorsThrees: Int
     var defenseFavorsThrees: Int
     var aggression: Int
     var pace: Int
+    var teamRating: Int = 0
 
     var twoPointAttempts = 0
     var twoPointMakes = 0
@@ -21,6 +22,8 @@ class Team(val Name: String, rating: Int){
     var freeThrowShots = 0
     var freeThrowMakes = 0
 
+    val r = Random()
+
     init{
         offenseFavorsThrees = 50
         defenseFavorsThrees = 50
@@ -28,8 +31,16 @@ class Team(val Name: String, rating: Int){
         pace = 70
 
         for(i in 1..5){
-            players.add(Player(Name, "$i", i, rating))
+            roster.add(Player(Name, "$i", i, rating+10))
         }
+        for(i in 1..5){
+            roster.add(Player(Name, "${i+5}", i, rating))
+        }
+        for(i in 1..r.nextInt(6)+1){
+            roster.add(Player(Name, "${i+10}", r.nextInt(5) + 1, rating-5))
+        }
+
+        teamRating = calculateTeamRating()
     }
 
     fun getPlayerAtPosition(position: Int): Player{
@@ -58,21 +69,38 @@ class Team(val Name: String, rating: Int){
             p.inGame = true
             p.offensiveStatMod = 0
             p.defensiveStatMod = 0
+            p.fatigue = 0.0
+            p.timePlayed = 0
+        }
+
+        players = ArrayList(roster)
+    }
+
+    fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean){
+        for(index in players.indices){
+            if(index < 5){
+                players[index].addTimePlayed(time, isTimeout, isHalftime)
+            }
+            else{
+                players[index].addTimePlayed(0, isTimeout, isHalftime)
+            }
         }
     }
 
     fun endGame(){
         for(p in players){
             p.inGame = false
-            p.offensiveStatMod = 0
-            p.defensiveStatMod = 0
         }
     }
 
     fun getStatsAsString(): String{
-        return "$Name\n2FG:$twoPointMakes/$twoPointAttempts\n3FG:$threePointMakes/$threePointAttempts\n" +
-                "Rebounds:$offensiveRebounds/$defensiveRebounds\nTO:$turnovers\nOFouls:$offensiveFouls\n" +
-                "DFouls:$defensiveFouls\nFTA:$freeThrowShots\nFTM:$freeThrowMakes"
+        return "$Name\n" +
+                "2FG:$twoPointMakes/$twoPointAttempts - ${twoPointMakes/(twoPointAttempts*1.0)}\n" +
+                "3FG:$threePointMakes/$threePointAttempts - ${threePointMakes/(threePointAttempts*1.0)}\n" +
+                "Rebounds:$offensiveRebounds/$defensiveRebounds - ${offensiveRebounds+defensiveRebounds}\n" +
+                "TO:$turnovers\nOFouls:$offensiveFouls\n" +
+                "DFouls:$defensiveFouls\n" +
+                "FT:$freeThrowMakes/$freeThrowShots - ${freeThrowMakes/(freeThrowShots*1.0)}"
     }
 
     fun coachTalk(homeTeam: Boolean, scoreDif: Int, talkType: CoachTalk){
@@ -92,7 +120,7 @@ class Team(val Name: String, rating: Int){
             }
 
             if(homeTeam){
-                gameMod += 1
+                gameMod += 10
             }
 
             if(scoreDif > 10){
@@ -101,24 +129,6 @@ class Team(val Name: String, rating: Int){
             else if(scoreDif < -10){
                 gameMod += -scoreDif - 10
             }
-
-//            if(scoreDif in 11..15){
-//                gameMod = -(scoreDif - 10.0)
-//            }
-//            else if(scoreDif in 16..20){
-//                when(scoreDif){
-//                    16 -> gameMod = -9.0
-//                    17 -> gameMod = -12.0
-//                    19 -> gameMod = -15.0
-//                    20 -> gameMod = -18.0
-//                }
-//            }
-//            else if(scoreDif > 20){
-//                gameMod = -scoreDif.toDouble()
-//            }
-//            else if(scoreDif < -10 && gameMod < 0){
-//                gameMod = 0.0
-//            }
 
             when(talkType){
                 CoachTalk.OFFENSIVE -> {
@@ -157,11 +167,33 @@ class Team(val Name: String, rating: Int){
         }
     }
 
-    fun getTeamRating(): Int{
+    fun aiMakeSubs(){
+        for(index in 0..4){
+            val sub = getBestPlayerForPosition(index + 1)
+            if(index != sub && r.nextDouble() > .6){
+                // TODO: add coach's tendency to sub here
+                Collections.swap(players, index, sub)
+            }
+        }
+    }
+
+    private fun getBestPlayerForPosition(position: Int): Int{
+        var player = players[position-1]
+        var indexOfBest = position - 1
+        for(index in players.indices){
+            if((player.getRatingAtPosition(position) - player.fatigue) < (players[index].getRatingAtPosition(position) - players[index].fatigue)){
+                player = players[index]
+                indexOfBest = index
+            }
+        }
+        return indexOfBest
+    }
+
+    private fun calculateTeamRating(): Int{
         var rating = 0
-        for(p in players){
+        for(p in roster){
             rating += p.getOverallRating()
         }
-        return rating / players.size
+        return rating / roster.size
     }
 }
