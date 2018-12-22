@@ -2,14 +2,32 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Team
 
-class FreeThrows(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTeam: Team, awayTeam: Team, playerWithBall: Int, location: Int, val numberOfShots: Int) :
-        BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+class FreeThrows(
+    homeTeamHasBall: Boolean,
+    timeRemaining: Int,
+    shotClock: Int,
+    homeTeam: Team,
+    awayTeam: Team,
+    playerWithBall: Int,
+    location: Int,
+    val numberOfShots: Int
+) :
+    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
     var madeLastShot = true
 
     init {
         type = Plays.FREE_THROW
-        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.CLEAN)
+        foul = Foul(
+            homeTeamHasBall,
+            timeRemaining,
+            shotClock,
+            homeTeam,
+            awayTeam,
+            playerWithBall,
+            location,
+            FoulType.CLEAN
+        )
         points = generatePlay()
     }
 
@@ -24,7 +42,7 @@ class FreeThrows(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, h
                     made++
                     offense.freeThrowMakes++
                     shooter.freeThrowMakes++
-                    if(i == numberOfShots){
+                    if (i == numberOfShots) {
                         homeTeamHasBall = !homeTeamHasBall
                     }
                 } else if (i == numberOfShots) {
