@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/roster"
+            android:title="@string/roster" />
+        <item
+            android:id="@+id/schedule"
+            android:title="@string/schedule" />
+        <item
+            android:id="@+id/standings"
+            android:title="@string/standings" />
+        <item
+            android:id="@+id/recruiting"
+            android:title="@string/recruiting" />
+        <item
+            android:id="@+id/strategy"
+            android:title="@string/strategy" />
+        <item
+            android:id="@+id/staff"
+            android:title="@string/staff" />
+        <item
+            android:id="@+id/training"
+            android:title="@string/training" />
+    </group>
+</menu>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="years">
+        <item>FR</item>
+        <item>SO</item>
+        <item>JR</item>
+        <item>SR</item>
+    </string-array>
+
+    <string-array name="position_abbreviation">
+        <item>PG</item>
+        <item>SG</item>
+        <item>SF</item>
+        <item>PF</item>
+        <item>C</item>
+    </string-array>
+</resources>
