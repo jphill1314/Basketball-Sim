@@ -1,9 +1,5 @@
 package com.appdev.jphil.basketball
 
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
-
 fun main(args: Array<String>){
     val homeTeam = Team(1, "Home", 70, true)
     val awayTeam = Team(2, "Away", 70, true)
@@ -14,7 +10,7 @@ fun main(args: Array<String>){
 
     println(game.getAsString())
     println("Number of plays:${game.gamePlays.size}")
-    println("Possessions: ${game.possesions/2}")
+    println("Possessions: ${game.possessions/2}")
     println("\n${game.homeTeam.getStatsAsString()}")
     println("\n${game.awayTeam.getStatsAsString()}")
 //    for(player in homeTeam.roster){
