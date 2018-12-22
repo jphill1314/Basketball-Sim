@@ -48,7 +48,47 @@ class Shot(
             ))
 
         playAsString = "${shooter.fullName} takes a shot from "
-        val shotLocation: Int = if (location == 0) {
+        val shotLocation: Int = getShotLocation(shooter, shotClose, shotMid, shotLong)
+
+        var shotSuccess: Int = getShotSuccess(shotLocation, shooter, defender)
+
+        if (assisted) {
+            shotSuccess += 30
+        }
+        if (rushed) {
+            shotSuccess -= 30
+        }
+
+        val foulType = when (shotLocation) {
+            1 -> FoulType.SHOOTING_CLOSE
+            2 -> FoulType.SHOOTING_MID
+            else -> FoulType.SHOOTING_LONG
+        }
+
+        foul = Foul(
+                homeTeamHasBall,
+                timeRemaining,
+                shotClock,
+                homeTeam,
+                awayTeam,
+                playerWithBall,
+                location,
+                foulType
+        )
+
+        if (foul.foulType != FoulType.CLEAN) {
+            type = Plays.FOUL
+            shotSuccess -= 30
+        }
+
+        val timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+        timeRemaining -= timeChange
+        shotClock -= timeChange
+        return getMadeShot(shotLocation, shotSuccess, shooter)
+    }
+
+    private fun getShotLocation(shooter: Player, shotClose: Double, shotMid: Double, shotLong: Double): Int {
+        return if (location == 0) {
             // shot taken from around half court
             playAsString += "near half court"
             offense.threePointAttempts++
@@ -79,58 +119,6 @@ class Shot(
             shooter.threePointAttempts++
             3
         }
-
-        var shotSuccess: Int = getShotSuccess(shotLocation, shooter, defender)
-
-        if (assisted) {
-            shotSuccess += 30
-        }
-        if (rushed) {
-            shotSuccess -= 30
-        }
-
-        foul = when (shotLocation) {
-            1 -> Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                FoulType.SHOOTING_CLOSE
-            )
-            2 -> Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                FoulType.SHOOTING_MID
-            )
-            else -> Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                FoulType.SHOOTING_LONG
-            )
-        }
-
-        if (foul.foulType != FoulType.CLEAN) {
-            type = Plays.FOUL
-            shotSuccess -= 30
-        }
-
-        val timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
-        timeRemaining -= timeChange
-        shotClock -= timeChange
-        return getMadeShot(shotLocation, shotSuccess, shooter)
     }
 
     private fun getShotSuccess(shotLocation: Int, shooter: Player, defender: Player): Int {

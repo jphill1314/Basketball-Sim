@@ -37,48 +37,9 @@ class Rebound(
         }
 
         if (offChance[offHigh] > defChance[defHigh] && r.nextInt() > 60) {
-            // offensive rebound
-            playerWithBall = offHigh + 1 // convert index to basketball position
-            foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                FoulType.REBOUNDING
-            )
-            playAsString = if (foul.foulType == FoulType.CLEAN) {
-                offense.offensiveRebounds++
-                offense.getPlayerAtPosition(playerWithBall).offensiveRebounds++
-                "${offense.getPlayerAtPosition(playerWithBall).fullName} grabs the offensive rebound!"
-            } else {
-                foul.playAsString
-            }
+            offensiveRebound(offHigh)
         } else {
-            // defensive rebound
-            playerWithBall = defHigh + 1 // convert index to basketball position
-            homeTeamHasBall = !homeTeamHasBall
-            foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                FoulType.REBOUNDING
-            )
-            playAsString = if (foul.foulType == FoulType.CLEAN) {
-                defense.defensiveRebounds++
-                defense.getPlayerAtPosition(playerWithBall).defensiveRebounds++
-                "${defense.getPlayerAtPosition(playerWithBall).fullName} grabs the rebound!"
-            } else {
-                homeTeamHasBall = !homeTeamHasBall
-                location = 1
-                foul.playAsString
-            }
+            defensiveRebound(defHigh)
         }
 
         return 0
@@ -91,5 +52,50 @@ class Rebound(
             values.add(player.rebounding + player.aggressiveness / 5 + r.nextInt(4 * randomBound))
         }
         return values
+    }
+
+    private fun offensiveRebound(offHigh: Int) {
+        playerWithBall = offHigh + 1 // convert index to basketball position
+        foul = Foul(
+            homeTeamHasBall,
+            timeRemaining,
+            shotClock,
+            homeTeam,
+            awayTeam,
+            playerWithBall,
+            location,
+            FoulType.REBOUNDING
+        )
+        playAsString = if (foul.foulType == FoulType.CLEAN) {
+            offense.offensiveRebounds++
+            offense.getPlayerAtPosition(playerWithBall).offensiveRebounds++
+            "${offense.getPlayerAtPosition(playerWithBall).fullName} grabs the offensive rebound!"
+        } else {
+            foul.playAsString
+        }
+    }
+
+    private fun defensiveRebound(defHigh: Int) {
+        playerWithBall = defHigh + 1 // convert index to basketball position
+        homeTeamHasBall = !homeTeamHasBall
+        foul = Foul(
+            homeTeamHasBall,
+            timeRemaining,
+            shotClock,
+            homeTeam,
+            awayTeam,
+            playerWithBall,
+            location,
+            FoulType.REBOUNDING
+        )
+        playAsString = if (foul.foulType == FoulType.CLEAN) {
+            defense.defensiveRebounds++
+            defense.getPlayerAtPosition(playerWithBall).defensiveRebounds++
+            "${defense.getPlayerAtPosition(playerWithBall).fullName} grabs the rebound!"
+        } else {
+            homeTeamHasBall = !homeTeamHasBall
+            location = 1
+            foul.playAsString
+        }
     }
 }
