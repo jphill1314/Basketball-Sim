@@ -25,11 +25,12 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
     var numberOfFreeThrows = 0
     var playerWithBall = 1
     var location = 0
-    var possesions = 0
+    var possessions = 0
 
     val gamePlays = mutableListOf<BasketballPlay>()
 
     private val r = Random()
+    private val passingUtils = PassingUtils(homeTeam, awayTeam, BasketballPlay.randomBound)
 
     fun getAsString(): String{
         return "Half:$half \t ${homeTeam.Name}:$homeScore - ${awayTeam.Name}:$awayScore"
@@ -169,9 +170,9 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
         }
 
         return if (press) {
-            mutableListOf(Press(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball))
+            mutableListOf(Press(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
         } else {
-            mutableListOf(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball))
+            mutableListOf(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
         }
     }
 
@@ -216,7 +217,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
             }
         }
         else{
-            plays.add(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball))
+            plays.add(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
             deadball = false
         }
 
@@ -344,7 +345,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
         if(location != 0){
             location = -location
         }
-        possesions++
+        possessions++
     }
 
     private fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean){

@@ -95,7 +95,7 @@ class Foul (homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTe
     }
 
     private fun getFouler(team: Team): Int{
-        val values = Array(5, {i -> 0})
+        val values = Array(5) { 0 }
 
         for(i in 0..4){
             values[i] = r.nextInt(100) / team.players[i].offBallDefense
@@ -125,7 +125,7 @@ class Foul (homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTe
 
         // The assumption is that this is called after it has been decided who is going to get the rebound
         positionOfPlayerFouled = playerWithBall
-        var aggression = 0.0
+        val aggression: Double
         val fouler: Player = if(r.nextDouble() > 0.35){
             // more likely that the person who wasn't going to get the rebound is called for the foul
             isOnDefense = true
