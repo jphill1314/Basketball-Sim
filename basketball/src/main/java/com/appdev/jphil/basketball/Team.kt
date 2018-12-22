@@ -2,13 +2,13 @@ package com.appdev.jphil.basketball
 
 import java.util.*
 
-class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Boolean){
+class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Boolean) {
 
     var players = mutableListOf<Player>() // for use in games
     val roster = mutableListOf<Player>() // for use everywhere else
     var offenseFavorsThrees: Int = 0
     var defenseFavorsThrees: Int = 0
-    var pressFrequency : Int = 0
+    var pressFrequency: Int = 0
     var pressAggression: Int = 0
     var aggression: Int = 0
     var pace: Int = 0
@@ -33,12 +33,12 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         name: String,
         offenseFavorsThrees: Int,
         defenseFavorsThrees: Int,
-        pressFrequency : Int,
+        pressFrequency: Int,
         pressAggression: Int,
         aggression: Int,
         pace: Int,
         players: List<Player>
-    ): this(teamId, name, 0, false) {
+    ) : this(teamId, name, 0, false) {
         this.offenseFavorsThrees = offenseFavorsThrees
         this.defenseFavorsThrees = defenseFavorsThrees
         this.pressFrequency = pressFrequency
@@ -49,7 +49,7 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         teamRating = calculateTeamRating()
     }
 
-    init{
+    init {
         if (generatePlayers) {
             offenseFavorsThrees = 50
             defenseFavorsThrees = 50
@@ -71,16 +71,16 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         }
     }
 
-    fun getPlayerAtPosition(position: Int): Player{
+    fun getPlayerAtPosition(position: Int): Player {
         // Converts position numbering convention 1-5 to indexing convention 0-4
-        if(position in 1..5){
+        if (position in 1..5) {
             return players[position - 1]
         }
 
         throw Exception("There does not exist such a position!")
     }
 
-    fun startGame(){
+    fun startGame() {
         twoPointAttempts = 0
         twoPointMakes = 0
         threePointAttempts = 0
@@ -93,7 +93,7 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         freeThrowShots = 0
         freeThrowMakes = 0
 
-        for(p in players){
+        for (p in players) {
             p.startGame()
         }
 
@@ -101,12 +101,11 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         players.addAll(roster)
     }
 
-    fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean){
-        for(index in players.indices){
-            if(index < 5){
+    fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {
+        for (index in players.indices) {
+            if (index < 5) {
                 players[index].addTimePlayed(time, isTimeout, isHalftime)
-            }
-            else{
+            } else {
                 players[index].addTimePlayed(0, isTimeout, isHalftime)
             }
         }
@@ -118,50 +117,48 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         }
     }
 
-    fun endGame(){
-        for(p in players){
+    fun endGame() {
+        for (p in players) {
             p.inGame = false
         }
     }
 
-    fun getStatsAsString(): String{
+    fun getStatsAsString(): String {
         return "$Name\n" +
-                "2FG:$twoPointMakes/$twoPointAttempts - ${twoPointMakes/(twoPointAttempts*1.0)}\n" +
-                "3FG:$threePointMakes/$threePointAttempts - ${threePointMakes/(threePointAttempts*1.0)}\n" +
-                "Rebounds:$offensiveRebounds/$defensiveRebounds - ${offensiveRebounds+defensiveRebounds}\n" +
+                "2FG:$twoPointMakes/$twoPointAttempts - ${twoPointMakes / (twoPointAttempts * 1.0)}\n" +
+                "3FG:$threePointMakes/$threePointAttempts - ${threePointMakes / (threePointAttempts * 1.0)}\n" +
+                "Rebounds:$offensiveRebounds/$defensiveRebounds - ${offensiveRebounds + defensiveRebounds}\n" +
                 "TO:$turnovers\nOFouls:$offensiveFouls\n" +
                 "DFouls:$defensiveFouls\n" +
-                "FT:$freeThrowMakes/$freeThrowShots - ${freeThrowMakes/(freeThrowShots*1.0)}"
+                "FT:$freeThrowMakes/$freeThrowShots - ${freeThrowMakes / (freeThrowShots * 1.0)}"
     }
 
-    fun coachTalk(homeTeam: Boolean, scoreDif: Int, talkType: CoachTalk){
+    fun coachTalk(homeTeam: Boolean, scoreDif: Int, talkType: CoachTalk) {
         val maxModifier = 30
         val gameVariability = 15
         val focusMod = 5
         val r = Random()
 
-        for(p in players){
+        for (p in players) {
             var gameMod = (r.nextDouble() * 2 * gameVariability) - gameVariability
 
-            if(talkType == CoachTalk.CALM){
+            if (talkType == CoachTalk.CALM) {
                 gameMod /= 2
-            }
-            else if(talkType == CoachTalk.AGGRESSIVE){
+            } else if (talkType == CoachTalk.AGGRESSIVE) {
                 gameMod *= 2
             }
 
-            if(homeTeam){
+            if (homeTeam) {
                 gameMod += 10
             }
 
-            if(scoreDif > 10){
+            if (scoreDif > 10) {
                 gameMod -= scoreDif - 10
-            }
-            else if(scoreDif < -10){
+            } else if (scoreDif < -10) {
                 gameMod += -scoreDif - 10
             }
 
-            when(talkType){
+            when (talkType) {
                 CoachTalk.OFFENSIVE -> {
                     p.offensiveStatMod = gameMod.toInt() + focusMod
                     p.defensiveStatMod = gameMod.toInt() - focusMod
@@ -176,31 +173,27 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
                 }
             }
 
-            p.offensiveStatMod = if(p.offensiveStatMod > maxModifier){
+            p.offensiveStatMod = if (p.offensiveStatMod > maxModifier) {
                 maxModifier
-            }
-            else if(p.offensiveStatMod < -maxModifier){
+            } else if (p.offensiveStatMod < -maxModifier) {
                 -maxModifier
-            }
-            else {
+            } else {
                 p.offensiveStatMod
             }
 
-            p.defensiveStatMod = if(p.defensiveStatMod > maxModifier){
+            p.defensiveStatMod = if (p.defensiveStatMod > maxModifier) {
                 maxModifier
-            }
-            else if(p.defensiveStatMod < -maxModifier){
+            } else if (p.defensiveStatMod < -maxModifier) {
                 -maxModifier
-            }
-            else {
+            } else {
                 p.defensiveStatMod
             }
         }
     }
 
-    fun aiMakeSubs(freeThrowShooter: Int, half: Int, timeRemaining: Int){
-        for(index in 0..4){
-            if(index != freeThrowShooter) {
+    fun aiMakeSubs(freeThrowShooter: Int, half: Int, timeRemaining: Int) {
+        for (index in 0..4) {
+            if (index != freeThrowShooter) {
                 val sub = getBestPlayerForPosition(index + 1)
                 if (index != sub && (r.nextDouble() > .6 || players[index].isInFoulTrouble(half, timeRemaining))) {
                     // TODO: add coach's tendency to sub here
@@ -210,11 +203,11 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         }
     }
 
-    private fun getBestPlayerForPosition(position: Int): Int{
-        var player = players[position-1]
+    private fun getBestPlayerForPosition(position: Int): Int {
+        var player = players[position - 1]
         var indexOfBest = position - 1
-        for(index in players.indices){
-            if((player.getRatingAtPosition(position) - player.fatigue) < (players[index].getRatingAtPosition(position) - players[index].fatigue)){
+        for (index in players.indices) {
+            if ((player.getRatingAtPosition(position) - player.fatigue) < (players[index].getRatingAtPosition(position) - players[index].fatigue)) {
                 player = players[index]
                 indexOfBest = index
             }
@@ -222,9 +215,9 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         return indexOfBest
     }
 
-    private fun calculateTeamRating(): Int{
+    private fun calculateTeamRating(): Int {
         var rating = 0
-        for(p in roster){
+        for (p in roster) {
             rating += p.getOverallRating()
         }
         return rating / roster.size

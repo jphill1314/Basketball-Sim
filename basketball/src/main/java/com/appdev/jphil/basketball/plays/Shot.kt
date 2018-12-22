@@ -4,12 +4,31 @@ import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
 
 
-class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTeam: Team, awayTeam: Team, playerWithBall: Int, location: Int, val assisted: Boolean, val rushed: Boolean) :
-        BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+class Shot(
+    homeTeamHasBall: Boolean,
+    timeRemaining: Int,
+    shotClock: Int,
+    homeTeam: Team,
+    awayTeam: Team,
+    playerWithBall: Int,
+    location: Int,
+    val assisted: Boolean,
+    val rushed: Boolean
+) :
+    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
     init {
         super.type = Plays.SHOT
-        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.CLEAN)
+        foul = Foul(
+            homeTeamHasBall,
+            timeRemaining,
+            shotClock,
+            homeTeam,
+            awayTeam,
+            playerWithBall,
+            location,
+            FoulType.CLEAN
+        )
         points = generatePlay()
     }
 
@@ -18,9 +37,15 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
         val defender = defense.getPlayerAtPosition(playerWithBall)
 
         // First determine where the shot will be taken from
-        val shotClose = (shooter.closeRangeShot * (1 - (offense.offenseFavorsThrees / 100.0)) * (1 - (defense.defenseFavorsThrees / 100.0)) + r.nextInt(randomBound))
+        val shotClose =
+            (shooter.closeRangeShot * (1 - (offense.offenseFavorsThrees / 100.0)) * (1 - (defense.defenseFavorsThrees / 100.0)) + r.nextInt(
+                randomBound
+            ))
         val shotMid = (shooter.midRangeShot * .2 + r.nextInt(randomBound))
-        val shotLong = (shooter.longRangeShot * (offense.offenseFavorsThrees / 100.0) * (defense.defenseFavorsThrees / 100.0) + r.nextInt(randomBound))
+        val shotLong =
+            (shooter.longRangeShot * (offense.offenseFavorsThrees / 100.0) * (defense.defenseFavorsThrees / 100.0) + r.nextInt(
+                randomBound
+            ))
 
         playAsString = "${shooter.fullName} takes a shot from "
         val shotLocation: Int = if (location == 0) {
@@ -65,9 +90,36 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
         }
 
         foul = when (shotLocation) {
-            1 -> Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.SHOOTING_CLOSE)
-            2 -> Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.SHOOTING_MID)
-            else -> Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.SHOOTING_LONG)
+            1 -> Foul(
+                homeTeamHasBall,
+                timeRemaining,
+                shotClock,
+                homeTeam,
+                awayTeam,
+                playerWithBall,
+                location,
+                FoulType.SHOOTING_CLOSE
+            )
+            2 -> Foul(
+                homeTeamHasBall,
+                timeRemaining,
+                shotClock,
+                homeTeam,
+                awayTeam,
+                playerWithBall,
+                location,
+                FoulType.SHOOTING_MID
+            )
+            else -> Foul(
+                homeTeamHasBall,
+                timeRemaining,
+                shotClock,
+                homeTeam,
+                awayTeam,
+                playerWithBall,
+                location,
+                FoulType.SHOOTING_LONG
+            )
         }
 
         if (foul.foulType != FoulType.CLEAN) {
@@ -122,7 +174,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
         }
     }
 
-    private fun getMadeShot(shotLocation: Int, shotSuccess: Int, shooter: Player): Int{
+    private fun getMadeShot(shotLocation: Int, shotSuccess: Int, shooter: Player): Int {
         return when (shotLocation) {
             // 2 point shot
             1 -> {
@@ -130,8 +182,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     playAsString += " and makes it!"
                     if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                    }
-                    else{
+                    } else {
                         playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a three point play!"
                     }
                     offense.twoPointMakes++
@@ -139,7 +190,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     2
                 } else {
                     playAsString += " and misses it!"
-                    if(type == Plays.FOUL){
+                    if (type == Plays.FOUL) {
                         playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
@@ -152,8 +203,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     playAsString += " and makes it!"
                     if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                    }
-                    else{
+                    } else {
                         playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a three point play!"
                     }
                     offense.twoPointMakes++
@@ -161,7 +211,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     2
                 } else {
                     playAsString += " and misses it!"
-                    if(type == Plays.FOUL){
+                    if (type == Plays.FOUL) {
                         playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
@@ -174,8 +224,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     playAsString += " and makes it!"
                     if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                    }
-                    else{
+                    } else {
                         playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a four point play!"
                     }
                     offense.threePointMakes++
@@ -183,7 +232,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     3
                 } else {
                     playAsString += " and misses it!"
-                    if(type == Plays.FOUL){
+                    if (type == Plays.FOUL) {
                         playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
@@ -196,8 +245,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     playAsString += " and makes it!"
                     if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                    }
-                    else{
+                    } else {
                         playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a four point play!"
                     }
                     offense.threePointMakes++
@@ -205,7 +253,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     3
                 } else {
                     playAsString += " and misses it!"
-                    if(type == Plays.FOUL){
+                    if (type == Plays.FOUL) {
                         playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
@@ -218,8 +266,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     playAsString += " and makes it!"
                     if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                    }
-                    else{
+                    } else {
                         playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a four point play!"
                     }
                     offense.threePointMakes++
@@ -227,7 +274,7 @@ class Shot(homeTeamHasBall: Boolean, timeRemaining: Int, shotClock: Int, homeTea
                     3
                 } else {
                     playAsString += " and misses it!"
-                    if(type == Plays.FOUL){
+                    if (type == Plays.FOUL) {
                         playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
