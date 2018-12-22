@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Basketball Coach</string>
+
+    <string name="roster">Roster</string>
+    <string name="schedule">Schedule</string>
+    <string name="standings">Standings</string>
+    <string name="recruiting">Recruiting</string>
+    <string name="strategy">Strategy</string>
+    <string name="staff">Staff</string>
+    <string name="training">Training</string>
+</resources>
