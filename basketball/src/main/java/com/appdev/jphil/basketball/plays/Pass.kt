@@ -50,7 +50,7 @@ class Pass(
                 randomBound
             ) + 1)
 
-        //println("pass success: $passSuccess vs. pass fail:${(defense.aggression + (passDefender.aggressiveness + targetDefender.aggressiveness) / 15)}")
+        println("pass success: $passSuccess vs. pass fail:${(defense.aggression + (passDefender.aggressiveness + targetDefender.aggressiveness) / 15)}")
         if (passSuccess >= (defense.aggression + (passDefender.aggressiveness + targetDefender.aggressiveness) / 15) || location == -1) {
             successfulPass()
         } else if (passSuccess < ((defense.aggression + (passDefender.aggressiveness + targetDefender.aggressiveness) / 15)) - 6) {
