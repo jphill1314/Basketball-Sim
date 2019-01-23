@@ -106,7 +106,22 @@ class Press(
         }
     }
 
-    private fun stolenPass() {}
+    private fun stolenPass() {
+        playAsString = if (deadBall) {
+            "${passer.fullName} inbounds the ball to ${target.fullName}"
+        } else {
+            "${passer.fullName} passes the ball to ${target.fullName}"
+        }
+
+        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        if (r.nextBoolean()) {
+            playerWithBall = targetPos
+            playAsString += ", but the pass is stolen by ${targetDefender.fullName}!"
+        } else {
+            playAsString += ", but the pass is stolen by ${passDefender.fullName}!"
+        }
+        // todo turnovers and stats and fouls etc
+    }
 
     private fun badPass() {}
 
