@@ -8,4 +8,7 @@
     <string name="strategy">Strategy</string>
     <string name="staff">Staff</string>
     <string name="training">Training</string>
+
+    <string name="starting_lineup">Starting Lineup</string>
+    <string name="bench">Bench</string>
 </resources>
