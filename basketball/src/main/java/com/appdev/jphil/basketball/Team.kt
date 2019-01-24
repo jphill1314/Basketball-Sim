@@ -53,8 +53,8 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
         if (generatePlayers) {
             offenseFavorsThrees = 50
             defenseFavorsThrees = 50
-            pressFrequency = 0
-            pressAggression = 0
+            pressFrequency = 50
+            pressAggression = 50
             aggression = 0
             pace = 70
 
