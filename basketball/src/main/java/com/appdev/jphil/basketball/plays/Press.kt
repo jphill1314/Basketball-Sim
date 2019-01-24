@@ -41,12 +41,12 @@ class Press(
     }
 
     override fun generatePlay(): Int {
+        println("PRESS")
         getPasserAndTarget()
 
         val passSuccess = passer.passing + target.offBallMovement + r.nextInt(randomBound)
         val defSuccess = ((passDefender.onBallDefense + targetDefender.onBallDefense) /
-                (101.0 - defense.pressAggression)).toInt() +
-                r.nextInt(randomBound)
+                (101.0 - defense.pressAggression)).toInt() + r.nextInt(randomBound)
 
         // if successful -> chance to walk up court, chance for fast break
         if (passSuccess > defSuccess) {
@@ -55,7 +55,7 @@ class Press(
           stolenPass()
         } else if (defSuccess > passSuccess + 10) {
             badPass()
-        } else {
+        } else if (!deadBall) {
             justDribbling()
         }
 
@@ -120,10 +120,18 @@ class Press(
         } else {
             playAsString += ", but the pass is stolen by ${passDefender.fullName}!"
         }
+        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+        homeTeamHasBall = !homeTeamHasBall
         // todo turnovers and stats and fouls etc
     }
 
-    private fun badPass() {}
+    private fun badPass() {
+        // todo: bespoke sim for bad pass
+        stolenPass()
+    }
 
-    private fun justDribbling() {}
+    private fun justDribbling() {
+        playAsString = "${passer.fullName} is dribbling with the ball."
+        timeChange = timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+    }
 }

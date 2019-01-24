@@ -117,9 +117,9 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
 
         location = plays[plays.size - 1].location
         playerWithBall = plays[plays.size - 1].playerWithBall
-//        for(play in plays){
-//            println("$homeScore - $awayScore Time: ${getTimeAsString()} - ${play.playAsString}")
-//        }
+        for(play in plays){
+            println("$homeScore - $awayScore Time: ${getTimeAsString()} - ${play.playAsString}")
+        }
 
         if(plays[plays.size - 1].homeTeamHasBall != this.homeTeamHasBall){
             changePossession()
@@ -169,11 +169,16 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
             r.nextInt(100) < homeTeam.pressFrequency
         }
 
-        return if (press) {
+        val backcourtPlays: MutableList<BasketballPlay> = if (press) {
             mutableListOf(Press(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
         } else {
             mutableListOf(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
         }
+
+        if (backcourtPlays.last().type != Plays.FOUL) {
+            deadball = false
+        }
+        return backcourtPlays
     }
 
     private fun getFrontcourtPlay(): MutableList<BasketballPlay> {
