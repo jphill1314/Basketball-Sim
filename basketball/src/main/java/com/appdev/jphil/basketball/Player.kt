@@ -1,17 +1,30 @@
 package com.appdev.jphil.basketball
 
-import java.util.*
 import kotlin.math.max
 
 class Player(
+    val id: Int?,
+    val teamId: Int,
     val firstName: String,
     val lastName: String,
     val position: Int,
-    val teamId: Int,
-    generateAttributes: Boolean,
-    rating: Int
+    closeRangeShot: Int,
+    midRangeShot: Int,
+    longRangeShot: Int,
+    freeThrowShot: Int,
+    postMove: Int,
+    ballHandling: Int,
+    passing: Int,
+    offBallMovement: Int,
+    postDefense: Int,
+    perimeterDefense: Int,
+    onBallDefense: Int,
+    offBallDefense: Int,
+    stealing: Int,
+    rebounding: Int,
+    var stamina: Int,
+    var aggressiveness: Int
 ) {
-    var id: Int? = null
 
     var offensiveStatMod = 0
     var defensiveStatMod = 0
@@ -31,159 +44,49 @@ class Player(
     var freeThrowShots = 0
     var freeThrowMakes = 0
 
-    init {
-        if (generateAttributes) {
-            generateAttributes(rating)
-        }
-    }
-
-    constructor(
-        id: Int,
-        teamId: Int,
-        firstName: String,
-        lastName: String,
-        position: Int,
-        closeRangeShot: Int,
-        midRangeShot: Int,
-        longRangeShot: Int,
-        freeThrowShot: Int,
-        postMove: Int,
-        ballHandling: Int,
-        passing: Int,
-        offBallMovement: Int,
-        postDefense: Int,
-        perimeterDefense: Int,
-        onBallDefense: Int,
-        offBallDefense: Int,
-        stealing: Int,
-        rebounding: Int,
-        stamina: Int,
-        aggressiveness: Int
-    ) : this(firstName, lastName, position, teamId, false, 0) {
-        this.id = id
-        this.closeRangeShot = closeRangeShot
-        this.midRangeShot = midRangeShot
-        this.longRangeShot = longRangeShot
-        this.freeThrowShot = freeThrowShot
-        this.postMove = postMove
-        this.ballHandling = ballHandling
-        this.passing = passing
-        this.offBallMovement = offBallMovement
-        this.postDefense = postDefense
-        this.perimeterDefense = perimeterDefense
-        this.onBallDefense = onBallDefense
-        this.offBallDefense = offBallDefense
-        this.stealing = stealing
-        this.rebounding = rebounding
-        this.stamina = stamina
-        this.aggressiveness = aggressiveness
-    }
-
     // offense
-    var closeRangeShot: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var closeRangeShot: Int = closeRangeShot
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var midRangeShot: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var midRangeShot: Int = midRangeShot
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var longRangeShot: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var longRangeShot: Int = longRangeShot
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var freeThrowShot: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var freeThrowShot: Int = freeThrowShot
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var postMove: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var postMove: Int = postMove
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var ballHandling: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var ballHandling: Int = ballHandling
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var passing: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var passing: Int = passing
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var offBallMovement: Int = 0
-        get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var offBallMovement: Int = offBallMovement
+    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
     // Defense
-    var postDefense: Int = 0
-        get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var postDefense: Int = postDefense
+    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var perimeterDefense: Int = 0
-        get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var perimeterDefense: Int = perimeterDefense
+    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var onBallDefense: Int = 0
-        get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var onBallDefense: Int = onBallDefense
+    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var offBallDefense: Int = 0
-        get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var offBallDefense: Int = offBallDefense
+    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var stealing: Int = 0
-        get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var stealing: Int = stealing
+    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
-    var rebounding: Int = 0
-        get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var stamina: Int = 0
-    var aggressiveness: Int = 0
-
-    private fun generateAttributes(rating: Int) {
-        // TODO: instead of making worse players worse across the board, they should be good at a couple of things, and worse at others
-        val r = Random()
-        val newRating = rating + 10
-        val ratingVariability = 10
-
-        val closeWeight = doubleArrayOf(.6, .7, .8, 1.0, 1.0)
-        val midWeight = doubleArrayOf(.8, .8, .8, .7, .7)
-        val longWeight = doubleArrayOf(.8, 1.0, .8, .5, .5)
-        val ftWeight = doubleArrayOf(.8, .8, .8, .6, .6)
-        val postOffWeight = doubleArrayOf(.2, .2, .5, 1.3, 1.3)
-        val ballWeight = doubleArrayOf(1.1, .8, .8, .6, .5)
-        val passWeight = doubleArrayOf(1.1, .8, .8, .6, .5)
-        val offMoveWeight = doubleArrayOf(.8, 1.0, .8, .7, .7)
-
-        val postDefWeight = doubleArrayOf(.4, .5, .6, .9, 1.0)
-        val perimDefWeight = doubleArrayOf(1.0, 1.0, .9, .5, .5)
-        val onBallWeight = doubleArrayOf(1.0, .8, .8, .9, 1.0)
-        val offBallWeight = doubleArrayOf(.8, .8, .8, .7, .6)
-        val stealWeight = doubleArrayOf(.8, .8, .8, .5, .5)
-        val reboundWeight = doubleArrayOf(.4, .5, .7, 1.2, 1.2)
-
-        // Offensive
-        closeRangeShot =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * closeWeight[position - 1]).toInt()
-        midRangeShot =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * midWeight[position - 1]).toInt()
-        longRangeShot =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * longWeight[position - 1]).toInt()
-        freeThrowShot =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * ftWeight[position - 1]).toInt()
-        postMove =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * postOffWeight[position - 1]).toInt()
-        ballHandling =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * ballWeight[position - 1]).toInt()
-        passing =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * passWeight[position - 1]).toInt()
-        offBallMovement =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * offMoveWeight[position - 1]).toInt()
-
-        // Defensive
-        postDefense =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * postDefWeight[position - 1]).toInt()
-        perimeterDefense =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * perimDefWeight[position - 1]).toInt()
-        onBallDefense =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * onBallWeight[position - 1]).toInt()
-        offBallDefense =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * offBallWeight[position - 1]).toInt()
-        stealing =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * stealWeight[position - 1]).toInt()
-        rebounding =
-                ((newRating + 2 * r.nextInt(ratingVariability) - ratingVariability) * reboundWeight[position - 1]).toInt()
-
-        // Physical
-        stamina = r.nextInt(60) + 40
-        aggressiveness = r.nextInt(100)
-    }
+    var rebounding: Int = rebounding
+    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
 
     fun addTimePlayed(time: Int, isHalftime: Boolean, isTimeout: Boolean) {
         timePlayed += time
