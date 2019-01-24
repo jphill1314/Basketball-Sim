@@ -59,13 +59,13 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
             pace = 70
 
             for (i in 1..5) {
-                roster.add(Player(Name, "$i", i, teamId, true, rating + 10))
+                roster.add(PlayerFactory.generateBalancedPlayer(Name, "$i", i, teamId, rating + 10))
             }
             for (i in 1..5) {
-                roster.add(Player(Name, "${i + 5}", i, teamId, true, rating))
+                roster.add(PlayerFactory.generateBalancedPlayer(Name, "${i + 5}", i, teamId, rating))
             }
             for (i in 1..r.nextInt(6) + 1) {
-                roster.add(Player(Name, "${i + 10}", r.nextInt(5) + 1, teamId, true, rating - 5))
+                roster.add(PlayerFactory.generateBalancedPlayer(Name, "${i + 10}", r.nextInt(5) + 1, teamId, rating - 5))
             }
             teamRating = calculateTeamRating()
         }
