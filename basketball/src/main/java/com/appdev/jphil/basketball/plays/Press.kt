@@ -91,7 +91,7 @@ class Press(
             timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
         } else if (target.ballHandling > defense.pressAggression + r.nextInt(50)) {
             // press broken -> walk ball up court
-            playAsString += " and ${defense.Name}'s press relents, so ${target.firstName} walks the ball into the frontcourt"
+            playAsString += " and ${defense.name}'s press relents, so ${target.firstName} walks the ball into the frontcourt"
             location = 1
             timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
         } else if (r.nextInt(10) > 6) {

@@ -33,7 +33,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) 
     private val passingUtils = PassingUtils(homeTeam, awayTeam, BasketballPlay.randomBound)
 
     fun getAsString(): String{
-        return "Half:$half \t ${homeTeam.Name}:$homeScore - ${awayTeam.Name}:$awayScore"
+        return "Half:$half \t ${homeTeam.name}:$homeScore - ${awayTeam.name}:$awayScore"
     }
 
     fun simulateFullGame(){

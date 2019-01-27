@@ -2,16 +2,19 @@ package com.appdev.jphil.basketball
 
 import java.util.*
 
-class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Boolean) {
+class Team(
+    val teamId: Int,
+    val name: String,
+    var offenseFavorsThrees: Int,
+    var defenseFavorsThrees: Int,
+    var pressFrequency: Int,
+    var pressAggression: Int,
+    var aggression: Int,
+    var pace: Int,
+    var players: MutableList<Player> // for use in games
+) {
 
-    var players = mutableListOf<Player>() // for use in games
-    val roster = mutableListOf<Player>() // for use everywhere else
-    var offenseFavorsThrees: Int = 0
-    var defenseFavorsThrees: Int = 0
-    var pressFrequency: Int = 0
-    var pressAggression: Int = 0
-    var aggression: Int = 0
-    var pace: Int = 0
+    val roster = players // for use everywhere else
     var teamRating: Int = 0
 
     var twoPointAttempts = 0
@@ -28,47 +31,8 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
 
     val r = Random()
 
-    constructor(
-        teamId: Int,
-        name: String,
-        offenseFavorsThrees: Int,
-        defenseFavorsThrees: Int,
-        pressFrequency: Int,
-        pressAggression: Int,
-        aggression: Int,
-        pace: Int,
-        players: List<Player>
-    ) : this(teamId, name, 0, false) {
-        this.offenseFavorsThrees = offenseFavorsThrees
-        this.defenseFavorsThrees = defenseFavorsThrees
-        this.pressFrequency = pressFrequency
-        this.pressAggression = pressAggression
-        this.aggression = aggression
-        this.pace = pace
-        roster.addAll(players)
-        teamRating = calculateTeamRating()
-    }
-
     init {
-        if (generatePlayers) {
-            offenseFavorsThrees = 50
-            defenseFavorsThrees = 50
-            pressFrequency = 50
-            pressAggression = 50
-            aggression = 0
-            pace = 70
-
-            for (i in 1..5) {
-                roster.add(PlayerFactory.generateBalancedPlayer(Name, "$i", i, teamId, rating + 10))
-            }
-            for (i in 1..5) {
-                roster.add(PlayerFactory.generateBalancedPlayer(Name, "${i + 5}", i, teamId, rating))
-            }
-            for (i in 1..r.nextInt(6) + 1) {
-                roster.add(PlayerFactory.generateBalancedPlayer(Name, "${i + 10}", r.nextInt(5) + 1, teamId, rating - 5))
-            }
-            teamRating = calculateTeamRating()
-        }
+        teamRating = calculateTeamRating()
     }
 
     fun getPlayerAtPosition(position: Int): Player {
@@ -124,7 +88,7 @@ class Team(val teamId: Int, val Name: String, rating: Int, generatePlayers: Bool
     }
 
     fun getStatsAsString(): String {
-        return "$Name\n" +
+        return "$name\n" +
                 "2FG:$twoPointMakes/$twoPointAttempts - ${twoPointMakes / (twoPointAttempts * 1.0)}\n" +
                 "3FG:$threePointMakes/$threePointAttempts - ${threePointMakes / (threePointAttempts * 1.0)}\n" +
                 "Rebounds:$offensiveRebounds/$defensiveRebounds - ${offensiveRebounds + defensiveRebounds}\n" +
