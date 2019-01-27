@@ -1,18 +1,18 @@
 package com.appdev.jphil.basketball
 
 fun main(args: Array<String>){
-    val homeTeam = Team(1, "Home", 70, true)
-    val awayTeam = Team(2, "Away", 70, true)
-    println("Home team: ${homeTeam.teamRating} vs. Away team: ${awayTeam.teamRating}")
-
-    val game = Game(homeTeam, awayTeam, true)
-    game.simulateFullGame()
-
-    println(game.getAsString())
-    println("Number of plays:${game.gamePlays.size}")
-    println("Possessions: ${game.possessions/2}")
-    println("\n${game.homeTeam.getStatsAsString()}")
-    println("\n${game.awayTeam.getStatsAsString()}")
+//    val homeTeam = Team(1, "Home", 70, true)
+//    val awayTeam = Team(2, "Away", 70, true)
+//    println("Home team: ${homeTeam.teamRating} vs. Away team: ${awayTeam.teamRating}")
+//
+//    val game = Game(homeTeam, awayTeam, true)
+//    game.simulateFullGame()
+//
+//    println(game.getAsString())
+//    println("Number of plays:${game.gamePlays.size}")
+//    println("Possessions: ${game.possessions/2}")
+//    println("\n${game.homeTeam.getStatsAsString()}")
+//    println("\n${game.awayTeam.getStatsAsString()}")
 //    for(player in homeTeam.roster){
 //        println(player.getStatsAsString()+"\n")
 //    }

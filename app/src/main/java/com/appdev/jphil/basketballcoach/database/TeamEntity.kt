@@ -20,7 +20,7 @@ data class TeamEntity(
 ) {
     constructor(team: Team): this(
         team.teamId,
-        team.Name,
+        team.name,
         team.offenseFavorsThrees,
         team.defenseFavorsThrees,
         team.pressFrequency,
