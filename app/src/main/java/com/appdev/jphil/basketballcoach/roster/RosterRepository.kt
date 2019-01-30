@@ -30,7 +30,7 @@ class RosterRepository @Inject constructor(
                             resources.getStringArray(R.array.last_names).asList()
                         )
                         team = teamFactory.generateTeam(1, "Wofford Terriers", 70)
-                        dbHelper.saveTeam(team!!)
+                        dbHelper.saveTeam(team!!, 1)
                     }
                 }
             }
