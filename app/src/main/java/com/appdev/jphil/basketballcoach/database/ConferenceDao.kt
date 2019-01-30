@@ -8,7 +8,7 @@ interface ConferenceDao {
     fun getAllConferenceEntities(): List<ConferenceEntity>
 
     @Query("SELECT * FROM ConferenceEntity where id in (:id)")
-    fun getConferenceWithId(id: Int): ConferenceEntity
+    fun getConferenceWithId(id: Int): ConferenceEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertConferences(conferences: List<ConferenceEntity>)

@@ -10,6 +10,9 @@ interface TeamDao {
     @Query("SELECT * FROM TeamEntity where teamId in (:teamId)")
     fun getTeamWithId(teamId: Int): TeamEntity?
 
+    @Query("SELECT * FROM TeamEntity where conferenceId in (:conferenceId)")
+    fun getTeamsInConference(conferenceId: Int): List<TeamEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTeams(teams: List<TeamEntity>)
 
