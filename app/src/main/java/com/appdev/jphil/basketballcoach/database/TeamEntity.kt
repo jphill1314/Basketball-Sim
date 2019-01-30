@@ -16,9 +16,10 @@ data class TeamEntity(
     val pressFrequency : Int,
     val pressAggression: Int,
     val aggression: Int,
-    val pace: Int
+    val pace: Int,
+    val conferenceId: Int
 ) {
-    constructor(team: Team): this(
+    constructor(team: Team, conferenceId: Int): this(
         team.teamId,
         team.name,
         team.offenseFavorsThrees,
@@ -26,7 +27,8 @@ data class TeamEntity(
         team.pressFrequency,
         team.pressAggression,
         team.aggression,
-        team.pace
+        team.pace,
+        conferenceId
     )
 
     fun createTeam(players: List<PlayerEntity>): Team {
