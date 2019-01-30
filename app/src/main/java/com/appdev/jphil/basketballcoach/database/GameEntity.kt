@@ -5,8 +5,8 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity
 data class GameEntity(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int?,
     val homeTeamId: Int,
     val awayTeamId: Int,
     val isNeutralCourt: Boolean

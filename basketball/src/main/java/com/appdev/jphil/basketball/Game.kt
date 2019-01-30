@@ -3,7 +3,7 @@ package com.appdev.jphil.basketball
 import com.appdev.jphil.basketball.plays.*
 import java.util.*
 
-class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean) {
+class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean, val id: Int? = null) {
     private val lengthOfHalf = 20 * 60 // 20 minutes
     private val lengthOfOvertime = 5 * 60 // 5 minutes
     private val lengthOfShotClock = 30 // 30 seconds

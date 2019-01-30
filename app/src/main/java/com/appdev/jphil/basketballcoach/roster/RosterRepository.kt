@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
 import android.util.Log
+import com.appdev.jphil.basketball.BasketballFactory
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.TeamFactory
 import com.appdev.jphil.basketballcoach.R
@@ -25,17 +26,25 @@ class RosterRepository @Inject constructor(
                 if (team == null) {
                     team = dbHelper.loadTeamById(1)
                     if (team == null) {
-                        val teamFactory = TeamFactory(
-                            resources.getStringArray(R.array.first_names).asList(),
-                            resources.getStringArray(R.array.last_names).asList()
-                        )
-                        team = teamFactory.generateTeam(1, "Wofford Terriers", 70)
-                        dbHelper.saveTeam(team!!, 1)
+                        createGame()
+                        team = dbHelper.loadTeamById(1)
                     }
                 }
             }
             job.join()
             presenter.onDataFetched(team!!)
+        }
+    }
+
+    private fun createGame() {
+        val teamFactory = TeamFactory(
+            resources.getStringArray(R.array.first_names).asList(),
+            resources.getStringArray(R.array.last_names).asList()
+        )
+        val conferences = BasketballFactory.setupWholeBasketballWorld(teamFactory)
+        conferences.forEach {
+            dbHelper.saveConference(it)
+            dbHelper.saveGames(it.generateSchedule())
         }
     }
 
