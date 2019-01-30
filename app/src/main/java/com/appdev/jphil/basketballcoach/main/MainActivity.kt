@@ -1,11 +1,13 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
+import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -39,9 +41,9 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun handleFragmentNavigation(menuItem: MenuItem): Boolean {
-        val fragment = when (menuItem.itemId) {
+        val fragment: Fragment? = when (menuItem.itemId) {
             R.id.roster -> RosterFragment()
-            R.id.schedule -> null
+            R.id.schedule -> ScheduleFragment()
             R.id.standings -> null
             R.id.recruiting -> null
             R.id.strategy -> null

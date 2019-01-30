@@ -9,8 +9,8 @@ class Conference(
     fun generateSchedule(): List<Game> {
         val games = mutableListOf<Game>()
 
-        for (x in 0 until teams.size - 1) {
-            for (y in 0 until teams.size - 1) {
+        for (x in 0 until teams.size) {
+            for (y in 0 until teams.size) {
                 if (x != y) {
                     games.add(Game(teams[x], teams[y], false))
                 }
