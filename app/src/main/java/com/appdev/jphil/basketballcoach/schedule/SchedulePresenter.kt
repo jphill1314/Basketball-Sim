@@ -21,6 +21,10 @@ class SchedulePresenter @Inject constructor(
         view?.displaySchedule(games)
     }
 
+    override fun onFABClicked() {
+        repository.simulateNextGame()
+    }
+
     override fun onViewAttached(view: ScheduleContract.View) {
         this.view = view
         fetchSchedule()

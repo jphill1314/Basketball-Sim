@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule
 
+import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,16 @@ import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.R
 import kotlinx.android.synthetic.main.list_item_schedule.view.*
 
-class ScheduleAdapter(val games: List<Game>) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
+class ScheduleAdapter(private val resources: Resources) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
+
+    var games: List<Game>? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.temp_text
+        val homeName: TextView = view.home_name
+        val awayName: TextView = view.away_name
+        val homeScore: TextView = view.home_score
+        val awayScore: TextView = view.away_score
+        val gameStatus: TextView = view.game_status
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): ViewHolder {
@@ -21,11 +28,17 @@ class ScheduleAdapter(val games: List<Game>) : RecyclerView.Adapter<ScheduleAdap
     }
 
     override fun getItemCount(): Int {
-        return games.size
+        return games?.size ?: 0
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val game = games[position]
-        viewHolder.textView.text = "Game ${position + 1} - ${game.homeTeam.name} vs. ${game.awayTeam.name}"
+        games?.let {
+            val game = it[position]
+            viewHolder.homeName.text = game.homeTeam.name
+            viewHolder.awayName.text = game.awayTeam.name
+            viewHolder.homeScore.text = game.homeScore.toString()
+            viewHolder.awayScore.text = game.awayScore.toString()
+            viewHolder.gameStatus.text = if (game.isFinal) resources.getString(R.string.game_final) else resources.getString(R.string.game_number, position + 1)
+        }
     }
 }

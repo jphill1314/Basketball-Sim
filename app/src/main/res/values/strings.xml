@@ -12,6 +12,10 @@
     <string name="starting_lineup">Starting Lineup</string>
     <string name="bench">Bench</string>
 
+    <string name="game_number">Game %d</string>
+    <string name="in_progress">In progress</string>
+    <string name="game_final">Final</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

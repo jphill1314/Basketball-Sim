@@ -13,12 +13,14 @@ import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_schedule.*
+import kotlinx.android.synthetic.main.fragment_schedule.view.*
 import javax.inject.Inject
 
 class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
+    private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(resources) }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -34,12 +36,15 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedule, container, false)
+        val view = inflater.inflate(R.layout.fragment_schedule, container, false)
+        view.fab.setOnClickListener { presenter.onFABClicked() }
+        view.recycler_view.adapter = adapter
+        view.recycler_view.layoutManager = LinearLayoutManager(context)
+        return view
     }
 
     override fun displaySchedule(games: List<Game>) {
-        recycler_view.adapter = ScheduleAdapter(games)
-        recycler_view.layoutManager = LinearLayoutManager(context)
+        adapter.games = games
+        adapter.notifyDataSetChanged()
     }
 }
