@@ -39,31 +39,20 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
     fun loadGamesForTeam(teamId: Int): List<Game> {
         val gameEntities = database.gameDao().getAllGamesWithTeamId(teamId)
         val games = mutableListOf<Game>()
-        gameEntities.forEach { entity ->
-            val homeTeam = database.teamDao().getTeamWithId(entity.homeTeamId)!!.
-                createTeam(database.playerDao().getPlayersOnTeam(entity.homeTeamId))
-            val awayTeam = database.teamDao().getTeamWithId(entity.awayTeamId)!!.
-                createTeam(database.playerDao().getPlayersOnTeam(entity.awayTeamId))
-            games.add(
-                Game(homeTeam, awayTeam, entity.isNeutralCourt, entity.id, entity.isFinal).apply {
-                    homeScore = entity.homeScore
-                    awayScore = entity.awayScore
-                }
-            )
-        }
+        gameEntities.forEach { entity -> games.add(createGame(entity)) }
         return games
     }
 
     fun loadGameById(gameId: Int): Game {
-        val entity = database.gameDao().getGameWithId(gameId)
+        return createGame(database.gameDao().getGameWithId(gameId))
+    }
+
+    private fun createGame(entity: GameEntity): Game {
         val homeTeam = database.teamDao().getTeamWithId(entity.homeTeamId)!!.
             createTeam(database.playerDao().getPlayersOnTeam(entity.homeTeamId))
         val awayTeam = database.teamDao().getTeamWithId(entity.awayTeamId)!!.
             createTeam(database.playerDao().getPlayersOnTeam(entity.awayTeamId))
-        return Game(homeTeam, awayTeam, entity.isNeutralCourt, entity.id, entity.isFinal).apply {
-            homeScore = entity.homeScore
-            awayScore = entity.awayScore
-        }
+        return entity.createGame(homeTeam, awayTeam)
     }
 
     fun saveTeam(team: Team, conferenceId: Int) {
@@ -86,17 +75,6 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
     }
 
     fun saveGames(games: List< Game>) {
-        games.forEach { game -> database.gameDao().insertGame(
-            GameEntity(
-                game.id,
-                game.homeTeam.teamId,
-                game.awayTeam.teamId,
-                game.isNeutralCourt,
-                game.isFinal,
-                game.homeScore,
-                game.awayScore
-            )
-        )
-        }
+        games.forEach { game -> database.gameDao().insertGame(GameEntity.from(game)) }
     }
 }

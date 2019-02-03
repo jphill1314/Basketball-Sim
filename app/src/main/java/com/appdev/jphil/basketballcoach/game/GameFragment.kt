@@ -47,6 +47,12 @@ class GameFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_game, container, false)
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
+
+        savedInstanceState?.let {
+            homeTeamName = it.getString("homeTeam") ?: "error"
+            awayTeamName = it.getString("awayTeam") ?: "error"
+        }
+
         view.home_name.text = homeTeamName
         view.away_name.text = awayTeamName
         return view
@@ -67,6 +73,18 @@ class GameFragment : Fragment() {
 
         adapter.plays = game.gamePlays.reversed()
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pauseSim()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("homeTeam", homeTeamName)
+        outState.putString("awayTeam", awayTeamName)
+
+        super.onSaveInstanceState(outState)
     }
 
     companion object {

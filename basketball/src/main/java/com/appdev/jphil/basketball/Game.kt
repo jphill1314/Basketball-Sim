@@ -23,7 +23,7 @@ class Game(
     var homeFouls = 0
     var awayFouls = 0
 
-    var mediaTimeOuts = Array(10) {false}
+    var mediaTimeOuts = MutableList(10) {false}
     var homeTeamHasBall = true
     var deadball = false
     var madeShot = false
@@ -32,6 +32,7 @@ class Game(
     var playerWithBall = 1
     var location = 0
     var possessions = 0
+    var inProgress = false
 
     val gamePlays = mutableListOf<BasketballPlay>()
 
@@ -60,6 +61,7 @@ class Game(
     fun setupGame() {
         homeTeam.startGame()
         awayTeam.startGame()
+        inProgress = true
     }
 
     fun startHalf() {
@@ -116,6 +118,7 @@ class Game(
             println("wtf: $homeScore - $awayScore half:$half")
         }
         isFinal = true
+        inProgress = false
     }
 
     private fun getNextPlay(): MutableList<BasketballPlay>{
@@ -316,7 +319,7 @@ class Game(
     private fun getMediaTimeout(): Boolean{
         return if(half == 1){
             if(timeRemaining < 16 * 60 && !mediaTimeOuts[0]){
-                mediaTimeOuts[0] = true
+                mediaTimeOuts[0]= true
                 true
             }
             else if(timeRemaining < 12 * 60 && !mediaTimeOuts[1]){
