@@ -9,5 +9,8 @@ data class GameEntity(
     val id: Int?,
     val homeTeamId: Int,
     val awayTeamId: Int,
-    val isNeutralCourt: Boolean
+    val isNeutralCourt: Boolean,
+    val isFinal: Boolean,
+    val homeScore: Int,
+    val awayScore: Int
 )

@@ -3,7 +3,13 @@ package com.appdev.jphil.basketball
 import com.appdev.jphil.basketball.plays.*
 import java.util.*
 
-class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean, val id: Int? = null) {
+class Game(
+    val homeTeam: Team,
+    val awayTeam: Team,
+    val isNeutralCourt: Boolean,
+    val id: Int? = null,
+    var isFinal: Boolean = false
+) {
     private val lengthOfHalf = 20 * 60 // 20 minutes
     private val lengthOfOvertime = 5 * 60 // 5 minutes
     private val lengthOfShotClock = 30 // 30 seconds
@@ -93,6 +99,7 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean, 
         if(half > 4){
             println("wtf: $homeScore - $awayScore half:$half")
         }
+        isFinal = true
     }
 
     private fun getNextPlay(): MutableList<BasketballPlay>{
@@ -117,9 +124,9 @@ class Game(val homeTeam: Team, val awayTeam: Team, val isNeutralCourt: Boolean, 
 
         location = plays[plays.size - 1].location
         playerWithBall = plays[plays.size - 1].playerWithBall
-        for(play in plays){
-            println("$homeScore - $awayScore Time: ${getTimeAsString()} - ${play.playAsString}")
-        }
+//        for(play in plays){
+//            println("$homeScore - $awayScore Time: ${getTimeAsString()} - ${play.playAsString}")
+//        }
 
         if(plays[plays.size - 1].homeTeamHasBall != this.homeTeamHasBall){
             changePossession()

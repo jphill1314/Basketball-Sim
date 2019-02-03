@@ -12,9 +12,11 @@ interface ScheduleContract {
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchSchedule()
         fun onScheduleLoaded(games: List<Game>)
+        fun onFABClicked()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
         fun fetchSchedule()
+        fun simulateNextGame()
     }
 }
