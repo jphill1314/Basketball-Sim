@@ -1,7 +1,6 @@
-package com.appdev.jphil.basketballcoach.database
+package com.appdev.jphil.basketballcoach.database.game
 
 import android.arch.persistence.room.*
-import com.appdev.jphil.basketball.Game
 
 @Dao
 interface GameDao {

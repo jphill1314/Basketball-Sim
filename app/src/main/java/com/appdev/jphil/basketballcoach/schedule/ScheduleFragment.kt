@@ -20,6 +20,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
+    var teamId = 1
     private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(resources) }
 
     override fun onAttach(context: Context?) {
@@ -46,5 +47,13 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     override fun displaySchedule(games: List<Game>) {
         adapter.games = games
         adapter.notifyDataSetChanged()
+    }
+
+    companion object {
+        fun newInstance(teamId: Int): ScheduleFragment {
+            return ScheduleFragment().apply {
+                this.teamId = teamId
+            }
+        }
     }
 }

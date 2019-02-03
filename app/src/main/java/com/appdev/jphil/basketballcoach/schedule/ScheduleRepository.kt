@@ -9,12 +9,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ScheduleRepository @Inject constructor(
+    private val teamId: Int,
     private val dbHelper: DatabaseHelper
 ) : ScheduleContract.Repository {
 
     private lateinit var presenter: ScheduleContract.Presenter
     private var games: List<Game>? = null
-    private val teamId = 1
     private var gameId = 1
 
     override fun fetchSchedule() {
