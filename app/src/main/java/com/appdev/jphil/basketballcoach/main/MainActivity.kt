@@ -27,7 +27,9 @@ class MainActivity : DaggerAppCompatActivity() {
 
         drawerLayout = drawer_layout
         nav_view.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
-        handleFragmentNavigation(nav_view.menu.getItem(0))
+        if (savedInstanceState == null) {
+            handleFragmentNavigation(nav_view.menu.getItem(0))
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
