@@ -15,7 +15,6 @@ class ScheduleRepository @Inject constructor(
 
     private lateinit var presenter: ScheduleContract.Presenter
     private var games: List<Game>? = null
-    private var gameId = 1
 
     override fun fetchSchedule() {
         GlobalScope.launch(Dispatchers.Main) {
@@ -29,19 +28,27 @@ class ScheduleRepository @Inject constructor(
 
     override fun simulateNextGame() {
         GlobalScope.launch(Dispatchers.Main) {
+            var gameId = 1
+            var homeName = ""
+            var awayName = ""
             launch(Dispatchers.IO) {
                 var continueSim = false
                 while(!continueSim) {
                     val game = dbHelper.loadGameById(gameId++)
                     Log.d("Schedule Repo", "Game: ${game.id}")
                     if (!game.isFinal) {
-                        game.simulateFullGame()
                         continueSim = game.homeTeam.teamId == teamId || game.awayTeam.teamId == teamId
-                        dbHelper.saveGames(listOf(game))
+                        if (!continueSim) {
+                            game.simulateFullGame()
+                            dbHelper.saveGames(listOf(game))
+                        } else {
+                            homeName = game.homeTeam.name
+                            awayName = game.awayTeam.name
+                        }
                     }
                 }
             }.join()
-            fetchSchedule()
+            presenter.startGameFragment(gameId-1, homeName, awayName)
         }
     }
 

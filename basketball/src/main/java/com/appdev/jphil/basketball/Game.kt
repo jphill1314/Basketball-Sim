@@ -43,54 +43,70 @@ class Game(
     }
 
     fun simulateFullGame(){
-        homeTeam.startGame()
-        awayTeam.startGame()
+        setupGame()
 
         while(half < 3 || homeScore == awayScore){
-            //println("Half: $half Home: $homeScore  Away: $awayScore")
-            timeRemaining = if(half < 3) lengthOfHalf else lengthOfOvertime
-            shotClock = lengthOfShotClock
-
-            if(half < 3){
-                homeFouls = 0
-                awayFouls = 0
-            }
-
-            if(half == 2){
-                // half time
-                updateTimePlayed(0, false, true)
-            }
-            else{
-                // coach talk before game or between overtime periods
-                runTimeout()
-            }
+            startHalf()
 
             while(timeRemaining > 0) {
-                gamePlays.addAll(getNextPlay())
-                if(deadball && !madeShot){
-                    if(getMediaTimeout()) {
-                        runTimeout()
-                    }
-                    //println("Subs!?!")
-                    if(shootFreeThrows){
-                        if(homeTeamHasBall){
-                            homeTeam.aiMakeSubs(playerWithBall, half, timeRemaining)
-                            awayTeam.aiMakeSubs(-1, half, timeRemaining)
-                        }
-                        else{
-                            homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                            awayTeam.aiMakeSubs(playerWithBall, half, timeRemaining)
-                        }
-                    }
-                    else {
-                        homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                        awayTeam.aiMakeSubs(-1, half, timeRemaining)
-                    }
-                }
+                simPlay()
             }
             half++
         }
         half--
+        finishGame()
+    }
+
+    fun setupGame() {
+        homeTeam.startGame()
+        awayTeam.startGame()
+    }
+
+    fun startHalf() {
+        //println("Half: $half Home: $homeScore  Away: $awayScore")
+        timeRemaining = if(half < 3) lengthOfHalf else lengthOfOvertime
+        shotClock = lengthOfShotClock
+
+        if(half < 3){
+            homeFouls = 0
+            awayFouls = 0
+        }
+
+        if(half == 2){
+            // half time
+            updateTimePlayed(0, false, true)
+        }
+        else{
+            // coach talk before game or between overtime periods
+            runTimeout()
+        }
+    }
+
+    fun simPlay() {
+        gamePlays.addAll(getNextPlay())
+        if(deadball && !madeShot){
+            if(getMediaTimeout()) {
+                runTimeout()
+            }
+            //println("Subs!?!")
+            if(shootFreeThrows){
+                if(homeTeamHasBall){
+                    homeTeam.aiMakeSubs(playerWithBall, half, timeRemaining)
+                    awayTeam.aiMakeSubs(-1, half, timeRemaining)
+                }
+                else{
+                    homeTeam.aiMakeSubs(-1, half, timeRemaining)
+                    awayTeam.aiMakeSubs(playerWithBall, half, timeRemaining)
+                }
+            }
+            else {
+                homeTeam.aiMakeSubs(-1, half, timeRemaining)
+                awayTeam.aiMakeSubs(-1, half, timeRemaining)
+            }
+        }
+    }
+
+    fun finishGame() {
         //println("Final! Half: $half Home: $homeScore  Away: $awayScore")
 
         homeTeam.endGame()

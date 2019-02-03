@@ -25,6 +25,10 @@ class SchedulePresenter @Inject constructor(
         repository.simulateNextGame()
     }
 
+    override fun startGameFragment(gameId: Int, homeName: String, awayName: String) {
+        view?.startGameFragment(gameId, homeName, awayName)
+    }
+
     override fun onViewAttached(view: ScheduleContract.View) {
         this.view = view
         fetchSchedule()

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.appdev.jphil.basketball.Game
 
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.game.GameFragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import kotlinx.android.synthetic.main.fragment_schedule.view.*
@@ -47,6 +48,13 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     override fun displaySchedule(games: List<Game>) {
         adapter.games = games
         adapter.notifyDataSetChanged()
+    }
+
+    override fun startGameFragment(gameId: Int, homeName: String, awayName: String) {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName))
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
     companion object {
