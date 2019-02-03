@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
-import android.util.Log
 import com.appdev.jphil.basketball.BasketballFactory
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.TeamFactory
@@ -13,6 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RosterRepository @Inject constructor(
+    private val teamId: Int,
     private val dbHelper: DatabaseHelper,
     private val resources: Resources
 ): RosterContract.Repository {
@@ -24,10 +24,10 @@ class RosterRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.Main) {
             val job = launch(Dispatchers.IO) {
                 if (team == null) {
-                    team = dbHelper.loadTeamById(1)
+                    team = dbHelper.loadTeamById(teamId)
                     if (team == null) {
                         createGame()
-                        team = dbHelper.loadTeamById(1)
+                        team = dbHelper.loadTeamById(teamId)
                     }
                 }
             }

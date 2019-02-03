@@ -3,6 +3,10 @@ package com.appdev.jphil.basketballcoach.database
 import com.appdev.jphil.basketball.Conference
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
+import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import javax.inject.Inject
 
 class DatabaseHelper @Inject constructor(private val database: BasketballDatabase) {
@@ -63,13 +67,22 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
     }
 
     fun saveTeam(team: Team, conferenceId: Int) {
-        team.roster.forEach { player -> database.playerDao().insertPlayer(PlayerEntity(player)) }
+        team.roster.forEach { player -> database.playerDao().insertPlayer(
+            PlayerEntity(
+                player
+            )
+        ) }
         database.teamDao().insertTeam(TeamEntity(team, conferenceId))
     }
 
     fun saveConference(conference: Conference) {
         conference.teams.forEach { team -> saveTeam(team, conference.id) }
-        database.conferenceDao().insertConference(ConferenceEntity(conference.id, conference.name))
+        database.conferenceDao().insertConference(
+            ConferenceEntity(
+                conference.id,
+                conference.name
+            )
+        )
     }
 
     fun saveGames(games: List< Game>) {
@@ -82,7 +95,8 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
                 game.isFinal,
                 game.homeScore,
                 game.awayScore
-            ))
+            )
+        )
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.database
+package com.appdev.jphil.basketballcoach.database.team
 
 import android.arch.persistence.room.*
 

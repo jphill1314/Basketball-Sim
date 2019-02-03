@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.database
+package com.appdev.jphil.basketballcoach.database.player
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey

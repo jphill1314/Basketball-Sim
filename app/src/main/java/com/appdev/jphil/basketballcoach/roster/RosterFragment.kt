@@ -20,6 +20,7 @@ class RosterFragment : Fragment(), RosterContract.View {
     lateinit var presenter: RosterContract.Presenter
     private lateinit var adapter: RosterAdapter
     private lateinit var recyclerView: RecyclerView
+    var teamId = 1
 
     override fun onStart() {
         super.onStart()
@@ -47,5 +48,13 @@ class RosterFragment : Fragment(), RosterContract.View {
         adapter = RosterAdapter(players, resources)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    companion object {
+        fun newInstance(teamId: Int): RosterFragment {
+            return RosterFragment().apply {
+                this.teamId = teamId
+            }
+        }
     }
 }

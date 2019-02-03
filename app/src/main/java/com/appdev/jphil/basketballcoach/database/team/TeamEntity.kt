@@ -1,10 +1,10 @@
-package com.appdev.jphil.basketballcoach.database
+package com.appdev.jphil.basketballcoach.database.team
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import android.util.Log
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 
 @Entity
 data class TeamEntity(
