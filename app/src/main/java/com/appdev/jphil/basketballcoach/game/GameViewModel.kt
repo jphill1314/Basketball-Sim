@@ -3,52 +3,73 @@ package com.appdev.jphil.basketballcoach.game
 import android.arch.lifecycle.ViewModel
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class GameViewModel(
     private val dbHelper: DatabaseHelper
 ): ViewModel() {
     var gameId = -1
-    lateinit var game: Game
+    private lateinit var game: Game
+    private lateinit var gameSim: Job
+    private var saveGame: Job? = null
+    private var initialLoad = true
 
     fun simulateGame(updateGame: (game: Game) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            // Load game from db and update the view
+            if (saveGame != null && !saveGame!!.isCompleted) {
+                saveGame?.join()
+            }
+
+            // Load game from db if it doesn't currently exist
             launch(Dispatchers.IO) {
                 game = dbHelper.loadGameById(gameId)
             }.join()
+
             updateGame(game)
 
             // Simulate the game play-by-play updating the view each time
-            launch(Dispatchers.IO) {
-                while (!game.isFinal) {
+            gameSim = launch(Dispatchers.IO) {
+                if (!game.inProgress) {
                     game.setupGame()
+                }
 
-                    while (game.half < 3 || game.homeScore == game.awayScore) {
+                while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
+                    if (!initialLoad || !game.inProgress) {
                         game.startHalf()
+                    }
+                    initialLoad = false
 
-                        while (game.timeRemaining > 0) {
-                            game.simPlay()
-                            withContext(Dispatchers.Main) {
-                                updateGame(game)
-                            }
-                            Thread.sleep(1000)
+                    while (isActive && game.timeRemaining > 0) {
+                        game.simPlay()
+                        withContext(Dispatchers.Main) {
+                            updateGame(game)
                         }
+                        Thread.sleep(1000)
+                    }
+                    if (isActive) {
                         game.half++
                     }
+                }
+                if (isActive) {
                     game.half--
                     game.finishGame()
-
-                    // save game to db
-                    dbHelper.saveGames(listOf(game))
                 }
-            }
 
+                // save game to db
+                dbHelper.saveGames(listOf(game))
+            }
+            gameSim.join()
             // Game is over, update the view
             updateGame(game)
+        }
+    }
+
+    fun pauseSim() {
+        saveGame = GlobalScope.launch(Dispatchers.IO) {
+            if (gameSim.isActive) {
+                gameSim.cancelAndJoin()
+                dbHelper.saveGames(listOf(game))
+            }
         }
     }
 }
