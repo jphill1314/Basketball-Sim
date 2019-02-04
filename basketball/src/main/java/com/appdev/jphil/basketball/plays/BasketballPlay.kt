@@ -18,6 +18,7 @@ abstract class BasketballPlay(
     var playAsString = ""
     val r = Random()
     val timeUtil = TimeUtil()
+    val homeTeamStartsWithBall = homeTeamHasBall
 
     val offense: Team = if (homeTeamHasBall) homeTeam else awayTeam
     val defense: Team = if (homeTeamHasBall) awayTeam else homeTeam

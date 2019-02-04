@@ -24,7 +24,7 @@ class GameFragment : Fragment() {
     var gameId: Int = 0
     private var homeTeamName = "error"
     private var awayTeamName = "error"
-    private val adapter = GameAdapter()
+    private lateinit var adapter: GameAdapter
 
     private val homeScore: TextView by lazy { view!!.home_score }
     private val awayScore: TextView by lazy { view!!.away_score }
@@ -45,6 +45,7 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_game, container, false)
+        adapter = GameAdapter(resources)
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(context)
 
