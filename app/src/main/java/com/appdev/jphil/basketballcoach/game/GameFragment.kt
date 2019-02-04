@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class GameFragment : Fragment() {
 
-    var gameId: Int = 1
+    var gameId: Int = 0
     private var homeTeamName = "error"
     private var awayTeamName = "error"
     private val adapter = GameAdapter()
@@ -51,6 +51,9 @@ class GameFragment : Fragment() {
         savedInstanceState?.let {
             homeTeamName = it.getString("homeTeam") ?: "error"
             awayTeamName = it.getString("awayTeam") ?: "error"
+            if (gameId == 0) {
+                gameId = it.getInt("gameId", 0)
+            }
         }
 
         view.home_name.text = homeTeamName
@@ -83,6 +86,7 @@ class GameFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("homeTeam", homeTeamName)
         outState.putString("awayTeam", awayTeamName)
+        outState.putInt("gameId", gameId)
 
         super.onSaveInstanceState(outState)
     }

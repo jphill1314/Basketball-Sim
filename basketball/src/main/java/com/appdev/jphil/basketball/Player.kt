@@ -23,7 +23,9 @@ class Player(
     stealing: Int,
     rebounding: Int,
     var stamina: Int,
-    var aggressiveness: Int
+    var aggressiveness: Int,
+    var rosterIndex: Int,
+    var courtIndex: Int
 ) {
 
     var offensiveStatMod = 0

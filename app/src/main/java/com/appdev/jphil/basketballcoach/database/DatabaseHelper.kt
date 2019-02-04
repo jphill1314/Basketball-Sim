@@ -56,12 +56,8 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
     }
 
     fun saveTeam(team: Team, conferenceId: Int) {
-        team.roster.forEach { player -> database.playerDao().insertPlayer(
-            PlayerEntity(
-                player
-            )
-        ) }
-        database.teamDao().insertTeam(TeamEntity(team, conferenceId))
+        team.roster.forEach { player -> database.playerDao().insertPlayer(PlayerEntity.from(player)) }
+        database.teamDao().insertTeam(TeamEntity.from(team))
     }
 
     fun saveConference(conference: Conference) {

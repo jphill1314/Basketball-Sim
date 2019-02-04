@@ -6,6 +6,7 @@ import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ScheduleRepository @Inject constructor(
@@ -17,38 +18,32 @@ class ScheduleRepository @Inject constructor(
     private var games: List<Game>? = null
 
     override fun fetchSchedule() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val job = launch(Dispatchers.IO) {
-                games = dbHelper.loadGamesForTeam(teamId)
-            }
-            job.join()
-            presenter.onScheduleLoaded(games!!)
+        GlobalScope.launch(Dispatchers.IO) {
+            games = dbHelper.loadGamesForTeam(teamId)
+            withContext(Dispatchers.Main) { presenter.onScheduleLoaded(games!!) }
         }
     }
 
     override fun simulateNextGame() {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             var gameId = 1
             var homeName = ""
             var awayName = ""
-            launch(Dispatchers.IO) {
-                var continueSim = false
-                while(!continueSim) {
-                    val game = dbHelper.loadGameById(gameId++)
-                    Log.d("Schedule Repo", "Game: ${game.id}")
-                    if (!game.isFinal) {
-                        continueSim = game.homeTeam.teamId == teamId || game.awayTeam.teamId == teamId
-                        if (!continueSim) {
-                            game.simulateFullGame()
-                            dbHelper.saveGames(listOf(game))
-                        } else {
-                            homeName = game.homeTeam.name
-                            awayName = game.awayTeam.name
-                        }
+            var continueSim = true
+            while(continueSim) {
+                val game = dbHelper.loadGameById(gameId++)
+                if (!game.isFinal) {
+                    continueSim = game.homeTeam.teamId != teamId && game.awayTeam.teamId != teamId
+                    if (continueSim) {
+                        game.simulateFullGame()
+                        dbHelper.saveGames(listOf(game))
+                    } else {
+                        homeName = game.homeTeam.name
+                        awayName = game.awayTeam.name
                     }
                 }
-            }.join()
-            presenter.startGameFragment(gameId-1, homeName, awayName)
+            }
+            withContext(Dispatchers.Main) { presenter.startGameFragment(gameId-1, homeName, awayName) }
         }
     }
 
