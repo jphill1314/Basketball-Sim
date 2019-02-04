@@ -1,17 +1,18 @@
 package com.appdev.jphil.basketballcoach.game
 
+import android.content.res.Resources
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.plays.BasketballPlay
-import com.appdev.jphil.basketball.plays.FoulType
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import kotlinx.android.synthetic.main.list_item_game_event.view.*
 
-class GameAdapter: RecyclerView.Adapter<GameAdapter.ViewHolder>() {
+class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val gameTime: TextView = view.game_time
@@ -32,10 +33,12 @@ class GameAdapter: RecyclerView.Adapter<GameAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val play = plays[position]
         viewHolder.gameTime.text = TimeUtil.getFormattedTime(play.timeRemaining, play.shotClock)
-        viewHolder.gameEvent.text = if (play.foul.foulType != FoulType.CLEAN) {
-            "${play.playAsString}\n${play.foul.playAsString}"
+        viewHolder.gameEvent.text = play.playAsString
+
+        viewHolder.itemView.setBackgroundColor(if (play.homeTeamStartsWithBall) {
+            ResourcesCompat.getColor(resources, R.color.white, null)
         } else {
-            play.playAsString
-        }
+            ResourcesCompat.getColor(resources, R.color.gray, null)
+        })
     }
 }
