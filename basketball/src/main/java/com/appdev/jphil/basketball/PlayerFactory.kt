@@ -27,7 +27,8 @@ object PlayerFactory {
         lastName: String,
         position: Int,
         teamId: Int,
-        rating: Int
+        rating: Int,
+        index: Int
     ): Player {
         // TODO: instead of making worse players worse across the board, they should be good at a couple of things, and worse at others
         val r = Random()
@@ -90,7 +91,9 @@ object PlayerFactory {
             stealing,
             rebounding,
             stamina,
-            aggressiveness
+            aggressiveness,
+            index,
+            index
         )
     }
 }

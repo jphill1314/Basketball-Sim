@@ -27,34 +27,28 @@ data class PlayerEntity(
     val stealing: Int,
     val rebounding: Int,
     val stamina: Int,
-    val aggressiveness: Int
+    val aggressiveness: Int,
+    val offensiveStatMod: Int,
+    val defensiveStatMod: Int,
+    val fatigue: Double,
+    val timePlayed: Int,
+    val inGame: Boolean,
+    val twoPointAttempts: Int,
+    val twoPointMakes: Int,
+    val threePointAttempts: Int,
+    val threePointMakes: Int,
+    val offensiveRebounds: Int,
+    val defensiveRebounds: Int,
+    val turnovers: Int,
+    val fouls: Int,
+    val freeThrowShots: Int,
+    val freeThrowMakes: Int,
+    val rosterIndex: Int,
+    val courtIndex: Int
 ) {
-    constructor(player: Player): this(
-        player.id,
-        player.teamId,
-        player.firstName,
-        player.lastName,
-        player.position,
-        player.closeRangeShot,
-        player.midRangeShot,
-        player.longRangeShot,
-        player.freeThrowShot,
-        player.postMove,
-        player.ballHandling,
-        player.passing,
-        player.offBallMovement,
-        player.postDefense,
-        player.perimeterDefense,
-        player.onBallDefense,
-        player.offBallDefense,
-        player.stealing,
-        player.rebounding,
-        player.stamina,
-        player.aggressiveness
-    )
 
     fun createPlayer(): Player {
-        return Player(
+        val player = Player(
             id!!,
             teamId,
             firstName,
@@ -75,7 +69,72 @@ data class PlayerEntity(
             stealing,
             rebounding,
             stamina,
-            aggressiveness
+            aggressiveness,
+            rosterIndex,
+            courtIndex
         )
+
+        player.offensiveStatMod = offensiveStatMod
+        player.defensiveStatMod = defensiveStatMod
+        player.fatigue = fatigue
+        player.timePlayed = timePlayed
+        player.inGame = inGame
+        player.twoPointAttempts = twoPointAttempts
+        player.twoPointMakes = twoPointMakes
+        player.threePointAttempts = threePointAttempts
+        player.threePointMakes = threePointMakes
+        player.offensiveRebounds = offensiveRebounds
+        player.defensiveRebounds = defensiveRebounds
+        player.turnovers = turnovers
+        player.fouls = fouls
+        player.freeThrowShots = freeThrowShots
+        player.freeThrowMakes = freeThrowMakes
+
+        return player
+    }
+
+    companion object {
+        fun from(player: Player): PlayerEntity {
+            return PlayerEntity(
+                player.id,
+                player.teamId,
+                player.firstName,
+                player.lastName,
+                player.position,
+                player.closeRangeShot,
+                player.midRangeShot,
+                player.longRangeShot,
+                player.freeThrowShot,
+                player.postMove,
+                player.ballHandling,
+                player.passing,
+                player.offBallMovement,
+                player.postDefense,
+                player.perimeterDefense,
+                player.onBallDefense,
+                player.offBallDefense,
+                player.stealing,
+                player.rebounding,
+                player.stamina,
+                player.aggressiveness,
+                player.offensiveStatMod,
+                player.defensiveStatMod,
+                player.fatigue,
+                player.timePlayed,
+                player.inGame,
+                player.twoPointAttempts,
+                player.twoPointMakes,
+                player.threePointAttempts,
+                player.threePointMakes,
+                player.offensiveRebounds,
+                player.defensiveRebounds,
+                player.turnovers,
+                player.fouls,
+                player.freeThrowShots,
+                player.freeThrowMakes,
+                player.rosterIndex,
+                player.courtIndex
+            )
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RosterRepository @Inject constructor(
@@ -21,18 +22,15 @@ class RosterRepository @Inject constructor(
     private var team: Team? = null
 
     override fun fetchData() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val job = launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
+            if (team == null) {
+                team = dbHelper.loadTeamById(teamId)
                 if (team == null) {
+                    createGame()
                     team = dbHelper.loadTeamById(teamId)
-                    if (team == null) {
-                        createGame()
-                        team = dbHelper.loadTeamById(teamId)
-                    }
                 }
             }
-            job.join()
-            presenter.onDataFetched(team!!)
+            withContext(Dispatchers.Main) { presenter.onDataFetched(team!!) }
         }
     }
 

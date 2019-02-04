@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.game
 
 import android.arch.lifecycle.ViewModel
+import android.util.Log
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.*
@@ -12,9 +13,9 @@ class GameViewModel(
     private lateinit var game: Game
     private lateinit var gameSim: Job
     private var saveGame: Job? = null
-    private var initialLoad = true
 
     fun simulateGame(updateGame: (game: Game) -> Unit) {
+        var initialLoad = true
         GlobalScope.launch(Dispatchers.Main) {
             if (saveGame != null && !saveGame!!.isCompleted) {
                 saveGame?.join()

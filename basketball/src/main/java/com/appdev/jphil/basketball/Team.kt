@@ -11,7 +11,8 @@ class Team(
     var pressAggression: Int,
     var aggression: Int,
     var pace: Int,
-    var players: MutableList<Player> // for use in games
+    var players: MutableList<Player>,
+    val conferenceId: Int// for use in games
 ) {
 
     val roster = players // for use everywhere else
@@ -33,6 +34,7 @@ class Team(
 
     init {
         teamRating = calculateTeamRating()
+        roster.sortBy { it.rosterIndex }
     }
 
     fun getPlayerAtPosition(position: Int): Player {
@@ -162,6 +164,8 @@ class Team(
                 if (index != sub && (r.nextDouble() > .6 || players[index].isInFoulTrouble(half, timeRemaining))) {
                     // TODO: add coach's tendency to sub here
                     Collections.swap(players, index, sub)
+                    players[index].courtIndex = index
+                    players[sub].courtIndex = index
                 }
             }
         }
