@@ -28,6 +28,8 @@ class GameFragment : Fragment() {
 
     private val homeScore: TextView by lazy { view!!.home_score }
     private val awayScore: TextView by lazy { view!!.away_score }
+    private val homeFouls: TextView by lazy { view!!.home_fouls }
+    private val awayFouls: TextView by lazy { view!!.away_fouls }
     private val gameStatus: TextView by lazy { view!!.game_half }
     private val gameTime: TextView by lazy { view!!.game_time }
 
@@ -70,10 +72,16 @@ class GameFragment : Fragment() {
     }
 
     private fun updateGame(game: Game) {
-        gameStatus.text = if (game.isFinal) "Final" else "Half: ${game.half}"
+        gameStatus.text = if (game.isFinal) {
+            resources.getString(R.string.game_final)
+        } else {
+            resources.getString(R.string.half_placeholder, game.half)
+        }
         gameTime.text = TimeUtil.getFormattedTime(game.timeRemaining, game.shotClock)
         homeScore.text = game.homeScore.toString()
         awayScore.text = game.awayScore.toString()
+        homeFouls.text = resources.getString(R.string.fouls, game.homeFouls)
+        awayFouls.text = resources.getString(R.string.fouls, game.awayFouls)
 
         adapter.plays = game.gamePlays.reversed()
         adapter.notifyDataSetChanged()
