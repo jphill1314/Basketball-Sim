@@ -11,20 +11,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
+import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_game.view.*
 import javax.inject.Inject
 
-class GameFragment : Fragment() {
+class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
-    var gameId: Int = 0
+    private var gameId: Int = 0
+    private var viewId = 0
     private var homeTeamName = "error"
     private var awayTeamName = "error"
-    private lateinit var adapter: GameAdapter
+    private lateinit var gameAdapter: GameAdapter
+    private val homeStatsAdapter = GameStatsAdapter(emptyList())
+    private val awayStatsAdapter = GameStatsAdapter(emptyList())
 
     private val homeScore: TextView by lazy { view!!.home_score }
     private val awayScore: TextView by lazy { view!!.away_score }
@@ -32,10 +40,11 @@ class GameFragment : Fragment() {
     private val awayFouls: TextView by lazy { view!!.away_fouls }
     private val gameStatus: TextView by lazy { view!!.game_half }
     private val gameTime: TextView by lazy { view!!.game_time }
+    private lateinit var recyclerView: RecyclerView
 
     @Inject
     lateinit var viewModelFactory: GameViewModelFactory
-    lateinit var viewModel: GameViewModel
+    private lateinit var viewModel: GameViewModel
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -47,17 +56,30 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_game, container, false)
-        adapter = GameAdapter(resources)
-        view.recycler_view.adapter = adapter
-        view.recycler_view.layoutManager = LinearLayoutManager(context)
 
         savedInstanceState?.let {
             homeTeamName = it.getString("homeTeam") ?: "error"
             awayTeamName = it.getString("awayTeam") ?: "error"
+            viewId = it.getInt("viewId", 0)
             if (gameId == 0) {
                 gameId = it.getInt("gameId", 0)
             }
         }
+
+        gameAdapter = GameAdapter(resources)
+        recyclerView = view.recycler_view
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        selectView()
+
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.game_views,
+            android.R.layout.simple_spinner_dropdown_item
+        ).also { adapter->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            view.spinner.adapter = adapter
+        }
+        view.spinner.onItemSelectedListener = this
 
         view.home_name.text = homeTeamName
         view.away_name.text = awayTeamName
@@ -83,8 +105,13 @@ class GameFragment : Fragment() {
         homeFouls.text = resources.getString(R.string.fouls, game.homeFouls)
         awayFouls.text = resources.getString(R.string.fouls, game.awayFouls)
 
-        adapter.plays = game.gamePlays.reversed()
-        adapter.notifyDataSetChanged()
+        gameAdapter.plays = game.gamePlays.reversed()
+        gameAdapter.notifyDataSetChanged()
+
+        homeStatsAdapter.players = game.homeTeam.roster
+        homeStatsAdapter.notifyDataSetChanged()
+        awayStatsAdapter.players = game.awayTeam.roster
+        awayStatsAdapter.notifyDataSetChanged()
     }
 
     override fun onPause() {
@@ -96,8 +123,24 @@ class GameFragment : Fragment() {
         outState.putString("homeTeam", homeTeamName)
         outState.putString("awayTeam", awayTeamName)
         outState.putInt("gameId", gameId)
+        outState.putInt("viewId", viewId)
 
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) { /* no op */ }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        viewId = position
+        selectView()
+    }
+
+    private fun selectView() {
+        when (viewId) {
+            1 -> recyclerView.adapter = homeStatsAdapter
+            2 -> recyclerView.adapter = awayStatsAdapter
+            else -> recyclerView.adapter = gameAdapter
+        }
     }
 
     companion object {
