@@ -19,6 +19,12 @@
     <string name="half_placeholder">Half: %d</string>
     <string name="fouls">Fouls: %d</string>
 
+    <string-array name="game_views">
+        <item>Play by play</item>
+        <item>Home Roster</item>
+        <item>Away Roster</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

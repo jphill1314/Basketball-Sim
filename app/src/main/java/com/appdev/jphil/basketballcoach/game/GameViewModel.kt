@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.game
 
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.*

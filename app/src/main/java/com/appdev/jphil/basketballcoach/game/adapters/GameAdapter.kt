@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.game
+package com.appdev.jphil.basketballcoach.game.adapters
 
 import android.content.res.Resources
 import android.support.v4.content.res.ResourcesCompat

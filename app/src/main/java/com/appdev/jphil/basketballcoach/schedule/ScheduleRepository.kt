@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.schedule
 
-import android.util.Log
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +16,7 @@ class ScheduleRepository @Inject constructor(
     private lateinit var presenter: ScheduleContract.Presenter
     private var games: List<Game>? = null
 
+    // TODO: change to just use GameEntities?
     override fun fetchSchedule() {
         GlobalScope.launch(Dispatchers.IO) {
             games = dbHelper.loadGamesForTeam(teamId)
