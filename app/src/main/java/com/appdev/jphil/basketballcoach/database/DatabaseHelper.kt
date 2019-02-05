@@ -55,13 +55,13 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
         return entity.createGame(homeTeam, awayTeam)
     }
 
-    fun saveTeam(team: Team, conferenceId: Int) {
+    fun saveTeam(team: Team) {
         team.roster.forEach { player -> database.playerDao().insertPlayer(PlayerEntity.from(player)) }
         database.teamDao().insertTeam(TeamEntity.from(team))
     }
 
     fun saveConference(conference: Conference) {
-        conference.teams.forEach { team -> saveTeam(team, conference.id) }
+        conference.teams.forEach { team -> saveTeam(team) }
         database.conferenceDao().insertConference(
             ConferenceEntity(
                 conference.id,
@@ -70,7 +70,15 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
         )
     }
 
-    fun saveGames(games: List< Game>) {
-        games.forEach { game -> database.gameDao().insertGame(GameEntity.from(game)) }
+    fun saveGames(games: List<Game>) {
+        games.forEach { game ->
+            database.gameDao().insertGame(GameEntity.from(game))
+            saveTeam(game.homeTeam)
+            saveTeam(game.awayTeam)
+        }
+    }
+
+    fun saveOnlyGames(games: List<Game>) {
+        games.forEach {game -> database.gameDao().insertGame(GameEntity.from(game)) }
     }
 }
