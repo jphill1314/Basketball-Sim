@@ -404,4 +404,46 @@ class Game(
         homeTeam.pauseGame()
         awayTeam.pauseGame()
     }
+
+    fun getTeamStats(): List<TeamStatLine> {
+        val stats = mutableListOf<TeamStatLine>()
+        stats.add(TeamStatLine(homeTeam.name, awayTeam.name, ""))
+        stats.add(
+            TeamStatLine(
+            "${homeTeam.twoPointMakes}/${homeTeam.twoPointAttempts}",
+            "${awayTeam.twoPointMakes}/${awayTeam.twoPointAttempts}",
+                "2FGs"
+            ))
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.threePointMakes}/${homeTeam.threePointAttempts}",
+                "${awayTeam.threePointMakes}/${awayTeam.threePointAttempts}",
+                "3FGs"
+            ))
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.freeThrowMakes}/${homeTeam.freeThrowShots}",
+                "${awayTeam.freeThrowMakes}/${awayTeam.freeThrowShots}",
+                "FTs"
+            ))
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.offensiveRebounds} - ${homeTeam.defensiveFouls}",
+                "${awayTeam.offensiveRebounds} - ${awayTeam.defensiveRebounds}",
+                "Rebounds"
+            ))
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.turnovers}",
+                "${awayTeam.turnovers}",
+                "Turnovers"
+            ))
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.offensiveFouls} - ${homeTeam.defensiveFouls}",
+                "${awayTeam.offensiveFouls} - ${awayTeam.defensiveFouls}",
+                "Fouls"
+            ))
+        return stats
+    }
 }
