@@ -215,6 +215,14 @@ class Player(
         timePlayed = 0
     }
 
+    fun pauseGame() {
+        inGame = false
+    }
+
+    fun resumeGame() {
+        inGame = true
+    }
+
     fun isInFoulTrouble(half: Int, timeRemaining: Int): Boolean {
         return if (half == 1) {
             fouls > 1

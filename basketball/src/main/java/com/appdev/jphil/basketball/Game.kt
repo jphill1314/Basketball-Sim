@@ -394,4 +394,14 @@ class Game(
         val sec = timeRemaining - min * 60
         return if (sec > 9) "$min:$sec ($shotClock)" else "$min:0$sec ($shotClock)"
     }
+
+    fun pauseGame() {
+        homeTeam.pauseGame()
+        awayTeam.pauseGame()
+    }
+
+    fun resumeGame() {
+        homeTeam.pauseGame()
+        awayTeam.pauseGame()
+    }
 }

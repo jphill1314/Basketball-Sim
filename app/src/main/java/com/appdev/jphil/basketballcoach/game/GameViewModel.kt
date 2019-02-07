@@ -26,6 +26,7 @@ class GameViewModel(
                 }.join()
             }
             nullGame?.let { game ->
+                game.resumeGame()
                 updateGame(game)
 
                 // Simulate the game play-by-play updating the view each time
