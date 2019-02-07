@@ -15,7 +15,7 @@ class Team(
     val conferenceId: Int// for use in games
 ) {
 
-    val roster = players // for use everywhere else
+    val roster: MutableList<Player> // for use everywhere else
     var teamRating: Int = 0
 
     var twoPointAttempts = 0
@@ -33,8 +33,10 @@ class Team(
     val r = Random()
 
     init {
-        teamRating = calculateTeamRating()
+        roster = mutableListOf()
+        roster.addAll(players)
         roster.sortBy { it.rosterIndex }
+        teamRating = calculateTeamRating()
     }
 
     fun getPlayerAtPosition(position: Int): Player {

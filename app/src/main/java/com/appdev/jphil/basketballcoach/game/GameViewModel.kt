@@ -46,7 +46,7 @@ class GameViewModel(
                             withContext(Dispatchers.Main) {
                                 updateGame(game)
                             }
-                            Thread.sleep(1500)
+                            Thread.sleep(500)
                         }
                         if (isActive) {
                             game.half++
