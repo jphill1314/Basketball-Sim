@@ -19,6 +19,7 @@ import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
+import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_game.view.*
@@ -33,6 +34,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var gameAdapter: GameAdapter
     private val homeStatsAdapter = GameStatsAdapter(emptyList())
     private val awayStatsAdapter = GameStatsAdapter(emptyList())
+    private val teamStatsAdapter = GameTeamStatsAdapter(emptyList())
 
     private val homeScore: TextView by lazy { view!!.home_score }
     private val awayScore: TextView by lazy { view!!.away_score }
@@ -112,6 +114,9 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
         homeStatsAdapter.notifyDataSetChanged()
         awayStatsAdapter.players = game.awayTeam.roster
         awayStatsAdapter.notifyDataSetChanged()
+
+        teamStatsAdapter.stats = game.getTeamStats()
+        teamStatsAdapter.notifyDataSetChanged()
     }
 
     override fun onPause() {
@@ -136,10 +141,11 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun selectView() {
-        when (viewId) {
-            1 -> recyclerView.adapter = homeStatsAdapter
-            2 -> recyclerView.adapter = awayStatsAdapter
-            else -> recyclerView.adapter = gameAdapter
+        recyclerView.adapter = when (viewId) {
+            1 -> homeStatsAdapter
+            2 -> awayStatsAdapter
+            3 -> teamStatsAdapter
+            else -> gameAdapter
         }
     }
 
