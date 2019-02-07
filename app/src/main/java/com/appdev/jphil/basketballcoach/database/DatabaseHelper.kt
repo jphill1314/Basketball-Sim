@@ -72,6 +72,7 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
 
     fun saveGames(games: List<Game>) {
         games.forEach { game ->
+            game.pauseGame()
             database.gameDao().insertGame(GameEntity.from(game))
             saveTeam(game.homeTeam)
             saveTeam(game.awayTeam)

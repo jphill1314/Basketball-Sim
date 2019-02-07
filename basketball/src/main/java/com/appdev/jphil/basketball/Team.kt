@@ -67,6 +67,14 @@ class Team(
         players.addAll(roster)
     }
 
+    fun pauseGame() {
+        players.forEach { it.pauseGame() }
+    }
+
+    fun resumeGame() {
+        players.forEach { it.resumeGame() }
+    }
+
     fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {
         for (index in players.indices) {
             if (index < 5) {
