@@ -44,12 +44,10 @@ class Pass(
     override fun generatePlay(): Int {
         setPasserAndTarget()
 
-        val passSuccess = (passer.passing + target.offBallMovement) / (r.nextInt(randomBound) + 1)
+        val passSuccess = (passer.passing + target.offBallMovement) / (r.nextInt(randomBound / 2) + 1)
         val stealSuccess =
-            ((passDefender.onBallDefense + passDefender.stealing + targetDefender.offBallDefense + targetDefender.stealing) / 2) / (r.nextInt(
-                randomBound
-            ) + 1)
-
+            ((passDefender.onBallDefense + passDefender.stealing + targetDefender.offBallDefense + targetDefender.stealing) / 2) /
+                    (r.nextInt(randomBound) + 1)
 //        println("def agro: ${defense.aggression} pass agro: ${passDefender.aggressiveness} target agro: ${targetDefender.aggressiveness}")
 //        println("pass success: $passSuccess vs. pass fail:${((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15)}")
         if (passSuccess >= ((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15) || location == -1) {
