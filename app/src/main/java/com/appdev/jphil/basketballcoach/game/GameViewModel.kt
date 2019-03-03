@@ -9,6 +9,8 @@ class GameViewModel(
     private val dbHelper: DatabaseHelper
 ): ViewModel() {
     var gameId = -1
+    var simSpeed = 1000L
+    var pauseGame = false
     private var nullGame: Game? = null
     private lateinit var gameSim: Job
     private var saveGame: Job? = null
@@ -46,7 +48,10 @@ class GameViewModel(
                             withContext(Dispatchers.Main) {
                                 updateGame(game)
                             }
-                            Thread.sleep(500)
+                            Thread.sleep(simSpeed)
+                            while (pauseGame) {
+                                Thread.sleep(100)
+                            }
                         }
                         if (isActive) {
                             game.half++
