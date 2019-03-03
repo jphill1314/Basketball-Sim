@@ -96,10 +96,11 @@ class Press(
         playerWithBall = targetPos
 
         timeChange = when {
-            (passSuccess > defSuccess + 100) -> {
+            (passSuccess > defSuccess + 50) -> {
                 // TODO: great pass -> fast break -> easy bucket
                 playAsString += " and it's a great pass! ${target.firstName} has a clear path to the basket!"
                 location = 1
+                leadToFastBreak = true
                 timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
             }
             (target.ballHandling + r.nextInt(randomBound) > defense.pressAggression + r.nextInt(randomBound / consecutivePresses)) -> {

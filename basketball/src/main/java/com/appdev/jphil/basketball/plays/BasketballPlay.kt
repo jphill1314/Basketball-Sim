@@ -23,6 +23,8 @@ abstract class BasketballPlay(
     val offense: Team = if (homeTeamHasBall) homeTeam else awayTeam
     val defense: Team = if (homeTeamHasBall) awayTeam else homeTeam
 
+    var leadToFastBreak = false
+
     lateinit var foul: Foul
 
     /**
