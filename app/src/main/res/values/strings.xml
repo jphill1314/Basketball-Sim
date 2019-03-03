@@ -26,6 +26,20 @@
         <item>Team Stats</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="offense">Offense</string>
+    <string name="pace">Pace</string>
+    <string name="faster">Faster</string>
+    <string name="slower">Slower</string>
+    <string name="favors_threes">Favors threes</string>
+    <string name="more_threes">More threes</string>
+    <string name="fewer_threes">Fewer threes</string>
+
+    <string name="defense">Defense</string>
+    <string name="aggression">Aggression</string>
+    <string name="more_aggressive">More aggressive</string>
+    <string name="less_aggressive">Less aggressive</string>
+    <string name="press_frequency">Press frequency</string>
+    <string name="always_press">Always press</string>
+    <string name="never_press">Never press</string>
+    <string name="press_aggression">Press aggression</string>
 </resources>

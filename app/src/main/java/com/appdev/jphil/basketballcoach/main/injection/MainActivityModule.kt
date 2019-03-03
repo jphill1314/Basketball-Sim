@@ -7,6 +7,8 @@ import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.roster.RosterModule
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleModule
+import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
+import com.appdev.jphil.basketballcoach.strategy.StrategyModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -25,4 +27,7 @@ abstract class MainActivityModule {
     @ContributesAndroidInjector(modules = [GameModule::class])
     abstract fun gameFragment(): GameFragment
 
+    @PerFragment
+    @ContributesAndroidInjector(modules = [StrategyModule::class])
+    abstract fun strategyFragment(): StrategyFragment
 }

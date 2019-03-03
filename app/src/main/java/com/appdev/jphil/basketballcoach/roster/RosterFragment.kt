@@ -20,10 +20,15 @@ class RosterFragment : Fragment(), RosterContract.View {
     lateinit var presenter: RosterContract.Presenter
     private lateinit var adapter: RosterAdapter
     private lateinit var recyclerView: RecyclerView
-    var teamId = 1
+    var teamId = -1
 
-    override fun onStart() {
-        super.onStart()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(teamId == -1) {
+            savedInstanceState?.let {
+                teamId = it.getInt("teamId")
+            }
+        }
         AndroidSupportInjection.inject(this)
     }
 
@@ -48,6 +53,11 @@ class RosterFragment : Fragment(), RosterContract.View {
         adapter = RosterAdapter(players, resources)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("teamId", teamId)
+        super.onSaveInstanceState(outState)
     }
 
     companion object {
