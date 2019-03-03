@@ -86,6 +86,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
         view.away_name.text = awayTeamName
 
         view.seek_bar.setOnSeekBarChangeListener(this)
+        view.seek_bar.progress = simSpeed
 
         return view
     }

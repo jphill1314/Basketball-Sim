@@ -21,17 +21,27 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
-    var teamId = 1
+    var teamId = -1
     private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(resources) }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(teamId == -1) {
+            savedInstanceState?.let {
+                teamId = it.getInt("teamId")
+            }
+        }
         AndroidSupportInjection.inject(this)
     }
 
     override fun onResume() {
         super.onResume()
         presenter.onViewAttached(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.onViewDetached()
     }
 
     override fun onCreateView(
@@ -55,6 +65,11 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
             ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName))
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("teamId", teamId)
+        super.onSaveInstanceState(outState)
     }
 
     companion object {
