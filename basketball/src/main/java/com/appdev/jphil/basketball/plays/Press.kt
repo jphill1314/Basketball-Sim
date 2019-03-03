@@ -13,7 +13,8 @@ class Press(
     playerWithBall: Int,
     location: Int,
     private val deadBall: Boolean,
-    private val passingUtils: PassingUtils
+    private val passingUtils: PassingUtils,
+    private val consecutivePresses: Int // must be at least 1
 ) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
     private var playerStartsWithBall = playerWithBall
@@ -44,19 +45,29 @@ class Press(
         println("PRESS")
         getPasserAndTarget()
 
-        val passSuccess = passer.passing + target.offBallMovement + r.nextInt(randomBound)
+        val passSuccess = ((passer.passing + target.offBallMovement) /
+                (r.nextInt(randomBound) + 1.0)).toInt() + r.nextInt(randomBound)
         val defSuccess = ((passDefender.onBallDefense + targetDefender.onBallDefense) /
-                (101.0 - defense.pressAggression)).toInt() + r.nextInt(randomBound)
+                (r.nextInt(defense.pressAggression) + 1.0)).toInt() + r.nextInt(randomBound)
 
-        // if successful -> chance to walk up court, chance for fast break
-        if (passSuccess > defSuccess) {
-            successfulPass(passSuccess, defSuccess)
-        } else if (defSuccess > passSuccess + 25 /* number is arbitrary should be tuned a bit, maybe higher ceiling but random?*/) {
-          stolenPass()
-        } else if (defSuccess > passSuccess + 10) {
-            badPass()
-        } else if (!deadBall) {
-            justDribbling()
+        playAsString = when (consecutivePresses) {
+            1 -> "${defense.name} will pick up the press here as "
+            else -> ""
+        }
+
+        when {
+            passSuccess > defSuccess -> successfulPass(passSuccess, defSuccess)
+            defSuccess > (passSuccess + 40) -> {
+                stolenPass()
+                println("stolen pass")
+            }
+            defSuccess > (passSuccess + 25) -> {
+                badPass()
+                println("bad pass")
+            }
+            !deadBall -> justDribbling()
+            else -> successfulPass(passSuccess, defSuccess)
+            // TODO: 5 second violation
         }
 
         timeRemaining -= timeChange
@@ -77,37 +88,42 @@ class Press(
     }
 
     private fun successfulPass(passSuccess: Int, defSuccess: Int) {
-        playAsString = if (deadBall) {
+        playAsString += if (deadBall) {
             "${passer.fullName} inbounds the ball to ${target.fullName}"
         } else {
             "${passer.fullName} passes the ball to ${target.fullName}"
         }
         playerWithBall = targetPos
 
-        timeChange = if (passSuccess > defSuccess + 25) {
-            // TODO: great pass -> fast break -> easy bucket
-            playAsString += " and it's a great pass! ${target.firstName} has a clear path to the basket!"
-            location = 1
-            timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
-        } else if (target.ballHandling > defense.pressAggression + r.nextInt(50)) {
-            // press broken -> walk ball up court
-            playAsString += " and ${defense.name}'s press relents, so ${target.firstName} walks the ball into the frontcourt"
-            location = 1
-            timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
-        } else if (r.nextInt(10) > 6) {
-            // ball passed into frontcourt
-            playAsString += " who is in the frontcourt, breaking the press."
-            location = 1
-            timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
-        } else {
-            // ball still in backcourt
-            playAsString += "."
-            timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        timeChange = when {
+            (passSuccess > defSuccess + 100) -> {
+                // TODO: great pass -> fast break -> easy bucket
+                playAsString += " and it's a great pass! ${target.firstName} has a clear path to the basket!"
+                location = 1
+                timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
+            }
+            (target.ballHandling + r.nextInt(randomBound) > defense.pressAggression + r.nextInt(randomBound / consecutivePresses)) -> {
+                // press broken -> walk ball up court
+                playAsString += " and ${defense.name}'s press relents, so ${target.firstName} walks the ball into the frontcourt"
+                location = 1
+                timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+            }
+            (r.nextInt(10) > 6 - consecutivePresses) -> {
+                // ball passed into frontcourt
+                playAsString += " who is in the frontcourt, breaking the press."
+                location = 1
+                timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+            }
+            else -> {
+                // ball still in backcourt
+                playAsString += "."
+                timeUtil.smartTimeChange(3 - ((offense.pace / 90.0) * r.nextInt(2)).toInt(), shotClock)
+            }
         }
     }
 
     private fun stolenPass() {
-        playAsString = if (deadBall) {
+        playAsString += if (deadBall) {
             "${passer.fullName} inbounds the ball to ${target.fullName}"
         } else {
             "${passer.fullName} passes the ball to ${target.fullName}"
@@ -131,7 +147,7 @@ class Press(
     }
 
     private fun justDribbling() {
-        playAsString = "${passer.fullName} is dribbling with the ball."
-        timeChange = timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        playAsString += "${passer.fullName} is dribbling with the ball."
+        timeChange = timeUtil.smartTimeChange(2 - ((offense.pace / 90.0) * r.nextInt(1)).toInt(), shotClock)
     }
 }
