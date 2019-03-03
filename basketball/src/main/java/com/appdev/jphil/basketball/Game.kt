@@ -33,6 +33,8 @@ class Game(
     var location = 0
     var possessions = 0
     var inProgress = false
+    var consecutivePresses = 1
+    var timeInBackcourt = 0
 
     val gamePlays = mutableListOf<BasketballPlay>()
 
@@ -153,17 +155,36 @@ class Game(
 
         manageFouls(plays[plays.size - 1].foul)
 
-        if(shotClock == 0){
-            if(homeTeamHasBall){
-                homeTeam.turnovers++
+        if(shotClock == 0 && timeRemaining > 0){
+            plays[plays.size - 1].playAsString += if (homeTeamHasBall) {
+                " ${homeTeam.name} have turned the ball over on a shot clock violation!"
+            } else {
+                " ${awayTeam.name} have turned the ball over on a shot clock violation!"
             }
-            else{
-                awayTeam.turnovers++
+            handleTurnover()
+        } else if (timeInBackcourt >= 10 && location == -1) {
+            val overshoot = timeInBackcourt - 10
+            timeRemaining += overshoot
+            shotClock += overshoot
+            plays[plays.size - 1].playAsString += if (homeTeamHasBall) {
+                " ${homeTeam.name} have turned the ball over on a 10 second violation!"
+            } else {
+                " ${awayTeam.name} have turned the ball over on a 10 second violation!"
             }
-            changePossession()
+            handleTurnover()
         }
 
         return plays
+    }
+
+    private fun handleTurnover() {
+        if(homeTeamHasBall){
+            homeTeam.turnovers++
+        }
+        else{
+            awayTeam.turnovers++
+        }
+        changePossession()
     }
 
     private fun getFreeThrows(): MutableList<BasketballPlay>{
@@ -189,14 +210,19 @@ class Game(
     }
 
     private fun getBackcourtPlay(): MutableList<BasketballPlay> {
+        val liveBallModifier = when {
+            deadball -> 0
+            consecutivePresses != 1 -> 0
+            else -> 50
+        }
         val press: Boolean = if (homeTeamHasBall) {
-            r.nextInt(100) < awayTeam.pressFrequency
+            r.nextInt(100) < awayTeam.pressFrequency - liveBallModifier
         } else {
-            r.nextInt(100) < homeTeam.pressFrequency
+            r.nextInt(100) < homeTeam.pressFrequency - liveBallModifier
         }
 
         val backcourtPlays: MutableList<BasketballPlay> = if (press) {
-            mutableListOf(Press(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
+            mutableListOf(Press(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils, consecutivePresses++))
         } else {
             mutableListOf(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
         }
@@ -204,10 +230,14 @@ class Game(
         if (backcourtPlays.last().type != Plays.FOUL) {
             deadball = false
         }
+
+        timeInBackcourt += timeRemaining - backcourtPlays[0].timeRemaining
+
         return backcourtPlays
     }
 
     private fun getFrontcourtPlay(): MutableList<BasketballPlay> {
+        consecutivePresses = 1
         val shotUrgency: Int = if(homeTeamHasBall) lengthOfHalf / homeTeam.pace else lengthOfHalf / awayTeam.pace
         val plays = mutableListOf<BasketballPlay>()
 
@@ -259,6 +289,7 @@ class Game(
         if(foul.foulType != FoulType.CLEAN) {
             deadball = true
             madeShot = false // allow media timeouts to be called
+            timeInBackcourt = 0 // reset time for 10 second call
 
             if(foul.isOnDefense){
                 if(homeTeamHasBall){
@@ -371,6 +402,7 @@ class Game(
     }
 
     private fun changePossession(){
+        timeInBackcourt = 0
         shotClock = if(timeRemaining > lengthOfShotClock) lengthOfShotClock else timeRemaining
         homeTeamHasBall = !homeTeamHasBall
         if(location != 0){
