@@ -10,7 +10,7 @@ class FreeThrows(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    val numberOfShots: Int
+    private val numberOfShots: Int
 ) :
     BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
@@ -49,17 +49,25 @@ class FreeThrows(
                     madeLastShot = false
                 }
             }
-            playAsString = if (numberOfShots > 1) {
-                if (made == 0) {
-                    "${shooter.fullName} misses all $numberOfShots of his free throws!"
-                } else {
-                    "${shooter.fullName} makes $made of $numberOfShots free throws."
+            playAsString = when (numberOfShots) {
+                1 -> {
+                    when (made) {
+                        0 -> "${shooter.firstName} misses his free throw"
+                        else -> "${shooter.firstName} makes his free throw"
+                    }
                 }
-            } else {
-                if (made == 1) {
-                    "${shooter.fullName} makes his free throw."
-                } else {
-                    "${shooter.fullName} misses his free throw."
+                2 -> {
+                    when (made) {
+                        0 -> "${shooter.firstName} misses both of his free throws"
+                        1 -> "${shooter.firstName} makes one of his free throws"
+                        else -> "${shooter.firstName} makes both of his free throws"
+                    }
+                }
+                else -> {
+                    when (made) {
+                        0 -> "${shooter.firstName} misses all $numberOfShots of his free throws"
+                        else -> "${shooter.firstName} makes $made of $numberOfShots of his free throws"
+                    }
                 }
             }
         } else {
@@ -87,12 +95,10 @@ class FreeThrows(
                 shooter.freeThrowShots++
                 madeLastShot = false
             }
-            playAsString = if (made == 0) {
-                "${shooter.fullName} misses the front end of the 1 and 1."
-            } else if (made == 1) {
-                "${shooter.fullName} makes his first shot, but misses the second."
-            } else {
-                "${shooter.fullName} makes both shots from the 1 and 1."
+            playAsString = when (made) {
+                0 -> "${shooter.fullName} misses the front end of the 1 and 1."
+                1 -> "${shooter.fullName} makes his first shot, but misses the second."
+                else -> "${shooter.fullName} makes both shots from the 1 and 1."
             }
         }
         return made

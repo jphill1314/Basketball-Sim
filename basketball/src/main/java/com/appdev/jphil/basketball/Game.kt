@@ -203,9 +203,27 @@ class Game(
     }
 
     private fun getGamePlay(): MutableList<BasketballPlay>{
-        return when(location) {
-            -1 -> getBackcourtPlay()
+        return when {
+            gamePlays.size != 0 && gamePlays[gamePlays.size - 1].leadToFastBreak -> getFastBreak()
+            location == -1 -> getBackcourtPlay()
             else -> getFrontcourtPlay()
+        }
+    }
+
+    private fun getFastBreak(): MutableList<BasketballPlay> {
+        val play = FastBreak(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location)
+        return if (play.points == 0) {
+            mutableListOf(play, Rebound(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location))
+        } else {
+            madeShot = true
+            deadball = true
+            if(homeTeamHasBall){
+                homeScore += play.points
+            }
+            else{
+                awayScore += play.points
+            }
+            mutableListOf(play)
         }
     }
 
