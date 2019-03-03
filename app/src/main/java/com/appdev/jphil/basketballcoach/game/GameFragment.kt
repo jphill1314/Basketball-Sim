@@ -11,10 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
@@ -25,10 +22,11 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_game.view.*
 import javax.inject.Inject
 
-class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnSeekBarChangeListener {
 
     private var gameId: Int = 0
     private var viewId = 0
+    private var simSpeed = 50
     private var homeTeamName = "error"
     private var awayTeamName = "error"
     private lateinit var gameAdapter: GameAdapter
@@ -63,6 +61,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
             homeTeamName = it.getString("homeTeam") ?: "error"
             awayTeamName = it.getString("awayTeam") ?: "error"
             viewId = it.getInt("viewId", 0)
+            simSpeed = it.getInt("simSpeed", 50)
             if (gameId == 0) {
                 gameId = it.getInt("gameId", 0)
             }
@@ -85,6 +84,9 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         view.home_name.text = homeTeamName
         view.away_name.text = awayTeamName
+
+        view.seek_bar.setOnSeekBarChangeListener(this)
+
         return view
     }
 
@@ -129,6 +131,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
         outState.putString("awayTeam", awayTeamName)
         outState.putInt("gameId", gameId)
         outState.putInt("viewId", viewId)
+        outState.putInt("simSpeed", simSpeed)
 
         super.onSaveInstanceState(outState)
     }
@@ -138,6 +141,19 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         viewId = position
         selectView()
+    }
+
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        simSpeed = progress
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        // no op
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        viewModel.simSpeed = (100 - simSpeed) * 20L
+        viewModel.pauseGame = simSpeed == 0
     }
 
     private fun selectView() {
