@@ -8,6 +8,8 @@ interface ScheduleContract {
     interface View : MVPContract.View {
         fun displaySchedule(games: List<Game>)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String)
+        fun showProgressBar()
+        fun hideProgressBar()
     }
 
     interface Presenter : MVPContract.Presenter<View> {
@@ -15,10 +17,14 @@ interface ScheduleContract {
         fun onScheduleLoaded(games: List<Game>)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String)
         fun onFABClicked()
+        fun simulateToGame(gameId: Int)
+        fun simulateGame(gameId: Int)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
         fun fetchSchedule()
         fun simulateNextGame()
+        fun simulateToGame(gameId: Int)
+        fun simulateGame(gameId: Int)
     }
 }

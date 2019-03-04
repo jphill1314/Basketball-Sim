@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -22,7 +21,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
     var teamId = -1
-    private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(resources) }
+    private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(resources, presenter) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +64,14 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
             ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName))
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    override fun showProgressBar() {
+        view?.progress_bar?.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBar() {
+        view?.progress_bar?.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

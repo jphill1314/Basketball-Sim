@@ -18,6 +18,7 @@ class SchedulePresenter @Inject constructor(
     }
 
     override fun onScheduleLoaded(games: List<Game>) {
+        view?.hideProgressBar()
         view?.displaySchedule(games)
     }
 
@@ -27,6 +28,16 @@ class SchedulePresenter @Inject constructor(
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String) {
         view?.startGameFragment(gameId, homeName, awayName)
+    }
+
+    override fun simulateToGame(gameId: Int) {
+        view?.showProgressBar()
+        repository.simulateToGame(gameId)
+    }
+
+    override fun simulateGame(gameId: Int) {
+        view?.showProgressBar()
+        repository.simulateGame(gameId)
     }
 
     override fun onViewAttached(view: ScheduleContract.View) {
