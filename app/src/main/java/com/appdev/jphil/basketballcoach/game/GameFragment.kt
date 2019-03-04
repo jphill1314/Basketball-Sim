@@ -22,16 +22,17 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_game.view.*
 import javax.inject.Inject
 
-class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnSeekBarChangeListener {
+class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     private var gameId: Int = 0
     private var viewId = 0
+    private var rosterViewId = 0
     private var simSpeed = 50
     private var homeTeamName = "error"
     private var awayTeamName = "error"
     private lateinit var gameAdapter: GameAdapter
-    private val homeStatsAdapter = GameStatsAdapter(emptyList())
-    private val awayStatsAdapter = GameStatsAdapter(emptyList())
+    private lateinit var homeStatsAdapter: GameStatsAdapter
+    private lateinit var awayStatsAdapter: GameStatsAdapter
     private val teamStatsAdapter = GameTeamStatsAdapter(emptyList())
 
     private val homeScore: TextView by lazy { view!!.home_score }
@@ -40,6 +41,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
     private val awayFouls: TextView by lazy { view!!.away_fouls }
     private val gameStatus: TextView by lazy { view!!.game_half }
     private val gameTime: TextView by lazy { view!!.game_time }
+    private lateinit var rosterSpinner: Spinner
     private lateinit var recyclerView: RecyclerView
 
     @Inject
@@ -49,6 +51,9 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+
+        homeStatsAdapter = GameStatsAdapter(emptyList(), resources)
+        awayStatsAdapter = GameStatsAdapter(emptyList(), resources)
     }
 
     override fun onCreateView(
@@ -61,6 +66,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
             homeTeamName = it.getString("homeTeam") ?: "error"
             awayTeamName = it.getString("awayTeam") ?: "error"
             viewId = it.getInt("viewId", 0)
+            rosterViewId = it.getInt("rosterViewId", 0)
             simSpeed = it.getInt("simSpeed", 50)
             if (gameId == 0) {
                 gameId = it.getInt("gameId", 0)
@@ -70,7 +76,6 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
         gameAdapter = GameAdapter(resources)
         recyclerView = view.recycler_view
         recyclerView.layoutManager = LinearLayoutManager(context)
-        selectView()
 
         ArrayAdapter.createFromResource(
             requireContext(),
@@ -80,7 +85,30 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             view.spinner.adapter = adapter
         }
-        view.spinner.onItemSelectedListener = this
+        view.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectView(position)
+            }
+        }
+
+        rosterSpinner = view.findViewById(R.id.roster_spinner)
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.game_roster_views,
+            android.R.layout.simple_spinner_dropdown_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            rosterSpinner.adapter = adapter
+        }
+        rosterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectRosterView(position)
+            }
+        }
 
         view.home_name.text = homeTeamName
         view.away_name.text = awayTeamName
@@ -88,6 +116,7 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
         view.seek_bar.setOnSeekBarChangeListener(this)
         view.seek_bar.progress = simSpeed
 
+        selectView(viewId)
         return view
     }
 
@@ -113,9 +142,9 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
         gameAdapter.plays = game.gamePlays.reversed()
         gameAdapter.notifyDataSetChanged()
 
-        homeStatsAdapter.players = game.homeTeam.roster
+        homeStatsAdapter.players = game.homeTeam.players
         homeStatsAdapter.notifyDataSetChanged()
-        awayStatsAdapter.players = game.awayTeam.roster
+        awayStatsAdapter.players = game.awayTeam.players
         awayStatsAdapter.notifyDataSetChanged()
 
         teamStatsAdapter.stats = game.getTeamStats()
@@ -132,16 +161,10 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
         outState.putString("awayTeam", awayTeamName)
         outState.putInt("gameId", gameId)
         outState.putInt("viewId", viewId)
+        outState.putInt("rosterViewId", rosterViewId)
         outState.putInt("simSpeed", simSpeed)
 
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) { /* no op */ }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        viewId = position
-        selectView()
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -157,13 +180,31 @@ class GameFragment : Fragment(), AdapterView.OnItemSelectedListener, SeekBar.OnS
         viewModel.pauseGame = simSpeed == 0
     }
 
-    private fun selectView() {
+    private fun selectView(id: Int) {
+        viewId = id
         recyclerView.adapter = when (viewId) {
             1 -> homeStatsAdapter
             2 -> awayStatsAdapter
             3 -> teamStatsAdapter
             else -> gameAdapter
         }
+
+        rosterSpinner.visibility = if (recyclerView.adapter is GameStatsAdapter) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        selectRosterView(0)
+        rosterSpinner.setSelection(rosterViewId)
+    }
+
+    private fun selectRosterView(viewId: Int) {
+        rosterViewId = viewId
+        homeStatsAdapter.rosterViewId = rosterViewId
+        homeStatsAdapter.notifyDataSetChanged()
+        awayStatsAdapter.rosterViewId = rosterViewId
+        awayStatsAdapter.notifyDataSetChanged()
     }
 
     companion object {
