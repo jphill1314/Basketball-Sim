@@ -11,6 +11,7 @@
 
     <string name="starting_lineup">Starting Lineup</string>
     <string name="bench">Bench</string>
+    <string name="on_the_floor">On the floor</string>
 
     <string name="game_number">Game %d</string>
     <string name="in_progress">In progress</string>
@@ -25,6 +26,30 @@
         <item>Away Roster</item>
         <item>Team Stats</item>
     </string-array>
+
+    <string-array name="game_roster_views">
+        <item>Roster</item>
+        <item>Offensive stats</item>
+        <item>Defensive stats</item>
+    </string-array>
+
+    <string name="name">Name</string>
+    <string name="pos">Pos</string>
+    <string name="minutes">Minutes</string>
+    <string name="player_fouls">Fouls</string>
+    <string name="condition">Cond</string>
+    <string name="rating">Rating</string>
+
+    <string name="x_slash_y">%1$d/%2$d</string>
+    <string name="two_fg">2FG</string>
+    <string name="three_fg">3FG</string>
+    <string name="ft_fg">FT</string>
+    <string name="assists">Assists</string>
+
+    <string name="ob">OB</string>
+    <string name="db">DB</string>
+    <string name="steals">Steals</string>
+    <string name="to">TO</string>
 
     <string name="offense">Offense</string>
     <string name="pace">Pace</string>
