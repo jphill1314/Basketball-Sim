@@ -47,6 +47,36 @@ class ScheduleRepository @Inject constructor(
         }
     }
 
+    override fun simulateToGame(gameId: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            var id = 1
+            var continueSim = true
+            while (continueSim) {
+                continueSim = gameId != id
+                if (continueSim) {
+                    val game = dbHelper.loadGameById(id++)
+                    if (!game.isFinal) {
+                        game.simulateFullGame()
+                        dbHelper.saveGames(listOf(game))
+                    }
+                }
+            }
+            fetchSchedule()
+        }
+    }
+
+    override fun simulateGame(gameId: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            var id = 1
+            while (id <= gameId) {
+                val game = dbHelper.loadGameById(id++)
+                game.simulateFullGame()
+                dbHelper.saveGames(listOf(game))
+            }
+            fetchSchedule()
+        }
+    }
+
     override fun attachPresenter(presenter: ScheduleContract.Presenter) {
         this.presenter = presenter
     }
