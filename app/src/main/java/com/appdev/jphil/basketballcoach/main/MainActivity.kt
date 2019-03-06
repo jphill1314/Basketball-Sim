@@ -8,6 +8,7 @@ import android.view.MenuItem
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
+import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +17,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private var teamId = 1
+    private var conferenceId = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +50,7 @@ class MainActivity : DaggerAppCompatActivity() {
         val fragment: Fragment? = when (menuItem.itemId) {
             R.id.roster -> RosterFragment.newInstance(teamId)
             R.id.schedule -> ScheduleFragment.newInstance(teamId)
-            R.id.standings -> null
+            R.id.standings -> StandingsFragment.newInstance(conferenceId)
             R.id.recruiting -> null
             R.id.strategy -> StrategyFragment.newInstance(teamId)
             R.id.staff -> null

@@ -14,13 +14,11 @@ class ScheduleRepository @Inject constructor(
 ) : ScheduleContract.Repository {
 
     private lateinit var presenter: ScheduleContract.Presenter
-    private var games: List<Game>? = null
 
-    // TODO: change to just use GameEntities?
     override fun fetchSchedule() {
         GlobalScope.launch(Dispatchers.IO) {
-            games = dbHelper.loadGamesForTeam(teamId)
-            withContext(Dispatchers.Main) { presenter.onScheduleLoaded(games!!) }
+            val gameEntities = dbHelper.loadAllGameEntities()
+            withContext(Dispatchers.Main) { presenter.onScheduleLoaded(gameEntities) }
         }
     }
 

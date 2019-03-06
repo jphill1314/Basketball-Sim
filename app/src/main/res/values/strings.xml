@@ -69,4 +69,8 @@
     <string name="always_press">Always press</string>
     <string name="never_press">Never press</string>
     <string name="press_aggression">Press aggression</string>
+
+    <string name="standings_dash">%1$d-%2$d</string>
+    <string name="conf_w_l">Conf. W-L</string>
+    <string name="overall_w_l">Overall W-L</string>
 </resources>
