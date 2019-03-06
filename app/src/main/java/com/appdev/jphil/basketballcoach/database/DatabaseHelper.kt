@@ -47,6 +47,14 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
         return createGame(database.gameDao().getGameWithId(gameId))
     }
 
+    fun loadCompletedGameEntities(): List<GameEntity> {
+        return database.gameDao().getGamesWithIsFinal(true)
+    }
+
+    fun loadAllGameEntities(): List<GameEntity> {
+        return database.gameDao().getAllGames()
+    }
+
     private fun createGame(entity: GameEntity): Game {
         val homeTeam = database.teamDao().getTeamWithId(entity.homeTeamId)!!.
             createTeam(database.playerDao().getPlayersOnTeam(entity.homeTeamId))

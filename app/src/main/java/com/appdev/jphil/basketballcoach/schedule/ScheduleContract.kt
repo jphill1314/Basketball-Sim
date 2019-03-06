@@ -1,12 +1,12 @@
 package com.appdev.jphil.basketballcoach.schedule
 
-import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.MVPContract
+import com.appdev.jphil.basketballcoach.database.game.GameEntity
 
 interface ScheduleContract {
 
     interface View : MVPContract.View {
-        fun displaySchedule(games: List<Game>)
+        fun displaySchedule(games: List<ScheduleDataModel>)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String)
         fun showProgressBar()
         fun hideProgressBar()
@@ -14,7 +14,7 @@ interface ScheduleContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchSchedule()
-        fun onScheduleLoaded(games: List<Game>)
+        fun onScheduleLoaded(games: List<GameEntity>)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String)
         fun onFABClicked()
         fun simulateToGame(gameId: Int)

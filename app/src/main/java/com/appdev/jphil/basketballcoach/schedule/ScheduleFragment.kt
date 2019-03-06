@@ -54,7 +54,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         return view
     }
 
-    override fun displaySchedule(games: List<Game>) {
+    override fun displaySchedule(games: List<ScheduleDataModel>) {
         adapter.games = games
         adapter.notifyDataSetChanged()
     }

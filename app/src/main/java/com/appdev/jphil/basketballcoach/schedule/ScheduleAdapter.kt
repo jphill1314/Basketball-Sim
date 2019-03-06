@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.list_item_schedule.view.*
 
 class ScheduleAdapter(private val resources: Resources, private val presenter: ScheduleContract.Presenter) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
 
-    var games: List<Game>? = null
+    var games: List<ScheduleDataModel>? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val homeName: TextView = view.home_name
@@ -39,13 +39,19 @@ class ScheduleAdapter(private val resources: Resources, private val presenter: S
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         games?.let {
             val game = it[position]
-            viewHolder.homeName.text = game.homeTeam.name
-            viewHolder.awayName.text = game.awayTeam.name
-            viewHolder.homeScore.text = game.homeScore.toString()
-            viewHolder.awayScore.text = game.awayScore.toString()
-            viewHolder.gameStatus.text = if (game.isFinal) resources.getString(R.string.game_final) else resources.getString(R.string.game_number, position + 1)
-            viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.id ?: 0) }
-            viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.id ?: 0) }
+            viewHolder.homeName.text = game.homeTeamName
+            viewHolder.awayName.text = game.awayTeamName
+            if (game.isFinal) {
+                viewHolder.homeScore.text = game.homeTeamScore.toString()
+                viewHolder.awayScore.text = game.awayTeamScore.toString()
+                viewHolder.gameStatus.text = resources.getString(R.string.game_final)
+            } else {
+                viewHolder.homeScore.text = game.homeTeamRecord
+                viewHolder.awayScore.text = game.awayTeamRecord
+                viewHolder.gameStatus.text = resources.getString(R.string.game_number, position + 1)
+            }
+            viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
+            viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
             viewHolder.itemView.setOnClickListener {
                 val vis = viewHolder.simGame.visibility
                 if (vis == View.VISIBLE) {

@@ -13,6 +13,9 @@ interface GameDao {
     @Query("SELECT * FROM GameEntity where id in (:gameId)")
     fun getGameWithId(gameId: Int): GameEntity
 
+    @Query("SELECT * FROM GameEntity where isFinal in (:isFinal)")
+    fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGames(games: List<GameEntity>)
 
