@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.list_item_schedule.view.*
 
 class ScheduleAdapter(
     private val resources: Resources,
-    private val presenter: ScheduleContract.Presenter
+    private val presenter: ScheduleContract.Presenter,
+    private val isUsersSchedule: Boolean
 ) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
 
     var games: List<ScheduleDataModel>? = null
@@ -53,16 +54,19 @@ class ScheduleAdapter(
                 viewHolder.awayScore.text = game.awayTeamRecord
                 viewHolder.gameStatus.text = resources.getString(R.string.game_number, position + 1)
             }
-            viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
-            viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
-            viewHolder.itemView.setOnClickListener {
-                val vis = viewHolder.simGame.visibility
-                if (vis == View.VISIBLE) {
-                    viewHolder.simGame.visibility = View.GONE
-                    viewHolder.simToGame.visibility = View.GONE
-                } else {
-                    viewHolder.simGame.visibility = View.VISIBLE
-                    viewHolder.simToGame.visibility = View.VISIBLE
+
+            if (isUsersSchedule) {
+                viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
+                viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
+                viewHolder.itemView.setOnClickListener {
+                    val vis = viewHolder.simGame.visibility
+                    if (vis == View.VISIBLE) {
+                        viewHolder.simGame.visibility = View.GONE
+                        viewHolder.simToGame.visibility = View.GONE
+                    } else {
+                        viewHolder.simGame.visibility = View.VISIBLE
+                        viewHolder.simToGame.visibility = View.VISIBLE
+                    }
                 }
             }
         }
