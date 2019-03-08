@@ -42,7 +42,7 @@ class RosterRepository @Inject constructor(
         val conferences = BasketballFactory.setupWholeBasketballWorld(teamFactory)
         conferences.forEach {
             dbHelper.saveConference(it)
-            dbHelper.saveOnlyGames(it.generateSchedule())
+            dbHelper.saveOnlyGames(it.generateSchedule(2018))
         }
     }
 

@@ -4,6 +4,7 @@ import android.arch.persistence.room.*
 
 @Dao
 interface PlayerDao {
+    // Player Entity
     @Query("SELECT * FROM PlayerEntity")
     fun getAllPlayers(): List<PlayerEntity>
 
@@ -18,4 +19,15 @@ interface PlayerDao {
 
     @Delete
     fun deletePlayer(playerEntity: PlayerEntity)
+
+
+    // Game Stats Entity
+    @Query("SELECT * FROM GameStatsEntity where playerId in (:playerId)")
+    fun getAllGamesForPlayer(playerId: Int): List<GameStatsEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertGameStats(stats: GameStatsEntity)
+
+    @Delete
+    fun deleteGameStats(gameStats: List<GameStatsEntity>)
 }

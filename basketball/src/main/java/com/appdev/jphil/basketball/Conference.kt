@@ -6,13 +6,13 @@ class Conference(
     val teams: List<Team>
 ) {
 
-    fun generateSchedule(): List<Game> {
+    fun generateSchedule(season: Int): List<Game> {
         val games = mutableListOf<Game>()
 
         for (x in 0 until teams.size) {
             for (y in 0 until teams.size) {
                 if (x != y) {
-                    games.add(Game(teams[x], teams[y], false))
+                    games.add(Game(teams[x], teams[y], false, season))
                 }
             }
         }
