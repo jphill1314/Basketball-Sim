@@ -13,15 +13,20 @@ import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener {
 
     private lateinit var drawerLayout: DrawerLayout
-    private var teamId = 1
-    private var conferenceId = 1
+    private var teamId = DEFAULT_TEAM_ID
+    private var conferenceId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        savedInstanceState?.let {
+            teamId = it.getInt(TEAM_ID_STRING, 1)
+            conferenceId = it.getInt(CONF_ID_STRING, 1)
+        }
 
         setSupportActionBar(toolbar)
         supportActionBar.let {
@@ -34,6 +39,12 @@ class MainActivity : DaggerAppCompatActivity() {
         if (savedInstanceState == null) {
             handleFragmentNavigation(nav_view.menu.getItem(0))
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putInt(TEAM_ID_STRING, teamId)
+        outState?.putInt(CONF_ID_STRING, conferenceId)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -50,7 +61,7 @@ class MainActivity : DaggerAppCompatActivity() {
         val fragment: Fragment? = when (menuItem.itemId) {
             R.id.roster -> RosterFragment.newInstance(teamId)
             R.id.schedule -> ScheduleFragment.newInstance(teamId)
-            R.id.standings -> StandingsFragment.newInstance(conferenceId)
+            R.id.standings -> StandingsFragment.newInstance(teamId, conferenceId)
             R.id.recruiting -> null
             R.id.strategy -> StrategyFragment.newInstance(teamId)
             R.id.staff -> null
@@ -67,5 +78,20 @@ class MainActivity : DaggerAppCompatActivity() {
 
         drawerLayout.closeDrawers()
         return true
+    }
+
+    override fun changeTeam(teamId: Int) {
+        this.teamId = teamId
+    }
+
+    override fun changeConference(conferenceId: Int, teamId: Int) {
+        this.conferenceId = conferenceId
+        this.teamId = teamId
+    }
+
+    companion object {
+        private const val TEAM_ID_STRING = "teamId"
+        private const val CONF_ID_STRING = "confId"
+        const val DEFAULT_TEAM_ID = -1
     }
 }

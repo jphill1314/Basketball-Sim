@@ -6,6 +6,7 @@ import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.TeamFactory
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.main.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -19,16 +20,18 @@ class RosterRepository @Inject constructor(
 ): RosterContract.Repository {
 
     private lateinit var presenter: RosterContract.Presenter
-    private var team: Team? = null
 
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
+            var team = if (teamId == MainActivity.DEFAULT_TEAM_ID) {
+                dbHelper.loadUserTeam()
+            } else {
+                dbHelper.loadTeamById(teamId)
+            }
+
             if (team == null) {
-                team = dbHelper.loadTeamById(teamId)
-                if (team == null) {
-                    createGame()
-                    team = dbHelper.loadTeamById(teamId)
-                }
+                createGame()
+                team = dbHelper.loadUserTeam()
             }
             withContext(Dispatchers.Main) { presenter.onDataFetched(team!!) }
         }

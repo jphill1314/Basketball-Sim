@@ -17,6 +17,7 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
     }
 
     override fun onDataFetched(team: Team) {
+        view?.updateTeamAndConference(team.teamId, team.conferenceId)
         view?.displayData(team.roster)
     }
 

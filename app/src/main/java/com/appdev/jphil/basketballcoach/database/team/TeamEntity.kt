@@ -28,7 +28,8 @@ data class TeamEntity(
     val offensiveFouls: Int,
     val defensiveFouls: Int,
     val freeThrowShots: Int,
-    val freeThrowMakes: Int
+    val freeThrowMakes: Int,
+    val isUser: Boolean
 ) {
 
     fun createTeam(players: List<PlayerEntity>): Team {
@@ -44,7 +45,8 @@ data class TeamEntity(
             aggression,
             pace,
             teamPlayers,
-            conferenceId
+            conferenceId,
+            isUser
         )
 
         team.twoPointAttempts = twoPointAttempts
@@ -84,7 +86,8 @@ data class TeamEntity(
                 team.offensiveFouls,
                 team.defensiveFouls,
                 team.freeThrowShots,
-                team.freeThrowMakes
+                team.freeThrowMakes,
+                team.isUser
             )
         }
     }
