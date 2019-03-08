@@ -213,6 +213,8 @@ class Player(
         defensiveStatMod = 0
         fatigue = 0.0
         timePlayed = 0
+
+        courtIndex = rosterIndex
     }
 
     fun pauseGame() {

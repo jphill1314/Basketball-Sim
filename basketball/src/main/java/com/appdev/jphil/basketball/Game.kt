@@ -67,6 +67,11 @@ class Game(
         inProgress = true
     }
 
+    fun resumeGame() {
+        homeTeam.resumeGame()
+        awayTeam.resumeGame()
+    }
+
     fun startHalf() {
         //println("Half: $half Home: $homeScore  Away: $awayScore")
         timeRemaining = if(half < 3) lengthOfHalf else lengthOfOvertime
@@ -447,11 +452,6 @@ class Game(
     }
 
     fun pauseGame() {
-        homeTeam.pauseGame()
-        awayTeam.pauseGame()
-    }
-
-    fun resumeGame() {
         homeTeam.pauseGame()
         awayTeam.pauseGame()
     }
