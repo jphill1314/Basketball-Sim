@@ -138,17 +138,45 @@ class Press(
             playAsString += ", but the pass is stolen by ${passDefender.fullName}!"
         }
         timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
-        homeTeamHasBall = !homeTeamHasBall
-        // todo turnovers and stats and fouls etc
+        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.ON_BALL)
+        if (foul.foulType == FoulType.CLEAN) {
+            homeTeamHasBall = !homeTeamHasBall
+            passer.turnovers++
+        } else {
+            playAsString += " But, ${foul.playAsString}"
+        }
     }
 
     private fun badPass() {
-        // todo: bespoke sim for bad pass
-        stolenPass()
+        playAsString += if (deadBall) {
+            "${passer.fullName} inbounds the ball to ${target.fullName}"
+        } else {
+            "${passer.fullName} passes the ball to ${target.fullName}"
+        }
+
+        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        if (r.nextBoolean()) {
+            playerWithBall = targetPos
+            playAsString += ", but it's a bad pass and it's stolen by ${targetDefender.fullName}!"
+        } else {
+            playAsString += ", but it's a bad pass and it's stolen by ${passDefender.fullName}!"
+        }
+        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.ON_BALL)
+        if (foul.foulType == FoulType.CLEAN) {
+            homeTeamHasBall = !homeTeamHasBall
+            passer.turnovers++
+        } else {
+            playAsString += " But, ${foul.playAsString}"
+        }
     }
 
     private fun justDribbling() {
         playAsString += "${passer.fullName} is dribbling with the ball."
         timeChange = timeUtil.smartTimeChange(2 - ((offense.pace / 90.0) * r.nextInt(1)).toInt(), shotClock)
+        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, FoulType.ON_BALL)
+        if (foul.foulType != FoulType.CLEAN) {
+            playAsString += " And, ${foul.playAsString}"
+        }
     }
 }
