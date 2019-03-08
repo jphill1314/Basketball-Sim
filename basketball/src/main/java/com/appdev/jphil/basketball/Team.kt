@@ -11,7 +11,7 @@ class Team(
     var pressAggression: Int,
     var aggression: Int,
     var pace: Int,
-    var players: MutableList<Player>,
+    val players: MutableList<Player>,
     val conferenceId: Int,// for use in games
     val isUser: Boolean
 ) {
@@ -66,8 +66,7 @@ class Team(
             p.startGame()
         }
 
-        players = mutableListOf()
-        players.addAll(roster)
+        players.sortBy { it.courtIndex }
     }
 
     fun pauseGame() {
@@ -76,6 +75,7 @@ class Team(
 
     fun resumeGame() {
         players.forEach { it.resumeGame() }
+        players.sortBy { it.courtIndex }
     }
 
     fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {

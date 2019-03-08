@@ -28,13 +28,14 @@ class GameViewModel(
                 }.join()
             }
             nullGame?.let { game ->
-                game.resumeGame()
                 updateGame(game)
 
                 // Simulate the game play-by-play updating the view each time
                 gameSim = launch(Dispatchers.IO) {
                     if (!game.inProgress) {
                         game.setupGame()
+                    } else {
+                        game.resumeGame()
                     }
 
                     while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
@@ -76,6 +77,7 @@ class GameViewModel(
     fun pauseSim() {
         saveGame = GlobalScope.launch(Dispatchers.IO) {
             if (gameSim.isActive) {
+                pauseGame = false
                 gameSim.cancelAndJoin()
             }
         }
