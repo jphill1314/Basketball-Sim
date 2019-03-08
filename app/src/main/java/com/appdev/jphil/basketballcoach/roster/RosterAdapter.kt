@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,14 @@ import com.appdev.jphil.basketballcoach.R
 import kotlinx.android.synthetic.main.list_item_header.view.*
 import kotlinx.android.synthetic.main.list_item_roster.view.*
 
-class RosterAdapter(val roster: MutableList<Player>, val resources: Resources) : RecyclerView.Adapter<RosterAdapter.ViewHolder>() {
+class RosterAdapter(
+    val presenter: RosterContract.Presenter,
+    val roster: MutableList<RosterDataModel>,
+    val resources: Resources) : RecyclerView.Adapter<RosterAdapter.ViewHolder>() {
 
     private val positions: Array<String> = resources.getStringArray(R.array.position_abbreviation)
     private val classes: Array<String> = resources.getStringArray(R.array.years)
+    var isUsersTeam = false
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val name: TextView? = view.name
@@ -54,7 +59,10 @@ class RosterAdapter(val roster: MutableList<Player>, val resources: Resources) :
                 viewHolder.title?.text = resources.getString(R.string.bench)
             }
         } else {
-            val player = if (position < 6) roster[position - 1] else roster[position - 2]
+            val dataModel = if (position < 6) roster[position - 1] else roster[position - 2]
+            val player = dataModel.player
+            setTextColor(viewHolder, dataModel.isSelected)
+
             viewHolder.position?.text = if (position < 6) positions[position - 1] else positions[player.position - 1]
             viewHolder.name?.text = player.fullName
             viewHolder.rating?.text = player.getOverallRating().toString()
@@ -64,6 +72,28 @@ class RosterAdapter(val roster: MutableList<Player>, val resources: Resources) :
                 val params = viewHolder.itemView.layoutParams as ViewGroup.MarginLayoutParams
                 params.bottomMargin = resources.getDimension(R.dimen.sixteen_dp).toInt()
             }
+
+            if (isUsersTeam) {
+                viewHolder.itemView.setOnClickListener {
+                    presenter.onPlayerSelected(player)
+                    dataModel.isSelected = !dataModel.isSelected
+                    notifyDataSetChanged()
+                }
+            }
         }
+    }
+
+    private fun setTextColor(viewHolder: ViewHolder, isSelected: Boolean) {
+        val color = if (isSelected) R.color.gray else R.color.black
+        viewHolder.position?.setTextColor(ResourcesCompat.getColor(resources, color, null))
+        viewHolder.name?.setTextColor(ResourcesCompat.getColor(resources, color, null))
+        viewHolder.rating?.setTextColor(ResourcesCompat.getColor(resources, color, null))
+        viewHolder.year?.setTextColor(ResourcesCompat.getColor(resources, color, null))
+    }
+
+    fun updateRoster(roster: MutableList<RosterDataModel>) {
+        this.roster.clear()
+        this.roster.addAll(roster)
+        notifyDataSetChanged()
     }
 }
