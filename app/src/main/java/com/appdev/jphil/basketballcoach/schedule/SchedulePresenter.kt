@@ -22,7 +22,7 @@ class SchedulePresenter @Inject constructor(
         repository.fetchSchedule()
     }
 
-    override fun onScheduleLoaded(games: List<GameEntity>) {
+    override fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean) {
         val teamGames = games.filter { it.homeTeamId == teamId || it.awayTeamId == teamId }
         val dataModels = mutableListOf<ScheduleDataModel>()
         teamGames.forEach { game ->
@@ -42,7 +42,7 @@ class SchedulePresenter @Inject constructor(
             )
         }
         view?.hideProgressBar()
-        view?.displaySchedule(dataModels)
+        view?.displaySchedule(dataModels, isUsersSchedule)
 
     }
 

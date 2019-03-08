@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.schedule
 
-import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,7 +17,8 @@ class ScheduleRepository @Inject constructor(
     override fun fetchSchedule() {
         GlobalScope.launch(Dispatchers.IO) {
             val gameEntities = dbHelper.loadAllGameEntities()
-            withContext(Dispatchers.Main) { presenter.onScheduleLoaded(gameEntities) }
+            val team = dbHelper.loadUserTeam()
+            withContext(Dispatchers.Main) { presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId) }
         }
     }
 

@@ -4,6 +4,7 @@ package com.appdev.jphil.basketballcoach.schedule
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +21,9 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
-    var teamId = -1
-    private val adapter: ScheduleAdapter by lazy { ScheduleAdapter(resources, presenter) }
+    var teamId = 1
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ScheduleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +51,14 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
         view.fab.setOnClickListener { presenter.onFABClicked() }
-        view.recycler_view.adapter = adapter
-        view.recycler_view.layoutManager = LinearLayoutManager(context)
+        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
 
-    override fun displaySchedule(games: List<ScheduleDataModel>) {
+    override fun displaySchedule(games: List<ScheduleDataModel>, isUsersSchedule: Boolean) {
+        adapter = ScheduleAdapter(resources, presenter, isUsersSchedule)
+        recyclerView.adapter = adapter
         adapter.games = games
         adapter.notifyDataSetChanged()
     }
