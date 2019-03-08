@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.ChangeTeamConfContract
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_roster.view.*
 import javax.inject.Inject
@@ -58,6 +59,10 @@ class RosterFragment : Fragment(), RosterContract.View {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("teamId", teamId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {
+        (activity as? ChangeTeamConfContract.Listener?)?.changeConference(conferenceId, teamId)
     }
 
     companion object {

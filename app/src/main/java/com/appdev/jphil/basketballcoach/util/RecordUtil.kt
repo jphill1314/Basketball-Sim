@@ -55,6 +55,6 @@ object RecordUtil {
                 }
             }
         }
-        return StandingsDataModel(team.name, wins, loses, wins, loses)
+        return StandingsDataModel(team.teamId, team.conferenceId, team.name, wins, loses, wins, loses)
     }
 }

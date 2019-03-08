@@ -32,6 +32,10 @@ class StandingsPresenter @Inject constructor(
         view?.addTeams(standings)
     }
 
+    override fun onTeamSelected(standingsDataModel: StandingsDataModel) {
+        view?.changeTeamAndConference(standingsDataModel.teamId, standingsDataModel.conferenceId)
+    }
+
     override fun onViewAttached(view: StandingsContract.View) {
         this.view = view
     }

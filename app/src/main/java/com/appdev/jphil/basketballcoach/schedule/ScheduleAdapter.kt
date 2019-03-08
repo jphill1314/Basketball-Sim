@@ -13,7 +13,10 @@ import com.appdev.jphil.basketballcoach.R
 import kotlinx.android.synthetic.main.fragment_schedule.view.*
 import kotlinx.android.synthetic.main.list_item_schedule.view.*
 
-class ScheduleAdapter(private val resources: Resources, private val presenter: ScheduleContract.Presenter) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
+class ScheduleAdapter(
+    private val resources: Resources,
+    private val presenter: ScheduleContract.Presenter
+) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
 
     var games: List<ScheduleDataModel>? = null
 

@@ -12,7 +12,8 @@ class Team(
     var aggression: Int,
     var pace: Int,
     var players: MutableList<Player>,
-    val conferenceId: Int// for use in games
+    val conferenceId: Int,// for use in games
+    val isUser: Boolean
 ) {
 
     val roster: MutableList<Player> // for use everywhere else

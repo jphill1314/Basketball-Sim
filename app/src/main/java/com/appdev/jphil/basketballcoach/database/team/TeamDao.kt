@@ -13,6 +13,9 @@ interface TeamDao {
     @Query("SELECT * FROM TeamEntity where conferenceId in (:conferenceId)")
     fun getTeamsInConference(conferenceId: Int): List<TeamEntity>
 
+    @Query("SELECT * FROM TeamEntity where isUser in (:isUser)")
+    fun getTeamIsUser(isUser: Boolean): TeamEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTeams(teams: List<TeamEntity>)
 

@@ -1,6 +1,8 @@
 package com.appdev.jphil.basketballcoach.standings
 
 import android.content.res.Resources
+import android.graphics.Color
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +11,9 @@ import android.widget.TextView
 import com.appdev.jphil.basketballcoach.R
 
 class StandingsAdapter(
+    private var teamId: Int,
     private val standings: List<StandingsDataModel>,
+    private val presenter: StandingsContract.Presenter,
     private val resources: Resources
 ): RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
 
@@ -41,6 +45,18 @@ class StandingsAdapter(
             viewHolder.name.text = data.teamName
             viewHolder.conference.text = resources.getString(R.string.standings_dash, data.conferenceWins, data.conferenceLoses)
             viewHolder.overall.text = resources.getString(R.string.standings_dash, data.totalWins, data.totalLoses)
+            viewHolder.itemView.setBackgroundColor(if (data.teamId == teamId) {
+                Color.GRAY
+            } else {
+                Color.WHITE
+            })
+
+            viewHolder.itemView.setOnClickListener { presenter.onTeamSelected(data) }
         }
+    }
+
+    fun updateTeamId(teamId: Int) {
+        this.teamId = teamId
+        notifyDataSetChanged()
     }
 }

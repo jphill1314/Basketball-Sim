@@ -4,7 +4,7 @@ import java.util.*
 
 class TeamFactory(private val firstNames: List<String>, private val lastNames: List<String>) {
 
-    fun generateTeam(teamId: Int, teamName: String, teamRating: Int, conferenceId: Int): Team {
+    fun generateTeam(teamId: Int, teamName: String, teamRating: Int, conferenceId: Int, isUser: Boolean): Team {
         // TODO: generate different kinds of teams: run and gun, press heavy, good offense, good defense, balances, etc
         return Team(
             teamId,
@@ -16,7 +16,8 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
             50,
             70,
             generatePlayers(teamId, 15, teamRating),
-            conferenceId)
+            conferenceId,
+            isUser)
     }
 
     private fun generatePlayers(teamId: Int, teamSize: Int, teamRating: Int): MutableList<Player> {

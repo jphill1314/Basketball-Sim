@@ -22,6 +22,14 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
         }
     }
 
+    fun loadUserTeam(): Team? {
+        val teamEntity = database.teamDao().getTeamIsUser(true)
+        return teamEntity?.let {
+            val players = database.playerDao().getPlayersOnTeam(it.teamId)
+            it.createTeam(players)
+        }
+    }
+
     fun loadConferenceById(conferenceId: Int): Conference? {
         val conferenceEntity = database.conferenceDao().getConferenceWithId(conferenceId)
         return if (conferenceEntity == null) {

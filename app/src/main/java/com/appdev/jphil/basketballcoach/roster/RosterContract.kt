@@ -8,6 +8,7 @@ interface RosterContract {
 
     interface View : MVPContract.View {
         fun displayData(players: MutableList<Player>)
+        fun updateTeamAndConference(teamId: Int, conferenceId: Int)
     }
 
     interface Presenter : MVPContract.Presenter<View> {
