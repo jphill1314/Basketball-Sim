@@ -47,13 +47,15 @@ class RosterFragment : Fragment(), RosterContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_roster, container, false)
         recyclerView = view.recycler_view
+        adapter = RosterAdapter(presenter, mutableListOf(), resources)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
 
-    override fun displayData(players: MutableList<Player>) {
-        adapter = RosterAdapter(players, resources)
+    override fun displayData(players: MutableList<RosterDataModel>, isUsersTeam: Boolean) {
+        adapter.isUsersTeam = isUsersTeam
+        adapter.updateRoster(players)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

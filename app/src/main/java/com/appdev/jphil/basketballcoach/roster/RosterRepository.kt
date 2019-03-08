@@ -37,6 +37,12 @@ class RosterRepository @Inject constructor(
         }
     }
 
+    override fun saveTeam(team: Team) {
+        GlobalScope.launch(Dispatchers.IO) {
+            dbHelper.saveTeam(team)
+        }
+    }
+
     private fun createGame() {
         val teamFactory = TeamFactory(
             resources.getStringArray(R.array.first_names).asList(),

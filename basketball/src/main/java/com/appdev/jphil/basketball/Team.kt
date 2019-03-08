@@ -176,10 +176,16 @@ class Team(
                     // TODO: add coach's tendency to sub here
                     Collections.swap(players, index, sub)
                     players[index].courtIndex = index
-                    players[sub].courtIndex = index
+                    players[sub].courtIndex = sub
                 }
             }
         }
+    }
+
+    fun swapPlayers(player1: Int, player2: Int) {
+        Collections.swap(roster, player1, player2)
+        roster[player1].rosterIndex = player1
+        roster[player2].rosterIndex = player2
     }
 
     private fun getBestPlayerForPosition(position: Int): Int {
