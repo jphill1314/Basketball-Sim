@@ -12,6 +12,7 @@ import com.appdev.jphil.basketball.Team
 data class GameEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
+    val season: Int,
     val homeTeamId: Int,
     val awayTeamId: Int,
     val isNeutralCourt: Boolean,
@@ -37,7 +38,7 @@ data class GameEntity(
     val awayTeamName: String
 ) {
     fun createGame(homeTeam: Team, awayTeam: Team): Game {
-        val game = Game(homeTeam, awayTeam, isNeutralCourt, id, isFinal)
+        val game = Game(homeTeam, awayTeam, isNeutralCourt, season, id, isFinal)
         game.inProgress = inProgress
         game.shotClock = shotClock
         game.timeRemaining = timeRemaining
@@ -62,6 +63,7 @@ data class GameEntity(
         fun from(game: Game): GameEntity {
             return GameEntity(
                 game.id,
+                game.season,
                 game.homeTeam.teamId,
                 game.awayTeam.teamId,
                 game.isNeutralCourt,

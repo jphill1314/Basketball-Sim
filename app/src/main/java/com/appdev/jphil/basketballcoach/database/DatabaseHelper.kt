@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import javax.inject.Inject
@@ -84,6 +85,12 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
             database.gameDao().insertGame(GameEntity.from(game))
             saveTeam(game.homeTeam)
             saveTeam(game.awayTeam)
+            game.homeTeam.players.forEach { player ->
+                database.playerDao().insertGameStats(GameStatsEntity.generate(player, game.season, game.awayTeam.name, true))
+            }
+            game.awayTeam.players.forEach { player ->
+                database.playerDao().insertGameStats(GameStatsEntity.generate(player, game.season, game.homeTeam.name, false))
+            }
         }
     }
 
