@@ -32,8 +32,6 @@ class GameViewModel(
                 }.join()
             }
             nullGame?.let { game ->
-                updateGame(game, if (gameEvents.isNotEmpty()) gameEvents else dbHelper.loadGameEvents(gameId))
-
                 // Simulate the game play-by-play updating the view each time
                 gameSim = launch(Dispatchers.IO) {
                     if (!game.inProgress) {
@@ -42,8 +40,15 @@ class GameViewModel(
                         game.resumeGame()
                     }
 
+                    if (gameEvents.isEmpty()) {
+                        gameEvents.addAll(dbHelper.loadGameEvents(gameId))
+                    }
+                    withContext(Dispatchers.Main) {
+                        updateGame(game, gameEvents)
+                    }
+
                     while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
-                        if (!initialLoad || !game.inProgress) {
+                        if (!initialLoad || game.timeRemaining == 0) {
                             game.startHalf()
                         }
                         initialLoad = false

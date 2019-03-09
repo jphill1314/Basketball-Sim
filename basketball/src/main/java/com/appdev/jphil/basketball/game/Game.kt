@@ -20,8 +20,8 @@ class Game(
     private val lengthOfShotClock = 30 // 30 seconds
     private val resetShotClockTime = 20 // shot clock resets to 20 on a defensive foul
 
-    var shotClock = lengthOfShotClock
-    var timeRemaining = lengthOfHalf
+    var shotClock = 0
+    var timeRemaining = 0
     var half = 1
     var homeScore = 0
     var awayScore = 0
@@ -79,8 +79,15 @@ class Game(
 
     fun startHalf() {
         //println("Half: $half Home: $homeScore  Away: $awayScore")
-        timeRemaining = if(half < 3) lengthOfHalf else lengthOfOvertime
+        timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
         shotClock = lengthOfShotClock
+
+        if (half == 1) {
+            val tipOff = TipOff(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location)
+            homeTeamHasBall = tipOff.homeTeamHasBall
+            playerWithBall = tipOff.playerWithBall
+            gamePlays.add(tipOff)
+        }
 
         if(half < 3){
             homeFouls = 0
@@ -147,7 +154,7 @@ class Game(
 
         if(plays[plays.size - 1] is Rebound){
             timeRemaining = plays[plays.size - 2].timeRemaining
-            shotClock = if(timeRemaining > lengthOfShotClock) lengthOfShotClock else timeRemaining
+            shotClock = if(timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         }
         else {
             timeRemaining = plays[plays.size - 1].timeRemaining
@@ -433,7 +440,7 @@ class Game(
 
     private fun changePossession(){
         timeInBackcourt = 0
-        shotClock = if(timeRemaining > lengthOfShotClock) lengthOfShotClock else timeRemaining
+        shotClock = if(timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         homeTeamHasBall = !homeTeamHasBall
         if(location != 0){
             location = -location
