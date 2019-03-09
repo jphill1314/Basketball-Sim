@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball
 
+import com.appdev.jphil.basketball.game.CoachTalk
 import java.util.*
 
 class Team(

@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketball.plays
+package com.appdev.jphil.basketball.plays.utils
 
 import com.appdev.jphil.basketball.Team
 import java.util.*
