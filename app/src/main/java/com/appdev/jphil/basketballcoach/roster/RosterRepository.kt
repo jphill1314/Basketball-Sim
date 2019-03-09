@@ -1,9 +1,9 @@
 package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
-import com.appdev.jphil.basketball.BasketballFactory
+import com.appdev.jphil.basketball.factories.BasketballFactory
 import com.appdev.jphil.basketball.Team
-import com.appdev.jphil.basketball.TeamFactory
+import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import com.appdev.jphil.basketballcoach.main.MainActivity

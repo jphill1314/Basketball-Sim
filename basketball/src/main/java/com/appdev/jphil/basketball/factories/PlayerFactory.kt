@@ -1,5 +1,6 @@
-package com.appdev.jphil.basketball
+package com.appdev.jphil.basketball.factories
 
+import com.appdev.jphil.basketball.Player
 import java.util.*
 
 object PlayerFactory {

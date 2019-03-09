@@ -1,6 +1,8 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.playtext.FastBreakPlayText
+import com.appdev.jphil.basketball.textcontracts.FastBreakTextContract
 
 class FastBreak(
     homeTeamHasBall: Boolean,
@@ -9,7 +11,8 @@ class FastBreak(
     homeTeam: Team,
     awayTeam: Team,
     playerWithBall: Int,
-    location: Int
+    location: Int,
+    private val fastBreakText: FastBreakTextContract = FastBreakPlayText()
     ): BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
     init {
@@ -30,16 +33,15 @@ class FastBreak(
     // TODO: add chance for player to shoot a 3, or get fouled, or blocked, etc.
     override fun generatePlay(): Int {
         val shooter = offense.getPlayerAtPosition(playerWithBall)
-        playAsString = "${shooter.fullName} takes the layup off the fast break and "
         val timeChange = timeUtil.smartTimeChange(r.nextInt(5), shotClock)
         timeRemaining -= timeChange
         shotClock -= timeChange
         return if (r.nextInt(shooter.closeRangeShot) > 3) {
-            playAsString += "makes it."
+            playAsString = fastBreakText.madeShot(shooter)
             homeTeamHasBall = !homeTeamHasBall
             2
         } else {
-            playAsString += "misses the wide open layup!"
+            playAsString = fastBreakText.missedShot(shooter)
             0
         }
     }

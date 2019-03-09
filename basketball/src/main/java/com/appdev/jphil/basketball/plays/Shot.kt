@@ -2,6 +2,8 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.playtext.ShotPlayText
+import com.appdev.jphil.basketball.textcontracts.ShotTextContract
 
 
 class Shot(
@@ -13,7 +15,8 @@ class Shot(
     playerWithBall: Int,
     location: Int,
     val assisted: Boolean,
-    val rushed: Boolean
+    val rushed: Boolean,
+    private val shotText: ShotTextContract = ShotPlayText()
 ) :
     BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
@@ -47,7 +50,6 @@ class Shot(
                 randomBound
             ))
 
-        playAsString = "${shooter.fullName} takes a shot from "
         val shotLocation: Int = getShotLocation(shooter, shotClose, shotMid, shotLong)
 
         var shotSuccess: Int = getShotSuccess(shotLocation, shooter, defender)
@@ -90,31 +92,26 @@ class Shot(
     private fun getShotLocation(shooter: Player, shotClose: Double, shotMid: Double, shotLong: Double): Int {
         return if (location == 0) {
             // shot taken from around half court
-            playAsString += "near half court"
             offense.threePointAttempts++
             shooter.threePointAttempts++
             4
         } else if (location == -1) {
             // shot taken from beyond half court
-            playAsString += "well beyond half court"
             offense.threePointAttempts++
             shooter.threePointAttempts++
             5
         } else if (shotClose > shotMid && shotClose > shotLong) {
             // shot taken from close range
-            playAsString += "close range"
             offense.twoPointAttempts++
             shooter.twoPointAttempts++
             1
         } else if (shotMid > shotClose && shotMid > shotLong) {
             // shot taken from mid range
-            playAsString += "mid range"
             offense.twoPointAttempts++
             shooter.twoPointAttempts++
             2
         } else {
             // shot taken from 3
-            playAsString += "three"
             offense.threePointAttempts++
             shooter.threePointAttempts++
             3
@@ -167,105 +164,110 @@ class Shot(
             // 2 point shot
             1 -> {
                 if (shotSuccess > ((r.nextDouble() * shooter.closeRangeShot) * (r.nextDouble() * 5))) {
-                    playAsString += " and makes it!"
-                    if (type != Plays.FOUL) {
+                    playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
+                        shotText.shortMake(shooter)
                     } else {
-                        playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a three point play!"
+                        shotText.shortFoul(shooter, foul.fouler!!, true)
                     }
                     offense.twoPointMakes++
                     shooter.twoPointMakes++
                     2
                 } else {
-                    playAsString += " and misses it!"
-                    if (type == Plays.FOUL) {
-                        playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
+                    playAsString = if (type != Plays.FOUL) {
+                        shotText.shortMiss(shooter)
+                    } else {
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
+                        shotText.shortFoul(shooter, foul.fouler!!, false)
                     }
                     0
                 }
             }
             2 -> {
                 if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 5))) {
-                    playAsString += " and makes it!"
-                    if (type != Plays.FOUL) {
+                    playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
+                        shotText.midMake(shooter)
                     } else {
-                        playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a three point play!"
+                        shotText.midFoul(shooter, foul.fouler!!, true)
                     }
                     offense.twoPointMakes++
                     shooter.twoPointMakes++
                     2
                 } else {
-                    playAsString += " and misses it!"
-                    if (type == Plays.FOUL) {
-                        playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
+                    playAsString = if (type != Plays.FOUL) {
+                        shotText.midMiss(shooter)
+                    } else {
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
+                        shotText.midFoul(shooter, foul.fouler!!, false)
                     }
                     0
                 }
             }
             3 -> {
                 if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 6))) {
-                    playAsString += " and makes it!"
-                    if (type != Plays.FOUL) {
+                    playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
+                        shotText.longMake(shooter)
                     } else {
-                        playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a four point play!"
+                        shotText.longFoul(shooter, foul.fouler!!, true)
                     }
                     offense.threePointMakes++
                     shooter.threePointMakes++
                     3
                 } else {
-                    playAsString += " and misses it!"
-                    if (type == Plays.FOUL) {
-                        playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
+                    playAsString = if (type != Plays.FOUL) {
+                        shotText.longMiss(shooter)
+                    } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
+                        shotText.longFoul(shooter, foul.fouler!!, false)
                     }
                     0
                 }
             }
             4 -> {
                 if (r.nextInt(100) < 10) {
-                    playAsString += " and makes it!"
-                    if (type != Plays.FOUL) {
+                    playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
+                        shotText.halfCourtMake(shooter)
                     } else {
-                        playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a four point play!"
+                        shotText.halfCourtFoul(shooter, foul.fouler!!, true)
                     }
                     offense.threePointMakes++
                     shooter.threePointMakes++
                     3
                 } else {
-                    playAsString += " and misses it!"
-                    if (type == Plays.FOUL) {
-                        playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
+                    playAsString = if (type != Plays.FOUL) {
+                        shotText.halfCourtMiss(shooter)
+                    } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
+                        shotText.halfCourtFoul(shooter, foul.fouler!!, false)
                     }
                     0
                 }
             }
             else -> {
                 if (r.nextInt(100) < 2) {
-                    playAsString += " and makes it!"
-                    if (type != Plays.FOUL) {
+                    playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
+                        shotText.beyondHalfCourtMake(shooter)
                     } else {
-                        playAsString += " ${foul.playAsString} ${shooter.fullName} will get a chance at a four point play!"
+                        shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, true)
                     }
                     offense.threePointMakes++
                     shooter.threePointMakes++
                     3
                 } else {
-                    playAsString += " and misses it!"
-                    if (type == Plays.FOUL) {
-                        playAsString += " But ${foul.playAsString} ${shooter.fullName} will instead shoot free throws."
+                    playAsString = if (type != Plays.FOUL) {
+                        shotText.beyondHalfCourtMiss(shooter)
+                    } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
+                        shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, false)
                     }
                     0
                 }

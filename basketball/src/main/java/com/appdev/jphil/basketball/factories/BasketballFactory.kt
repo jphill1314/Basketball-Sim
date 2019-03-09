@@ -1,4 +1,7 @@
-package com.appdev.jphil.basketball
+package com.appdev.jphil.basketball.factories
+
+import com.appdev.jphil.basketball.Conference
+import com.appdev.jphil.basketball.Team
 
 object BasketballFactory {
 

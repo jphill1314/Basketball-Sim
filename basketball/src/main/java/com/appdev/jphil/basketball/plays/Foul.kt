@@ -2,6 +2,8 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.playtext.FoulPlayText
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 
 class Foul(
     homeTeamHasBall: Boolean,
@@ -11,7 +13,8 @@ class Foul(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    var foulType: FoulType
+    var foulType: FoulType,
+    private val foulText: FoulTextContract = FoulPlayText()
 ) :
     BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
@@ -19,6 +22,7 @@ class Foul(
 
     var isOnDefense = false
     var positionOfPlayerFouled = 0
+    var fouler: Player? = null
 
     init {
         type = Plays.FOUL
@@ -48,8 +52,6 @@ class Foul(
     private fun getFloorFoul(): Int {
         var foulChance = 8.0 / (70)
 
-        val fouler: Player?
-
         if (foulType == FoulType.OFF_BALL) {
             // foul could be on anyone not with the ball
             if (r.nextBoolean()) {
@@ -59,16 +61,17 @@ class Foul(
                 fouler = offense.getPlayerAtPosition(positionOfPlayerFouled)
                 val aggression =
                     (offense.getPlayerAtPosition(playerWithBall).aggressiveness + ((offense.aggression + 10) * 5) / 2.0)
-                foulChance -= (fouler.offBallMovement - aggression) / 20000
+                foulChance -= (fouler!!.offBallMovement - aggression) / 20000
+                playAsString = foulText.offenseOffBallFoul(fouler!!, defense.getPlayerAtPosition(positionOfPlayerFouled))
             } else {
                 isOnDefense = true
                 positionOfPlayerFouled = getFouler(defense)
                 fouler = defense.getPlayerAtPosition(positionOfPlayerFouled)
                 val aggression =
                     (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
-                foulChance -= (fouler.offBallDefense - aggression) / 20000
+                foulChance -= (fouler!!.offBallDefense - aggression) / 20000
+                playAsString = foulText.defenseOffBallFoul(fouler!!, offense.getPlayerAtPosition(positionOfPlayerFouled))
             }
-            playAsString = "${fouler.fullName} is called for an off-ball foul!"
         } else {
             // foul could be on person with ball or their defender
             positionOfPlayerFouled = playerWithBall
@@ -78,22 +81,22 @@ class Foul(
                 fouler = offense.getPlayerAtPosition(playerWithBall)
                 val aggression =
                     (offense.getPlayerAtPosition(playerWithBall).aggressiveness + ((offense.aggression + 10) * 5) / 2.0)
-                foulChance -= (fouler.ballHandling - aggression) / 20000
-                playAsString = "${fouler.fullName} is called for the offensive foul!"
+                foulChance -= (fouler!!.ballHandling - aggression) / 20000
+                playAsString = foulText.offenseOnBallFoul(fouler!!, defense.getPlayerAtPosition(positionOfPlayerFouled))
             } else {
                 isOnDefense = true
                 fouler = defense.getPlayerAtPosition(playerWithBall)
                 val aggression =
                     (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
-                foulChance -= (fouler.onBallDefense - aggression) / 20000
-                playAsString = "${fouler.fullName} is called for the foul!"
+                foulChance -= (fouler!!.onBallDefense - aggression) / 20000
+                playAsString = foulText.defenseOnBallFoul(fouler!!, offense.getPlayerAtPosition(positionOfPlayerFouled))
             }
         }
 
         return if (r.nextDouble() < foulChance) {
-            fouler.fouls++
+            fouler!!.fouls++
             if (!isOnDefense) {
-                fouler.turnovers++
+                fouler!!.turnovers++
                 offense.turnovers++
             }
             1
@@ -130,7 +133,7 @@ class Foul(
         // The assumption is that this is called after it has been decided who is going to get the rebound
         positionOfPlayerFouled = playerWithBall
         val aggression: Double
-        val fouler: Player = if (r.nextDouble() > 0.35) {
+        fouler = if (r.nextDouble() > 0.35) {
             // more likely that the person who wasn't going to get the rebound is called for the foul
             isOnDefense = true
             aggression =
@@ -143,10 +146,11 @@ class Foul(
             offense.getPlayerAtPosition(playerWithBall)
         }
 
-        foulChance -= ((fouler.rebounding - aggression) / 20000)
+        foulChance -= ((fouler!!.rebounding - aggression) / 20000)
+        val fouled = if (isOnDefense) offense.getPlayerAtPosition(positionOfPlayerFouled) else defense.getPlayerAtPosition(positionOfPlayerFouled)
         return if (r.nextDouble() < foulChance) {
-            playAsString = "${fouler.fullName} is called for the illegal box out!"
-            fouler.fouls++
+            playAsString = foulText.reboundingFoul(fouler!!, fouled)
+            fouler!!.fouls++
             1
         } else {
             0
@@ -182,7 +186,8 @@ class Foul(
 
         return if (r.nextDouble() < foulChance) {
             isOnDefense = true
-            playAsString = "${defender.fullName} has fouled the shooter!"
+            fouler = defender
+            playAsString = "${defender.fullName} has fouled the shooter!" // Shooting fouls are handled by the shoot play class
             defender.fouls++
             1
         } else {

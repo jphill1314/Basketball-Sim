@@ -169,6 +169,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         simSpeed = progress
+        viewModel.simSpeed = (100 - simSpeed) * 20L
+        viewModel.pauseGame = simSpeed == 0
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -176,8 +178,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        viewModel.simSpeed = (100 - simSpeed) * 20L
-        viewModel.pauseGame = simSpeed == 0
+
     }
 
     private fun selectView(id: Int) {
