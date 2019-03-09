@@ -5,6 +5,8 @@ import com.appdev.jphil.basketball.plays.*
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
+import com.appdev.jphil.basketball.playtext.MiscPlayText
+import com.appdev.jphil.basketball.textcontracts.MiscTextContract
 import java.util.*
 
 class Game(
@@ -15,10 +17,7 @@ class Game(
     val id: Int? = null,
     var isFinal: Boolean = false
 ) {
-    private val lengthOfHalf = 20 * 60 // 20 minutes
-    private val lengthOfOvertime = 5 * 60 // 5 minutes
-    private val lengthOfShotClock = 30 // 30 seconds
-    private val resetShotClockTime = 20 // shot clock resets to 20 on a defensive foul
+    var miscText: MiscTextContract = MiscPlayText()
 
     var shotClock = 0
     var timeRemaining = 0
@@ -78,7 +77,6 @@ class Game(
     }
 
     fun startHalf() {
-        //println("Half: $half Home: $homeScore  Away: $awayScore")
         timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
         shotClock = lengthOfShotClock
 
@@ -163,9 +161,6 @@ class Game(
 
         location = plays[plays.size - 1].location
         playerWithBall = plays[plays.size - 1].playerWithBall
-//        for(play in plays){
-//            println("$homeScore - $awayScore Time: ${getTimeAsString()} - ${play.playAsString}")
-//        }
 
         if(plays[plays.size - 1].homeTeamHasBall != this.homeTeamHasBall){
             changePossession()
@@ -175,9 +170,9 @@ class Game(
 
         if(shotClock == 0 && timeRemaining > 0){
             plays[plays.size - 1].playAsString += if (homeTeamHasBall) {
-                " ${homeTeam.name} have turned the ball over on a shot clock violation!"
+                miscText.shotClockViolation(homeTeam)
             } else {
-                " ${awayTeam.name} have turned the ball over on a shot clock violation!"
+                miscText.shotClockViolation(awayTeam)
             }
             handleTurnover()
         } else if (timeInBackcourt >= 10 && location == -1) {
@@ -185,9 +180,9 @@ class Game(
             timeRemaining += overshoot
             shotClock += overshoot
             plays[plays.size - 1].playAsString += if (homeTeamHasBall) {
-                " ${homeTeam.name} have turned the ball over on a 10 second violation!"
+                miscText.tenSecondViolation(homeTeam)
             } else {
-                " ${awayTeam.name} have turned the ball over on a 10 second violation!"
+                miscText.tenSecondViolation(awayTeam)
             }
             handleTurnover()
         }
@@ -515,5 +510,12 @@ class Game(
             )
         )
         return stats
+    }
+
+    private companion object {
+        const val lengthOfHalf = 20 * 60 // 20 minutes
+        const val lengthOfOvertime = 5 * 60 // 5 minutes
+        const val lengthOfShotClock = 30 // 30 seconds
+        const val resetShotClockTime = 20 // shot clock resets to 20 on a defensive foul
     }
 }
