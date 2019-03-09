@@ -2,6 +2,8 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.playtext.PassPlayText
+import com.appdev.jphil.basketball.textcontracts.PassTextContract
 
 
 class Pass(
@@ -13,9 +15,9 @@ class Pass(
     playerWithBall: Int,
     location: Int,
     private val deadBall: Boolean,
-    private val passingUtils: PassingUtils
-) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    private val passingUtils: PassingUtils,
+    private val playText: PassTextContract = PassPlayText()
+) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
     private var playerStartsWithBall = playerWithBall
     private lateinit var passer: Player
@@ -81,20 +83,23 @@ class Pass(
 
     private fun successfulPass() {
         //TODO: add chance to have the ball knocked out of bounds
-        playAsString = if (deadBall) {
-            "${passer.fullName} inbounds the ball to ${target.fullName}"
-        } else {
-            "${passer.fullName} passes the ball to ${target.fullName}"
-        }
         playerWithBall = targetPos
         timeChange = if (location < 1) {
             // the ball was inbounded in the backcourt so more time needs to come off the clock
-            playAsString += " who brings the ball into the front court."
+            playAsString = if (deadBall) {
+                playText.successfulInboundBackcourt(passer, target)
+            } else {
+                playText.successfulPassBackcourt(passer, target)
+            }
             location = 1
             timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
         } else {
             //TODO: add pass leading to a shot / post move / etc
-            playAsString += "."
+            playAsString = if (deadBall) {
+                playText.successfulInbound(passer, target)
+            } else {
+                playText.successfulPass(passer, target)
+            }
             timeUtil.smartTimeChange(8 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
         }
     }
@@ -105,17 +110,17 @@ class Pass(
             playerWithBall = targetPos
             target.turnovers++
             playAsString = if (deadBall) {
-                "${passer.fullName} inbounds the ball to ${target.fullName} who cannot handle the pass and turns it over!"
+                playText.mishandledInbound(passer, target)
             } else {
-                "${passer.fullName} passes the ball to ${target.fullName} who cannot handle the pass and turns it over!"
+                playText.mishandledPass(passer, target)
             }
         } else {
             // passer is at fault
             passer.turnovers++
             playAsString = if (deadBall) {
-                "${passer.fullName} turns the ball over with a bad inbounds pass!"
+                playText.badInbound(passer, target)
             } else {
-                "${passer.fullName} turns the ball over with a horrid pass!"
+                playText.badPass(passer, target)
             }
         }
         offense.turnovers++
@@ -124,14 +129,13 @@ class Pass(
     }
 
     private fun stolenPass() {
-        playAsString = if (deadBall) {
-            "${passer.fullName} inbounds the ball to ${target.fullName}, but it is stolen by "
-        } else {
-            "${passer.fullName} passes the ball to ${target.fullName}, but it is stolen by "
-        }
         if (r.nextBoolean()) {
             // ball is stolen by defender of target
-            playAsString += "${targetDefender.fullName}!"
+            playAsString = if (deadBall) {
+                playText.stolenInbound(passer, target, targetDefender)
+            } else {
+                playText.stolenPass(passer, target, targetDefender)
+            }
             playerWithBall = targetPos
             foul = Foul(
                 homeTeamHasBall,
@@ -148,7 +152,11 @@ class Pass(
             }
         } else {
             // ball is stolen by defender of passer
-            playAsString += "${passDefender.fullName}!"
+            playAsString = if (deadBall) {
+                playText.stolenInbound(passer, target, passDefender)
+            } else {
+                playText.stolenPass(passer, target, passDefender)
+            }
             foul = Foul(
                 homeTeamHasBall,
                 timeRemaining,
@@ -203,7 +211,7 @@ class Pass(
             playerStartsWithBall = foul.positionOfPlayerFouled
             type = Plays.FOUL
         } else {
-            playAsString = "${passer.fullName} is dribbling the ball."
+            playAsString = playText.justDribbling(passer)
             type = Plays.DRIBBLE
         }
 

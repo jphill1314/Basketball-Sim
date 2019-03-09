@@ -1,6 +1,8 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.playtext.FTPlayText
+import com.appdev.jphil.basketball.textcontracts.FreeThrowTextContract
 
 class FreeThrows(
     homeTeamHasBall: Boolean,
@@ -10,7 +12,8 @@ class FreeThrows(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    private val numberOfShots: Int
+    private val numberOfShots: Int,
+    private val ftText: FreeThrowTextContract = FTPlayText()
 ) :
     BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
@@ -49,27 +52,7 @@ class FreeThrows(
                     madeLastShot = false
                 }
             }
-            playAsString = when (numberOfShots) {
-                1 -> {
-                    when (made) {
-                        0 -> "${shooter.firstName} misses his free throw"
-                        else -> "${shooter.firstName} makes his free throw"
-                    }
-                }
-                2 -> {
-                    when (made) {
-                        0 -> "${shooter.firstName} misses both of his free throws"
-                        1 -> "${shooter.firstName} makes one of his free throws"
-                        else -> "${shooter.firstName} makes both of his free throws"
-                    }
-                }
-                else -> {
-                    when (made) {
-                        0 -> "${shooter.firstName} misses all $numberOfShots of his free throws"
-                        else -> "${shooter.firstName} makes $made of $numberOfShots of his free throws"
-                    }
-                }
-            }
+            playAsString = ftText.freeThrowText(shooter, made, numberOfShots)
         } else {
             // 1 and 1 situation
             if (r.nextInt(100) < shooter.freeThrowShot) {
@@ -95,11 +78,7 @@ class FreeThrows(
                 shooter.freeThrowShots++
                 madeLastShot = false
             }
-            playAsString = when (made) {
-                0 -> "${shooter.fullName} misses the front end of the 1 and 1."
-                1 -> "${shooter.fullName} makes his first shot, but misses the second."
-                else -> "${shooter.fullName} makes both shots from the 1 and 1."
-            }
+            playAsString = ftText.oneAndOneText(shooter, made)
         }
         return made
     }

@@ -1,6 +1,8 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.playtext.ReboundPlayText
+import com.appdev.jphil.basketball.textcontracts.ReboundTextContract
 
 class Rebound(
     homeTeamHasBall: Boolean,
@@ -9,7 +11,8 @@ class Rebound(
     homeTeam: Team,
     awayTeam: Team,
     playerWithBall: Int,
-    location: Int
+    location: Int,
+    private val reboundText: ReboundTextContract = ReboundPlayText()
 ) :
     BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
@@ -69,7 +72,7 @@ class Rebound(
         playAsString = if (foul.foulType == FoulType.CLEAN) {
             offense.offensiveRebounds++
             offense.getPlayerAtPosition(playerWithBall).offensiveRebounds++
-            "${offense.getPlayerAtPosition(playerWithBall).fullName} grabs the offensive rebound!"
+            reboundText.offensiveRebound(offense.getPlayerAtPosition(playerWithBall))
         } else {
             foul.playAsString
         }
@@ -91,7 +94,7 @@ class Rebound(
         playAsString = if (foul.foulType == FoulType.CLEAN) {
             defense.defensiveRebounds++
             defense.getPlayerAtPosition(playerWithBall).defensiveRebounds++
-            "${defense.getPlayerAtPosition(playerWithBall).fullName} grabs the rebound!"
+            reboundText.defensiveRebound(defense.getPlayerAtPosition(playerWithBall))
         } else {
             homeTeamHasBall = !homeTeamHasBall
             location = 1
