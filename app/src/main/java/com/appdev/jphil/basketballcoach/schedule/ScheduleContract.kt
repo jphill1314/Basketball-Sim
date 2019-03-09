@@ -10,6 +10,8 @@ interface ScheduleContract {
         fun startGameFragment(gameId: Int, homeName: String, awayName: String)
         fun showProgressBar()
         fun hideProgressBar()
+        fun disableFab()
+        fun enableFab()
     }
 
     interface Presenter : MVPContract.Presenter<View> {

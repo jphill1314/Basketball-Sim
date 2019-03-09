@@ -2,12 +2,14 @@ package com.appdev.jphil.basketballcoach.schedule
 
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
@@ -22,6 +24,9 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     var teamId = 1
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ScheduleAdapter
+
+    private lateinit var fab: FloatingActionButton
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +53,11 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
-        view.fab.setOnClickListener { presenter.onFABClicked() }
+        fab = view.findViewById(R.id.fab)
+        fab.setOnClickListener { presenter.onFABClicked() }
+
+        progressBar = view.findViewById(R.id.progress_bar)
+
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         return view
@@ -69,11 +78,19 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun showProgressBar() {
-        view?.progress_bar?.visibility = View.VISIBLE
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun hideProgressBar() {
-        view?.progress_bar?.visibility = View.GONE
+        progressBar.visibility = View.GONE
+    }
+
+    override fun disableFab() {
+        fab.isEnabled = false
+    }
+
+    override fun enableFab() {
+        fab.isEnabled = false
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
