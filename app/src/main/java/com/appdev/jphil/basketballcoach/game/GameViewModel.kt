@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.game
 import android.arch.lifecycle.ViewModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import kotlinx.coroutines.*
 
 class GameViewModel(
@@ -11,13 +12,16 @@ class GameViewModel(
     var gameId = -1
     var simSpeed = 1000L
     var pauseGame = false
+    var lastPlay = 0
+    var totalEvents = 0
     private var nullGame: Game? = null
     private lateinit var gameSim: Job
     private var saveGame: Job? = null
+    private val gameEvents = mutableListOf<GameEventEntity>()
 
-    fun simulateGame(updateGame: (game: Game) -> Unit) {
+    fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit) {
         var initialLoad = true
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             if (nullGame == null) {
                 if (saveGame != null && !saveGame!!.isCompleted) {
                     saveGame?.join()
@@ -28,7 +32,7 @@ class GameViewModel(
                 }.join()
             }
             nullGame?.let { game ->
-                updateGame(game)
+                updateGame(game, if (gameEvents.isNotEmpty()) gameEvents else dbHelper.loadGameEvents(gameId))
 
                 // Simulate the game play-by-play updating the view each time
                 gameSim = launch(Dispatchers.IO) {
@@ -47,7 +51,7 @@ class GameViewModel(
                         while (isActive && game.timeRemaining > 0) {
                             game.simPlay()
                             withContext(Dispatchers.Main) {
-                                updateGame(game)
+                                updateGame(game, getNewPlayEvents(game))
                             }
                             Thread.sleep(simSpeed)
                             while (pauseGame) {
@@ -63,11 +67,12 @@ class GameViewModel(
                         game.finishGame()
                         withContext(Dispatchers.Main) {
                             // Game is over, update the view
-                            updateGame(game)
+                            updateGame(game, getNewPlayEvents(game))
                         }
                     }
                     // save game to db
                     dbHelper.saveGames(listOf(game))
+                    dbHelper.saveGameEvents(gameEvents)
                 }
                 gameSim.join()
             }
@@ -81,5 +86,46 @@ class GameViewModel(
                 gameSim.cancelAndJoin()
             }
         }
+    }
+
+    private fun getNewPlayEvents(game: Game): List<GameEventEntity> {
+        val newEvents = mutableListOf<GameEventEntity>()
+        val plays = game.gamePlays
+
+        if (plays.size > lastPlay) {
+            val newPlays = plays.subList(lastPlay, plays.size)
+
+            for (index in newPlays.indices) {
+                val play = newPlays[index]
+                if (index == 0) {
+                    newEvents.add(GameEventEntity(
+                        totalEvents++,
+                        gameId,
+                        play.timeRemaining,
+                        play.shotClock,
+                        play.playAsString,
+                        play.homeTeamStartsWithBall
+                    ))
+                } else {
+                    val lastPlay = newPlays[index - 1]
+                    if (lastPlay.timeRemaining == play.timeRemaining) {
+                        newEvents.last().event += "\n${play.playAsString}"
+                    } else {
+                        newEvents.add(GameEventEntity(
+                            totalEvents++,
+                            gameId,
+                            play.timeRemaining,
+                            play.shotClock,
+                            play.playAsString,
+                            play.homeTeamStartsWithBall
+                        ))
+                    }
+                }
+            }
+        }
+
+        lastPlay = plays.size
+        gameEvents.addAll(newEvents)
+        return newEvents
     }
 }

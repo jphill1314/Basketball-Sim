@@ -24,4 +24,13 @@ interface GameDao {
 
     @Delete
     fun deleteGame(game: GameEntity)
+
+    @Query("SELECT * FROM GameEventEntity where gameId in (:gameId)")
+    fun getAllGameEventsForGame(gameId: Int): List<GameEventEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertGameEvents(gameEvents: List<GameEventEntity>)
+
+    @Delete
+    fun deleteGameEvents(gameEvents: List<GameEventEntity>)
 }

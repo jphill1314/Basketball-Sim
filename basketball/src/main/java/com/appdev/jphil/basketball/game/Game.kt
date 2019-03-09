@@ -224,7 +224,7 @@ class Game(
     private fun getFastBreak(): MutableList<BasketballPlay> {
         val play = FastBreak(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location)
         return if (play.points == 0) {
-            mutableListOf(play, Rebound(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location))
+            mutableListOf(play, Rebound(homeTeamHasBall, play.timeRemaining, play.shotClock, homeTeam, awayTeam, playerWithBall, location))
         } else {
             madeShot = true
             deadball = true
@@ -273,19 +273,20 @@ class Game(
         madeShot = false
         if(((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)){
             plays.add(Shot(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, false, deadball))
-            if(plays[0].points == 0 && plays[0].foul.foulType == FoulType.CLEAN){
+            val shot = plays[0]
+            if(shot.points == 0 && shot.foul.foulType == FoulType.CLEAN){
                 // missed shot need to get a rebound
-                plays.add(Rebound(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location))
+                plays.add(Rebound(homeTeamHasBall, shot.timeRemaining, shot.shotClock, homeTeam, awayTeam, playerWithBall, location))
                 deadball = false
             }
-            else if(plays[0].foul.foulType != FoulType.CLEAN){
+            else if(shot.foul.foulType != FoulType.CLEAN){
                 // shoot free throws now?
                 shootFreeThrows = true
-                if(plays[0].points != 0){
-                    addPoints(plays[0].points)
+                if(shot.points != 0){
+                    addPoints(shot.points)
                     numberOfFreeThrows = 1
                 }
-                else if(plays[0].foul.foulType == FoulType.SHOOTING_LONG){
+                else if(shot.foul.foulType == FoulType.SHOOTING_LONG){
                     numberOfFreeThrows = 3
                 }
                 else{
@@ -299,10 +300,10 @@ class Game(
                 madeShot = true
                 deadball = true
                 if(homeTeamHasBall){
-                    homeScore += plays[0].points
+                    homeScore += shot.points
                 }
                 else{
-                    awayScore += plays[0].points
+                    awayScore += shot.points
                 }
             }
         }

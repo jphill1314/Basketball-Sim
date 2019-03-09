@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
@@ -45,7 +46,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     @Inject
     lateinit var viewModelFactory: GameViewModelFactory
-    private lateinit var viewModel: GameViewModel
+    private var viewModel: GameViewModel? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -122,11 +123,11 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onResume() {
         super.onResume()
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
-        viewModel.gameId = gameId
-        viewModel.simulateGame { game -> updateGame(game) }
+        viewModel?.gameId = gameId
+        viewModel?.simulateGame { game, newEvents -> updateGame(game, newEvents) }
     }
 
-    private fun updateGame(game: Game) {
+    private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
         gameStatus.text = if (game.isFinal) {
             resources.getString(R.string.game_final)
         } else {
@@ -138,7 +139,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         homeFouls.text = resources.getString(R.string.fouls, game.homeFouls)
         awayFouls.text = resources.getString(R.string.fouls, game.awayFouls)
 
-        gameAdapter.plays = game.gamePlays.reversed()
+        gameAdapter.addEvents(newEvents)
         gameAdapter.notifyDataSetChanged()
 
         homeStatsAdapter.players = game.homeTeam.players
@@ -152,7 +153,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pauseSim()
+        viewModel?.pauseSim()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -168,8 +169,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         simSpeed = progress
-        viewModel.simSpeed = (100 - simSpeed) * 20L
-        viewModel.pauseGame = simSpeed == 0
+        viewModel?.simSpeed = (100 - simSpeed) * 20L
+        viewModel?.pauseGame = simSpeed == 0
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {

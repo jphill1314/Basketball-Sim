@@ -6,6 +6,7 @@ import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerDao
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
@@ -17,7 +18,8 @@ import com.appdev.jphil.basketballcoach.database.team.TeamEntity
     PlayerEntity::class,
     ConferenceEntity::class,
     GameEntity::class,
-    GameStatsEntity::class],
+    GameStatsEntity::class,
+    GameEventEntity::class],
     version = 1)
 abstract class BasketballDatabase: RoomDatabase() {
     abstract fun playerDao(): PlayerDao
