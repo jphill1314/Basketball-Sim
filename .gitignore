@@ -57,6 +57,8 @@ hs_err_pid*
 .idea/libraries
 
 .idea/caches
+
+.idea/
 out/
 *.iml
 .gradle
@@ -69,3 +71,9 @@ out/
 /build
 /captures
 .externalNativeBuild
+
+gradle/
+*.gradle
+gradlew
+gradlew.bat
+gradle.properties
