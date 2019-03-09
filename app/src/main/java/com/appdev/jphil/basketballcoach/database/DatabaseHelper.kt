@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.database
 
 import com.appdev.jphil.basketball.Conference
-import com.appdev.jphil.basketball.Game
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameEntity

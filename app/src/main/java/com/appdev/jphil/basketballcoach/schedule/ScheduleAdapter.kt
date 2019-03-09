@@ -6,11 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
-import com.appdev.jphil.basketball.Game
 import com.appdev.jphil.basketballcoach.R
-import kotlinx.android.synthetic.main.fragment_schedule.view.*
 import kotlinx.android.synthetic.main.list_item_schedule.view.*
 
 class ScheduleAdapter(
