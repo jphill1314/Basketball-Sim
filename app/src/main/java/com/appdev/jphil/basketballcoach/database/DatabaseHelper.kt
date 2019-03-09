@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
@@ -104,5 +105,13 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
 
     fun saveOnlyGames(games: List<Game>) {
         games.forEach {game -> database.gameDao().insertGame(GameEntity.from(game)) }
+    }
+
+    fun saveGameEvents(events: List<GameEventEntity>) {
+        database.gameDao().insertGameEvents(events)
+    }
+
+    fun loadGameEvents(gameId: Int): List<GameEventEntity> {
+        return database.gameDao().getAllGameEventsForGame(gameId)
     }
 }

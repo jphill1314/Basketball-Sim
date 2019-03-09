@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.plays.BasketballPlay
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import kotlinx.android.synthetic.main.list_item_game_event.view.*
 
@@ -19,7 +20,7 @@ class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAd
         val gameEvent: TextView = view.game_event
     }
 
-    var plays = listOf<BasketballPlay>()
+    private val plays = mutableListOf<GameEventEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_game_event, parent, false)
@@ -33,12 +34,16 @@ class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAd
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val play = plays[position]
         viewHolder.gameTime.text = TimeUtil.getFormattedTime(play.timeRemaining, play.shotClock)
-        viewHolder.gameEvent.text = play.playAsString
+        viewHolder.gameEvent.text = play.event
 
-        viewHolder.itemView.setBackgroundColor(if (play.homeTeamStartsWithBall) {
+        viewHolder.itemView.setBackgroundColor(if (play.homeTeamHasBall) {
             ResourcesCompat.getColor(resources, R.color.white, null)
         } else {
             ResourcesCompat.getColor(resources, R.color.gray, null)
         })
+    }
+
+    fun addEvents(newEvents: List<GameEventEntity>) {
+        plays.addAll(0, newEvents.reversed())
     }
 }
