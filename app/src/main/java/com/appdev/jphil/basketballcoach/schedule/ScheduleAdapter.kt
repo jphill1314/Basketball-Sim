@@ -55,14 +55,16 @@ class ScheduleAdapter(
             if (isUsersSchedule) {
                 viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
                 viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
-                viewHolder.itemView.setOnClickListener {
-                    val vis = viewHolder.simGame.visibility
-                    if (vis == View.VISIBLE) {
-                        viewHolder.simGame.visibility = View.GONE
-                        viewHolder.simToGame.visibility = View.GONE
-                    } else {
-                        viewHolder.simGame.visibility = View.VISIBLE
-                        viewHolder.simToGame.visibility = View.VISIBLE
+                if (!game.isFinal) {
+                    viewHolder.itemView.setOnClickListener {
+                        val vis = viewHolder.simGame.visibility
+                        if (vis == View.VISIBLE) {
+                            viewHolder.simGame.visibility = View.GONE
+                            viewHolder.simToGame.visibility = View.GONE
+                        } else {
+                            viewHolder.simGame.visibility = View.VISIBLE
+                            viewHolder.simToGame.visibility = View.VISIBLE
+                        }
                     }
                 }
             }

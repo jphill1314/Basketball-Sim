@@ -47,6 +47,8 @@ class SchedulePresenter @Inject constructor(
     }
 
     override fun onFABClicked() {
+        view?.disableFab()
+        view?.showProgressBar()
         repository.simulateNextGame()
     }
 
