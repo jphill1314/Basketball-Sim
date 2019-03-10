@@ -52,8 +52,8 @@ class SchedulePresenter @Inject constructor(
         repository.simulateNextGame()
     }
 
-    override fun startGameFragment(gameId: Int, homeName: String, awayName: String) {
-        view?.startGameFragment(gameId, homeName, awayName)
+    override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
+        view?.startGameFragment(gameId, homeName, awayName, userIsHomeTeam)
     }
 
     override fun simulateToGame(gameId: Int) {

@@ -27,6 +27,7 @@ class ScheduleRepository @Inject constructor(
             var gameId = 1
             var homeName = ""
             var awayName = ""
+            var userIsHomeTeam = false
             var continueSim = true
             while(continueSim) {
                 val game = dbHelper.loadGameById(gameId++)
@@ -38,10 +39,11 @@ class ScheduleRepository @Inject constructor(
                     } else {
                         homeName = game.homeTeam.name
                         awayName = game.awayTeam.name
+                        userIsHomeTeam = game.homeTeam.isUser
                     }
                 }
             }
-            withContext(Dispatchers.Main) { presenter.startGameFragment(gameId-1, homeName, awayName) }
+            withContext(Dispatchers.Main) { presenter.startGameFragment(gameId-1, homeName, awayName, userIsHomeTeam) }
         }
     }
 

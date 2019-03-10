@@ -17,7 +17,8 @@ class Team(
     val isUser: Boolean
 ) {
 
-    val roster: MutableList<Player> // for use everywhere else
+    val roster = mutableListOf<Player>() // for use everywhere else
+    private val userSubs = mutableListOf<Pair<Int, Int>>()
     var teamRating: Int = 0
 
     var twoPointAttempts = 0
@@ -35,7 +36,6 @@ class Team(
     val r = Random()
 
     init {
-        roster = mutableListOf()
         roster.addAll(players)
         roster.sortBy { it.rosterIndex }
         teamRating = calculateTeamRating()
@@ -71,7 +71,10 @@ class Team(
     }
 
     fun pauseGame() {
-        players.forEach { it.pauseGame() }
+        players.forEach {
+            it.pauseGame()
+            it.courtIndex = players.indexOf(it)
+        }
     }
 
     fun resumeGame() {
@@ -181,6 +184,20 @@ class Team(
                 }
             }
         }
+
+        players.forEach { it.courtIndex = players.indexOf(it) }
+    }
+
+    fun addPendingSub(sub: Pair<Int, Int>) {
+        userSubs.add(sub)
+    }
+
+    fun makeUserSubs(freeThrowShooter: Int) {
+        userSubs.filter { it.first != freeThrowShooter && it.second != freeThrowShooter }.forEach {
+            Collections.swap(players, it.first, it.second)
+        }
+        userSubs.removeAll(userSubs.filter { it.first != freeThrowShooter && it.second != freeThrowShooter })
+        players.forEach { it.courtIndex = players.indexOf(it) }
     }
 
     fun swapPlayers(player1: Int, player2: Int) {

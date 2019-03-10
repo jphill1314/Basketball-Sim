@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.game.adapters
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketballcoach.R
-import java.text.DecimalFormat
+import com.appdev.jphil.basketballcoach.game.GameViewModel
+import java.util.*
 
-class GameStatsAdapter(var players: List<Player>, private val resources: Resources): RecyclerView.Adapter<GameStatsAdapter.ViewHolder>() {
+class GameStatsAdapter(
+    private val isUsersTeam: Boolean,
+    private val players: MutableList<Player>,
+    private val resources: Resources,
+    private val viewModel: GameViewModel
+): RecyclerView.Adapter<GameStatsAdapter.ViewHolder>() {
 
     var rosterViewId = 0
     private val positions = resources.getStringArray(R.array.position_abbreviation)
+
+    private var selectedPlayer: Player? = null
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val pos: TextView? = view.findViewById(R.id.player_position)
@@ -24,6 +33,26 @@ class GameStatsAdapter(var players: List<Player>, private val resources: Resourc
         val stat4: TextView? = view.findViewById(R.id.stat4)
         val header: TextView? = view.findViewById(R.id.title)
     }
+
+    fun updatePlayerStats(newPlayers: List<Player>) {
+        if (isUsersTeam) {
+            if (players.isEmpty()) {
+                players.addAll(newPlayers)
+            } else {
+                newPlayers.forEach { newPlayer ->
+                    val player = players.filter { it.id == newPlayer.id }
+                    if (player.isNotEmpty()) {
+                        Collections.replaceAll(players, player[0], newPlayer)
+                    }
+                }
+            }
+        } else {
+            players.clear()
+            players.addAll(newPlayers)
+        }
+        notifyDataSetChanged()
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = when (viewType) {
@@ -59,6 +88,7 @@ class GameStatsAdapter(var players: List<Player>, private val resources: Resourc
                     else -> position - 4
                 }
                 val player = players[playerPos]
+                setPlayerTextColor(viewHolder, player, playerPos)
                 viewHolder.pos?.text = positions[player.position - 1]
                 viewHolder.name?.text = player.lastName
                 when (rosterViewId) {
@@ -80,6 +110,10 @@ class GameStatsAdapter(var players: List<Player>, private val resources: Resourc
                         viewHolder.stat3?.text = "0"
                         viewHolder.stat4?.text = player.turnovers.toString()
                     }
+                }
+
+                if (isUsersTeam) {
+                    viewHolder.itemView.setOnClickListener { onPlayerSelected(player) }
                 }
             }
         }
@@ -108,5 +142,37 @@ class GameStatsAdapter(var players: List<Player>, private val resources: Resourc
                 viewHolder.stat4?.text = resources.getString(R.string.to)
             }
         }
+    }
+
+    private fun setPlayerTextColor(viewHolder: ViewHolder, player: Player, position: Int) {
+        if (player.courtIndex == position) {
+            viewHolder.pos?.setTextColor(Color.BLACK)
+            viewHolder.name?.setTextColor(Color.BLACK)
+            viewHolder.stat1?.setTextColor(Color.BLACK)
+            viewHolder.stat2?.setTextColor(Color.BLACK)
+            viewHolder.stat3?.setTextColor(Color.BLACK)
+            viewHolder.stat4?.setTextColor(Color.BLACK)
+        } else {
+            viewHolder.pos?.setTextColor(Color.GRAY)
+            viewHolder.name?.setTextColor(Color.GRAY)
+            viewHolder.stat1?.setTextColor(Color.GRAY)
+            viewHolder.stat2?.setTextColor(Color.GRAY)
+            viewHolder.stat3?.setTextColor(Color.GRAY)
+            viewHolder.stat4?.setTextColor(Color.GRAY)
+        }
+    }
+
+    private fun onPlayerSelected(player: Player) {
+        if (selectedPlayer == null) {
+            selectedPlayer = player
+        } else {
+            if (selectedPlayer?.id != player.id) {
+                val sub = Pair(players.indexOf(selectedPlayer!!), players.indexOf(player))
+                Collections.swap(players, sub.first, sub.second)
+                viewModel.addUserSub(sub)
+            }
+            selectedPlayer = null
+        }
+        notifyDataSetChanged()
     }
 }
