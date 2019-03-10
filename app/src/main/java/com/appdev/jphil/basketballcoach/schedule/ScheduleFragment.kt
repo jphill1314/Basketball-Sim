@@ -70,9 +70,9 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         adapter.notifyDataSetChanged()
     }
 
-    override fun startGameFragment(gameId: Int, homeName: String, awayName: String) {
+    override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
         fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName))
+            ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName, userIsHomeTeam))
             ?.addToBackStack(null)
             ?.commit()
     }

@@ -93,7 +93,7 @@ class Player(
     fun addTimePlayed(time: Int, isHalftime: Boolean, isTimeout: Boolean) {
         timePlayed += time
         if (time > 0) {
-            fatigue += 2.8 - (stamina / 100.0)
+            fatigue += 1.2 - (stamina / 100.0)
             if (fatigue > 100) {
                 fatigue = 100.0
             }

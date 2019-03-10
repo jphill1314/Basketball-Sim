@@ -39,6 +39,8 @@ class Game(
     var inProgress = false
     var consecutivePresses = 1
     var timeInBackcourt = 0
+    var homeTeamHasPossessionArrow = false
+    var userIsCoaching = false
 
     val gamePlays = mutableListOf<BasketballPlay>()
 
@@ -79,12 +81,25 @@ class Game(
     fun startHalf() {
         timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
         shotClock = lengthOfShotClock
+        location = 0
 
-        if (half == 1) {
+        if (half != 2) {
+            // Tip off starts game and all overtime periods
             val tipOff = TipOff(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location)
             homeTeamHasBall = tipOff.homeTeamHasBall
+            homeTeamHasPossessionArrow = !tipOff.homeTeamHasBall
             playerWithBall = tipOff.playerWithBall
             gamePlays.add(tipOff)
+            deadball = false
+            madeShot = false
+            if (half != 1) {
+                gamePlays.last().playAsString += miscText.endOfHalf(half - 1, false)
+            }
+        } else {
+            homeTeamHasBall = homeTeamHasPossessionArrow
+            deadball = true
+            madeShot = false
+            gamePlays.last().playAsString += miscText.endOfHalf(1, false)
         }
 
         if(half < 3){
@@ -106,22 +121,77 @@ class Game(
         gamePlays.addAll(getNextPlay())
         if(deadball && !madeShot){
             if(getMediaTimeout()) {
+                gamePlays.last().playAsString += miscText.mediaTimeOut()
                 runTimeout()
             }
-            //println("Subs!?!")
-            if(shootFreeThrows){
-                if(homeTeamHasBall){
-                    homeTeam.aiMakeSubs(playerWithBall, half, timeRemaining)
+
+            makeSubs()
+        }
+    }
+
+    private fun makeSubs() {
+        if(shootFreeThrows){
+            if(homeTeamHasBall){
+                if (userIsCoaching) {
+                    if (homeTeam.isUser) {
+                        awayTeam.aiMakeSubs(-1, half, timeRemaining)
+                    } else {
+                        homeTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
+                    }
+                } else {
+                    homeTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
                     awayTeam.aiMakeSubs(-1, half, timeRemaining)
                 }
-                else{
+            }
+            else{
+                if (userIsCoaching) {
+                    if (homeTeam.isUser) {
+                        awayTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
+                    } else {
+                        homeTeam.aiMakeSubs(-1, half, timeRemaining)
+                    }
+                } else {
                     homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                    awayTeam.aiMakeSubs(playerWithBall, half, timeRemaining)
+                    awayTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
                 }
             }
-            else {
+        }
+        else {
+            if (userIsCoaching) {
+                if (homeTeam.isUser) {
+                    awayTeam.aiMakeSubs(-1, half, timeRemaining)
+                } else {
+                    homeTeam.aiMakeSubs(-1, half, timeRemaining)
+                }
+            } else {
                 homeTeam.aiMakeSubs(-1, half, timeRemaining)
                 awayTeam.aiMakeSubs(-1, half, timeRemaining)
+            }
+        }
+    }
+
+    fun makeUserSubsIfPossible() {
+        if (deadball && !madeShot) {
+            if (shootFreeThrows) {
+                if (homeTeamHasBall) {
+                    if (homeTeam.isUser) {
+                        homeTeam.makeUserSubs(playerWithBall)
+                    } else {
+                        awayTeam.makeUserSubs(-1)
+                    }
+                } else {
+                    if (homeTeam.isUser) {
+                        homeTeam.makeUserSubs(-1)
+                    } else {
+                        awayTeam.makeUserSubs(playerWithBall)
+                    }
+                }
+            } else {
+                if (homeTeam.isUser) {
+                    homeTeam.makeUserSubs(-1)
+                } else {
+                    awayTeam.makeUserSubs(-1)
+                }
             }
         }
     }
@@ -137,6 +207,8 @@ class Game(
         }
         isFinal = true
         inProgress = false
+
+        gamePlays.last().playAsString += miscText.endOfHalf(half, true)
     }
 
     private fun getNextPlay(): MutableList<BasketballPlay>{
@@ -147,29 +219,30 @@ class Game(
             getGamePlay()
         }
 
-        updateTimePlayed(timeRemaining - plays[plays.size - 1].timeRemaining, false, false)
-        plays.forEach { play -> if (play is Press) addFatigueFromPress() }
+        val play = plays.last()
+        updateTimePlayed(timeRemaining - play.timeRemaining, false, false)
+        plays.forEach { p -> if (p is Press) addFatigueFromPress() }
 
-        if(plays[plays.size - 1] is Rebound){
+        if(play is Rebound){
             timeRemaining = plays[plays.size - 2].timeRemaining
             shotClock = if(timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         }
         else {
-            timeRemaining = plays[plays.size - 1].timeRemaining
-            shotClock = plays[plays.size - 1].shotClock
+            timeRemaining = play.timeRemaining
+            shotClock = play.shotClock
         }
 
-        location = plays[plays.size - 1].location
-        playerWithBall = plays[plays.size - 1].playerWithBall
+        location = play.location
+        playerWithBall = play.playerWithBall
 
-        if(plays[plays.size - 1].homeTeamHasBall != this.homeTeamHasBall){
+        if(play.homeTeamHasBall != this.homeTeamHasBall){
             changePossession()
         }
 
-        manageFouls(plays[plays.size - 1].foul)
+        manageFouls(play.foul)
 
         if(shotClock == 0 && timeRemaining > 0){
-            plays[plays.size - 1].playAsString += if (homeTeamHasBall) {
+            play.playAsString += if (homeTeamHasBall) {
                 miscText.shotClockViolation(homeTeam)
             } else {
                 miscText.shotClockViolation(awayTeam)
@@ -179,7 +252,7 @@ class Game(
             val overshoot = timeInBackcourt - 10
             timeRemaining += overshoot
             shotClock += overshoot
-            plays[plays.size - 1].playAsString += if (homeTeamHasBall) {
+            play.playAsString += if (homeTeamHasBall) {
                 miscText.tenSecondViolation(homeTeam)
             } else {
                 miscText.tenSecondViolation(awayTeam)
@@ -273,43 +346,43 @@ class Game(
         val plays = mutableListOf<BasketballPlay>()
 
         madeShot = false
-        if(((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)){
+        if (((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)) {
             plays.add(Shot(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, false, deadball))
             val shot = plays[0]
-            if(shot.points == 0 && shot.foul.foulType == FoulType.CLEAN){
+            if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
                 // missed shot need to get a rebound
                 plays.add(Rebound(homeTeamHasBall, shot.timeRemaining, shot.shotClock, homeTeam, awayTeam, playerWithBall, location))
                 deadball = false
             }
-            else if(shot.foul.foulType != FoulType.CLEAN){
+            else if (shot.foul.foulType != FoulType.CLEAN) {
                 // shoot free throws now?
                 shootFreeThrows = true
-                if(shot.points != 0){
+                if (shot.points != 0) {
                     addPoints(shot.points)
                     numberOfFreeThrows = 1
                 }
-                else if(shot.foul.foulType == FoulType.SHOOTING_LONG){
+                else if (shot.foul.foulType == FoulType.SHOOTING_LONG) {
                     numberOfFreeThrows = 3
                 }
-                else{
+                else {
                     numberOfFreeThrows = 2
                 }
 
                 deadball = true
             }
-            else{
+            else {
                 // made shot
                 madeShot = true
                 deadball = true
-                if(homeTeamHasBall){
+                if (homeTeamHasBall) {
                     homeScore += shot.points
                 }
-                else{
+                else {
                     awayScore += shot.points
                 }
             }
         }
-        else{
+        else {
             plays.add(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
             deadball = false
         }

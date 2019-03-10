@@ -11,27 +11,32 @@ class GameViewModel(
 ): ViewModel() {
     var gameId = -1
     var simSpeed = 1000L
-    var pauseGame = false
+    var pauseGame = true
     var lastPlay = 0
     var totalEvents = 0
     private var nullGame: Game? = null
-    private lateinit var gameSim: Job
+    private var gameSim: Job? = null
     private var saveGame: Job? = null
     private val gameEvents = mutableListOf<GameEventEntity>()
 
-    fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit) {
-        var initialLoad = true
+    fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: () -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             if (nullGame == null) {
-                if (saveGame != null && !saveGame!!.isCompleted) {
+                if (saveGame?.isCompleted == false) {
                     saveGame?.join()
                 }
                 // Load game from db if it doesn't currently exist
-                launch(Dispatchers.IO) {
-                    nullGame = dbHelper.loadGameById(gameId)
-                }.join()
+                nullGame = dbHelper.loadGameById(gameId)
             }
             nullGame?.let { game ->
+                game.userIsCoaching = true // allow the user to make their own subs
+                if (gameEvents.isEmpty()) {
+                    gameEvents.addAll(dbHelper.loadGameEvents(gameId))
+                }
+                withContext(Dispatchers.Main) {
+                    updateGame(game, gameEvents)
+                }
+
                 // Simulate the game play-by-play updating the view each time
                 gameSim = launch(Dispatchers.IO) {
                     if (!game.inProgress) {
@@ -40,21 +45,23 @@ class GameViewModel(
                         game.resumeGame()
                     }
 
-                    if (gameEvents.isEmpty()) {
-                        gameEvents.addAll(dbHelper.loadGameEvents(gameId))
-                    }
-                    withContext(Dispatchers.Main) {
-                        updateGame(game, gameEvents)
-                    }
-
                     while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
-                        if (!initialLoad || game.timeRemaining == 0) {
+                        if (game.timeRemaining == 0) {
                             game.startHalf()
+                            withContext(Dispatchers.Main) {
+                                notifyNewHalf()
+                            }
                         }
-                        initialLoad = false
+
+                        while (pauseGame) {
+                            // Wait for the user to press play
+                            // Happens between each half and when the sim is first opened
+                            Thread.sleep(100)
+                        }
 
                         while (isActive && game.timeRemaining > 0) {
                             game.simPlay()
+                            game.makeUserSubsIfPossible()
                             withContext(Dispatchers.Main) {
                                 updateGame(game, getNewPlayEvents(game))
                             }
@@ -62,6 +69,7 @@ class GameViewModel(
                             while (pauseGame) {
                                 Thread.sleep(100)
                             }
+                            game.makeUserSubsIfPossible()
                         }
                         if (isActive) {
                             game.half++
@@ -79,16 +87,26 @@ class GameViewModel(
                     dbHelper.saveGames(listOf(game))
                     dbHelper.saveGameEvents(gameEvents)
                 }
-                gameSim.join()
+                gameSim?.join()
             }
         }
     }
 
     fun pauseSim() {
         saveGame = GlobalScope.launch(Dispatchers.IO) {
-            if (gameSim.isActive) {
+            if (gameSim?.isActive == true) {
                 pauseGame = false
-                gameSim.cancelAndJoin()
+                gameSim?.cancelAndJoin()
+            }
+        }
+    }
+
+    fun addUserSub(sub: Pair<Int, Int>) {
+        nullGame?.let { game ->
+            if (game.homeTeam.isUser) {
+                game.homeTeam.addPendingSub(sub)
+            } else {
+                game.awayTeam.addPendingSub(sub)
             }
         }
     }

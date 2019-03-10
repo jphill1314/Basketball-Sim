@@ -7,7 +7,7 @@ interface ScheduleContract {
 
     interface View : MVPContract.View {
         fun displaySchedule(games: List<ScheduleDataModel>, isUsersSchedule: Boolean)
-        fun startGameFragment(gameId: Int, homeName: String, awayName: String)
+        fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
         fun showProgressBar()
         fun hideProgressBar()
         fun disableFab()
@@ -17,7 +17,7 @@ interface ScheduleContract {
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchSchedule()
         fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean)
-        fun startGameFragment(gameId: Int, homeName: String, awayName: String)
+        fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
         fun onFABClicked()
         fun simulateToGame(gameId: Int)
         fun simulateGame(gameId: Int)

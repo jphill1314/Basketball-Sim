@@ -9,21 +9,21 @@ class FTPlayText : FreeThrowTextContract {
         return when (attempts) {
             1 -> {
                 when (makes) {
-                    0 -> "${shooter.firstName} misses his free throw"
-                    else -> "${shooter.firstName} makes his free throw"
+                    0 -> "${shooter.firstName} misses his free throw."
+                    else -> "${shooter.firstName} makes his free throw."
                 }
             }
             2 -> {
                 when (makes) {
-                    0 -> "${shooter.firstName} misses both of his free throws"
-                    1 -> "${shooter.firstName} makes one of his free throws"
-                    else -> "${shooter.firstName} makes both of his free throws"
+                    0 -> "${shooter.firstName} misses both of his free throws."
+                    1 -> "${shooter.firstName} makes one of his free throws."
+                    else -> "${shooter.firstName} makes both of his free throws."
                 }
             }
             else -> {
                 when (makes) {
-                    0 -> "${shooter.firstName} misses all $attempts of his free throws"
-                    else -> "${shooter.firstName} makes $makes of $attempts of his free throws"
+                    0 -> "${shooter.firstName} misses all $attempts of his free throws."
+                    else -> "${shooter.firstName} makes $makes of $attempts of his free throws."
                 }
             }
         }

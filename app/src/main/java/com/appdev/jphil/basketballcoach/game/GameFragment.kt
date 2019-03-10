@@ -4,6 +4,7 @@ package com.appdev.jphil.basketballcoach.game
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.plays.FreeThrows
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
@@ -28,11 +30,12 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var viewId = 0
     private var rosterViewId = 0
     private var simSpeed = 50
+    private var userIsHomeTeam = false
     private var homeTeamName = "error"
     private var awayTeamName = "error"
     private lateinit var gameAdapter: GameAdapter
-    private lateinit var homeStatsAdapter: GameStatsAdapter
-    private lateinit var awayStatsAdapter: GameStatsAdapter
+    private var homeStatsAdapter: GameStatsAdapter? = null
+    private var awayStatsAdapter: GameStatsAdapter? = null
     private val teamStatsAdapter = GameTeamStatsAdapter(emptyList())
 
     private val homeScore: TextView by lazy { view!!.home_score }
@@ -41,6 +44,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private val awayFouls: TextView by lazy { view!!.away_fouls }
     private val gameStatus: TextView by lazy { view!!.game_half }
     private val gameTime: TextView by lazy { view!!.game_time }
+    private lateinit var fab: FloatingActionButton
     private lateinit var rosterSpinner: Spinner
     private lateinit var recyclerView: RecyclerView
 
@@ -51,10 +55,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
-
-        homeStatsAdapter = GameStatsAdapter(emptyList(), resources)
-        awayStatsAdapter = GameStatsAdapter(emptyList(), resources)
-
         (activity as? NavigationManager)?.disableNavigation()
     }
 
@@ -74,6 +74,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             awayTeamName = it.getString("awayTeam") ?: "error"
             viewId = it.getInt("viewId", 0)
             rosterViewId = it.getInt("rosterViewId", 0)
+            userIsHomeTeam = it.getBoolean("userIsHome", false)
             simSpeed = it.getInt("simSpeed", 50)
             if (gameId == 0) {
                 gameId = it.getInt("gameId", 0)
@@ -123,6 +124,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         view.seek_bar.setOnSeekBarChangeListener(this)
         view.seek_bar.progress = simSpeed
 
+        fab = view.findViewById(R.id.fab)
+        fab.setOnClickListener { onFabClicked() }
+
         selectView(viewId)
         return view
     }
@@ -131,10 +135,20 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         super.onResume()
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
         viewModel?.gameId = gameId
-        viewModel?.simulateGame { game, newEvents -> updateGame(game, newEvents) }
+        viewModel?.simulateGame(
+            { game, newEvents -> updateGame(game, newEvents) },
+            { notifyNewHalf() }
+        )
+
+        homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!)
+        awayStatsAdapter = GameStatsAdapter(!userIsHomeTeam, mutableListOf(), resources, viewModel!!)
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
+        if (game.deadball && !game.madeShot && game.gamePlays.isNotEmpty() && game.gamePlays.last() !is FreeThrows) {
+            onDeadBall()
+        }
+
         gameStatus.text = if (game.isFinal) {
             resources.getString(R.string.game_final)
         } else {
@@ -149,13 +163,15 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         gameAdapter.addEvents(newEvents)
         gameAdapter.notifyDataSetChanged()
 
-        homeStatsAdapter.players = game.homeTeam.players
-        homeStatsAdapter.notifyDataSetChanged()
-        awayStatsAdapter.players = game.awayTeam.players
-        awayStatsAdapter.notifyDataSetChanged()
+        homeStatsAdapter?.updatePlayerStats(game.homeTeam.players)
+        awayStatsAdapter?.updatePlayerStats(game.awayTeam.players)
 
         teamStatsAdapter.stats = game.getTeamStats()
         teamStatsAdapter.notifyDataSetChanged()
+    }
+
+    private fun notifyNewHalf() {
+        onDeadBall()
     }
 
     override fun onPause() {
@@ -170,6 +186,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         outState.putInt("viewId", viewId)
         outState.putInt("rosterViewId", rosterViewId)
         outState.putInt("simSpeed", simSpeed)
+        outState.putBoolean("userIsHome", userIsHomeTeam)
 
         super.onSaveInstanceState(outState)
     }
@@ -209,18 +226,29 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     private fun selectRosterView(viewId: Int) {
         rosterViewId = viewId
-        homeStatsAdapter.rosterViewId = rosterViewId
-        homeStatsAdapter.notifyDataSetChanged()
-        awayStatsAdapter.rosterViewId = rosterViewId
-        awayStatsAdapter.notifyDataSetChanged()
+        homeStatsAdapter?.rosterViewId = rosterViewId
+        awayStatsAdapter?.rosterViewId = rosterViewId
+    }
+
+    private fun onFabClicked() {
+        fab.isEnabled = false
+        fab.hide()
+        viewModel?.pauseGame = false
+    }
+
+    private fun onDeadBall() {
+        fab.isEnabled = true
+        fab.show()
+        viewModel?.pauseGame = true
     }
 
     companion object {
-        fun newInstance(gameId: Int, homeTeamName: String, awayTeamName: String): GameFragment {
+        fun newInstance(gameId: Int, homeTeamName: String, awayTeamName: String, userIsHomeTeam: Boolean): GameFragment {
             return GameFragment().apply {
                 this.gameId = gameId
                 this.homeTeamName = homeTeamName
                 this.awayTeamName = awayTeamName
+                this.userIsHomeTeam = userIsHomeTeam
             }
         }
     }
