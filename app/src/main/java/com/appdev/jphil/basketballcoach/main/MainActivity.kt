@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
@@ -13,7 +14,7 @@ import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener {
+class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener, GameFragment.NavigationManager {
 
     private lateinit var drawerLayout: DrawerLayout
     private var teamId = DEFAULT_TEAM_ID
@@ -58,6 +59,10 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener 
     }
 
     private fun handleFragmentNavigation(menuItem: MenuItem): Boolean {
+        while (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStackImmediate()
+        }
+
         val fragment: Fragment? = when (menuItem.itemId) {
             R.id.roster -> RosterFragment.newInstance(teamId)
             R.id.schedule -> ScheduleFragment.newInstance(teamId)
@@ -87,6 +92,22 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener 
     override fun changeConference(conferenceId: Int, teamId: Int) {
         this.conferenceId = conferenceId
         this.teamId = teamId
+    }
+
+    override fun disableNavigation() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        supportActionBar.let {
+            it?.setDisplayHomeAsUpEnabled(false)
+            it?.setHomeAsUpIndicator(null)
+        }
+    }
+
+    override fun enableNavigation() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        supportActionBar.let {
+            it?.setDisplayHomeAsUpEnabled(true)
+            it?.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+        }
     }
 
     companion object {

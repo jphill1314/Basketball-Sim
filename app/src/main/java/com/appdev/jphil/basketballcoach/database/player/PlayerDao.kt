@@ -11,6 +11,9 @@ interface PlayerDao {
     @Query("SELECT * FROM PlayerEntity where teamId in (:teamId)")
     fun getPlayersOnTeam(teamId: Int): List<PlayerEntity>
 
+    @Query("SELECT * FROM PlayerEntity where id in (:playerId)")
+    fun getPlayerById(playerId: Int): PlayerEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPlayers(players: List<PlayerEntity>)
 
