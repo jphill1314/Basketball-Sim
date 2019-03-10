@@ -73,4 +73,38 @@
     <string name="standings_dash">%1$d-%2$d</string>
     <string name="conf_w_l">Conf. W-L</string>
     <string name="overall_w_l">Overall W-L</string>
+
+    <string-array name="player_overview">
+        <item>Attributes</item>
+        <item>Stats</item>
+    </string-array>
+
+    <string-array name="player_stats">
+        <item>Offensive Stats</item>
+        <item>Defensive Stats</item>
+        <item>Other Stats</item>
+    </string-array>
+
+    <string name="colon">%1$s: %2$s</string>
+
+    <string name="game">Game</string>
+
+    <string name="close_range_shot">Close range shot: %d</string>
+    <string name="mid_range_shot">Mid range shot: %d</string>
+    <string name="long_range_shot">Long range shot: %d</string>
+    <string name="free_throw_shot">Free throw shot: %d</string>
+    <string name="post_move">Post move: %d</string>
+    <string name="ball_handling">Ball handling: %d</string>
+    <string name="passing">Passing: %d</string>
+    <string name="off_ball_movement">Off ball movement: %d</string>
+    <string name="post_defense">Post defense: %d</string>
+    <string name="perimeter_defense">Perimeter defense: %d</string>
+    <string name="on_ball_defense">On ball defense: %d</string>
+    <string name="off_ball_defense">Off ball defense: %d</string>
+    <string name="stealing">Stealing: %d</string>
+    <string name="rebounding">Rebounding: %d</string>
+    <string name="stamina">Stamina: %d</string>
+    <string name="aggressiveness">Aggressiveness: %d</string>
+
+
 </resources>

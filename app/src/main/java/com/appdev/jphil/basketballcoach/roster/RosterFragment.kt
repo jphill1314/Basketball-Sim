@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.ChangeTeamConfContract
+import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_roster.view.*
 import javax.inject.Inject
@@ -65,6 +66,13 @@ class RosterFragment : Fragment(), RosterContract.View {
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {
         (activity as? ChangeTeamConfContract.Listener?)?.changeConference(conferenceId, teamId)
+    }
+
+    override fun gotoPlayerOverview(playerId: Int) {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.frame_layout, PlayerOverviewFragment.newInstance(playerId))
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
     companion object {

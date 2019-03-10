@@ -38,6 +38,10 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
         }
     }
 
+    override fun onPlayerLongPressed(player: Player) {
+        view?.gotoPlayerOverview(player.id!!)
+    }
+
     private fun displayData(roster: List<Player>, isUsersTeam: Boolean) {
         val dataModels = mutableListOf<RosterDataModel>()
         roster.forEach { dataModels.add(RosterDataModel(it, false)) }

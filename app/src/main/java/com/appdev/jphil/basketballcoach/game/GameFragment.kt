@@ -54,6 +54,13 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
         homeStatsAdapter = GameStatsAdapter(emptyList(), resources)
         awayStatsAdapter = GameStatsAdapter(emptyList(), resources)
+
+        (activity as? NavigationManager)?.disableNavigation()
+    }
+
+    override fun onDetach() {
+        (activity as? NavigationManager)?.enableNavigation()
+        super.onDetach()
     }
 
     override fun onCreateView(
@@ -216,5 +223,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
                 this.awayTeamName = awayTeamName
             }
         }
+    }
+
+    interface NavigationManager {
+        fun disableNavigation()
+        fun enableNavigation()
     }
 }

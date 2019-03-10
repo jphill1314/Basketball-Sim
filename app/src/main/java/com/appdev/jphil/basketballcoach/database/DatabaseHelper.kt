@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.database
 
 import com.appdev.jphil.basketball.Conference
+import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
@@ -94,11 +95,15 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
             database.gameDao().insertGame(GameEntity.from(game))
             saveTeam(game.homeTeam)
             saveTeam(game.awayTeam)
-            game.homeTeam.players.forEach { player ->
-                database.playerDao().insertGameStats(GameStatsEntity.generate(player, game.season, game.awayTeam.name, true))
-            }
-            game.awayTeam.players.forEach { player ->
-                database.playerDao().insertGameStats(GameStatsEntity.generate(player, game.season, game.homeTeam.name, false))
+            if (game.isFinal) {
+                game.homeTeam.players.forEach { player ->
+                    database.playerDao()
+                        .insertGameStats(GameStatsEntity.generate(player, game.season, game.awayTeam.name, true))
+                }
+                game.awayTeam.players.forEach { player ->
+                    database.playerDao()
+                        .insertGameStats(GameStatsEntity.generate(player, game.season, game.homeTeam.name, false))
+                }
             }
         }
     }
@@ -113,5 +118,14 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
 
     fun loadGameEvents(gameId: Int): List<GameEventEntity> {
         return database.gameDao().getAllGameEventsForGame(gameId)
+    }
+
+    fun loadPlayerById(id: Int): Player {
+        val player = database.playerDao().getPlayerById(id)
+        return player.createPlayer()
+    }
+
+    fun loadGameStatsForPlayer(playerId: Int): List<GameStatsEntity> {
+        return database.playerDao().getAllGamesForPlayer(playerId)
     }
 }
