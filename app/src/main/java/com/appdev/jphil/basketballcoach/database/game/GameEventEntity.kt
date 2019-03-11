@@ -11,5 +11,9 @@ data class GameEventEntity(
     val timeRemaining: Int,
     val shotClock: Int,
     var event: String,
+    val homeTeam: String,
+    val awayTeam: String,
+    val homeScore: Int,
+    val awayScore: Int,
     val homeTeamHasBall: Boolean
 )

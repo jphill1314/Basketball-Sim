@@ -31,6 +31,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var rosterViewId = 0
     private var simSpeed = 50
     private var userIsHomeTeam = false
+    private var deadBall = true
     private var homeTeamName = "error"
     private var awayTeamName = "error"
     private lateinit var gameAdapter: GameAdapter
@@ -75,6 +76,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             viewId = it.getInt("viewId", 0)
             rosterViewId = it.getInt("rosterViewId", 0)
             userIsHomeTeam = it.getBoolean("userIsHome", false)
+            deadBall = it.getBoolean("deadBall", true)
             simSpeed = it.getInt("simSpeed", 50)
             if (gameId == 0) {
                 gameId = it.getInt("gameId", 0)
@@ -128,6 +130,13 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         fab.setOnClickListener { onFabClicked() }
 
         selectView(viewId)
+
+        if (deadBall) {
+            onDeadBall()
+        } else {
+            onFabClicked()
+        }
+
         return view
     }
 
@@ -187,6 +196,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         outState.putInt("rosterViewId", rosterViewId)
         outState.putInt("simSpeed", simSpeed)
         outState.putBoolean("userIsHome", userIsHomeTeam)
+        outState.putBoolean("deadBall", deadBall)
 
         super.onSaveInstanceState(outState)
     }
@@ -194,7 +204,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         simSpeed = progress
         viewModel?.simSpeed = (100 - simSpeed) * 20L
-        viewModel?.pauseGame = simSpeed == 0
+        if (!deadBall) {
+            viewModel?.pauseGame = simSpeed == 0
+        }
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -234,12 +246,14 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         fab.isEnabled = false
         fab.hide()
         viewModel?.pauseGame = false
+        deadBall = false
     }
 
     private fun onDeadBall() {
         fab.isEnabled = true
         fab.show()
         viewModel?.pauseGame = true
+        deadBall = true
     }
 
     companion object {

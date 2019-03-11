@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener, GameFragment.NavigationManager {
 
-    private lateinit var drawerLayout: DrawerLayout
+    private var drawerLayout: DrawerLayout? = null
     private var teamId = DEFAULT_TEAM_ID
     private var conferenceId = -1
 
@@ -51,7 +51,7 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                drawerLayout.openDrawer(GravityCompat.START)
+                drawerLayout?.openDrawer(GravityCompat.START)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -81,7 +81,7 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
                     .commit()
         }
 
-        drawerLayout.closeDrawers()
+        drawerLayout?.closeDrawers()
         return true
     }
 
@@ -95,7 +95,7 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
     }
 
     override fun disableNavigation() {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         supportActionBar.let {
             it?.setDisplayHomeAsUpEnabled(false)
             it?.setHomeAsUpIndicator(null)
@@ -103,7 +103,7 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
     }
 
     override fun enableNavigation() {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         supportActionBar.let {
             it?.setDisplayHomeAsUpEnabled(true)
             it?.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)

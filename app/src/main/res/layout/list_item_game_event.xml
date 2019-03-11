@@ -8,26 +8,58 @@
     android:layout_marginBottom="2dp"
     app:cardCornerRadius="0dp">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/game_time"
-            android:textAppearance="@style/NormalTextBlack"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            tools:text="12:50 (3)"/>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="12:50 (3)" />
 
         <TextView
             android:id="@+id/game_event"
-            android:textAppearance="@style/NormalTextBlack"
-            android:paddingTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="This guy grabbed the rebound!"/>
-    </LinearLayout>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_time"
+            tools:text="This guy grabbed the rebound!" />
+
+        <TextView
+            android:id="@+id/game_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Wof 53 - 45 ETSU" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

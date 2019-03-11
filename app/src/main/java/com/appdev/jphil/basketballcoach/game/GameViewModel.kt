@@ -28,10 +28,12 @@ class GameViewModel(
                 // Load game from db if it doesn't currently exist
                 nullGame = dbHelper.loadGameById(gameId)
             }
+
             nullGame?.let { game ->
                 game.userIsCoaching = true // allow the user to make their own subs
                 if (gameEvents.isEmpty()) {
                     gameEvents.addAll(dbHelper.loadGameEvents(gameId))
+                    totalEvents = gameEvents.size
                 }
                 withContext(Dispatchers.Main) {
                     updateGame(game, gameEvents)
@@ -95,8 +97,10 @@ class GameViewModel(
     fun pauseSim() {
         saveGame = GlobalScope.launch(Dispatchers.IO) {
             if (gameSim?.isActive == true) {
+                val pause = pauseGame
                 pauseGame = false
                 gameSim?.cancelAndJoin()
+                pauseGame = pause
             }
         }
     }
@@ -127,6 +131,10 @@ class GameViewModel(
                         play.timeRemaining,
                         play.shotClock,
                         play.playAsString,
+                        game.homeTeam.abbreviation,
+                        game.awayTeam.abbreviation,
+                        game.homeScore,
+                        game.awayScore,
                         play.homeTeamStartsWithBall
                     ))
                 } else {
@@ -140,6 +148,10 @@ class GameViewModel(
                             play.timeRemaining,
                             play.shotClock,
                             play.playAsString,
+                            game.homeTeam.abbreviation,
+                            game.awayTeam.abbreviation,
+                            game.homeScore,
+                            game.awayScore,
                             play.homeTeamStartsWithBall
                         ))
                     }

@@ -33,6 +33,7 @@ class Player(
     var fatigue = 0.0
     var timePlayed = 0
     var inGame = false
+    var subPosition = courtIndex
     val fullName = "$firstName $lastName"
 
     var twoPointAttempts = 0
@@ -114,11 +115,23 @@ class Player(
     }
 
     private fun getFatigueFactor(): Double {
-        return Math.max(1 - (Math.exp(fatigue / 10.0) / 100.0), .5)
+        return if (fatigue > 0.1) {
+            Math.max(1 - (Math.exp(fatigue / 10.0) / 100.0), .5)
+        } else {
+            1.0
+        }
     }
 
     fun getOverallRating(): Int {
         return getRatingAtPosition(position)
+    }
+
+    fun getRatingAtPositionNoFatigue(position: Int): Int {
+        val currentlyInGame = inGame
+        inGame = false
+        val rating = getRatingAtPosition(position)
+        inGame = currentlyInGame
+        return rating
     }
 
     fun getRatingAtPosition(position: Int): Int {
@@ -176,7 +189,7 @@ class Player(
                 1 -> 10
                 2 -> 5
                 3 -> 0
-                4 -> 20
+                4 -> 10
                 else -> 20
             }
             4 -> when (currentPosition) {

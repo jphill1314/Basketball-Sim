@@ -38,6 +38,7 @@ class GameStatsAdapter(
         if (isUsersTeam) {
             if (players.isEmpty()) {
                 players.addAll(newPlayers)
+                players.sortBy { it.subPosition }
             } else {
                 newPlayers.forEach { newPlayer ->
                     val player = players.filter { it.id == newPlayer.id }
@@ -49,6 +50,7 @@ class GameStatsAdapter(
         } else {
             players.clear()
             players.addAll(newPlayers)
+            players.sortBy { it.courtIndex }
         }
         notifyDataSetChanged()
     }
@@ -93,7 +95,13 @@ class GameStatsAdapter(
                 viewHolder.name?.text = player.lastName
                 when (rosterViewId) {
                     0 -> {
-                        viewHolder.stat1?.text = player.getOverallRating().toString()
+                        viewHolder.stat1?.text = if (playerPos > 4 ) {
+                            //player.getRatingAtPositionNoFatigue(player.position).toString()
+                            player.getOverallRating().toString()
+                        } else {
+                            //player.getRatingAtPositionNoFatigue(playerPos + 1).toString()
+                            player.getRatingAtPosition(playerPos + 1).toString()
+                        }
                         viewHolder.stat2?.text = String.format("%.2f", player.fatigue)
                         viewHolder.stat3?.text = (player.timePlayed / 60).toString()
                         viewHolder.stat4?.text = player.fouls.toString()
@@ -142,6 +150,7 @@ class GameStatsAdapter(
                 viewHolder.stat4?.text = resources.getString(R.string.to)
             }
         }
+        setHeaderTextColor(viewHolder)
     }
 
     private fun setPlayerTextColor(viewHolder: ViewHolder, player: Player, position: Int) {
@@ -162,6 +171,15 @@ class GameStatsAdapter(
         }
     }
 
+    private fun setHeaderTextColor(viewHolder: ViewHolder) {
+        viewHolder.pos?.setTextColor(Color.BLACK)
+        viewHolder.name?.setTextColor(Color.BLACK)
+        viewHolder.stat1?.setTextColor(Color.BLACK)
+        viewHolder.stat2?.setTextColor(Color.BLACK)
+        viewHolder.stat3?.setTextColor(Color.BLACK)
+        viewHolder.stat4?.setTextColor(Color.BLACK)
+    }
+
     private fun onPlayerSelected(player: Player) {
         if (selectedPlayer == null) {
             selectedPlayer = player
@@ -169,6 +187,8 @@ class GameStatsAdapter(
             if (selectedPlayer?.id != player.id) {
                 val sub = Pair(players.indexOf(selectedPlayer!!), players.indexOf(player))
                 Collections.swap(players, sub.first, sub.second)
+                selectedPlayer?.subPosition = sub.second
+                player.subPosition = sub.first
                 viewModel.addUserSub(sub)
             }
             selectedPlayer = null
