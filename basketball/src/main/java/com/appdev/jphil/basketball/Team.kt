@@ -6,6 +6,7 @@ import java.util.*
 class Team(
     val teamId: Int,
     val name: String,
+    val abbreviation: String,
     var offenseFavorsThrees: Int,
     var defenseFavorsThrees: Int,
     var pressFrequency: Int,
@@ -197,7 +198,10 @@ class Team(
             Collections.swap(players, it.first, it.second)
         }
         userSubs.removeAll(userSubs.filter { it.first != freeThrowShooter && it.second != freeThrowShooter })
-        players.forEach { it.courtIndex = players.indexOf(it) }
+        players.forEach {
+            it.courtIndex = players.indexOf(it)
+            it.subPosition = it.courtIndex
+        }
     }
 
     fun swapPlayers(player1: Int, player2: Int) {
@@ -210,7 +214,7 @@ class Team(
         var player = players[position - 1]
         var indexOfBest = position - 1
         for (index in players.indices) {
-            if ((player.getRatingAtPosition(position) - player.fatigue) < (players[index].getRatingAtPosition(position) - players[index].fatigue)) {
+            if ((player.getRatingAtPositionNoFatigue(position) - player.fatigue) < (players[index].getRatingAtPositionNoFatigue(position) - players[index].fatigue)) {
                 player = players[index]
                 indexOfBest = index
             }

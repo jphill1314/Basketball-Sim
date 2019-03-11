@@ -11,6 +11,7 @@ data class TeamEntity(
     @PrimaryKey
     val teamId: Int,
     val name: String,
+    val abbreviation: String,
     val offenseFavorsThrees: Int,
     val defenseFavorsThrees: Int,
     val pressFrequency : Int,
@@ -38,6 +39,7 @@ data class TeamEntity(
         val team = Team(
             teamId,
             name,
+            abbreviation,
             offenseFavorsThrees,
             defenseFavorsThrees,
             pressFrequency,
@@ -69,6 +71,7 @@ data class TeamEntity(
             return TeamEntity(
                 team.teamId,
                 team.name,
+                team.abbreviation,
                 team.offenseFavorsThrees,
                 team.defenseFavorsThrees,
                 team.pressFrequency,

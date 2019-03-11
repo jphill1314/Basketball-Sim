@@ -73,6 +73,7 @@
     <string name="standings_dash">%1$d-%2$d</string>
     <string name="conf_w_l">Conf. W-L</string>
     <string name="overall_w_l">Overall W-L</string>
+    <string name="score_dash">%1$s %2$d - %3$d %4$s</string>
 
     <string-array name="player_overview">
         <item>Attributes</item>
