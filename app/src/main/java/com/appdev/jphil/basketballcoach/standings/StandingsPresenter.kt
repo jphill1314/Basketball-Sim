@@ -28,8 +28,13 @@ class StandingsPresenter @Inject constructor(
         teams.forEach { team ->
             standings.add(RecordUtil.getRecordAsPair(games, team))
         }
-        standings.sortByDescending { it.conferenceWins }
-        view?.addTeams(standings)
+
+        view?.addTeams(standings.sortedWith(compareBy(
+            { it.getConferenceWinPercentage() },
+            { -it.conferenceWins },
+            { it.getWinPercentage() },
+            { -it.totalWins }
+        )))
     }
 
     override fun onTeamSelected(standingsDataModel: StandingsDataModel) {

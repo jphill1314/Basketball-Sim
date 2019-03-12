@@ -35,9 +35,6 @@ class GameViewModel(
                     gameEvents.addAll(dbHelper.loadGameEvents(gameId))
                     totalEvents = gameEvents.size
                 }
-                withContext(Dispatchers.Main) {
-                    updateGame(game, gameEvents)
-                }
 
                 // Simulate the game play-by-play updating the view each time
                 gameSim = launch(Dispatchers.IO) {
@@ -45,6 +42,10 @@ class GameViewModel(
                         game.setupGame()
                     } else {
                         game.resumeGame()
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        updateGame(game, gameEvents)
                     }
 
                     while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
