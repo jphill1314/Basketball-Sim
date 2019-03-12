@@ -154,7 +154,7 @@ class GameStatsAdapter(
     }
 
     private fun setPlayerTextColor(viewHolder: ViewHolder, player: Player, position: Int) {
-        if (player.courtIndex == position) {
+        if (player.courtIndex == position && player.id != selectedPlayer?.id) {
             viewHolder.pos?.setTextColor(Color.BLACK)
             viewHolder.name?.setTextColor(Color.BLACK)
             viewHolder.stat1?.setTextColor(Color.BLACK)

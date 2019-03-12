@@ -239,7 +239,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private fun selectRosterView(viewId: Int) {
         rosterViewId = viewId
         homeStatsAdapter?.rosterViewId = rosterViewId
+        homeStatsAdapter?.notifyDataSetChanged()
         awayStatsAdapter?.rosterViewId = rosterViewId
+        awayStatsAdapter?.notifyDataSetChanged()
     }
 
     private fun onFabClicked() {

@@ -8,4 +8,20 @@ data class StandingsDataModel(
     val conferenceLoses: Int,
     val totalWins: Int,
     val totalLoses: Int
-)
+) {
+    fun getWinPercentage(): Double {
+        return if (totalLoses == 0) {
+            1.0
+        } else {
+            totalWins / (totalLoses * 1.0)
+        }
+    }
+
+    fun getConferenceWinPercentage(): Double {
+        return if (conferenceLoses == 0) {
+            1.0
+        } else {
+            conferenceWins / (conferenceLoses * 1.0)
+        }
+    }
+}

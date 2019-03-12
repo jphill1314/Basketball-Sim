@@ -228,6 +228,7 @@ class Player(
         timePlayed = 0
 
         courtIndex = rosterIndex
+        subPosition = courtIndex
     }
 
     fun pauseGame() {
