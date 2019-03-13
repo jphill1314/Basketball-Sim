@@ -8,5 +8,6 @@ class ScheduleDataModel(
     val awayTeamName: String,
     val awayTeamRecord: String,
     val awayTeamScore: Int,
-    val isFinal: Boolean
+    val isFinal: Boolean,
+    val inProgress: Boolean
 )

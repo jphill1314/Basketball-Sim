@@ -46,6 +46,10 @@ class ScheduleAdapter(
                 viewHolder.homeScore.text = game.homeTeamScore.toString()
                 viewHolder.awayScore.text = game.awayTeamScore.toString()
                 viewHolder.gameStatus.text = resources.getString(R.string.game_final)
+            } else if (game.inProgress){
+                viewHolder.homeScore.text = game.homeTeamScore.toString()
+                viewHolder.awayScore.text = game.awayTeamScore.toString()
+                viewHolder.gameStatus.text = resources.getString(R.string.in_progress)
             } else {
                 viewHolder.homeScore.text = game.homeTeamRecord
                 viewHolder.awayScore.text = game.awayTeamRecord

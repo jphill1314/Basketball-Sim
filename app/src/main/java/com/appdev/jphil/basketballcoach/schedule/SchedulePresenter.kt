@@ -30,6 +30,7 @@ class SchedulePresenter @Inject constructor(
             val homeRecord = resources.getString(R.string.standings_dash, homeTeamRecord.first, homeTeamRecord.second)
             val awayTeamRecord = RecordUtil.getRecordAsPair(games, game.awayTeamId)
             val awayRecord = resources.getString(R.string.standings_dash, awayTeamRecord.first, awayTeamRecord.second)
+
             dataModels.add(ScheduleDataModel(
                 game.id ?: 0,
                 game.homeTeamName,
@@ -38,7 +39,8 @@ class SchedulePresenter @Inject constructor(
                 game.awayTeamName,
                 awayRecord,
                 game.awayScore,
-                game.isFinal)
+                game.isFinal,
+                game.inProgress)
             )
         }
         view?.hideProgressBar()
