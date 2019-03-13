@@ -67,6 +67,8 @@ class Team(
         freeThrowShots = 0
         freeThrowMakes = 0
 
+        lastScoreDiff = 0
+
         for (p in players) {
             p.startGame()
         }
@@ -217,7 +219,7 @@ class Team(
         return if (isUser) {
             userWantsTimeout
         } else {
-            (Math.abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && r.nextBoolean()).also { lastScoreDiff = scoreDif}
+            (Math.abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && r.nextBoolean())
         }
     }
 

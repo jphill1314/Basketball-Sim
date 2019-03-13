@@ -16,7 +16,7 @@ class Shot(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    val assisted: Boolean,
+    val assisted: Boolean, // TODO: when adding assists -> need a way to know which player passed the ball
     val rushed: Boolean,
     private val shotText: ShotTextContract = ShotPlayText()
 ) :

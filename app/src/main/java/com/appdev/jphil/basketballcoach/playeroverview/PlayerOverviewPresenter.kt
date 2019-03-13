@@ -28,9 +28,11 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
         var twoPointMakes = 0
         var threePointAttempts = 0
         var threePointMakes = 0
+        var assists = 0
         var offensiveRebounds = 0
         var defensiveRebounds = 0
         var turnovers = 0
+        var steals = 0
         var fouls = 0
         var freeThrowShots = 0
         var freeThrowMakes = 0
@@ -41,9 +43,11 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
             twoPointMakes += it.twoPointMakes
             threePointAttempts += it.threePointAttempts
             threePointMakes += it.threePointMakes
+            assists += it.assists
             offensiveRebounds += it.offensiveRebounds
             defensiveRebounds += it.defensiveRebounds
             turnovers += it.turnovers
+            steals += it.steals
             fouls += it.fouls
             freeThrowShots += it.freeThrowShots
             freeThrowMakes += it.freeThrowMakes
@@ -61,9 +65,11 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
             twoPointMakes,
             threePointAttempts,
             threePointMakes,
+            assists,
             offensiveRebounds,
             defensiveRebounds,
             turnovers,
+            steals,
             fouls,
             freeThrowShots,
             freeThrowMakes

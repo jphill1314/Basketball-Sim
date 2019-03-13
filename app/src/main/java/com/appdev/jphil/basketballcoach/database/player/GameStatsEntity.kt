@@ -17,9 +17,11 @@ class GameStatsEntity(
     val twoPointMakes: Int,
     val threePointAttempts: Int,
     val threePointMakes: Int,
+    val assists: Int,
     val offensiveRebounds: Int,
     val defensiveRebounds: Int,
     val turnovers: Int,
+    val steals: Int,
     val fouls: Int,
     val freeThrowShots: Int,
     val freeThrowMakes: Int
@@ -38,9 +40,11 @@ class GameStatsEntity(
                 player.twoPointMakes,
                 player.threePointAttempts,
                 player.threePointMakes,
+                player.assists,
                 player.offensiveRebounds,
                 player.defensiveRebounds,
                 player.turnovers,
+                player.steals,
                 player.fouls,
                 player.freeThrowShots,
                 player.freeThrowMakes

@@ -110,12 +110,12 @@ class GameStatsAdapter(
                         viewHolder.stat1?.text = resources.getString(R.string.x_slash_y, player.twoPointMakes, player.twoPointAttempts)
                         viewHolder.stat2?.text = resources.getString(R.string.x_slash_y, player.threePointMakes, player.threePointAttempts)
                         viewHolder.stat3?.text = resources.getString(R.string.x_slash_y, player.freeThrowMakes, player.freeThrowShots)
-                        viewHolder.stat4?.text = "0"
+                        viewHolder.stat4?.text = player.assists.toString()
                     }
                     2 -> {
                         viewHolder.stat1?.text = player.offensiveRebounds.toString()
                         viewHolder.stat2?.text = player.defensiveRebounds.toString()
-                        viewHolder.stat3?.text = "0"
+                        viewHolder.stat3?.text = player.steals.toString()
                         viewHolder.stat4?.text = player.turnovers.toString()
                     }
                 }

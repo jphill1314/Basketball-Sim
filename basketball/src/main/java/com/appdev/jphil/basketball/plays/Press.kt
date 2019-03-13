@@ -155,6 +155,11 @@ class Press(
         if (foul.foulType == FoulType.CLEAN) {
             homeTeamHasBall = !homeTeamHasBall
             passer.turnovers++
+            if (playerWithBall == playerStartsWithBall) {
+                passDefender.steals++
+            } else {
+                targetDefender.steals++
+            }
         } else {
             playAsString += " But, ${foul.playAsString}"
         }
@@ -181,6 +186,11 @@ class Press(
         if (foul.foulType == FoulType.CLEAN) {
             homeTeamHasBall = !homeTeamHasBall
             passer.turnovers++
+            if (playerWithBall == playerStartsWithBall) {
+                passDefender.steals++
+            } else {
+                targetDefender.steals++
+            }
         } else {
             playAsString += " But, ${foul.playAsString}"
         }

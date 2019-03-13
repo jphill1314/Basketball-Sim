@@ -112,6 +112,7 @@ class Pass(
             // target of pass is at fault
             playerWithBall = targetPos
             target.turnovers++
+            targetDefender.steals++
             playAsString = if (deadBall) {
                 playText.mishandledInbound(passer, target)
             } else {
@@ -120,6 +121,7 @@ class Pass(
         } else {
             // passer is at fault
             passer.turnovers++
+            passDefender.steals++
             playAsString = if (deadBall) {
                 playText.badInbound(passer, target)
             } else {
@@ -152,6 +154,7 @@ class Pass(
             )
             if (foul.foulType == FoulType.CLEAN) {
                 target.turnovers++
+                targetDefender.steals++
             }
         } else {
             // ball is stolen by defender of passer
@@ -172,6 +175,7 @@ class Pass(
             )
             if (foul.foulType == FoulType.CLEAN) {
                 passer.turnovers++
+                passDefender.steals++
             }
         }
         timeChange = timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
