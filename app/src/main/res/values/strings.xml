@@ -21,6 +21,7 @@
 
     <string name="half_placeholder">Half: %d</string>
     <string name="fouls">Fouls: %d</string>
+    <string name="timeouts">TO: %d</string>
 
     <string-array name="game_views">
         <item>Play by play</item>

@@ -26,6 +26,8 @@ class Game(
     var awayScore = 0
     var homeFouls = 0
     var awayFouls = 0
+    var homeTimeouts = maxTimeouts
+    var awayTimeouts = maxTimeouts
 
     var mediaTimeOuts = MutableList(10) {false}
     var homeTeamHasBall = true
@@ -94,12 +96,20 @@ class Game(
             madeShot = false
             if (half != 1) {
                 gamePlays.last().playAsString += miscText.endOfHalf(half - 1, false)
+                homeTimeouts++
+                awayTimeouts++
             }
         } else {
             homeTeamHasBall = homeTeamHasPossessionArrow
             deadball = true
             madeShot = false
             gamePlays.last().playAsString += miscText.endOfHalf(1, false)
+            if (homeTimeouts == maxTimeouts) {
+                homeTimeouts--
+            }
+            if (awayTimeouts == maxTimeouts) {
+                awayTimeouts--
+            }
         }
 
         if(half < 3){
@@ -119,13 +129,33 @@ class Game(
 
     fun simPlay() {
         gamePlays.addAll(getNextPlay())
+        var mediaTimeoutCalled = false
         if(deadball && !madeShot){
             if(getMediaTimeout()) {
                 gamePlays.last().playAsString += miscText.mediaTimeOut()
                 runTimeout()
+                mediaTimeoutCalled = true
             }
 
             makeSubs()
+        }
+
+        if (!mediaTimeoutCalled) {
+            if ((homeTeamHasBall || deadball) && homeTeam.coachWantsTimeout(homeScore - awayScore) && homeTimeouts > 0) {
+                gamePlays.last().playAsString += miscText.timeOut(homeTeam)
+                homeTimeouts--
+                runTimeout()
+                makeSubs()
+                deadball = true
+                madeShot = false
+            } else if ((!homeTeamHasBall || deadball) && awayTeam.coachWantsTimeout(awayScore - homeScore) && awayTimeouts > 0) {
+                gamePlays.last().playAsString += miscText.timeOut(awayTeam)
+                awayTimeouts--
+                runTimeout()
+                makeSubs()
+                deadball = true
+                madeShot = false
+            }
         }
     }
 
@@ -504,6 +534,8 @@ class Game(
         homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
         awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
         updateTimePlayed(0, true, false)
+        homeTeam.userWantsTimeout = false
+        awayTeam.userWantsTimeout = false
     }
 
     private fun changePossession(){
@@ -590,5 +622,6 @@ class Game(
         const val lengthOfOvertime = 5 * 60 // 5 minutes
         const val lengthOfShotClock = 30 // 30 seconds
         const val resetShotClockTime = 20 // shot clock resets to 20 on a defensive foul
+        const val maxTimeouts = 4
     }
 }

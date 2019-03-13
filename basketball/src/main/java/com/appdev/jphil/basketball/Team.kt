@@ -34,6 +34,9 @@ class Team(
     var freeThrowShots = 0
     var freeThrowMakes = 0
 
+    var userWantsTimeout = false
+    var lastScoreDiff = 0
+
     val r = Random()
 
     init {
@@ -208,6 +211,14 @@ class Team(
         Collections.swap(roster, player1, player2)
         roster[player1].rosterIndex = player1
         roster[player2].rosterIndex = player2
+    }
+
+    fun coachWantsTimeout(scoreDif: Int): Boolean {
+        return if (isUser) {
+            userWantsTimeout
+        } else {
+            (Math.abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && r.nextBoolean()).also { lastScoreDiff = scoreDif}
+        }
     }
 
     private fun getBestPlayerForPosition(position: Int): Int {
