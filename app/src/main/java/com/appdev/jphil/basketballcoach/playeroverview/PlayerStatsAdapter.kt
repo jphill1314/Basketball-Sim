@@ -76,14 +76,14 @@ class PlayerStatsAdapter(private val resources: Resources, private val stats: Li
         viewHolder.stat1.text = resources.getString(R.string.x_slash_y, game.twoPointMakes, game.twoPointAttempts)
         viewHolder.stat2.text = resources.getString(R.string.x_slash_y, game.threePointMakes, game.threePointAttempts)
         viewHolder.stat3.text = resources.getString(R.string.x_slash_y, game.freeThrowMakes, game.freeThrowShots)
-        viewHolder.stat4.text = "0"
+        viewHolder.stat4.text = game.assists.toString()
     }
 
     private fun bindDefensiveStats(viewHolder: ViewHolder, game: GameStatsEntity) {
         viewHolder.name.text = game.opponent
         viewHolder.stat1.text = game.offensiveRebounds.toString()
         viewHolder.stat2.text = game.defensiveRebounds.toString()
-        viewHolder.stat3.text = "0"
+        viewHolder.stat3.text = game.steals.toString()
         viewHolder.stat4.text = game.fouls.toString()
     }
 

@@ -139,22 +139,15 @@ class Game(
 
             makeSubs()
         }
-
         if (!mediaTimeoutCalled) {
             if ((homeTeamHasBall || deadball) && homeTeam.coachWantsTimeout(homeScore - awayScore) && homeTimeouts > 0) {
-                gamePlays.last().playAsString += miscText.timeOut(homeTeam)
+                gamePlays.last().playAsString += miscText.timeOut(homeTeam, getCoachExtendsToMedia())
                 homeTimeouts--
                 runTimeout()
-                makeSubs()
-                deadball = true
-                madeShot = false
             } else if ((!homeTeamHasBall || deadball) && awayTeam.coachWantsTimeout(awayScore - homeScore) && awayTimeouts > 0) {
-                gamePlays.last().playAsString += miscText.timeOut(awayTeam)
+                gamePlays.last().playAsString += miscText.timeOut(awayTeam, getCoachExtendsToMedia())
                 awayTimeouts--
                 runTimeout()
-                makeSubs()
-                deadball = true
-                madeShot = false
             }
         }
     }
@@ -421,134 +414,195 @@ class Game(
     }
 
     private fun manageFouls(foul: Foul){
-        if(foul.foulType != FoulType.CLEAN) {
+        if (foul.foulType != FoulType.CLEAN) {
             deadball = true
             madeShot = false // allow media timeouts to be called
             timeInBackcourt = 0 // reset time for 10 second call
 
-            if(foul.isOnDefense){
-                if(homeTeamHasBall){
+            if (foul.isOnDefense) {
+                if (homeTeamHasBall) {
                     awayFouls++
                 }
-                else{
+                else {
                     homeFouls++
                 }
             }
-            else{
-                if(homeTeamHasBall){
+            else {
+                if (homeTeamHasBall) {
                     homeFouls++
                 }
-                else{
+                else {
                     awayFouls++
                 }
             }
 
-            if(foul.isOnDefense){
-                if(homeTeamHasBall && awayFouls > 6){
+            if (foul.isOnDefense) {
+                if (homeTeamHasBall && awayFouls > 6) {
                     shootFreeThrows = true
-                    numberOfFreeThrows = if(awayFouls >= 10){
+                    numberOfFreeThrows = if (awayFouls >= 10) {
                         2
                     }
-                    else{
+                    else {
                         -1
                     }
                 }
-                else if(homeFouls > 6){
+                else if (homeFouls > 6) {
                     shootFreeThrows = true
-                    numberOfFreeThrows = if(homeFouls >= 10){
+                    numberOfFreeThrows = if (homeFouls >= 10) {
                         2
                     }
-                    else{
+                    else {
                         -1
                     }
                 }
 
-                if(shotClock < resetShotClockTime){
+                if (shotClock < resetShotClockTime) {
                     shotClock = if(timeRemaining > resetShotClockTime) resetShotClockTime else timeRemaining
                 }
+                if (shootFreeThrows) {
+                    shotClock = lengthOfShotClock
+                }
             }
-            else{
+            else {
                 changePossession()
             }
         }
     }
 
     private fun addPoints(points: Int){
-        if(homeTeamHasBall){
+        if (homeTeamHasBall) {
             homeScore += points
         }
-        else{
+        else {
             awayScore += points
         }
     }
 
     private fun getMediaTimeout(): Boolean{
-        return if(half == 1){
-            if(timeRemaining < 16 * 60 && !mediaTimeOuts[0]){
+        return if (half == 1) {
+            if (timeRemaining < 16 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[0]) {
                 mediaTimeOuts[0]= true
                 true
             }
-            else if(timeRemaining < 12 * 60 && !mediaTimeOuts[1]){
+            else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
                 mediaTimeOuts[1] = true
                 true
             }
-            else if(timeRemaining < 8 * 60 && !mediaTimeOuts[2]){
+            else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
                 mediaTimeOuts[2] = true
                 true
             }
-            else if(timeRemaining < 4 * 60 && !mediaTimeOuts[3]){
+            else if (timeRemaining < 4 * 60 && !mediaTimeOuts[3]) {
                 mediaTimeOuts[3] = true
                 true
             }
-            else{
+            else {
                 false
             }
         }
-        else if(half == 2){
-            if(timeRemaining < 16 * 60 && !mediaTimeOuts[4]){
+        else if (half == 2) {
+            if (timeRemaining < 16 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[4]) {
                 mediaTimeOuts[4] = true
                 true
             }
-            else if(timeRemaining < 12 * 60 && !mediaTimeOuts[5]){
+            else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
                 mediaTimeOuts[5] = true
                 true
             }
-            else if(timeRemaining < 8 * 60 && !mediaTimeOuts[6]){
+            else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
                 mediaTimeOuts[6] = true
                 true
             }
-            else if(timeRemaining < 4 * 60 && !mediaTimeOuts[7]){
+            else if (timeRemaining < 4 * 60 && !mediaTimeOuts[7]) {
                 mediaTimeOuts[7] = true
                 true
             }
-            else{
+            else {
                 false
             }
         }
-        else{
+        else {
             false
         }
     }
 
-    private fun runTimeout(){
-        homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
-        awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
-        updateTimePlayed(0, true, false)
-        homeTeam.userWantsTimeout = false
-        awayTeam.userWantsTimeout = false
+    private fun getCoachExtendsToMedia(): Boolean {
+        return if (half == 1) {
+            if (timeRemaining < 16.5 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[0]) {
+                mediaTimeOuts[0]= true
+                true
+            }
+            else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
+                mediaTimeOuts[1] = true
+                true
+            }
+            else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
+                mediaTimeOuts[2] = true
+                true
+            }
+            else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[3]) {
+                mediaTimeOuts[3] = true
+                true
+            }
+            else {
+                false
+            }
+        }
+        else if (half == 2) {
+            if (timeRemaining < 16.5 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[4]) {
+                mediaTimeOuts[4] = true
+                true
+            }
+            else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
+                mediaTimeOuts[5] = true
+                true
+            }
+            else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
+                mediaTimeOuts[6] = true
+                true
+            }
+            else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[7]) {
+                mediaTimeOuts[7] = true
+                true
+            }
+            else {
+                false
+            }
+        }
+        else {
+            false
+        }
     }
 
-    private fun changePossession(){
+    private fun runTimeout() {
+        homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
+        awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
+
+        updateTimePlayed(0, true, false)
+
+        homeTeam.userWantsTimeout = false
+        awayTeam.userWantsTimeout = false
+
+        homeTeam.lastScoreDiff = homeScore - awayScore
+        awayTeam.lastScoreDiff = awayScore - homeScore
+
+        deadball = true
+        madeShot = false
+
+        makeSubs()
+    }
+
+    private fun changePossession() {
         timeInBackcourt = 0
-        shotClock = if(timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
+        shotClock = if (timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         homeTeamHasBall = !homeTeamHasBall
-        if(location != 0){
+        if (location != 0) {
             location = -location
         }
         possessions++
     }
 
-    private fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean){
+    private fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {
         homeTeam.updateTimePlayed(time, isTimeout, isHalftime)
         awayTeam.updateTimePlayed(time, isTimeout, isHalftime)
     }
@@ -558,7 +612,7 @@ class Game(
         awayTeam.addFatigueFromPress()
     }
 
-    fun getTimeAsString(): String{
+    fun getTimeAsString(): String {
         val min = timeRemaining / 60
         val sec = timeRemaining - min * 60
         return if (sec > 9) "$min:$sec ($shotClock)" else "$min:0$sec ($shotClock)"

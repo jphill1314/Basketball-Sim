@@ -17,8 +17,9 @@ class MiscPlayText : MiscTextContract {
         return "\nAnd that will bring us to a media timeout."
     }
 
-    override fun timeOut(team: Team): String {
-        return "\n${team.name} have called a timeout."
+    override fun timeOut(team: Team, extendsToFull: Boolean): String {
+        return "\n${team.name} have called a timeout" +
+                if (extendsToFull) " and it will extend to a full media timeout." else "."
     }
 
     override fun endOfHalf(half: Int, gameOver: Boolean): String {

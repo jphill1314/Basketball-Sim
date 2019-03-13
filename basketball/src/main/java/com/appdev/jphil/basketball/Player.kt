@@ -40,9 +40,11 @@ class Player(
     var twoPointMakes = 0
     var threePointAttempts = 0
     var threePointMakes = 0
+    var assists = 0
     var offensiveRebounds = 0
     var defensiveRebounds = 0
     var turnovers = 0
+    var steals = 0
     var fouls = 0
     var freeThrowShots = 0
     var freeThrowMakes = 0
@@ -215,9 +217,11 @@ class Player(
         twoPointMakes = 0
         threePointAttempts = 0
         threePointMakes = 0
+        assists =0
         offensiveRebounds = 0
         defensiveRebounds = 0
         turnovers = 0
+        steals = 0
         fouls = 0
         freeThrowShots = 0
         freeThrowMakes = 0
