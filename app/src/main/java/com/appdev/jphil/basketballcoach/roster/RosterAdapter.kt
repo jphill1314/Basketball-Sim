@@ -66,7 +66,7 @@ class RosterAdapter(
             viewHolder.position?.text = if (position < 6) positions[position - 1] else positions[player.position - 1]
             viewHolder.name?.text = player.fullName
             viewHolder.rating?.text = player.getOverallRating().toString()
-            viewHolder.year?.text = classes[2]
+            viewHolder.year?.text = classes[player.year]
 
             if (position == 5) {
                 val params = viewHolder.itemView.layoutParams as ViewGroup.MarginLayoutParams

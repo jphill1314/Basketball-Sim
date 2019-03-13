@@ -34,6 +34,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     i,
+                    r.nextInt(4),
                     teamId,
                     teamRating,
                     i - 1
@@ -47,6 +48,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     i,
+                    r.nextInt(4),
                     teamId,
                     teamRating - r.nextInt(10),
                     i + 4
@@ -60,6 +62,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     i,
+                    r.nextInt(4),
                     teamId,
                     teamRating - r.nextInt(15),
                     i + 9

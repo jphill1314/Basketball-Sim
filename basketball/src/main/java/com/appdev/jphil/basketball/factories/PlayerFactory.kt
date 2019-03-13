@@ -27,6 +27,7 @@ object PlayerFactory {
         firstName: String,
         lastName: String,
         position: Int,
+        year: Int,
         teamId: Int,
         rating: Int,
         index: Int
@@ -77,6 +78,7 @@ object PlayerFactory {
             firstName,
             lastName,
             position,
+            year,
             closeRangeShot,
             midRangeShot,
             longRangeShot,
