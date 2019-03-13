@@ -35,7 +35,9 @@ data class GameEntity(
     val mediaTimeouts: MutableList<Boolean>,
     val homeTeamName: String,
     val awayTeamName: String,
-    val homeTeamHasPossessionArrow: Boolean
+    val homeTeamHasPossessionArrow: Boolean,
+    val homeTimeouts: Int,
+    val awayTimeouts: Int
 ) {
     fun createGame(homeTeam: Team, awayTeam: Team): Game {
         val game = Game(homeTeam, awayTeam, isNeutralCourt, season, id, isFinal)
@@ -57,6 +59,8 @@ data class GameEntity(
         game.possessions = possessions
         game.mediaTimeOuts = mediaTimeouts
         game.homeTeamHasPossessionArrow = homeTeamHasPossessionArrow
+        game.homeTimeouts = homeTimeouts
+        game.awayTimeouts = awayTimeouts
         return game
     }
 
@@ -88,7 +92,9 @@ data class GameEntity(
                 game.mediaTimeOuts,
                 game.homeTeam.name,
                 game.awayTeam.name,
-                game.homeTeamHasPossessionArrow
+                game.homeTeamHasPossessionArrow,
+                game.homeTimeouts,
+                game.awayTimeouts
             )
         }
     }

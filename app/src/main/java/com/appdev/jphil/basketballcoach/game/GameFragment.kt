@@ -45,7 +45,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private val awayFouls: TextView by lazy { view!!.away_fouls }
     private val gameStatus: TextView by lazy { view!!.game_half }
     private val gameTime: TextView by lazy { view!!.game_time }
-    private lateinit var fab: FloatingActionButton
+    private val homeTimeouts: TextView by lazy { view!!.home_timeouts }
+    private val awayTimeouts: TextView by lazy { view!!.away_timeouts }
+    private lateinit var playFab: FloatingActionButton
+    private lateinit var timeoutFab: FloatingActionButton
     private lateinit var rosterSpinner: Spinner
     private lateinit var recyclerView: RecyclerView
 
@@ -126,15 +129,18 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         view.seek_bar.setOnSeekBarChangeListener(this)
         view.seek_bar.progress = simSpeed
 
-        fab = view.findViewById(R.id.fab)
-        fab.setOnClickListener { onFabClicked() }
+        playFab = view.findViewById(R.id.play_fab)
+        playFab.setOnClickListener { onPlayFabClicked() }
+
+        timeoutFab = view.findViewById(R.id.timeout_fab)
+        timeoutFab.setOnClickListener { onTimeOutFabClicked() }
 
         selectView(viewId)
 
         if (deadBall) {
             onDeadBall()
         } else {
-            onFabClicked()
+            onPlayFabClicked()
         }
 
         return view
@@ -168,6 +174,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         awayScore.text = game.awayScore.toString()
         homeFouls.text = resources.getString(R.string.fouls, game.homeFouls)
         awayFouls.text = resources.getString(R.string.fouls, game.awayFouls)
+        homeTimeouts.text = resources.getString(R.string.timeouts, game.homeTimeouts)
+        awayTimeouts.text = resources.getString(R.string.timeouts, game.awayTimeouts)
 
         gameAdapter.addEvents(newEvents)
         gameAdapter.notifyDataSetChanged()
@@ -244,18 +252,26 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         awayStatsAdapter?.notifyDataSetChanged()
     }
 
-    private fun onFabClicked() {
-        fab.isEnabled = false
-        fab.hide()
+    private fun onPlayFabClicked() {
+        playFab.isEnabled = false
+        playFab.hide()
         viewModel?.pauseGame = false
         deadBall = false
+
+        timeoutFab.show()
     }
 
     private fun onDeadBall() {
-        fab.isEnabled = true
-        fab.show()
+        playFab.isEnabled = true
+        playFab.show()
         viewModel?.pauseGame = true
         deadBall = true
+
+        timeoutFab.hide()
+    }
+
+    private fun onTimeOutFabClicked() {
+        viewModel?.callTimeout()
     }
 
     companion object {

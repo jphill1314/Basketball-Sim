@@ -116,6 +116,16 @@ class GameViewModel(
         }
     }
 
+    fun callTimeout() {
+        nullGame?.let { game ->
+            if (game.homeTeam.isUser) {
+                game.homeTeam.userWantsTimeout = !game.homeTeam.userWantsTimeout
+            } else {
+                game.awayTeam.userWantsTimeout = !game.awayTeam.userWantsTimeout
+            }
+        }
+    }
+
     private fun getNewPlayEvents(game: Game): List<GameEventEntity> {
         val newEvents = mutableListOf<GameEventEntity>()
         val plays = game.gamePlays
