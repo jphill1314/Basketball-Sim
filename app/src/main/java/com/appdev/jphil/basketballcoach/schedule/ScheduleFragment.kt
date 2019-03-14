@@ -86,11 +86,11 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun disableFab() {
-        fab.isEnabled = false
+        fab.hide()
     }
 
     override fun enableFab() {
-        fab.isEnabled = false
+        fab.show()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

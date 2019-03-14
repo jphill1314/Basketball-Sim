@@ -70,7 +70,9 @@ class ScheduleRepository @Inject constructor(
             var id = 1
             while (id <= gameId) {
                 val game = dbHelper.loadGameById(id++)
-                game.simulateFullGame()
+                if (!game.isFinal) {
+                    game.simulateFullGame()
+                }
                 dbHelper.saveGames(listOf(game))
             }
             fetchSchedule()

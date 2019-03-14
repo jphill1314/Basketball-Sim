@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.strategy
 
+import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
@@ -17,18 +18,16 @@ class StrategyRepository @Inject constructor(
 
     override fun loadStrategy() {
         GlobalScope.launch(Dispatchers.IO) {
-            val team = dbHelper.loadTeamById(teamId)
-            team?.let {
-                withContext(Dispatchers.Main) {
-                    presenter.onStrategyLoaded(it)
-                }
+            val coach = dbHelper.loadCoachByTeamId(teamId)
+            withContext(Dispatchers.Main) {
+                presenter.onStrategyLoaded(coach)
             }
         }
     }
 
-    override fun saveStrategy(team: Team) {
+    override fun saveStrategy(coach: Coach) {
         GlobalScope.launch(Dispatchers.IO) {
-            dbHelper.saveTeam(team)
+            dbHelper.saveCoach(coach)
         }
     }
 

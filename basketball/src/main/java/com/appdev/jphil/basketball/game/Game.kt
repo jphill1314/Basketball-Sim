@@ -95,7 +95,9 @@ class Game(
             deadball = false
             madeShot = false
             if (half != 1) {
-                gamePlays.last().playAsString += miscText.endOfHalf(half - 1, false)
+                if (gamePlays.isNotEmpty()) {
+                    gamePlays.last().playAsString += miscText.endOfHalf(half - 1, false)
+                }
                 homeTimeouts++
                 awayTimeouts++
             }
@@ -103,7 +105,10 @@ class Game(
             homeTeamHasBall = homeTeamHasPossessionArrow
             deadball = true
             madeShot = false
-            gamePlays.last().playAsString += miscText.endOfHalf(1, false)
+            if (gamePlays.isNotEmpty()) {
+                gamePlays.last().playAsString += miscText.endOfHalf(1, false)
+            }
+
             if (homeTimeouts == maxTimeouts) {
                 homeTimeouts--
             }

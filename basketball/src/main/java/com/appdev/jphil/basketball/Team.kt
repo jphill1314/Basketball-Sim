@@ -7,15 +7,10 @@ class Team(
     val teamId: Int,
     val name: String,
     val abbreviation: String,
-    var offenseFavorsThrees: Int,
-    var defenseFavorsThrees: Int,
-    var pressFrequency: Int,
-    var pressAggression: Int,
-    var aggression: Int,
-    var pace: Int,
     val players: MutableList<Player>,
     val conferenceId: Int,// for use in games
-    val isUser: Boolean
+    val isUser: Boolean,
+    val coach: Coach
 ) {
 
     val roster = mutableListOf<Player>() // for use everywhere else
@@ -33,6 +28,13 @@ class Team(
     var defensiveFouls = 0
     var freeThrowShots = 0
     var freeThrowMakes = 0
+
+    var offenseFavorsThrees = coach.offenseFavorsThreesGame
+    var defenseFavorsThrees = coach.defenseFavorsThreesGame
+    var pressFrequency = coach.pressFrequencyGame
+    var pressAggression = coach.pressAggressionGame
+    var aggression = coach.aggressionGame
+    var pace = coach.paceGame
 
     var userWantsTimeout = false
     var lastScoreDiff = 0

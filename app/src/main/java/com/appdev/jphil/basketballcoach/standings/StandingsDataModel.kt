@@ -13,7 +13,7 @@ data class StandingsDataModel(
         return if (totalLoses == 0) {
             1.0
         } else {
-            totalWins / (totalLoses * 1.0)
+            totalWins / (totalWins + totalLoses * 1.0)
         }
     }
 
@@ -21,7 +21,7 @@ data class StandingsDataModel(
         return if (conferenceLoses == 0) {
             1.0
         } else {
-            conferenceWins / (conferenceLoses * 1.0)
+            conferenceWins / (conferenceWins + conferenceLoses * 1.0)
         }
     }
 }

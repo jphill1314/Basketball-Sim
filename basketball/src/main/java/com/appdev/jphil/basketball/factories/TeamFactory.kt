@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.factories
 
+import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
 import java.util.*
@@ -12,15 +13,10 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
             teamId,
             teamName,
             teamAbbreviation,
-            50,
-            50,
-            0,
-            0,
-            50,
-            70,
             generatePlayers(teamId, 15, teamRating),
             conferenceId,
-            isUser
+            isUser,
+            generateCoach(teamId)
         )
     }
 
@@ -71,5 +67,14 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
         }
 
         return players
+    }
+
+    private fun generateCoach(teamId: Int): Coach {
+        val r = Random()
+        return CoachFactory.generateCoach(
+            teamId,
+            firstNames[r.nextInt(firstNames.size)],
+            lastNames[r.nextInt(lastNames.size)]
+        )
     }
 }
