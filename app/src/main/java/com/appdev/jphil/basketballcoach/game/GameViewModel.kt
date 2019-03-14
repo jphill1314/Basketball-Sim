@@ -2,12 +2,13 @@ package com.appdev.jphil.basketballcoach.game
 
 import android.arch.lifecycle.ViewModel
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import kotlinx.coroutines.*
 
 class GameViewModel(
-    private val dbHelper: DatabaseHelper
+    private val database: BasketballDatabase
 ): ViewModel() {
     var gameId = -1
     var simSpeed = 1000L
@@ -26,13 +27,13 @@ class GameViewModel(
                     saveGame?.join()
                 }
                 // Load game from db if it doesn't currently exist
-                nullGame = dbHelper.loadGameById(gameId)
+                nullGame = GameDatabaseHelper.loadGameById(gameId, database)
             }
 
             nullGame?.let { game ->
                 game.userIsCoaching = true // allow the user to make their own subs
                 if (gameEvents.isEmpty()) {
-                    gameEvents.addAll(dbHelper.loadGameEvents(gameId))
+                    gameEvents.addAll(GameDatabaseHelper.loadGameEvents(gameId, database))
                     totalEvents = gameEvents.size
                 }
 
@@ -87,8 +88,8 @@ class GameViewModel(
                         }
                     }
                     // save game to db
-                    dbHelper.saveGames(listOf(game))
-                    dbHelper.saveGameEvents(gameEvents)
+                    GameDatabaseHelper.saveGames(listOf(game), database)
+                    GameDatabaseHelper.saveGameEvents(gameEvents, database)
                 }
                 gameSim?.join()
             }

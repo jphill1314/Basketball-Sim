@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.playeroverview
 
-import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -9,14 +10,14 @@ import javax.inject.Inject
 
 class PlayerOverviewRepository @Inject constructor(
     private val playerId: Int,
-    private val dbHelper: DatabaseHelper
+    private val database: BasketballDatabase
 ) : PlayerOverviewContract.Repository {
 
     private lateinit var presenter: PlayerOverviewContract.Presenter
 
     override fun fetchPlayer() {
         GlobalScope.launch(Dispatchers.IO) {
-            val player = dbHelper.loadPlayerById(playerId)
+            val player = PlayerDatabaseHelper.loadPlayerById(playerId, database)
             withContext(Dispatchers.Main) {
                 presenter.onPlayerLoaded(player)
             }
@@ -25,7 +26,7 @@ class PlayerOverviewRepository @Inject constructor(
 
     override fun fetchPlayerStats() {
         GlobalScope.launch(Dispatchers.IO) {
-            val stats = dbHelper.loadGameStatsForPlayer(playerId)
+            val stats = PlayerDatabaseHelper.loadGameStatsForPlayer(playerId, database)
             withContext(Dispatchers.Main) {
                 presenter.onStatsLoaded(stats)
             }

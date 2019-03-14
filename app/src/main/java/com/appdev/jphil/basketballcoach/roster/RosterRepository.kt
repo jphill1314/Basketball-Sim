@@ -5,7 +5,10 @@ import com.appdev.jphil.basketball.factories.BasketballFactory
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -15,7 +18,7 @@ import javax.inject.Inject
 
 class RosterRepository @Inject constructor(
     private val teamId: Int,
-    private val dbHelper: DatabaseHelper,
+    private val database: BasketballDatabase,
     private val resources: Resources
 ): RosterContract.Repository {
 
@@ -24,14 +27,14 @@ class RosterRepository @Inject constructor(
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
             var team = if (teamId == MainActivity.DEFAULT_TEAM_ID) {
-                dbHelper.loadUserTeam()
+                TeamDatabaseHelper.loadUserTeam(database)
             } else {
-                dbHelper.loadTeamById(teamId)
+                TeamDatabaseHelper.loadTeamById(teamId, database)
             }
 
             if (team == null) {
                 createGame()
-                team = dbHelper.loadUserTeam()
+                team = TeamDatabaseHelper.loadUserTeam(database)
             }
             withContext(Dispatchers.Main) { presenter.onDataFetched(team!!) }
         }
@@ -39,7 +42,7 @@ class RosterRepository @Inject constructor(
 
     override fun saveTeam(team: Team) {
         GlobalScope.launch(Dispatchers.IO) {
-            dbHelper.saveTeam(team)
+            TeamDatabaseHelper.saveTeam(team, database)
         }
     }
 
@@ -50,8 +53,8 @@ class RosterRepository @Inject constructor(
         )
         val conferences = BasketballFactory.setupWholeBasketballWorld(teamFactory)
         conferences.forEach {
-            dbHelper.saveConference(it)
-            dbHelper.saveOnlyGames(it.generateSchedule(2018))
+            ConferenceDatabaseHelper.saveConference(it, database)
+            GameDatabaseHelper.saveOnlyGames(it.generateSchedule(2018), database)
         }
     }
 
