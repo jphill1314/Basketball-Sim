@@ -17,8 +17,8 @@ object CoachFactory {
         val defenseFavorsThrees = r.nextInt(100)
 
         val presses = r.nextInt(100) < 20
-        val pressFrequency = if (presses) r.nextInt(66) + 33 else 0
-        val pressAggression = if (presses) r.nextInt(100) else 0
+        val pressFrequency = if (presses) r.nextInt(66) + 34 else 0
+        val pressAggression = if (presses) r.nextInt(99) + 1 else 0
 
         return Coach(
             null,

@@ -101,15 +101,13 @@ class Player(
             if (fatigue > 100) {
                 fatigue = 100.0
             }
-        } else {
-            fatigue *= .9
         }
 
         if (isHalftime) {
-            fatigue *= .5
+            fatigue *= .85
         }
         if (isTimeout) {
-            fatigue *= .8
+            fatigue *= .9
         }
     }
 
@@ -119,7 +117,7 @@ class Player(
 
     private fun getFatigueFactor(): Double {
         return if (fatigue > 0.1) {
-            Math.max(1 - (Math.exp(fatigue / 10.0) / 100.0), .5)
+            Math.max(1 - (Math.exp(fatigue / 25.0) / 100.0), .5)
         } else {
             1.0
         }
