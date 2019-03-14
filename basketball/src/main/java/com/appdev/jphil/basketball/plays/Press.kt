@@ -7,6 +7,7 @@ import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
 import com.appdev.jphil.basketball.playtext.PressPlayText
 import com.appdev.jphil.basketball.textcontracts.PressTextContract
+import java.lang.Math.abs
 
 
 class Press(
@@ -48,7 +49,6 @@ class Press(
     }
 
     override fun generatePlay(): Int {
-        println("PRESS")
         getPasserAndTarget()
 
         val passSuccess = ((passer.passing + target.offBallMovement) /
@@ -60,11 +60,9 @@ class Press(
             passSuccess > defSuccess -> successfulPass(passSuccess, defSuccess)
             defSuccess > (passSuccess + 40) -> {
                 stolenPass()
-                println("stolen pass")
             }
             defSuccess > (passSuccess + 25) -> {
                 badPass()
-                println("bad pass")
             }
             !deadBall -> justDribbling()
             else -> successfulPass(passSuccess, defSuccess)
