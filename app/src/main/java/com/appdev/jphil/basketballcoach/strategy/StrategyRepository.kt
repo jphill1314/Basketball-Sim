@@ -1,8 +1,8 @@
 package com.appdev.jphil.basketballcoach.strategy
 
 import com.appdev.jphil.basketball.Coach
-import com.appdev.jphil.basketball.Team
-import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.coach.CoachDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -11,14 +11,14 @@ import javax.inject.Inject
 
 class StrategyRepository @Inject constructor(
     private val teamId: Int,
-    private val dbHelper: DatabaseHelper
+    private val database: BasketballDatabase
 ): StrategyContract.Repository {
 
     private lateinit var presenter: StrategyContract.Presenter
 
     override fun loadStrategy() {
         GlobalScope.launch(Dispatchers.IO) {
-            val coach = dbHelper.loadCoachByTeamId(teamId)
+            val coach = CoachDatabaseHelper.loadCoachByTeamId(teamId, database)
             withContext(Dispatchers.Main) {
                 presenter.onStrategyLoaded(coach)
             }
@@ -27,7 +27,7 @@ class StrategyRepository @Inject constructor(
 
     override fun saveStrategy(coach: Coach) {
         GlobalScope.launch(Dispatchers.IO) {
-            dbHelper.saveCoach(coach)
+            CoachDatabaseHelper.saveCoach(coach, database)
         }
     }
 

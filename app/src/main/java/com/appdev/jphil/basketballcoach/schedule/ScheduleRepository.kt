@@ -1,6 +1,8 @@
 package com.appdev.jphil.basketballcoach.schedule
 
-import com.appdev.jphil.basketballcoach.database.DatabaseHelper
+import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -9,15 +11,15 @@ import javax.inject.Inject
 
 class ScheduleRepository @Inject constructor(
     private val teamId: Int,
-    private val dbHelper: DatabaseHelper
+    private val database: BasketballDatabase
 ) : ScheduleContract.Repository {
 
     private lateinit var presenter: ScheduleContract.Presenter
 
     override fun fetchSchedule() {
         GlobalScope.launch(Dispatchers.IO) {
-            val gameEntities = dbHelper.loadAllGameEntities()
-            val team = dbHelper.loadUserTeam()
+            val gameEntities = GameDatabaseHelper.loadAllGameEntities(database)
+            val team = TeamDatabaseHelper.loadUserTeam(database)
             withContext(Dispatchers.Main) { presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId) }
         }
     }
@@ -30,12 +32,12 @@ class ScheduleRepository @Inject constructor(
             var userIsHomeTeam = false
             var continueSim = true
             while(continueSim) {
-                val game = dbHelper.loadGameById(gameId++)
+                val game = GameDatabaseHelper.loadGameById(gameId++, database)
                 if (!game.isFinal) {
                     continueSim = game.homeTeam.teamId != teamId && game.awayTeam.teamId != teamId
                     if (continueSim) {
                         game.simulateFullGame()
-                        dbHelper.saveGames(listOf(game))
+                        GameDatabaseHelper.saveGames(listOf(game), database)
                     } else {
                         homeName = game.homeTeam.name
                         awayName = game.awayTeam.name
@@ -50,15 +52,11 @@ class ScheduleRepository @Inject constructor(
     override fun simulateToGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             var id = 1
-            var continueSim = true
-            while (continueSim) {
-                continueSim = gameId != id
-                if (continueSim) {
-                    val game = dbHelper.loadGameById(id++)
-                    if (!game.isFinal) {
-                        game.simulateFullGame()
-                        dbHelper.saveGames(listOf(game))
-                    }
+            while (id < gameId) {
+                val game = GameDatabaseHelper.loadGameById(id++, database)
+                if (!game.isFinal) {
+                    game.simulateFullGame()
+                    GameDatabaseHelper.saveGames(listOf(game), database)
                 }
             }
             fetchSchedule()
@@ -69,11 +67,11 @@ class ScheduleRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.IO) {
             var id = 1
             while (id <= gameId) {
-                val game = dbHelper.loadGameById(id++)
+                val game = GameDatabaseHelper.loadGameById(id++, database)
                 if (!game.isFinal) {
                     game.simulateFullGame()
+                    GameDatabaseHelper.saveGames(listOf(game), database)
                 }
-                dbHelper.saveGames(listOf(game))
             }
             fetchSchedule()
         }
