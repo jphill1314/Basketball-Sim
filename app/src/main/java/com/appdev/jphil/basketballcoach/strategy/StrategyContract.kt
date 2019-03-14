@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.strategy
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketballcoach.MVPContract
 
 interface StrategyContract {
@@ -11,7 +11,7 @@ interface StrategyContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchStrategy()
-        fun onStrategyLoaded(team: Team)
+        fun onStrategyLoaded(coach: Coach)
         fun onPaceChanged(pace: Int)
         fun onOffenseFavorsThreesChanged(favorsThrees: Int)
         fun onAggressionChanged(aggression: Int)
@@ -22,6 +22,6 @@ interface StrategyContract {
 
     interface Repository : MVPContract.Repository<Presenter> {
         fun loadStrategy()
-        fun saveStrategy(team: Team)
+        fun saveStrategy(coach: Coach)
     }
 }

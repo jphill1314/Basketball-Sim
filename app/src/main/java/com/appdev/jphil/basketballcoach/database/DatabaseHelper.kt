@@ -1,9 +1,11 @@
 package com.appdev.jphil.basketballcoach.database
 
+import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketball.Conference
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
@@ -16,11 +18,10 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
 
     fun loadTeamById(teamId: Int): Team? {
         val teamEntity = database.teamDao().getTeamWithId(teamId)
-        return if (teamEntity == null) {
-            null
-        } else {
+        return teamEntity?.let {
             val players = database.playerDao().getPlayersOnTeam(teamId)
-            teamEntity.createTeam(players)
+            val coach = database.coachDao().getCoachByTeamId(teamId)
+            it.createTeam(players, coach)
         }
     }
 
@@ -28,7 +29,8 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
         val teamEntity = database.teamDao().getTeamIsUser(true)
         return teamEntity?.let {
             val players = database.playerDao().getPlayersOnTeam(it.teamId)
-            it.createTeam(players)
+            val coach = database.coachDao().getCoachByTeamId(it.teamId)
+            it.createTeam(players, coach)
         }
     }
 
@@ -41,7 +43,8 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
             val teams = mutableListOf<Team>()
             teamEntities.forEach { entity ->
                 val players = database.playerDao().getPlayersOnTeam(entity.teamId)
-                teams.add(entity.createTeam(players))
+                val coach = database.coachDao().getCoachByTeamId(entity.teamId)
+                teams.add(entity.createTeam(players, coach))
             }
             Conference(conferenceEntity.id, conferenceEntity.name, teams)
         }
@@ -68,14 +71,21 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
 
     private fun createGame(entity: GameEntity): Game {
         val homeTeam = database.teamDao().getTeamWithId(entity.homeTeamId)!!.
-            createTeam(database.playerDao().getPlayersOnTeam(entity.homeTeamId))
+            createTeam(
+                database.playerDao().getPlayersOnTeam(entity.homeTeamId),
+                database.coachDao().getCoachByTeamId(entity.homeTeamId)
+            )
         val awayTeam = database.teamDao().getTeamWithId(entity.awayTeamId)!!.
-            createTeam(database.playerDao().getPlayersOnTeam(entity.awayTeamId))
+            createTeam(
+                database.playerDao().getPlayersOnTeam(entity.awayTeamId),
+                database.coachDao().getCoachByTeamId(entity.awayTeamId)
+            )
         return entity.createGame(homeTeam, awayTeam)
     }
 
     fun saveTeam(team: Team) {
         team.roster.forEach { player -> database.playerDao().insertPlayer(PlayerEntity.from(player)) }
+        database.coachDao().saveCoach(CoachEntity.from(team.coach))
         database.teamDao().insertTeam(TeamEntity.from(team))
     }
 
@@ -127,5 +137,13 @@ class DatabaseHelper @Inject constructor(private val database: BasketballDatabas
 
     fun loadGameStatsForPlayer(playerId: Int): List<GameStatsEntity> {
         return database.playerDao().getAllGamesForPlayer(playerId)
+    }
+
+    fun loadCoachByTeamId(teamId: Int): Coach {
+        return database.coachDao().getCoachByTeamId(teamId).createCoach()
+    }
+
+    fun saveCoach(coach: Coach) {
+        database.coachDao().saveCoach(CoachEntity.from(coach))
     }
 }

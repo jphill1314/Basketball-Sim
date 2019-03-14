@@ -30,9 +30,9 @@ class StandingsPresenter @Inject constructor(
         }
 
         view?.addTeams(standings.sortedWith(compareBy(
-            { it.getConferenceWinPercentage() },
+            { -it.getConferenceWinPercentage() },
             { -it.conferenceWins },
-            { it.getWinPercentage() },
+            { -it.getWinPercentage() },
             { -it.totalWins }
         )))
     }

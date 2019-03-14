@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.strategy
 
+import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketball.Team
 import javax.inject.Inject
 
@@ -8,7 +9,7 @@ class StrategyPresenter @Inject constructor(
 ) : StrategyContract.Presenter {
 
     private var view: StrategyContract.View? = null
-    private lateinit var team: Team
+    private lateinit var coach: Coach
 
     init {
         repository.attachPresenter(this)
@@ -18,42 +19,42 @@ class StrategyPresenter @Inject constructor(
         repository.loadStrategy()
     }
 
-    override fun onStrategyLoaded(team: Team) {
-        this.team = team
+    override fun onStrategyLoaded(coach: Coach) {
+        this.coach = coach
 
         view?.updateStrategy(
             StrategyDataModel(
-            team.pace - minimumPace,
-                team.offenseFavorsThrees,
-                team.aggression,
-                team.defenseFavorsThrees,
-                team.pressFrequency,
-                team.pressAggression
+            coach.paceGame - Coach.minimumPace,
+                coach.offenseFavorsThreesGame,
+                coach.aggressionGame,
+                coach.defenseFavorsThreesGame,
+                coach.pressFrequencyGame,
+                coach.pressAggressionGame
         ))
     }
 
     override fun onPaceChanged(pace: Int) {
-        team.pace = pace + minimumPace
+        coach.paceGame = pace + Coach.minimumPace
     }
 
     override fun onOffenseFavorsThreesChanged(favorsThrees: Int) {
-        team.offenseFavorsThrees = favorsThrees
+        coach.offenseFavorsThreesGame = favorsThrees
     }
 
     override fun onAggressionChanged(aggression: Int) {
-        team.aggression = aggression
+        coach.aggressionGame = aggression
     }
 
     override fun onDefenseFavorsThreesChanged(favorsThrees: Int) {
-        team.defenseFavorsThrees = favorsThrees
+        coach.defenseFavorsThreesGame = favorsThrees
     }
 
     override fun onPressFrequencyChanged(frequency: Int) {
-        team.pressFrequency = frequency
+        coach.pressFrequencyGame = frequency
     }
 
     override fun onPressAggressionChanged(aggression: Int) {
-        team.pressAggression = aggression
+        coach.pressAggressionGame = aggression
     }
 
     override fun onViewAttached(view: StrategyContract.View) {
@@ -62,12 +63,8 @@ class StrategyPresenter @Inject constructor(
 
     override fun onViewDetached() {
         view = null
-        repository.saveStrategy(team)
+        repository.saveStrategy(coach)
     }
 
     override fun onDestroyed() { }
-
-    private companion object {
-        const val minimumPace = 60
-    }
 }

@@ -43,6 +43,12 @@ class SchedulePresenter @Inject constructor(
                 game.inProgress)
             )
         }
+        if (!isUsersSchedule) {
+            view?.disableFab()
+        } else {
+            view?.enableFab()
+        }
+
         view?.hideProgressBar()
         view?.displaySchedule(dataModels, isUsersSchedule)
 
