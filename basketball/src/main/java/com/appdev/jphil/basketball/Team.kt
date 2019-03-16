@@ -225,6 +225,19 @@ class Team(
         }
     }
 
+    fun addNewPlayer(player: Player) {
+        players.add(player)
+        roster.add(player)
+    }
+
+    fun returningPlayers(returningPlayers: List<Player>) {
+        players.clear()
+        roster.clear()
+
+        players.addAll(returningPlayers)
+        roster.addAll(returningPlayers)
+    }
+
     private fun getBestPlayerForPosition(position: Int): Int {
         var player = players[position - 1]
         var indexOfBest = position - 1

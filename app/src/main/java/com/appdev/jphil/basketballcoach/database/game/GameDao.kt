@@ -11,10 +11,13 @@ interface GameDao {
     fun getAllGamesWithTeamId(teamId: Int): List<GameEntity>
 
     @Query("SELECT * FROM GameEntity where id in (:gameId)")
-    fun getGameWithId(gameId: Int): GameEntity
+    fun getGameWithId(gameId: Int): GameEntity?
 
     @Query("SELECT * FROM GameEntity where isFinal in (:isFinal)")
     fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
+
+    @Query("DELETE FROM GameEntity")
+    fun deleteAllGames()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGames(games: List<GameEntity>)
@@ -30,6 +33,9 @@ interface GameDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGameEvents(gameEvents: List<GameEventEntity>)
+
+    @Query("DELETE FROM GameEventEntity")
+    fun deleteAllGameEvents()
 
     @Delete
     fun deleteGameEvents(gameEvents: List<GameEventEntity>)

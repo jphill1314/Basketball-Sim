@@ -3,13 +3,15 @@ package com.appdev.jphil.basketballcoach.schedule
 import android.content.res.Resources
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import javax.inject.Inject
 
 class SchedulePresenter @Inject constructor(
     private val teamId: Int,
     private val resources: Resources,
-    private val repository: ScheduleContract.Repository
+    private val repository: ScheduleContract.Repository,
+    private val newSeasonRepository: NewSeasonRepository
 ): ScheduleContract.Presenter {
 
     init {
@@ -72,6 +74,11 @@ class SchedulePresenter @Inject constructor(
     override fun simulateGame(gameId: Int) {
         view?.showProgressBar()
         repository.simulateGame(gameId)
+    }
+
+    override fun onSeasonOver() {
+        view?.showProgressBar()
+        newSeasonRepository.startNewSeason { fetchSchedule() }
     }
 
     override fun onViewAttached(view: ScheduleContract.View) {

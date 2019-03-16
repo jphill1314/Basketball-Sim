@@ -13,4 +13,9 @@ object PlayerDatabaseHelper {
     fun loadGameStatsForPlayer(playerId: Int, database: BasketballDatabase): List<GameStatsEntity> {
         return database.playerDao().getAllGamesForPlayer(playerId)
     }
+
+    fun deletePlayer(player: Player, database: BasketballDatabase) {
+        database.playerDao().deleteGameStatsForPlayer(player.id!!)
+        database.playerDao().deletePlayer(PlayerEntity.from(player))
+    }
 }
