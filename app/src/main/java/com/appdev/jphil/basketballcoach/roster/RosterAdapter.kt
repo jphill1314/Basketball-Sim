@@ -7,10 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketballcoach.R
-import kotlinx.android.synthetic.main.list_item_header.view.*
-import kotlinx.android.synthetic.main.list_item_roster.view.*
 
 class RosterAdapter(
     val presenter: RosterContract.Presenter,
@@ -22,11 +19,11 @@ class RosterAdapter(
     var isUsersTeam = false
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val name: TextView? = view.name
-        val rating: TextView? = view.rating
-        val position: TextView? = view.position
-        val year: TextView? = view.year
-        val title: TextView? = view.title
+        val name: TextView? = view.findViewById(R.id.name)
+        val rating: TextView? = view.findViewById(R.id.rating)
+        val position: TextView? = view.findViewById(R.id.position)
+        val year: TextView? = view.findViewById(R.id.year)
+        val title: TextView? = view.findViewById(R.id.title)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): ViewHolder {

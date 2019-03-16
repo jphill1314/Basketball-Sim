@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.ChangeTeamConfContract
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -61,8 +61,10 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     }
 
     override fun changeTeamAndConference(teamId: Int, conferenceId: Int) {
-        (activity as? ChangeTeamConfContract.Listener?)?.changeConference(conferenceId, teamId)
-        adapter.updateTeamId(teamId)
+        (activity as? NavigationManager?)?.let {
+            it.changeConference(conferenceId, teamId)
+            it.navigateToHomePage()
+        }
     }
 
     companion object {
