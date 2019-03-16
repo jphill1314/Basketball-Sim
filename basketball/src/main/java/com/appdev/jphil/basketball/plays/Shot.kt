@@ -22,6 +22,8 @@ class Shot(
 ) :
     BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
 
+    private var wellDefended = false
+
     init {
         super.type = Plays.SHOT
         foul = Foul(
@@ -42,15 +44,9 @@ class Shot(
         val defender = defense.getPlayerAtPosition(playerWithBall)
 
         // First determine where the shot will be taken from
-        val shotClose =
-            (shooter.closeRangeShot * (1 - (offense.offenseFavorsThrees / 100.0)) * (1 - (defense.defenseFavorsThrees / 100.0)) + r.nextInt(
-                randomBound
-            ))
-        val shotMid = (shooter.midRangeShot * .2 + r.nextInt(randomBound))
-        val shotLong =
-            (shooter.longRangeShot * (offense.offenseFavorsThrees / 100.0) * (defense.defenseFavorsThrees / 100.0) + r.nextInt(
-                randomBound
-            ))
+        val shotClose = (shooter.closeRangeShot - offense.offenseFavorsThrees + 50  + r.nextInt(randomBound))
+        val shotMid = (shooter.midRangeShot + r.nextInt(randomBound))
+        val shotLong = (shooter.longRangeShot + offense.offenseFavorsThrees - 50 + r.nextInt(randomBound))
 
         val shotLocation: Int = getShotLocation(shooter, shotClose, shotMid, shotLong)
 
@@ -88,10 +84,10 @@ class Shot(
         val timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
         timeRemaining -= timeChange
         shotClock -= timeChange
-        return getMadeShot(shotLocation, shotSuccess, shooter)
+        return getMadeShot(shotLocation, shotSuccess, shooter, defender)
     }
 
-    private fun getShotLocation(shooter: Player, shotClose: Double, shotMid: Double, shotLong: Double): Int {
+    private fun getShotLocation(shooter: Player, shotClose: Int, shotMid: Int, shotLong: Int): Int {
         return if (location == 0) {
             // shot taken from around half court
             offense.threePointAttempts++
@@ -123,7 +119,8 @@ class Shot(
     private fun getShotSuccess(shotLocation: Int, shooter: Player, defender: Player): Int {
         return when (shotLocation) {
             1 -> {
-                if (defender.onBallDefense + defender.postDefense > r.nextInt(200 * 2)) {
+                if (defender.onBallDefense + defender.postDefense - defense.defenseFavorsThrees + 50 > r.nextInt(250 * 2)) {
+                    wellDefended = true
                     shooter.closeRangeShot - 10
                 } else {
                     shooter.closeRangeShot
@@ -131,13 +128,15 @@ class Shot(
             }
             2 -> {
                 if (defender.onBallDefense + defender.postDefense + defender.perimeterDefense > r.nextInt(300 * 4)) {
+                    wellDefended = true
                     shooter.midRangeShot - 10
                 } else {
                     shooter.midRangeShot
                 }
             }
             3 -> {
-                if (defender.onBallDefense + defender.perimeterDefense > r.nextInt(200 * 4)) {
+                if (defender.onBallDefense + defender.perimeterDefense + defense.defenseFavorsThrees - 50 > r.nextInt(250 * 4)) {
+                    wellDefended = true
                     shooter.longRangeShot - 10
                 } else {
                     shooter.longRangeShot
@@ -145,6 +144,7 @@ class Shot(
             }
             4 -> {
                 if (defender.onBallDefense + defender.perimeterDefense > r.nextInt(200 * 8)) {
+                    wellDefended = true
                     shooter.longRangeShot - 20
                 } else {
                     shooter.longRangeShot - 10
@@ -152,6 +152,7 @@ class Shot(
             }
             5 -> {
                 if (defender.onBallDefense + defender.perimeterDefense > r.nextInt(200 * 8)) {
+                    wellDefended = true
                     shooter.longRangeShot - 30
                 } else {
                     shooter.longRangeShot - 20
@@ -161,14 +162,14 @@ class Shot(
         }
     }
 
-    private fun getMadeShot(shotLocation: Int, shotSuccess: Int, shooter: Player): Int {
+    private fun getMadeShot(shotLocation: Int, shotSuccess: Int, shooter: Player, defender: Player): Int {
         return when (shotLocation) {
             // 2 point shot
             1 -> {
                 if (shotSuccess > ((r.nextDouble() * shooter.closeRangeShot) * (r.nextDouble() * 5))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.shortMake(shooter)
+                        shotText.shortMake(shooter, defender, wellDefended)
                     } else {
                         shotText.shortFoul(shooter, foul.fouler!!, true)
                     }
@@ -177,7 +178,7 @@ class Shot(
                     2
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.shortMiss(shooter)
+                        shotText.shortMiss(shooter, defender, wellDefended)
                     } else {
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
@@ -190,7 +191,7 @@ class Shot(
                 if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 5))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.midMake(shooter)
+                        shotText.midMake(shooter, defender, wellDefended)
                     } else {
                         shotText.midFoul(shooter, foul.fouler!!, true)
                     }
@@ -199,7 +200,7 @@ class Shot(
                     2
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.midMiss(shooter)
+                        shotText.midMiss(shooter, defender, wellDefended)
                     } else {
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
@@ -212,7 +213,7 @@ class Shot(
                 if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 6))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.longMake(shooter)
+                        shotText.longMake(shooter, defender, wellDefended)
                     } else {
                         shotText.longFoul(shooter, foul.fouler!!, true)
                     }
@@ -221,7 +222,7 @@ class Shot(
                     3
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.longMiss(shooter)
+                        shotText.longMiss(shooter, defender, wellDefended)
                     } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
@@ -234,7 +235,7 @@ class Shot(
                 if (r.nextInt(100) < 10) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.halfCourtMake(shooter)
+                        shotText.halfCourtMake(shooter, defender, wellDefended)
                     } else {
                         shotText.halfCourtFoul(shooter, foul.fouler!!, true)
                     }
@@ -243,7 +244,7 @@ class Shot(
                     3
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.halfCourtMiss(shooter)
+                        shotText.halfCourtMiss(shooter, defender, wellDefended)
                     } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
@@ -256,7 +257,7 @@ class Shot(
                 if (r.nextInt(100) < 2) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.beyondHalfCourtMake(shooter)
+                        shotText.beyondHalfCourtMake(shooter, defender, wellDefended)
                     } else {
                         shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, true)
                     }
@@ -265,7 +266,7 @@ class Shot(
                     3
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.beyondHalfCourtMiss(shooter)
+                        shotText.beyondHalfCourtMiss(shooter, defender, wellDefended)
                     } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--

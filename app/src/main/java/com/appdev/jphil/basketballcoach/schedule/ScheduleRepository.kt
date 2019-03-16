@@ -26,7 +26,7 @@ class ScheduleRepository @Inject constructor(
 
     override fun simulateNextGame() {
         GlobalScope.launch(Dispatchers.IO) {
-            var gameId = 1
+            var gameId = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
             var homeName = ""
             var awayName = ""
             var userIsHomeTeam = false
@@ -64,7 +64,7 @@ class ScheduleRepository @Inject constructor(
 
     override fun simulateToGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var id = 1
+            var id = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
             while (id < gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
@@ -79,7 +79,7 @@ class ScheduleRepository @Inject constructor(
 
     override fun simulateGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var id = 1
+            var id = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
             while (id <= gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {

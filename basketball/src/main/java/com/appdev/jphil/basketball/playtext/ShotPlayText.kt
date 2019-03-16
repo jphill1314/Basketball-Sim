@@ -5,12 +5,20 @@ import com.appdev.jphil.basketball.textcontracts.ShotTextContract
 
 class ShotPlayText : ShotTextContract {
 
-    override fun shortMake(shooter: Player): String {
-        return "${shooter.fullName} makes the shot from close range!"
+    override fun shortMake(shooter: Player, defender: Player, wellDefended: Boolean): String {
+        return if (wellDefended) {
+            "${shooter.fullName} makes the shot from close range, despite great defense from ${defender.fullName}!"
+        } else {
+            "${shooter.fullName} makes the shot from close range!"
+        }
     }
 
-    override fun shortMiss(shooter: Player): String {
-        return "${shooter.fullName} shoots from close, but misses!"
+    override fun shortMiss(shooter: Player, defender: Player, wellDefended: Boolean): String {
+        return if (wellDefended) {
+            "${shooter.fullName} shoots from close, but misses due to the great defense from ${defender.fullName}!"
+        } else {
+            "${shooter.fullName} shoots from close, but misses!"
+        }
     }
 
     override fun shortFoul(shooter: Player, fouler: Player, shotMade: Boolean): String {
@@ -23,12 +31,20 @@ class ShotPlayText : ShotTextContract {
         }
     }
 
-    override fun midMake(shooter: Player): String {
-        return "${shooter.fullName} makes the shot from mid range!"
+    override fun midMake(shooter: Player, defender: Player, wellDefended: Boolean): String {
+        return if (wellDefended) {
+            "${shooter.fullName} makes the shot from mid range, despite great defense from ${defender.fullName}!"
+        } else {
+            "${shooter.fullName} makes the shot from mid range!"
+        }
     }
 
-    override fun midMiss(shooter: Player): String {
-        return "${shooter.fullName} shoots from mid range, but misses!"
+    override fun midMiss(shooter: Player, defender: Player, wellDefended: Boolean): String {
+        return if (wellDefended) {
+            "${shooter.fullName} shoots from mid range, but misses due to the great defense from ${defender.fullName}!"
+        } else {
+            "${shooter.fullName} shoots from mid range, but misses!"
+        }
     }
 
     override fun midFoul(shooter: Player, fouler: Player, shotMade: Boolean): String {
@@ -41,12 +57,20 @@ class ShotPlayText : ShotTextContract {
         }
     }
 
-    override fun longMake(shooter: Player): String {
-        return "${shooter.fullName} makes the shot from three!"
+    override fun longMake(shooter: Player, defender: Player, wellDefended: Boolean): String {
+        return if (wellDefended) {
+            "${shooter.fullName} makes the shot from three, despite great defense from ${defender.fullName}!"
+        } else {
+            "${shooter.fullName} makes the shot from three!"
+        }
     }
 
-    override fun longMiss(shooter: Player): String {
-        return "${shooter.fullName} shoots from three, but misses!"
+    override fun longMiss(shooter: Player, defender: Player, wellDefended: Boolean): String {
+        return if (wellDefended) {
+            "${shooter.fullName} shoots from three, but misses due to the great defense from ${defender.fullName}!"
+        } else {
+            "${shooter.fullName} shoots from three, but misses!"
+        }
     }
 
     override fun longFoul(shooter: Player, fouler: Player, shotMade: Boolean): String {
@@ -59,11 +83,11 @@ class ShotPlayText : ShotTextContract {
         }
     }
 
-    override fun halfCourtMake(shooter: Player): String {
+    override fun halfCourtMake(shooter: Player, defender: Player, wellDefended: Boolean): String {
         return "${shooter.fullName} shoots from near half court and he makes it!"
     }
 
-    override fun halfCourtMiss(shooter: Player): String {
+    override fun halfCourtMiss(shooter: Player, defender: Player, wellDefended: Boolean): String {
         return "${shooter.fullName} shoots from half court, but misses!"
     }
 
@@ -77,11 +101,11 @@ class ShotPlayText : ShotTextContract {
         }
     }
 
-    override fun beyondHalfCourtMake(shooter: Player): String {
+    override fun beyondHalfCourtMake(shooter: Player, defender: Player, wellDefended: Boolean): String {
         return "${shooter.fullName} heaves the ball from well beyond half court... AND HE MAKES IT! UNBELIEVABLE SCENES"
     }
 
-    override fun beyondHalfCourtMiss(shooter: Player): String {
+    override fun beyondHalfCourtMiss(shooter: Player, defender: Player, wellDefended: Boolean): String {
         return "${shooter.fullName} shoots from well beyond half court, but misses!"
     }
 
