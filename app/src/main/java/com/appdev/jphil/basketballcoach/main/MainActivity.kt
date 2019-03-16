@@ -1,24 +1,24 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener, GameFragment.NavigationManager {
+class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     private var drawerLayout: DrawerLayout? = null
     private var teamId = DEFAULT_TEAM_ID
     private var conferenceId = -1
+    private lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,16 +29,14 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
             conferenceId = it.getInt(CONF_ID_STRING, 1)
         }
 
-        setSupportActionBar(toolbar)
-        supportActionBar.let {
-            it?.setDisplayHomeAsUpEnabled(true)
-            it?.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
-        }
+        setSupportActionBar(findViewById(R.id.toolbar))
+        enableNavigation()
 
-        drawerLayout = drawer_layout
-        nav_view.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navView = findViewById(R.id.nav_view)
+        navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
         if (savedInstanceState == null) {
-            handleFragmentNavigation(nav_view.menu.getItem(0))
+            navigateToHomePage()
         }
     }
 
@@ -74,15 +72,15 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
             else -> null
         }
 
+        drawerLayout?.closeDrawers()
         if (fragment != null && !menuItem.isChecked) {
             menuItem.isChecked = true
             supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, fragment)
                     .commit()
+            return true
         }
-
-        drawerLayout?.closeDrawers()
-        return true
+        return false
     }
 
     override fun changeTeam(teamId: Int) {
@@ -96,18 +94,22 @@ class MainActivity : DaggerAppCompatActivity(), ChangeTeamConfContract.Listener,
 
     override fun disableNavigation() {
         drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        supportActionBar.let {
-            it?.setDisplayHomeAsUpEnabled(false)
-            it?.setHomeAsUpIndicator(null)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(false)
+            it.setHomeAsUpIndicator(null)
         }
     }
 
     override fun enableNavigation() {
         drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        supportActionBar.let {
-            it?.setDisplayHomeAsUpEnabled(true)
-            it?.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
         }
+    }
+
+    override fun navigateToHomePage() {
+        handleFragmentNavigation(navView.menu.getItem(0))
     }
 
     companion object {

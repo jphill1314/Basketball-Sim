@@ -20,6 +20,7 @@ class StrategyPresenter @Inject constructor(
     }
 
     override fun onStrategyLoaded(coach: Coach) {
+        // TODO: only show strategy of user
         this.coach = coach
 
         view?.updateStrategy(

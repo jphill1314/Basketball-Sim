@@ -19,9 +19,9 @@ import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_game.view.*
 import javax.inject.Inject
 
 class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
@@ -39,14 +39,14 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var awayStatsAdapter: GameStatsAdapter? = null
     private val teamStatsAdapter = GameTeamStatsAdapter(emptyList())
 
-    private val homeScore: TextView by lazy { view!!.home_score }
-    private val awayScore: TextView by lazy { view!!.away_score }
-    private val homeFouls: TextView by lazy { view!!.home_fouls }
-    private val awayFouls: TextView by lazy { view!!.away_fouls }
-    private val gameStatus: TextView by lazy { view!!.game_half }
-    private val gameTime: TextView by lazy { view!!.game_time }
-    private val homeTimeouts: TextView by lazy { view!!.home_timeouts }
-    private val awayTimeouts: TextView by lazy { view!!.away_timeouts }
+    private val homeScore: TextView by lazy { view!!.findViewById<TextView>(R.id.home_score) }
+    private val awayScore: TextView by lazy { view!!.findViewById<TextView>(R.id.away_score) }
+    private val homeFouls: TextView by lazy { view!!.findViewById<TextView>(R.id.home_fouls) }
+    private val awayFouls: TextView by lazy { view!!.findViewById<TextView>(R.id.away_fouls) }
+    private val gameStatus: TextView by lazy { view!!.findViewById<TextView>(R.id.game_half) }
+    private val gameTime: TextView by lazy { view!!.findViewById<TextView>(R.id.game_time) }
+    private val homeTimeouts: TextView by lazy { view!!.findViewById<TextView>(R.id.home_timeouts) }
+    private val awayTimeouts: TextView by lazy { view!!.findViewById<TextView>(R.id.away_timeouts) }
     private lateinit var playFab: FloatingActionButton
     private lateinit var timeoutFab: FloatingActionButton
     private lateinit var rosterSpinner: Spinner
@@ -87,18 +87,19 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         }
 
         gameAdapter = GameAdapter(resources)
-        recyclerView = view.recycler_view
+        recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+        val spinner = view.findViewById<Spinner>(R.id.spinner)
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.game_views,
             android.R.layout.simple_spinner_dropdown_item
         ).also { adapter->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            view.spinner.adapter = adapter
+            spinner.adapter = adapter
         }
-        view.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -123,11 +124,13 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
         }
 
-        view.home_name.text = homeTeamName
-        view.away_name.text = awayTeamName
+        view.findViewById<TextView>(R.id.home_name).text = homeTeamName
+        view.findViewById<TextView>(R.id.away_name).text = awayTeamName
 
-        view.seek_bar.setOnSeekBarChangeListener(this)
-        view.seek_bar.progress = simSpeed
+        view.findViewById<SeekBar>(R.id.seek_bar).apply {
+            setOnSeekBarChangeListener(this@GameFragment)
+            progress = simSpeed
+        }
 
         playFab = view.findViewById(R.id.play_fab)
         playFab.setOnClickListener { onPlayFabClicked() }
@@ -283,10 +286,5 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
                 this.userIsHomeTeam = userIsHomeTeam
             }
         }
-    }
-
-    interface NavigationManager {
-        fun disableNavigation()
-        fun enableNavigation()
     }
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.appdev.jphil.basketballcoach.R
-import kotlinx.android.synthetic.main.list_item_schedule.view.*
 
 class ScheduleAdapter(
     private val resources: Resources,
@@ -19,13 +18,13 @@ class ScheduleAdapter(
     var games: List<ScheduleDataModel>? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val homeName: TextView = view.home_name
-        val awayName: TextView = view.away_name
-        val homeScore: TextView = view.home_score
-        val awayScore: TextView = view.away_score
-        val gameStatus: TextView = view.game_status
-        val simToGame: Button = view.sim_to_game
-        val simGame: Button = view.sim_game
+        val homeName: TextView = view.findViewById(R.id.home_name)
+        val awayName: TextView = view.findViewById(R.id.away_name)
+        val homeScore: TextView = view.findViewById(R.id.home_score)
+        val awayScore: TextView = view.findViewById(R.id.away_score)
+        val gameStatus: TextView = view.findViewById(R.id.game_status)
+        val simToGame: Button = view.findViewById(R.id.sim_to_game)
+        val simGame: Button = view.findViewById(R.id.sim_game)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): ViewHolder {

@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.ChangeTeamConfContract
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_roster.view.*
 import javax.inject.Inject
 
 class RosterFragment : Fragment(), RosterContract.View {
@@ -47,7 +44,7 @@ class RosterFragment : Fragment(), RosterContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_roster, container, false)
-        recyclerView = view.recycler_view
+        recyclerView = view.findViewById(R.id.recycler_view)
         adapter = RosterAdapter(presenter, mutableListOf(), resources)
         recyclerView.layoutManager = LinearLayoutManager(context)
         return view
@@ -65,7 +62,7 @@ class RosterFragment : Fragment(), RosterContract.View {
     }
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {
-        (activity as? ChangeTeamConfContract.Listener?)?.changeConference(conferenceId, teamId)
+        (activity as? NavigationManager?)?.changeConference(conferenceId, teamId)
     }
 
     override fun gotoPlayerOverview(playerId: Int) {

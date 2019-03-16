@@ -14,7 +14,6 @@ import android.widget.ProgressBar
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_schedule.view.*
 import javax.inject.Inject
 
 class ScheduleFragment : Fragment(), ScheduleContract.View {

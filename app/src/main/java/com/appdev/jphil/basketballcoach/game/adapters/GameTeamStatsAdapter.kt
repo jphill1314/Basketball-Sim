@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.game.TeamStatLine
 import com.appdev.jphil.basketballcoach.R
-import kotlinx.android.synthetic.main.list_item_game_team_stats.view.*
 
 class GameTeamStatsAdapter(var stats: List<TeamStatLine>) : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val homeStats: TextView = view.home_stats
-        val awayStats: TextView = view.away_stats
-        val statType: TextView = view.stat_type
+        val homeStats: TextView = view.findViewById(R.id.home_stats)
+        val awayStats: TextView = view.findViewById(R.id.away_stats)
+        val statType: TextView = view.findViewById(R.id.stat_type)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
