@@ -31,6 +31,9 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGameStats(stats: GameStatsEntity)
 
+    @Query("DELETE FROM GameStatsEntity where playerId in (:playerId)")
+    fun deleteGameStatsForPlayer(playerId: Int)
+
     @Delete
     fun deleteGameStats(gameStats: List<GameStatsEntity>)
 }

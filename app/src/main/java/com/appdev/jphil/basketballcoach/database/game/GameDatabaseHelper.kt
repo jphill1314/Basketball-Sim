@@ -33,8 +33,9 @@ object GameDatabaseHelper {
         return games
     }
 
-    fun loadGameById(gameId: Int, database: BasketballDatabase): Game {
-        return createGame(database.gameDao().getGameWithId(gameId), database)
+    fun loadGameById(gameId: Int, database: BasketballDatabase): Game? {
+        val game = database.gameDao().getGameWithId(gameId)
+        return game?.let { createGame(it, database) }
     }
 
     private fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
@@ -67,5 +68,10 @@ object GameDatabaseHelper {
 
     fun loadAllGameEntities(database: BasketballDatabase): List<GameEntity> {
         return database.gameDao().getAllGames()
+    }
+
+    fun deleteAllGames(database: BasketballDatabase) {
+        database.gameDao().deleteAllGames()
+        database.gameDao().deleteAllGameEvents()
     }
 }

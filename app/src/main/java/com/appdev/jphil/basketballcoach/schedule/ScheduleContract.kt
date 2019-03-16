@@ -21,6 +21,7 @@ interface ScheduleContract {
         fun onFABClicked()
         fun simulateToGame(gameId: Int)
         fun simulateGame(gameId: Int)
+        fun onSeasonOver()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {

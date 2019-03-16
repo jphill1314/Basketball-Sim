@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.Conference
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 
 object ConferenceDatabaseHelper {
 
@@ -11,13 +12,7 @@ object ConferenceDatabaseHelper {
         val conferenceEntity = database.conferenceDao().getConferenceWithId(conferenceId)
         return conferenceEntity?.let { conference ->
             val teamEntities = database.teamDao().getTeamsInConference(conferenceId)
-            val teams = mutableListOf<Team>()
-            teamEntities.forEach { entity ->
-                val players = database.playerDao().getPlayersOnTeam(entity.teamId)
-                val coach = database.coachDao().getCoachByTeamId(entity.teamId)
-                teams.add(entity.createTeam(players, coach))
-            }
-            Conference(conference.id, conference.name, teams)
+            Conference(conference.id, conference.name, generateTeams(database, teamEntities))
         }
     }
 
@@ -29,5 +24,29 @@ object ConferenceDatabaseHelper {
                 conference.name
             )
         )
+    }
+
+    fun loadAllConferences(database: BasketballDatabase): List<Conference> {
+        val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
+        val conferences = mutableListOf<Conference>()
+        conferenceEntities.forEach { conference ->
+            val teamEntities = database.teamDao().getTeamsInConference(conference.id)
+            conferences.add(Conference(conference.id, conference.name, generateTeams(database, teamEntities)))
+        }
+        return conferences
+    }
+
+    fun saveAllConferences(conferences: List<Conference>, database: BasketballDatabase) {
+        conferences.forEach { conference -> saveConference(conference, database) }
+    }
+
+    private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): List<Team> {
+        val teams = mutableListOf<Team>()
+        teamEntities.forEach { entity ->
+            val players = database.playerDao().getPlayersOnTeam(entity.teamId)
+            val coach = database.coachDao().getCoachByTeamId(entity.teamId)
+            teams.add(entity.createTeam(players, coach))
+        }
+        return teams
     }
 }

@@ -31,21 +31,34 @@ class ScheduleRepository @Inject constructor(
             var awayName = ""
             var userIsHomeTeam = false
             var continueSim = true
+            var gameLoaded = false
             while(continueSim) {
                 val game = GameDatabaseHelper.loadGameById(gameId++, database)
-                if (!game.isFinal) {
-                    continueSim = game.homeTeam.teamId != teamId && game.awayTeam.teamId != teamId
-                    if (continueSim) {
-                        game.simulateFullGame()
-                        GameDatabaseHelper.saveGames(listOf(game), database)
-                    } else {
-                        homeName = game.homeTeam.name
-                        awayName = game.awayTeam.name
-                        userIsHomeTeam = game.homeTeam.isUser
+                if (game == null) {
+                    continueSim = false
+                }
+                else {
+                    if (!game.isFinal) {
+                        continueSim = game.homeTeam.teamId != teamId && game.awayTeam.teamId != teamId
+                        if (continueSim) {
+                            game.simulateFullGame()
+                            GameDatabaseHelper.saveGames(listOf(game), database)
+                        } else {
+                            gameLoaded = true
+                            homeName = game.homeTeam.name
+                            awayName = game.awayTeam.name
+                            userIsHomeTeam = game.homeTeam.isUser
+                        }
                     }
                 }
             }
-            withContext(Dispatchers.Main) { presenter.startGameFragment(gameId-1, homeName, awayName, userIsHomeTeam) }
+            withContext(Dispatchers.Main) {
+                if (gameLoaded) {
+                    presenter.startGameFragment(gameId - 1, homeName, awayName, userIsHomeTeam)
+                } else {
+                    presenter.onSeasonOver()
+                }
+            }
         }
     }
 
@@ -53,10 +66,11 @@ class ScheduleRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.IO) {
             var id = 1
             while (id < gameId) {
-                val game = GameDatabaseHelper.loadGameById(id++, database)
-                if (!game.isFinal) {
-                    game.simulateFullGame()
-                    GameDatabaseHelper.saveGames(listOf(game), database)
+                GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
+                    if (!game.isFinal) {
+                        game.simulateFullGame()
+                        GameDatabaseHelper.saveGames(listOf(game), database)
+                    }
                 }
             }
             fetchSchedule()
@@ -67,10 +81,11 @@ class ScheduleRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.IO) {
             var id = 1
             while (id <= gameId) {
-                val game = GameDatabaseHelper.loadGameById(id++, database)
-                if (!game.isFinal) {
-                    game.simulateFullGame()
-                    GameDatabaseHelper.saveGames(listOf(game), database)
+                GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
+                    if (!game.isFinal) {
+                        game.simulateFullGame()
+                        GameDatabaseHelper.saveGames(listOf(game), database)
+                    }
                 }
             }
             fetchSchedule()
