@@ -3,8 +3,8 @@ package com.appdev.jphil.basketball.plays
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.playtext.FastBreakPlayText
 import com.appdev.jphil.basketball.textcontracts.FastBreakTextContract
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 
 class FastBreak(
     homeTeamHasBall: Boolean,
@@ -14,8 +14,9 @@ class FastBreak(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    private val fastBreakText: FastBreakTextContract = FastBreakPlayText()
-    ): BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    foulText: FoulTextContract,
+    private val fastBreakText: FastBreakTextContract
+    ): BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     init {
         type = Plays.SHOT
@@ -27,6 +28,7 @@ class FastBreak(
             awayTeam,
             playerWithBall,
             location,
+            foulText,
             FoulType.CLEAN
         )
         points = generatePlay()

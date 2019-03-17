@@ -2,7 +2,7 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.playtext.TipOffPlayText
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.TipOffTextContract
 
 class TipOff(
@@ -13,8 +13,9 @@ class TipOff(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    private val tipOffText: TipOffTextContract = TipOffPlayText()
-) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    foulText: FoulTextContract,
+    private val tipOffText: TipOffTextContract
+) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     init {
         type = Plays.TIP_OFF

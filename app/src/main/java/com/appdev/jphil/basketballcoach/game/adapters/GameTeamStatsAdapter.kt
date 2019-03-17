@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.appdev.jphil.basketball.game.TeamStatLine
+import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.R
 
-class GameTeamStatsAdapter(var stats: List<TeamStatLine>) : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolder>() {
+class GameTeamStatsAdapter : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolder>() {
+
+    private val stats = mutableListOf<TeamStatLine>()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val homeStats: TextView = view.findViewById(R.id.home_stats)
@@ -30,5 +32,52 @@ class GameTeamStatsAdapter(var stats: List<TeamStatLine>) : RecyclerView.Adapter
         viewHolder.homeStats.text = stat.homeTeamStat
         viewHolder.awayStats.text = stat.awayTeamStat
         viewHolder.statType.text = stat.statType
+    }
+
+    fun updateTeamStats(homeTeam: Team, awayTeam: Team) {
+        stats.clear()
+        stats.add(TeamStatLine(homeTeam.name, awayTeam.name, ""))
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.twoPointMakes}/${homeTeam.twoPointAttempts}",
+                "${awayTeam.twoPointMakes}/${awayTeam.twoPointAttempts}",
+                "2FGs"
+            )
+        )
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.threePointMakes}/${homeTeam.threePointAttempts}",
+                "${awayTeam.threePointMakes}/${awayTeam.threePointAttempts}",
+                "3FGs"
+            )
+        )
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.freeThrowMakes}/${homeTeam.freeThrowShots}",
+                "${awayTeam.freeThrowMakes}/${awayTeam.freeThrowShots}",
+                "FTs"
+            )
+        )
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.offensiveRebounds} - ${homeTeam.defensiveFouls}",
+                "${awayTeam.offensiveRebounds} - ${awayTeam.defensiveRebounds}",
+                "Rebounds"
+            )
+        )
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.turnovers}",
+                "${awayTeam.turnovers}",
+                "Turnovers"
+            )
+        )
+        stats.add(
+            TeamStatLine(
+                "${homeTeam.offensiveFouls} - ${homeTeam.defensiveFouls}",
+                "${awayTeam.offensiveFouls} - ${awayTeam.defensiveFouls}",
+                "Fouls"
+            )
+        )
     }
 }

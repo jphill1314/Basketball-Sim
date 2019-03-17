@@ -3,6 +3,7 @@ package com.appdev.jphil.basketball.plays
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.plays.utils.TimeUtil
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import java.util.*
 
 abstract class BasketballPlay(
@@ -12,7 +13,8 @@ abstract class BasketballPlay(
     val homeTeam: Team,
     val awayTeam: Team,
     var playerWithBall: Int,
-    var location: Int
+    var location: Int,
+    val foulText: FoulTextContract
 ) {
 
     lateinit var type: Plays // what kind of play? Pass, turnover, shot, foul, etc

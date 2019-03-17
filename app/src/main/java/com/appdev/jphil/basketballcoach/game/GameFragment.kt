@@ -37,7 +37,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private lateinit var gameAdapter: GameAdapter
     private var homeStatsAdapter: GameStatsAdapter? = null
     private var awayStatsAdapter: GameStatsAdapter? = null
-    private val teamStatsAdapter = GameTeamStatsAdapter(emptyList())
+    private val teamStatsAdapter = GameTeamStatsAdapter()
 
     private val homeScore: TextView by lazy { view!!.findViewById<TextView>(R.id.home_score) }
     private val awayScore: TextView by lazy { view!!.findViewById<TextView>(R.id.away_score) }
@@ -186,7 +186,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         homeStatsAdapter?.updatePlayerStats(game.homeTeam.players)
         awayStatsAdapter?.updatePlayerStats(game.awayTeam.players)
 
-        teamStatsAdapter.stats = game.getTeamStats()
+        teamStatsAdapter.updateTeamStats(game.homeTeam, game.awayTeam)
         teamStatsAdapter.notifyDataSetChanged()
     }
 

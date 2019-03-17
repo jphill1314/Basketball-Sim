@@ -4,7 +4,7 @@ import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.playtext.ShotPlayText
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.ShotTextContract
 
 
@@ -16,11 +16,12 @@ class Shot(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
+    foulText: FoulTextContract,
     val assisted: Boolean, // TODO: when adding assists -> need a way to know which player passed the ball
     val rushed: Boolean,
-    private val shotText: ShotTextContract = ShotPlayText()
+    private val shotText: ShotTextContract
 ) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     private var wellDefended = false
 
@@ -34,6 +35,7 @@ class Shot(
             awayTeam,
             playerWithBall,
             location,
+            foulText,
             FoulType.CLEAN
         )
         points = generatePlay()
@@ -73,6 +75,7 @@ class Shot(
                 awayTeam,
                 playerWithBall,
                 location,
+                foulText,
                 foulType
         )
 

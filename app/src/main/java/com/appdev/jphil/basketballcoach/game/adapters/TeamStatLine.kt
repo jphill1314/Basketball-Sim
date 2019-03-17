@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketball.game
+package com.appdev.jphil.basketballcoach.game.adapters
 
 data class TeamStatLine(
     val homeTeamStat: String,
