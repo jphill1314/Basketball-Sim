@@ -1,12 +1,13 @@
 package com.appdev.jphil.basketball.game
 
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.game.extensions.*
 import com.appdev.jphil.basketball.plays.*
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
-import com.appdev.jphil.basketball.playtext.MiscPlayText
-import com.appdev.jphil.basketball.textcontracts.MiscTextContract
+import com.appdev.jphil.basketball.playtext.*
+import com.appdev.jphil.basketball.textcontracts.*
 import java.util.*
 
 class Game(
@@ -18,6 +19,14 @@ class Game(
     var isFinal: Boolean = false
 ) {
     var miscText: MiscTextContract = MiscPlayText()
+    var fastBreakText: FastBreakTextContract = FastBreakPlayText()
+    var foulText: FoulTextContract = FoulPlayText()
+    var freeThrowText: FreeThrowTextContract = FTPlayText()
+    var passText: PassTextContract = PassPlayText()
+    var pressText: PressTextContract = PressPlayText()
+    var reboundText: ReboundTextContract = ReboundPlayText()
+    var shotText: ShotTextContract = ShotPlayText()
+    var tipOffText: TipOffTextContract = TipOffPlayText()
 
     var shotClock = 0
     var timeRemaining = 0
@@ -47,8 +56,7 @@ class Game(
     val gamePlays = mutableListOf<BasketballPlay>()
 
     private val r = Random()
-    private val passingUtils =
-        PassingUtils(homeTeam, awayTeam, BasketballPlay.randomBound)
+    val passingUtils = PassingUtils(homeTeam, awayTeam, BasketballPlay.randomBound)
 
     fun getAsString(): String{
         return "Half:$half \t ${homeTeam.name}:$homeScore - ${awayTeam.name}:$awayScore"
@@ -87,7 +95,7 @@ class Game(
 
         if (half != 2) {
             // Tip off starts game and all overtime periods
-            val tipOff = TipOff(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location)
+            val tipOff = newTipOff()
             homeTeamHasBall = tipOff.homeTeamHasBall
             homeTeamHasPossessionArrow = !tipOff.homeTeamHasBall
             playerWithBall = tipOff.playerWithBall
@@ -157,82 +165,10 @@ class Game(
         }
     }
 
-    private fun makeSubs() {
-        if(shootFreeThrows){
-            if(homeTeamHasBall){
-                if (userIsCoaching) {
-                    if (homeTeam.isUser) {
-                        awayTeam.aiMakeSubs(-1, half, timeRemaining)
-                    } else {
-                        homeTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
-                    }
-                } else {
-                    homeTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
-                    awayTeam.aiMakeSubs(-1, half, timeRemaining)
-                }
-            }
-            else{
-                if (userIsCoaching) {
-                    if (homeTeam.isUser) {
-                        awayTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
-                    } else {
-                        homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                    }
-                } else {
-                    homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                    awayTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
-                }
-            }
-        }
-        else {
-            if (userIsCoaching) {
-                if (homeTeam.isUser) {
-                    awayTeam.aiMakeSubs(-1, half, timeRemaining)
-                } else {
-                    homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                }
-            } else {
-                homeTeam.aiMakeSubs(-1, half, timeRemaining)
-                awayTeam.aiMakeSubs(-1, half, timeRemaining)
-            }
-        }
-    }
-
-    fun makeUserSubsIfPossible() {
-        if (deadball && !madeShot) {
-            if (shootFreeThrows) {
-                if (homeTeamHasBall) {
-                    if (homeTeam.isUser) {
-                        homeTeam.makeUserSubs(playerWithBall)
-                    } else {
-                        awayTeam.makeUserSubs(-1)
-                    }
-                } else {
-                    if (homeTeam.isUser) {
-                        homeTeam.makeUserSubs(-1)
-                    } else {
-                        awayTeam.makeUserSubs(playerWithBall)
-                    }
-                }
-            } else {
-                if (homeTeam.isUser) {
-                    homeTeam.makeUserSubs(-1)
-                } else {
-                    awayTeam.makeUserSubs(-1)
-                }
-            }
-        }
-    }
-
     fun finishGame() {
-        //println("Final! Half: $half Home: $homeScore  Away: $awayScore")
-
         homeTeam.endGame()
         awayTeam.endGame()
 
-        if(half > 4){
-            println("wtf: $homeScore - $awayScore half:$half")
-        }
         isFinal = true
         inProgress = false
 
@@ -304,12 +240,12 @@ class Game(
     private fun getFreeThrows(): MutableList<BasketballPlay>{
         shootFreeThrows = false
         val plays = mutableListOf<BasketballPlay>()
-        val freeThrows = FreeThrows(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, numberOfFreeThrows)
+        val freeThrows = newFreeThrow()
         addPoints(freeThrows.points)
         plays.add(freeThrows)
 
         if(!freeThrows.madeLastShot){
-            plays.add(Rebound(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location))
+            plays.add(newRebound(freeThrows))
             deadball = false
         }
 
@@ -325,9 +261,9 @@ class Game(
     }
 
     private fun getFastBreak(): MutableList<BasketballPlay> {
-        val play = FastBreak(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location)
+        val play = newFastBreak()
         return if (play.points == 0) {
-            mutableListOf(play, Rebound(homeTeamHasBall, play.timeRemaining, play.shotClock, homeTeam, awayTeam, playerWithBall, location))
+            mutableListOf(play, newRebound(play))
         } else {
             madeShot = true
             deadball = true
@@ -354,9 +290,9 @@ class Game(
         }
 
         val backcourtPlays: MutableList<BasketballPlay> = if (press) {
-            mutableListOf(Press(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils, consecutivePresses++))
+            mutableListOf(newPress())
         } else {
-            mutableListOf(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
+            mutableListOf(newPass())
         }
 
         if (backcourtPlays.last().type != Plays.FOUL) {
@@ -375,11 +311,11 @@ class Game(
 
         madeShot = false
         if (((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)) {
-            plays.add(Shot(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, false, deadball))
+            plays.add(newShot(assisted = false))
             val shot = plays[0]
             if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
                 // missed shot need to get a rebound
-                plays.add(Rebound(homeTeamHasBall, shot.timeRemaining, shot.shotClock, homeTeam, awayTeam, playerWithBall, location))
+                plays.add(newRebound(shot))
                 deadball = false
             }
             else if (shot.foul.foulType != FoulType.CLEAN) {
@@ -411,7 +347,7 @@ class Game(
             }
         }
         else {
-            plays.add(Pass(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, deadball, passingUtils))
+            plays.add(newPass())
             deadball = false
         }
 
@@ -483,102 +419,6 @@ class Game(
         }
     }
 
-    private fun getMediaTimeout(): Boolean{
-        return if (half == 1) {
-            if (timeRemaining < 16 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[0]) {
-                mediaTimeOuts[0]= true
-                true
-            }
-            else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
-                mediaTimeOuts[1] = true
-                true
-            }
-            else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
-                mediaTimeOuts[2] = true
-                true
-            }
-            else if (timeRemaining < 4 * 60 && !mediaTimeOuts[3]) {
-                mediaTimeOuts[3] = true
-                true
-            }
-            else {
-                false
-            }
-        }
-        else if (half == 2) {
-            if (timeRemaining < 16 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[4]) {
-                mediaTimeOuts[4] = true
-                true
-            }
-            else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
-                mediaTimeOuts[5] = true
-                true
-            }
-            else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
-                mediaTimeOuts[6] = true
-                true
-            }
-            else if (timeRemaining < 4 * 60 && !mediaTimeOuts[7]) {
-                mediaTimeOuts[7] = true
-                true
-            }
-            else {
-                false
-            }
-        }
-        else {
-            false
-        }
-    }
-
-    private fun getCoachExtendsToMedia(): Boolean {
-        return if (half == 1) {
-            if (timeRemaining < 16.5 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[0]) {
-                mediaTimeOuts[0]= true
-                true
-            }
-            else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
-                mediaTimeOuts[1] = true
-                true
-            }
-            else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
-                mediaTimeOuts[2] = true
-                true
-            }
-            else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[3]) {
-                mediaTimeOuts[3] = true
-                true
-            }
-            else {
-                false
-            }
-        }
-        else if (half == 2) {
-            if (timeRemaining < 16.5 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[4]) {
-                mediaTimeOuts[4] = true
-                true
-            }
-            else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
-                mediaTimeOuts[5] = true
-                true
-            }
-            else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
-                mediaTimeOuts[6] = true
-                true
-            }
-            else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[7]) {
-                mediaTimeOuts[7] = true
-                true
-            }
-            else {
-                false
-            }
-        }
-        else {
-            false
-        }
-    }
-
     private fun runTimeout() {
         homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
         awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
@@ -617,63 +457,9 @@ class Game(
         awayTeam.addFatigueFromPress()
     }
 
-    fun getTimeAsString(): String {
-        val min = timeRemaining / 60
-        val sec = timeRemaining - min * 60
-        return if (sec > 9) "$min:$sec ($shotClock)" else "$min:0$sec ($shotClock)"
-    }
-
     fun pauseGame() {
         homeTeam.pauseGame()
         awayTeam.pauseGame()
-    }
-
-    fun getTeamStats(): List<TeamStatLine> {
-        val stats = mutableListOf<TeamStatLine>()
-        stats.add(TeamStatLine(homeTeam.name, awayTeam.name, ""))
-        stats.add(
-            TeamStatLine(
-                "${homeTeam.twoPointMakes}/${homeTeam.twoPointAttempts}",
-                "${awayTeam.twoPointMakes}/${awayTeam.twoPointAttempts}",
-                "2FGs"
-            )
-        )
-        stats.add(
-            TeamStatLine(
-                "${homeTeam.threePointMakes}/${homeTeam.threePointAttempts}",
-                "${awayTeam.threePointMakes}/${awayTeam.threePointAttempts}",
-                "3FGs"
-            )
-        )
-        stats.add(
-            TeamStatLine(
-                "${homeTeam.freeThrowMakes}/${homeTeam.freeThrowShots}",
-                "${awayTeam.freeThrowMakes}/${awayTeam.freeThrowShots}",
-                "FTs"
-            )
-        )
-        stats.add(
-            TeamStatLine(
-                "${homeTeam.offensiveRebounds} - ${homeTeam.defensiveFouls}",
-                "${awayTeam.offensiveRebounds} - ${awayTeam.defensiveRebounds}",
-                "Rebounds"
-            )
-        )
-        stats.add(
-            TeamStatLine(
-                "${homeTeam.turnovers}",
-                "${awayTeam.turnovers}",
-                "Turnovers"
-            )
-        )
-        stats.add(
-            TeamStatLine(
-                "${homeTeam.offensiveFouls} - ${homeTeam.defensiveFouls}",
-                "${awayTeam.offensiveFouls} - ${awayTeam.defensiveFouls}",
-                "Fouls"
-            )
-        )
-        return stats
     }
 
     private companion object {

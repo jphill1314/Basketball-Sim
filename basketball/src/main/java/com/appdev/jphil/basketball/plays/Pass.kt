@@ -5,7 +5,7 @@ import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
-import com.appdev.jphil.basketball.playtext.PassPlayText
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.PassTextContract
 
 
@@ -17,10 +17,11 @@ class Pass(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
+    foulText: FoulTextContract,
     private val deadBall: Boolean,
     private val passingUtils: PassingUtils,
-    private val playText: PassTextContract = PassPlayText()
-) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    private val playText: PassTextContract
+) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     private var playerStartsWithBall = playerWithBall
     private lateinit var passer: Player
@@ -41,6 +42,7 @@ class Pass(
             awayTeam,
             playerWithBall,
             location,
+            foulText,
             FoulType.CLEAN
         )
         points = generatePlay()
@@ -150,6 +152,7 @@ class Pass(
                 awayTeam,
                 playerWithBall,
                 location,
+                foulText,
                 FoulType.ON_BALL
             )
             if (foul.foulType == FoulType.CLEAN) {
@@ -171,6 +174,7 @@ class Pass(
                 awayTeam,
                 playerWithBall,
                 location,
+                foulText,
                 FoulType.ON_BALL
             )
             if (foul.foulType == FoulType.CLEAN) {
@@ -198,6 +202,7 @@ class Pass(
                 awayTeam,
                 playerWithBall,
                 location,
+                foulText,
                 FoulType.OFF_BALL
             )
         } else {
@@ -209,6 +214,7 @@ class Pass(
                 awayTeam,
                 playerWithBall,
                 location,
+                foulText,
                 FoulType.ON_BALL
             )
         }

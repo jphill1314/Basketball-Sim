@@ -3,7 +3,7 @@ package com.appdev.jphil.basketball.plays
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.playtext.FTPlayText
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.FreeThrowTextContract
 
 class FreeThrows(
@@ -14,10 +14,11 @@ class FreeThrows(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
+    foulText: FoulTextContract,
     private val numberOfShots: Int,
-    private val ftText: FreeThrowTextContract = FTPlayText()
+    private val ftText: FreeThrowTextContract
 ) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     var madeLastShot = true
 
@@ -31,6 +32,7 @@ class FreeThrows(
             awayTeam,
             playerWithBall,
             location,
+            foulText,
             FoulType.CLEAN
         )
         points = generatePlay()

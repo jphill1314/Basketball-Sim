@@ -37,7 +37,9 @@ data class GameEntity(
     val awayTeamName: String,
     val homeTeamHasPossessionArrow: Boolean,
     val homeTimeouts: Int,
-    val awayTimeouts: Int
+    val awayTimeouts: Int,
+    var consecutivePresses: Int,
+    var timeInBackcourt: Int
 ) {
     fun createGame(homeTeam: Team, awayTeam: Team): Game {
         val game = Game(homeTeam, awayTeam, isNeutralCourt, season, id, isFinal)
@@ -61,6 +63,8 @@ data class GameEntity(
         game.homeTeamHasPossessionArrow = homeTeamHasPossessionArrow
         game.homeTimeouts = homeTimeouts
         game.awayTimeouts = awayTimeouts
+        game.consecutivePresses = consecutivePresses
+        game.timeInBackcourt = timeInBackcourt
         return game
     }
 
@@ -94,7 +98,9 @@ data class GameEntity(
                 game.awayTeam.name,
                 game.homeTeamHasPossessionArrow,
                 game.homeTimeouts,
-                game.awayTimeouts
+                game.awayTimeouts,
+                game.consecutivePresses,
+                game.timeInBackcourt
             )
         }
     }

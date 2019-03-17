@@ -3,7 +3,7 @@ package com.appdev.jphil.basketball.plays
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.playtext.ReboundPlayText
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.ReboundTextContract
 
 class Rebound(
@@ -14,9 +14,10 @@ class Rebound(
     awayTeam: Team,
     playerWithBall: Int,
     location: Int,
-    private val reboundText: ReboundTextContract = ReboundPlayText()
+    foulText: FoulTextContract,
+    private val reboundText: ReboundTextContract
 ) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location) {
+    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     init {
         type = Plays.REBOUND
@@ -69,6 +70,7 @@ class Rebound(
             awayTeam,
             playerWithBall,
             location,
+            foulText,
             FoulType.REBOUNDING
         )
         playAsString = if (foul.foulType == FoulType.CLEAN) {
@@ -91,6 +93,7 @@ class Rebound(
             awayTeam,
             playerWithBall,
             location,
+            foulText,
             FoulType.REBOUNDING
         )
         playAsString = if (foul.foulType == FoulType.CLEAN) {
