@@ -1,21 +1,24 @@
 package com.appdev.jphil.basketballcoach.game
 
 import android.arch.lifecycle.ViewModel
+import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
+import com.appdev.jphil.basketballcoach.strategy.StrategyContract
 import kotlinx.coroutines.*
 
 class GameViewModel(
     private val database: BasketballDatabase
-): ViewModel() {
+): ViewModel(), StrategyContract.Adapter.Out {
     var gameId = -1
     var simSpeed = 1000L
     var pauseGame = true
     var lastPlay = 0
     var totalEvents = 0
+    lateinit var coach: Coach
     private var nullGame: Game? = null
     private var gameSim: Job? = null
     private var saveGame: Job? = null
@@ -33,6 +36,7 @@ class GameViewModel(
 
             nullGame?.let { game ->
                 game.userIsCoaching = true // allow the user to make their own subs
+                coach = if (game.homeTeam.isUser) game.homeTeam.coach else game.awayTeam.coach
                 if (gameEvents.isEmpty()) {
                     gameEvents.addAll(GameDatabaseHelper.loadGameEvents(gameId, database))
                     totalEvents = gameEvents.size
@@ -175,5 +179,29 @@ class GameViewModel(
         lastPlay = plays.size
         gameEvents.addAll(newEvents)
         return newEvents
+    }
+
+    override fun onPaceChanged(pace: Int) {
+        coach.paceGame = pace + Coach.minimumPace
+    }
+
+    override fun onOffenseFavorsThreesChanged(favorsThrees: Int) {
+        coach.offenseFavorsThreesGame = favorsThrees
+    }
+
+    override fun onAggressionChanged(aggression: Int) {
+        coach.aggressionGame = aggression
+    }
+
+    override fun onDefenseFavorsThreesChanged(favorsThrees: Int) {
+        coach.defenseFavorsThreesGame = favorsThrees
+    }
+
+    override fun onPressFrequencyChanged(frequency: Int) {
+        coach.pressFrequencyGame = frequency
+    }
+
+    override fun onPressAggressionChanged(aggression: Int) {
+        coach.pressAggressionGame = aggression
     }
 }

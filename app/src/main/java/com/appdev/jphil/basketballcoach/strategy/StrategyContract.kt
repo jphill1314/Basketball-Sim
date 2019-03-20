@@ -6,22 +6,27 @@ import com.appdev.jphil.basketballcoach.MVPContract
 interface StrategyContract {
 
     interface View : MVPContract.View {
-        fun updateStrategy(strategyDataModel: StrategyDataModel)
+        fun updateStrategy(strategyDataModels: List<StrategyDataModel>)
     }
 
-    interface Presenter : MVPContract.Presenter<View> {
+    interface Presenter : MVPContract.Presenter<View>, Adapter.Out {
         fun fetchStrategy()
         fun onStrategyLoaded(coach: Coach)
-        fun onPaceChanged(pace: Int)
-        fun onOffenseFavorsThreesChanged(favorsThrees: Int)
-        fun onAggressionChanged(aggression: Int)
-        fun onDefenseFavorsThreesChanged(favorsThrees: Int)
-        fun onPressFrequencyChanged(frequency: Int)
-        fun onPressAggressionChanged(aggression: Int)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
         fun loadStrategy()
         fun saveStrategy(coach: Coach)
+    }
+
+    interface Adapter {
+        interface Out {
+            fun onPaceChanged(pace: Int)
+            fun onOffenseFavorsThreesChanged(favorsThrees: Int)
+            fun onAggressionChanged(aggression: Int)
+            fun onDefenseFavorsThreesChanged(favorsThrees: Int)
+            fun onPressFrequencyChanged(frequency: Int)
+            fun onPressAggressionChanged(aggression: Int)
+        }
     }
 }
