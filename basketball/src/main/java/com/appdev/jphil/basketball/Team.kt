@@ -74,6 +74,7 @@ class Team(
         for (p in players) {
             p.startGame()
         }
+        coach.startGame()
 
         players.sortBy { it.courtIndex }
     }

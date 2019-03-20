@@ -20,6 +20,8 @@ import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
+import com.appdev.jphil.basketballcoach.strategy.StrategyDataModel
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -35,6 +37,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var homeTeamName = "error"
     private var awayTeamName = "error"
     private lateinit var gameAdapter: GameAdapter
+    private var strategyAdapter: StrategyAdapter? = null
     private var homeStatsAdapter: GameStatsAdapter? = null
     private var awayStatsAdapter: GameStatsAdapter? = null
     private val teamStatsAdapter = GameTeamStatsAdapter()
@@ -188,6 +191,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
         teamStatsAdapter.updateTeamStats(game.homeTeam, game.awayTeam)
         teamStatsAdapter.notifyDataSetChanged()
+
+        if (strategyAdapter == null && viewModel != null) {
+            strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(viewModel!!.coach, resources, true), viewModel!!)
+        }
     }
 
     private fun notifyNewHalf() {
@@ -234,6 +241,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             1 -> homeStatsAdapter
             2 -> awayStatsAdapter
             3 -> teamStatsAdapter
+            4 -> strategyAdapter
             else -> gameAdapter
         }
 

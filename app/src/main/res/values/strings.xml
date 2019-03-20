@@ -28,6 +28,7 @@
         <item>Home Roster</item>
         <item>Away Roster</item>
         <item>Team Stats</item>
+        <item>Strategy</item>
     </string-array>
 
     <string-array name="game_roster_views">
@@ -58,7 +59,8 @@
     <string name="pace">Pace</string>
     <string name="faster">Faster</string>
     <string name="slower">Slower</string>
-    <string name="favors_threes">Favors threes</string>
+    <string name="offense_favors_threes">Offense favors threes</string>
+    <string name="defense_favors_threes">Defense favors threes</string>
     <string name="more_threes">More threes</string>
     <string name="fewer_threes">Fewer threes</string>
 

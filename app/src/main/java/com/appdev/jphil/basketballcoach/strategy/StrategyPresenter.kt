@@ -1,11 +1,13 @@
 package com.appdev.jphil.basketballcoach.strategy
 
+import android.content.res.Resources
 import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketball.Team
 import javax.inject.Inject
 
 class StrategyPresenter @Inject constructor(
-    private val repository: StrategyContract.Repository
+    private val repository: StrategyContract.Repository,
+    private val resources: Resources
 ) : StrategyContract.Presenter {
 
     private var view: StrategyContract.View? = null
@@ -22,40 +24,31 @@ class StrategyPresenter @Inject constructor(
     override fun onStrategyLoaded(coach: Coach) {
         // TODO: only show strategy of user
         this.coach = coach
-
-        view?.updateStrategy(
-            StrategyDataModel(
-            coach.paceGame - Coach.minimumPace,
-                coach.offenseFavorsThreesGame,
-                coach.aggressionGame,
-                coach.defenseFavorsThreesGame,
-                coach.pressFrequencyGame,
-                coach.pressAggressionGame
-        ))
+        view?.updateStrategy(StrategyDataModel.generateDataModels(coach, resources, false))
     }
 
     override fun onPaceChanged(pace: Int) {
-        coach.paceGame = pace + Coach.minimumPace
+        coach.pace = pace + Coach.minimumPace
     }
 
     override fun onOffenseFavorsThreesChanged(favorsThrees: Int) {
-        coach.offenseFavorsThreesGame = favorsThrees
+        coach.offenseFavorsThrees = favorsThrees
     }
 
     override fun onAggressionChanged(aggression: Int) {
-        coach.aggressionGame = aggression
+        coach.aggression = aggression
     }
 
     override fun onDefenseFavorsThreesChanged(favorsThrees: Int) {
-        coach.defenseFavorsThreesGame = favorsThrees
+        coach.defenseFavorsThrees = favorsThrees
     }
 
     override fun onPressFrequencyChanged(frequency: Int) {
-        coach.pressFrequencyGame = frequency
+        coach.pressFrequency = frequency
     }
 
     override fun onPressAggressionChanged(aggression: Int) {
-        coach.pressAggressionGame = aggression
+        coach.pressAggression = aggression
     }
 
     override fun onViewAttached(view: StrategyContract.View) {
