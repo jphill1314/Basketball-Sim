@@ -55,6 +55,8 @@ dependencies {
     // GSON
     implementation "com.google.code.gson:gson:2.8.5"
 
+    implementation 'com.flurry.android:analytics:11.6.0@aar'
+
     // Basketball Sim
     implementation project(':basketball')
 }

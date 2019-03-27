@@ -77,3 +77,5 @@ gradle/
 gradlew
 gradlew.bat
 gradle.properties
+
+/app/src/main/res/values/scerets.xml
