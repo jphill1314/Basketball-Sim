@@ -19,6 +19,7 @@ data class GameEntity(
     val inProgress: Boolean,
     val shotClock: Int,
     val timeRemaining: Int,
+    val lastTimeRemaining: Int,
     val half: Int,
     val homeScore: Int,
     val awayScore: Int,
@@ -46,6 +47,7 @@ data class GameEntity(
         game.inProgress = inProgress
         game.shotClock = shotClock
         game.timeRemaining = timeRemaining
+        game.lastTimeRemaining = lastTimeRemaining
         game.half = half
         game.homeScore = homeScore
         game.awayScore = awayScore
@@ -80,6 +82,7 @@ data class GameEntity(
                 game.inProgress,
                 game.shotClock,
                 game.timeRemaining,
+                game.lastTimeRemaining,
                 game.half,
                 game.homeScore,
                 game.awayScore,

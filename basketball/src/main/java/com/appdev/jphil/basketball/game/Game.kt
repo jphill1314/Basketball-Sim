@@ -30,6 +30,7 @@ class Game(
 
     var shotClock = 0
     var timeRemaining = 0
+    var lastTimeRemaining = 0
     var half = 1
     var homeScore = 0
     var awayScore = 0
@@ -89,7 +90,9 @@ class Game(
     }
 
     fun startHalf() {
+        updateTimePlayed(false, false)
         timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
+        lastTimeRemaining = timeRemaining
         shotClock = lengthOfShotClock
         location = 0
 
@@ -132,7 +135,7 @@ class Game(
 
         if(half == 2){
             // half time
-            updateTimePlayed(0, false, true)
+            updateTimePlayed(false, true)
         }
         else{
             // coach talk before game or between overtime periods
@@ -184,7 +187,6 @@ class Game(
         }
 
         val play = plays.last()
-        updateTimePlayed(timeRemaining - play.timeRemaining, false, false)
         plays.forEach { p -> if (p is Press) addFatigueFromPress() }
 
         if(play is Rebound){
@@ -423,7 +425,7 @@ class Game(
         homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
         awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
 
-        updateTimePlayed(0, true, false)
+        updateTimePlayed(true, false)
 
         homeTeam.userWantsTimeout = false
         awayTeam.userWantsTimeout = false
@@ -438,6 +440,7 @@ class Game(
     }
 
     private fun changePossession() {
+        updateTimePlayed(false, false)
         timeInBackcourt = 0
         shotClock = if (timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         homeTeamHasBall = !homeTeamHasBall
@@ -447,9 +450,11 @@ class Game(
         possessions++
     }
 
-    private fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {
+    private fun updateTimePlayed(isTimeout: Boolean, isHalftime: Boolean) {
+        val time = lastTimeRemaining - timeRemaining
         homeTeam.updateTimePlayed(time, isTimeout, isHalftime)
         awayTeam.updateTimePlayed(time, isTimeout, isHalftime)
+        lastTimeRemaining = timeRemaining
     }
 
     private fun addFatigueFromPress() {

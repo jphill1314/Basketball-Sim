@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.main
 import android.app.Activity
 import android.app.Application
 import android.support.v4.app.Fragment
+import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.injection.AppComponent
 import com.appdev.jphil.basketballcoach.main.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -10,6 +11,9 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
+import com.flurry.android.FlurryAgent
+
+
 
 class MainApplication : HasActivityInjector, HasSupportFragmentInjector, Application() {
 
@@ -21,6 +25,11 @@ class MainApplication : HasActivityInjector, HasSupportFragmentInjector, Applica
 
     override fun onCreate() {
         super.onCreate()
+
+        FlurryAgent.Builder()
+            .withLogEnabled(true)
+            .build(this, resources.getString(R.string.flurry_key))
+
         component = DaggerAppComponent.builder()
             .application(this)
             .build()
