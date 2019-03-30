@@ -17,7 +17,8 @@ class Shot(
     playerWithBall: Int,
     location: Int,
     foulText: FoulTextContract,
-    val assisted: Boolean, // TODO: when adding assists -> need a way to know which player passed the ball
+    val assisted: Boolean,
+    val passer: Player,
     val rushed: Boolean,
     private val shotText: ShotTextContract
 ) :
@@ -172,20 +173,23 @@ class Shot(
                 if (shotSuccess > ((r.nextDouble() * shooter.closeRangeShot) * (r.nextDouble() * 5))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.shortMake(shooter, defender, wellDefended)
+                        shotText.shortMake(shooter, defender, wellDefended, this)
                     } else {
-                        shotText.shortFoul(shooter, foul.fouler!!, true)
+                        shotText.shortFoul(shooter, foul.fouler!!, true, this)
                     }
                     offense.twoPointMakes++
                     shooter.twoPointMakes++
+                    if (assisted) {
+                        passer.assists++
+                    }
                     2
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.shortMiss(shooter, defender, wellDefended)
+                        shotText.shortMiss(shooter, defender, wellDefended, this)
                     } else {
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
-                        shotText.shortFoul(shooter, foul.fouler!!, false)
+                        shotText.shortFoul(shooter, foul.fouler!!, false, this)
                     }
                     0
                 }
@@ -194,20 +198,23 @@ class Shot(
                 if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 5))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.midMake(shooter, defender, wellDefended)
+                        shotText.midMake(shooter, defender, wellDefended, this)
                     } else {
-                        shotText.midFoul(shooter, foul.fouler!!, true)
+                        shotText.midFoul(shooter, foul.fouler!!, true, this)
+                    }
+                    if (assisted) {
+                        passer.assists++
                     }
                     offense.twoPointMakes++
                     shooter.twoPointMakes++
                     2
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.midMiss(shooter, defender, wellDefended)
+                        shotText.midMiss(shooter, defender, wellDefended, this)
                     } else {
                         offense.twoPointAttempts--
                         shooter.twoPointAttempts--
-                        shotText.midFoul(shooter, foul.fouler!!, false)
+                        shotText.midFoul(shooter, foul.fouler!!, false, this)
                     }
                     0
                 }
@@ -216,20 +223,23 @@ class Shot(
                 if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 6))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.longMake(shooter, defender, wellDefended)
+                        shotText.longMake(shooter, defender, wellDefended, this)
                     } else {
-                        shotText.longFoul(shooter, foul.fouler!!, true)
+                        shotText.longFoul(shooter, foul.fouler!!, true, this)
+                    }
+                    if (assisted) {
+                        passer.assists++
                     }
                     offense.threePointMakes++
                     shooter.threePointMakes++
                     3
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.longMiss(shooter, defender, wellDefended)
+                        shotText.longMiss(shooter, defender, wellDefended, this)
                     } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
-                        shotText.longFoul(shooter, foul.fouler!!, false)
+                        shotText.longFoul(shooter, foul.fouler!!, false, this)
                     }
                     0
                 }
@@ -238,20 +248,23 @@ class Shot(
                 if (r.nextInt(100) < 10) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.halfCourtMake(shooter, defender, wellDefended)
+                        shotText.halfCourtMake(shooter, defender, wellDefended, this)
                     } else {
-                        shotText.halfCourtFoul(shooter, foul.fouler!!, true)
+                        shotText.halfCourtFoul(shooter, foul.fouler!!, true, this)
+                    }
+                    if (assisted) {
+                        passer.assists++
                     }
                     offense.threePointMakes++
                     shooter.threePointMakes++
                     3
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.halfCourtMiss(shooter, defender, wellDefended)
+                        shotText.halfCourtMiss(shooter, defender, wellDefended, this)
                     } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
-                        shotText.halfCourtFoul(shooter, foul.fouler!!, false)
+                        shotText.halfCourtFoul(shooter, foul.fouler!!, false, this)
                     }
                     0
                 }
@@ -260,20 +273,23 @@ class Shot(
                 if (r.nextInt(100) < 2) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
-                        shotText.beyondHalfCourtMake(shooter, defender, wellDefended)
+                        shotText.beyondHalfCourtMake(shooter, defender, wellDefended, this)
                     } else {
-                        shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, true)
+                        shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, true, this)
+                    }
+                    if (assisted) {
+                        passer.assists++
                     }
                     offense.threePointMakes++
                     shooter.threePointMakes++
                     3
                 } else {
                     playAsString = if (type != Plays.FOUL) {
-                        shotText.beyondHalfCourtMiss(shooter, defender, wellDefended)
+                        shotText.beyondHalfCourtMiss(shooter, defender, wellDefended, this)
                     } else {
                         offense.threePointAttempts--
                         shooter.threePointAttempts--
-                        shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, false)
+                        shotText.beyondHalfCourtFoul(shooter, foul.fouler!!, false, this)
                     }
                     0
                 }

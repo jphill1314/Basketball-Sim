@@ -3,7 +3,8 @@ package com.appdev.jphil.basketball.game.extensions
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.*
 
-fun Game.newShot(assisted: Boolean): Shot {
+fun Game.newShot(isRushed: Boolean): Shot {
+    val passer = if (homeTeamHasBall) homeTeam.getPlayerAtPosition(lastPlayerWithBall) else awayTeam.getPlayerAtPosition(lastPlayerWithBall)
     return Shot(
         homeTeamHasBall,
         timeRemaining,
@@ -13,8 +14,9 @@ fun Game.newShot(assisted: Boolean): Shot {
         playerWithBall,
         location,
         foulText,
-        assisted,
-        deadball,
+        lastPassWasGreat,
+        passer,
+        isRushed,
         shotText
     )
 }
