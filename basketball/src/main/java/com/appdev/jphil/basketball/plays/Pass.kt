@@ -23,7 +23,7 @@ class Pass(
     private val playText: PassTextContract
 ) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
-    private var playerStartsWithBall = playerWithBall
+    var playerStartsWithBall = playerWithBall
     private lateinit var passer: Player
     private lateinit var passDefender: Player
     private lateinit var target: Player
@@ -31,6 +31,8 @@ class Pass(
     private var targetPos = -1
 
     private var timeChange = 0
+
+    var isGreatPass = false
 
     init {
         super.type = Plays.PASS
@@ -55,10 +57,9 @@ class Pass(
         val stealSuccess =
             ((passDefender.onBallDefense + passDefender.stealing + targetDefender.offBallDefense + targetDefender.stealing) / 2) /
                     (r.nextInt(randomBound) + 1)
-//        println("def agro: ${defense.aggression} pass agro: ${passDefender.aggressiveness} target agro: ${targetDefender.aggressiveness}")
-//        println("pass success: $passSuccess vs. pass fail:${((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15)}")
+
         if (passSuccess >= ((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15) || location == -1) {
-            successfulPass()
+            successfulPass(passSuccess)
         } else if (passSuccess < (((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15)) - 6) {
             badPass()
         } else if (stealSuccess > (100 - defense.aggression - ((passDefender.aggressiveness + targetDefender.aggressiveness) / 2))) {
@@ -86,7 +87,7 @@ class Pass(
         targetDefender = defense.getPlayerAtPosition(targetPos)
     }
 
-    private fun successfulPass() {
+    private fun successfulPass(passSuccess: Int) {
         //TODO: add chance to have the ball knocked out of bounds
         playerWithBall = targetPos
         timeChange = if (location < 1) {
@@ -100,6 +101,7 @@ class Pass(
             timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
         } else {
             //TODO: add pass leading to a shot / post move / etc
+            isGreatPass = passSuccess > 25
             playAsString = if (deadBall) {
                 playText.successfulInbound(passer, target)
             } else {

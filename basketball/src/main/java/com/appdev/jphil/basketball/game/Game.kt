@@ -53,6 +53,8 @@ class Game(
     var timeInBackcourt = 0
     var homeTeamHasPossessionArrow = false
     var userIsCoaching = false
+    var lastPassWasGreat = false
+    var lastPlayerWithBall = 0
 
     val gamePlays = mutableListOf<BasketballPlay>()
 
@@ -145,6 +147,8 @@ class Game(
 
     fun simPlay() {
         gamePlays.addAll(getNextPlay())
+        val lastPlay = gamePlays.last()
+        lastPlayerWithBall = if (lastPlay is Pass) lastPlay.playerStartsWithBall else playerWithBall
         var mediaTimeoutCalled = false
         if(deadball && !madeShot){
             if(getMediaTimeout()) {
@@ -189,7 +193,9 @@ class Game(
         val play = plays.last()
         plays.forEach { p -> if (p is Press) addFatigueFromPress() }
 
-        if(play is Rebound){
+        lastPassWasGreat = if (play is Pass) play.isGreatPass else false
+
+        if (play is Rebound) {
             timeRemaining = plays[plays.size - 2].timeRemaining
             shotClock = if(timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         }
@@ -312,8 +318,8 @@ class Game(
         val plays = mutableListOf<BasketballPlay>()
 
         madeShot = false
-        if (((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05)) {
-            plays.add(newShot(assisted = false))
+        if (((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05) || lastPassWasGreat) {
+            plays.add(newShot(shotClock <= 5))
             val shot = plays[0]
             if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
                 // missed shot need to get a rebound
@@ -321,7 +327,6 @@ class Game(
                 deadball = false
             }
             else if (shot.foul.foulType != FoulType.CLEAN) {
-                // shoot free throws now?
                 shootFreeThrows = true
                 if (shot.points != 0) {
                     addPoints(shot.points)
@@ -361,6 +366,7 @@ class Game(
             deadball = true
             madeShot = false // allow media timeouts to be called
             timeInBackcourt = 0 // reset time for 10 second call
+            lastPassWasGreat = false
 
             if (foul.isOnDefense) {
                 if (homeTeamHasBall) {
@@ -441,6 +447,7 @@ class Game(
 
     private fun changePossession() {
         updateTimePlayed(false, false)
+        lastPassWasGreat = false
         timeInBackcourt = 0
         shotClock = if (timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
         homeTeamHasBall = !homeTeamHasBall
