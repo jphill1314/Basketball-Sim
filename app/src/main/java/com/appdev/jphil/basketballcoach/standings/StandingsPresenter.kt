@@ -2,7 +2,9 @@ package com.appdev.jphil.basketballcoach.standings
 
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.appdev.jphil.basketballcoach.util.RecordUtil
+import com.flurry.android.FlurryAgent
 import javax.inject.Inject
 
 class StandingsPresenter @Inject constructor(
@@ -39,6 +41,7 @@ class StandingsPresenter @Inject constructor(
 
     override fun onTeamSelected(standingsDataModel: StandingsDataModel) {
         view?.changeTeamAndConference(standingsDataModel.teamId, standingsDataModel.conferenceId)
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SELECT_TEAM))
     }
 
     override fun onViewAttached(view: StandingsContract.View) {

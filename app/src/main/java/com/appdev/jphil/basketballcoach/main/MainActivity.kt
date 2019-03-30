@@ -11,6 +11,7 @@ import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
+import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.flurry.android.FlurryAgent
 import dagger.android.support.DaggerAppCompatActivity
 
@@ -39,11 +40,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         if (savedInstanceState == null) {
             navigateToHomePage()
         }
-    }
-
-    override fun onDestroy() {
-        FlurryAgent.endTimedEvent("view_screen")
-        super.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -80,8 +76,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
         drawerLayout?.closeDrawers()
         if (fragment != null && !menuItem.isChecked) {
-            FlurryAgent.endTimedEvent("view_screen")
-            FlurryAgent.logEvent("view_screen", mutableMapOf("screen_name" to fragment::class.java.simpleName), true)
+            FlurryAgent.logEvent(TrackingKeys.EVENT_VIEW_SCREEN, mutableMapOf(TrackingKeys.PAYLOAD_SCREEN_NAME to fragment::class.java.simpleName))
             menuItem.isChecked = true
             supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, fragment)

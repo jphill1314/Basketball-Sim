@@ -4,7 +4,9 @@ import android.content.res.Resources
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
+import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.appdev.jphil.basketballcoach.util.RecordUtil
+import com.flurry.android.FlurryAgent
 import javax.inject.Inject
 
 class SchedulePresenter @Inject constructor(
@@ -63,22 +65,26 @@ class SchedulePresenter @Inject constructor(
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_PLAY_GAME))
         view?.startGameFragment(gameId, homeName, awayName, userIsHomeTeam)
     }
 
     override fun simulateToGame(gameId: Int) {
         view?.showProgressBar()
         repository.simulateToGame(gameId)
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SIM_TO_GAME))
     }
 
     override fun simulateGame(gameId: Int) {
         view?.showProgressBar()
         repository.simulateGame(gameId)
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SIM_GAME))
     }
 
     override fun onSeasonOver() {
         view?.showProgressBar()
         newSeasonRepository.startNewSeason { fetchSchedule() }
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_START_NEW_SEASON))
     }
 
     override fun onViewAttached(view: ScheduleContract.View) {

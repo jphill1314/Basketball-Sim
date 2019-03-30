@@ -3,6 +3,8 @@ package com.appdev.jphil.basketballcoach.roster
 import android.util.Log
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
+import com.flurry.android.FlurryAgent
 import javax.inject.Inject
 
 class RosterPresenter @Inject constructor(private val repository: RosterContract.Repository): RosterContract.Presenter {
@@ -33,6 +35,7 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
                 team.swapPlayers(player.rosterIndex, this.player!!.rosterIndex)
                 repository.saveTeam(team)
                 displayData(team.roster, team.isUser)
+                FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SWAP_PLAYERS))
             }
             this.player = null
         }
