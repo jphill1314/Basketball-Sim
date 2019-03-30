@@ -101,6 +101,11 @@ class Player(
             if (fatigue > 100) {
                 fatigue = 100.0
             }
+        } else {
+            fatigue -= (stamina / 200.0)
+            if (fatigue < 0) {
+                fatigue = 0.0
+            }
         }
 
         if (isHalftime) {
