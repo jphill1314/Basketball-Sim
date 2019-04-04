@@ -52,6 +52,4 @@ class StandingsPresenter @Inject constructor(
     override fun onViewDetached() {
         view = null
     }
-
-    override fun onDestroyed() { }
 }

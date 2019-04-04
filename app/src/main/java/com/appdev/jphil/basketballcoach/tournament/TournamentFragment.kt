@@ -23,7 +23,7 @@ class TournamentFragment : Fragment(), TournamentContract.View {
     lateinit var presenter: TournamentContract.Presenter
 
     private lateinit var fab: FloatingActionButton
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: TournamentAdapter
     var confId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,14 +60,16 @@ class TournamentFragment : Fragment(), TournamentContract.View {
 
         view.findViewById<ProgressBar>(R.id.progress_bar).apply { visibility = View.GONE }
 
-        recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = TournamentAdapter(resources, mutableListOf(), presenter)
+        view.findViewById<RecyclerView>(R.id.recycler_view).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@TournamentFragment.adapter
+        }
         return view
     }
 
-    override fun onTournamentLoaded(dataModels: List<ScheduleDataModel>) {
-        val adapter = TournamentAdapter(resources, dataModels)
-        recyclerView.adapter = adapter
+    override fun onTournamentLoaded(dataModels: MutableList<ScheduleDataModel>) {
+        adapter.updateGames(dataModels)
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {

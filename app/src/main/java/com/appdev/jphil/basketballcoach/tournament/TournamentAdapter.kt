@@ -12,7 +12,8 @@ import com.appdev.jphil.basketballcoach.schedule.ScheduleDataModel
 
 class TournamentAdapter(
     private val resources: Resources,
-    private val games: List<ScheduleDataModel>
+    private val games: MutableList<ScheduleDataModel>,
+    private val presenter: TournamentContract.Presenter
 ) : RecyclerView.Adapter<TournamentAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -23,6 +24,12 @@ class TournamentAdapter(
         val gameStatus: TextView = view.findViewById(R.id.game_status)
         val simToGame: Button = view.findViewById(R.id.sim_to_game)
         val simGame: Button = view.findViewById(R.id.sim_game)
+    }
+
+    fun updateGames(newGames: List<ScheduleDataModel>) {
+        games.clear()
+        games.addAll(newGames)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -50,6 +57,21 @@ class TournamentAdapter(
             viewHolder.homeScore.text = game.homeTeamRecord
             viewHolder.awayScore.text = game.awayTeamRecord
             viewHolder.gameStatus.text = resources.getString(R.string.game_number, position + 1)
+        }
+
+        viewHolder.simToGame.setOnClickListener { presenter.simToGame(game.gameId) }
+        viewHolder.simGame.setOnClickListener { presenter.simGame(game.gameId) }
+        if (!game.isFinal) {
+            viewHolder.itemView.setOnClickListener {
+                val vis = viewHolder.simGame.visibility
+                if (vis == View.VISIBLE) {
+                    viewHolder.simGame.visibility = View.GONE
+                    viewHolder.simToGame.visibility = View.GONE
+                } else {
+                    viewHolder.simGame.visibility = View.VISIBLE
+                    viewHolder.simToGame.visibility = View.VISIBLE
+                }
+            }
         }
     }
 }

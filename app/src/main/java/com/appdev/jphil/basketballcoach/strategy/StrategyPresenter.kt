@@ -59,6 +59,4 @@ class StrategyPresenter @Inject constructor(
         view = null
         repository.saveStrategy(coach)
     }
-
-    override fun onDestroyed() { }
 }

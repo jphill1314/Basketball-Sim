@@ -40,6 +40,7 @@ class StrategyAdapter(
         viewHolder.seekbar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    data.value = progress
                     when (data.type) {
                         StrategyType.PACE -> out.onPaceChanged(progress)
                         StrategyType.AGGRESSION -> out.onAggressionChanged(progress)
