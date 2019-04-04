@@ -5,11 +5,13 @@ import com.appdev.jphil.basketball.TenTeamTournament
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.schedule.ScheduleDataModel
+import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import javax.inject.Inject
 
 class TournamentPresenter @Inject constructor(
     private val repository: TournamentContract.Repository,
+    private val gameSimRepository: SimulationContract.GameSimRepository,
     private val resources: Resources
 ) : TournamentContract.Presenter {
 
@@ -17,9 +19,10 @@ class TournamentPresenter @Inject constructor(
 
     init {
         repository.attachPresenter(this)
+        gameSimRepository.attachPresenter(this)
     }
 
-    override fun onTournamentLoaded(tournament: TenTeamTournament, allGames: List<GameEntity>) {
+    override fun onTournamentLoaded(tournament: TenTeamTournament, allGames: MutableList<GameEntity>) {
         val dataModels = mutableListOf<ScheduleDataModel>()
         tournament.games.forEach { game ->
             val homeTeamRecord = RecordUtil.getRecordAsPair(allGames, game.homeTeam.teamId)
@@ -42,12 +45,28 @@ class TournamentPresenter @Inject constructor(
         view?.onTournamentLoaded(dataModels)
     }
 
+    override fun simToGame(gameId: Int) {
+        gameSimRepository.simToGame(gameId)
+    }
+
+    override fun simGame(gameId: Int) {
+        gameSimRepository.simGame(gameId)
+    }
+
+    override fun onSimCompleted() {
+        repository.fetchData()
+    }
+
+    override fun onSeasonCompleted() {
+        repository.fetchData()
+    }
+
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
         view?.startGameFragment(gameId, homeName, awayName, userIsHomeTeam)
     }
 
     override fun onFABClicked() {
-        repository.simToGame()
+        gameSimRepository.startNextGame()
     }
 
     override fun onViewAttached(view: TournamentContract.View) {
@@ -57,9 +76,5 @@ class TournamentPresenter @Inject constructor(
 
     override fun onViewDetached() {
         view = null
-    }
-
-    override fun onDestroyed() {
-
     }
 }

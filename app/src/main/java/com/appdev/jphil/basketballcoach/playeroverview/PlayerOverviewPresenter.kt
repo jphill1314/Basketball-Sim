@@ -96,6 +96,4 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
     override fun onViewDetached() {
         view = null
     }
-
-    override fun onDestroyed() { }
 }

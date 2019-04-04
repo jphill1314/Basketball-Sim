@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.schedule
 
 import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 
 interface ScheduleContract {
 
@@ -15,21 +16,16 @@ interface ScheduleContract {
         fun enableFab()
     }
 
-    interface Presenter : MVPContract.Presenter<View> {
+    interface Presenter : MVPContract.Presenter<View>, SimulationContract.GameSimPresenter {
         fun fetchSchedule()
         fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean)
-        fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
         fun onFABClicked()
         fun simulateToGame(gameId: Int)
         fun simulateGame(gameId: Int)
-        fun onSeasonOver()
         fun goToConferenceTournament()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
         fun fetchSchedule()
-        fun simulateNextGame()
-        fun simulateToGame(gameId: Int)
-        fun simulateGame(gameId: Int)
     }
 }

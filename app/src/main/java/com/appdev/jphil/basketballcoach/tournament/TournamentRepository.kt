@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.TenTeamTournament
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -22,49 +23,18 @@ class TournamentRepository @Inject constructor(
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
             createTournament()?.let { tournament ->
-                val games = GameDatabaseHelper.loadAllGameEntities(database)
+                val games = mutableListOf<GameEntity>()
+                games.addAll(GameDatabaseHelper.loadAllGameEntities(database))
+                if (games.filter { !it.isFinal }.isEmpty()) {
+                    generateNextRound()
+                    games.clear()
+                    tournament.games.clear()
+                    tournament.games.addAll(GameDatabaseHelper.loadGamesForTournament(tournament.id, database))
+                    games.addAll(GameDatabaseHelper.loadAllGameEntities(database))
+                }
                 withContext(Dispatchers.Main) {
                     presenter.onTournamentLoaded(tournament, games)
                 }
-            }
-        }
-    }
-
-    override fun simToGame() {
-        GlobalScope.launch(Dispatchers.IO) {
-            var currentGameId = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
-            var homeName = ""
-            var awayName = ""
-            var userIsHomeTeam = false
-            var continueSim = true
-            var gameLoaded = false
-            while(continueSim) {
-                val game = GameDatabaseHelper.loadGameById(currentGameId++, database)
-                if (game == null) {
-                    continueSim = false
-                }
-                else {
-                    if (!game.isFinal) {
-                        continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
-                        if (continueSim) {
-                            game.simulateFullGame()
-                            GameDatabaseHelper.saveGames(listOf(game), database)
-                        } else {
-                            gameLoaded = true
-                            homeName = game.homeTeam.name
-                            awayName = game.awayTeam.name
-                            userIsHomeTeam = game.homeTeam.isUser
-                        }
-                    }
-                }
-            }
-            if (gameLoaded) {
-                withContext(Dispatchers.Main) {
-                    presenter.startGameFragment(currentGameId - 1, homeName, awayName, userIsHomeTeam)
-                }
-            } else {
-                generateNextRound()
-                fetchData()
             }
         }
     }

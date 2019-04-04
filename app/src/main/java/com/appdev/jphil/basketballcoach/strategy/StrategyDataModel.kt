@@ -5,11 +5,11 @@ import com.appdev.jphil.basketball.Coach
 import com.appdev.jphil.basketballcoach.R
 
 data class StrategyDataModel(
-    val type: StrategyType,
-    val title: String,
-    val higher: String,
-    val lower: String,
-    val value: Int,
+    var type: StrategyType,
+    var title: String,
+    var higher: String,
+    var lower: String,
+    var value: Int,
     val max: Int = 100
 ) {
 

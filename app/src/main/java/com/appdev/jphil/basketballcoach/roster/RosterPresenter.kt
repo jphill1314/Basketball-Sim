@@ -58,8 +58,4 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
     override fun onViewDetached() {
         view = null
     }
-
-    override fun onDestroyed() {
-        Log.d("test", "presenter onDestroyed")
-    }
 }

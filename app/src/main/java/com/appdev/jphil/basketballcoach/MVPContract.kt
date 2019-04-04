@@ -7,7 +7,6 @@ interface MVPContract {
     interface Presenter<V: View> {
         fun onViewAttached(view: V)
         fun onViewDetached()
-        fun onDestroyed()
     }
 
     interface Repository<P: Presenter<*>> {
