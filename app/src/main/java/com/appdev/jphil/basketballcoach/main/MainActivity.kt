@@ -78,6 +78,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         if (fragment != null && !menuItem.isChecked) {
             FlurryAgent.logEvent(TrackingKeys.EVENT_VIEW_SCREEN, mutableMapOf(TrackingKeys.PAYLOAD_SCREEN_NAME to fragment::class.java.simpleName))
             menuItem.isChecked = true
+            while (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStackImmediate()
+            }
             supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, fragment)
                     .commit()
@@ -93,6 +96,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     override fun changeConference(conferenceId: Int, teamId: Int) {
         this.conferenceId = conferenceId
         this.teamId = teamId
+    }
+
+    override fun getTeamId(): Int {
+        return teamId // TODO: refactor fragments to use these functions
+    }
+
+    override fun getConferenceId(): Int {
+        return conferenceId
     }
 
     override fun disableNavigation() {

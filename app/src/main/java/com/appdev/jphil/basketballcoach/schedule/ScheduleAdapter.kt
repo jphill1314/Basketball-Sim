@@ -33,41 +33,51 @@ class ScheduleAdapter(
     }
 
     override fun getItemCount(): Int {
-        return games?.size ?: 0
+        return (games?.size ?: 0) + 1
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        games?.let {
-            val game = it[position]
-            viewHolder.homeName.text = game.homeTeamName
-            viewHolder.awayName.text = game.awayTeamName
-            if (game.isFinal) {
-                viewHolder.homeScore.text = game.homeTeamScore.toString()
-                viewHolder.awayScore.text = game.awayTeamScore.toString()
-                viewHolder.gameStatus.text = resources.getString(R.string.game_final)
-            } else if (game.inProgress){
-                viewHolder.homeScore.text = game.homeTeamScore.toString()
-                viewHolder.awayScore.text = game.awayTeamScore.toString()
-                viewHolder.gameStatus.text = resources.getString(R.string.in_progress)
-            } else {
-                viewHolder.homeScore.text = game.homeTeamRecord
-                viewHolder.awayScore.text = game.awayTeamRecord
-                viewHolder.gameStatus.text = resources.getString(R.string.game_number, position + 1)
-            }
+        if (position < games?.size ?: 0) {
+            games?.let { handleGame(it[position], position, viewHolder) }
+        } else {
+            viewHolder.homeName.text = "Conference tournament!"
+            viewHolder.awayName.text = ""
+            viewHolder.homeScore.text = ""
+            viewHolder.awayScore.text = ""
+            viewHolder.gameStatus.text = ""
+            viewHolder.itemView.setOnClickListener { presenter.goToConferenceTournament() }
+        }
+    }
 
-            if (isUsersSchedule) {
-                viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
-                viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
-                if (!game.isFinal) {
-                    viewHolder.itemView.setOnClickListener {
-                        val vis = viewHolder.simGame.visibility
-                        if (vis == View.VISIBLE) {
-                            viewHolder.simGame.visibility = View.GONE
-                            viewHolder.simToGame.visibility = View.GONE
-                        } else {
-                            viewHolder.simGame.visibility = View.VISIBLE
-                            viewHolder.simToGame.visibility = View.VISIBLE
-                        }
+    private fun handleGame(game: ScheduleDataModel, position: Int, viewHolder: ViewHolder) {
+        viewHolder.homeName.text = game.homeTeamName
+        viewHolder.awayName.text = game.awayTeamName
+        if (game.isFinal) {
+            viewHolder.homeScore.text = game.homeTeamScore.toString()
+            viewHolder.awayScore.text = game.awayTeamScore.toString()
+            viewHolder.gameStatus.text = resources.getString(R.string.game_final)
+        } else if (game.inProgress){
+            viewHolder.homeScore.text = game.homeTeamScore.toString()
+            viewHolder.awayScore.text = game.awayTeamScore.toString()
+            viewHolder.gameStatus.text = resources.getString(R.string.in_progress)
+        } else {
+            viewHolder.homeScore.text = game.homeTeamRecord
+            viewHolder.awayScore.text = game.awayTeamRecord
+            viewHolder.gameStatus.text = resources.getString(R.string.game_number, position + 1)
+        }
+
+        if (isUsersSchedule) {
+            viewHolder.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
+            viewHolder.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
+            if (!game.isFinal) {
+                viewHolder.itemView.setOnClickListener {
+                    val vis = viewHolder.simGame.visibility
+                    if (vis == View.VISIBLE) {
+                        viewHolder.simGame.visibility = View.GONE
+                        viewHolder.simToGame.visibility = View.GONE
+                    } else {
+                        viewHolder.simGame.visibility = View.VISIBLE
+                        viewHolder.simToGame.visibility = View.VISIBLE
                     }
                 }
             }

@@ -38,6 +38,18 @@ object GameDatabaseHelper {
         return game?.let { createGame(it, database) }
     }
 
+    fun loadGamesForTournament(tournamentId: Int, database: BasketballDatabase): List<Game> {
+        val games = mutableListOf<Game>()
+        database.gameDao().getGamesWithTournamentId(tournamentId).forEach { entity ->
+            games.add(createGame(entity, database))
+        }
+        return games
+    }
+
+    fun loadGameEntitiesForTournament(tournamentId: Int, database: BasketballDatabase): List<GameEntity> {
+        return database.gameDao().getGamesWithTournamentId(tournamentId)
+    }
+
     private fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
         val homeTeam = database.teamDao().getTeamWithId(entity.homeTeamId)!!.createTeam(
                 database.playerDao().getPlayersOnTeam(entity.homeTeamId),

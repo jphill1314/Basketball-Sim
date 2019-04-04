@@ -16,6 +16,7 @@ class Game(
     val isNeutralCourt: Boolean,
     val season: Int,
     val id: Int? = null,
+    val tournamentId: Int? = null,
     var isFinal: Boolean = false
 ) {
     var miscText: MiscTextContract = MiscPlayText()

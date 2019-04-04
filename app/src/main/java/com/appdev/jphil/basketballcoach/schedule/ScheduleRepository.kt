@@ -18,7 +18,7 @@ class ScheduleRepository @Inject constructor(
 
     override fun fetchSchedule() {
         GlobalScope.launch(Dispatchers.IO) {
-            val gameEntities = GameDatabaseHelper.loadAllGameEntities(database)
+            val gameEntities = GameDatabaseHelper.loadAllGameEntities(database).filter { it.tournamentId == null }
             val team = TeamDatabaseHelper.loadUserTeam(database)
             withContext(Dispatchers.Main) { presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId) }
         }

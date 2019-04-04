@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
+import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -72,6 +73,13 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
         fragmentManager?.beginTransaction()
             ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName, userIsHomeTeam))
+            ?.addToBackStack(null)
+            ?.commit()
+    }
+
+    override fun goToConferenceTournament() {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.frame_layout, TournamentFragment.newInstance())
             ?.addToBackStack(null)
             ?.commit()
     }

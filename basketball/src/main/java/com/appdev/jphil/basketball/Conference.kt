@@ -8,6 +8,8 @@ class Conference(
     val teams: List<Team>
 ) {
 
+    var tournament: TenTeamTournament? = null
+
     fun generateSchedule(season: Int): List<Game> {
         val games = mutableListOf<Game>()
 
@@ -24,4 +26,9 @@ class Conference(
         return games
     }
 
+    fun generateTournament(dataModels: List<StandingsDataModel>) {
+        if (tournament == null) {
+            tournament = TenTeamTournament(id, teams, dataModels)
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.standings
+package com.appdev.jphil.basketball
 
 data class StandingsDataModel(
     val teamId: Int,

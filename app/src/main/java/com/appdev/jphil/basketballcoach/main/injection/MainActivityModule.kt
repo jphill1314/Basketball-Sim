@@ -13,6 +13,8 @@ import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyModule
+import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
+import com.appdev.jphil.basketballcoach.tournament.TournamentModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -42,4 +44,8 @@ abstract class MainActivityModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [PlayerOverviewModule::class])
     abstract fun playerOverviewFragment(): PlayerOverviewFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [TournamentModule::class])
+    abstract fun tournamentFragment(): TournamentFragment
 }
