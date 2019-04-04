@@ -1,6 +1,6 @@
-package com.appdev.jphil.basketballcoach.schedule
+package com.appdev.jphil.basketballcoach.tournament
 
-
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -10,30 +10,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
-import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
+import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.schedule.ScheduleDataModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-class ScheduleFragment : Fragment(), ScheduleContract.View {
+class TournamentFragment : Fragment(), TournamentContract.View {
 
     @Inject
-    lateinit var presenter: ScheduleContract.Presenter
-    var teamId = 1
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ScheduleAdapter
+    lateinit var presenter: TournamentContract.Presenter
 
     private lateinit var fab: FloatingActionButton
-    private lateinit var progressBar: ProgressBar
+    private lateinit var recyclerView: RecyclerView
+    var confId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(teamId == -1) {
-            savedInstanceState?.let {
-                teamId = it.getInt("teamId")
-            }
+        (activity as? NavigationManager)?.let {
+            confId = it.getConferenceId()
         }
         AndroidSupportInjection.inject(this)
     }
@@ -44,8 +40,13 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun onStop() {
-        super.onStop()
         presenter.onViewDetached()
+        super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(CONF_ID, confId)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(
@@ -55,19 +56,18 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
         fab = view.findViewById(R.id.fab)
         fab.setOnClickListener { presenter.onFABClicked() }
+        fab.show()
 
-        progressBar = view.findViewById(R.id.progress_bar)
+        view.findViewById<ProgressBar>(R.id.progress_bar).apply { visibility = View.GONE }
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
 
-    override fun displaySchedule(games: List<ScheduleDataModel>, isUsersSchedule: Boolean) {
-        adapter = ScheduleAdapter(resources, presenter, isUsersSchedule)
+    override fun onTournamentLoaded(dataModels: List<ScheduleDataModel>) {
+        val adapter = TournamentAdapter(resources, dataModels)
         recyclerView.adapter = adapter
-        adapter.games = games
-        adapter.notifyDataSetChanged()
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
@@ -77,39 +77,11 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
             ?.commit()
     }
 
-    override fun goToConferenceTournament() {
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, TournamentFragment.newInstance())
-            ?.addToBackStack(null)
-            ?.commit()
-    }
-
-    override fun showProgressBar() {
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun hideProgressBar() {
-        progressBar.visibility = View.GONE
-    }
-
-    override fun disableFab() {
-        fab.hide()
-    }
-
-    override fun enableFab() {
-        fab.show()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("teamId", teamId)
-        super.onSaveInstanceState(outState)
-    }
-
     companion object {
-        fun newInstance(teamId: Int): ScheduleFragment {
-            return ScheduleFragment().apply {
-                this.teamId = teamId
-            }
+        private const val CONF_ID = "confID"
+
+        fun newInstance(): TournamentFragment {
+            return TournamentFragment()
         }
     }
 }

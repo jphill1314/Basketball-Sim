@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.util
 
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
-import com.appdev.jphil.basketballcoach.standings.StandingsDataModel
+import com.appdev.jphil.basketball.StandingsDataModel
 
 object RecordUtil {
 
@@ -55,6 +55,14 @@ object RecordUtil {
                 }
             }
         }
-        return StandingsDataModel(team.teamId, team.conferenceId, team.name, wins, loses, wins, loses)
+        return StandingsDataModel(
+            team.teamId,
+            team.conferenceId,
+            team.name,
+            wins,
+            loses,
+            wins,
+            loses
+        )
     }
 }

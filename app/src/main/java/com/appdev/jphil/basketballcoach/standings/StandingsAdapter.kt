@@ -2,12 +2,12 @@ package com.appdev.jphil.basketballcoach.standings
 
 import android.content.res.Resources
 import android.graphics.Color
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.appdev.jphil.basketball.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
 
 class StandingsAdapter(

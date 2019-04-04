@@ -21,13 +21,14 @@ class SchedulePresenter @Inject constructor(
     }
 
     private var view: ScheduleContract.View? = null
+    private var teamGames = listOf<GameEntity>()
 
     override fun fetchSchedule() {
         repository.fetchSchedule()
     }
 
     override fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean) {
-        val teamGames = games.filter { it.homeTeamId == teamId || it.awayTeamId == teamId }
+        teamGames = games.filter { it.homeTeamId == teamId || it.awayTeamId == teamId }
         val dataModels = mutableListOf<ScheduleDataModel>()
         teamGames.forEach { game ->
             val homeTeamRecord = RecordUtil.getRecordAsPair(games, game.homeTeamId)
@@ -85,6 +86,12 @@ class SchedulePresenter @Inject constructor(
         view?.showProgressBar()
         newSeasonRepository.startNewSeason { fetchSchedule() }
         FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_START_NEW_SEASON))
+    }
+
+    override fun goToConferenceTournament() {
+        if (teamGames.filter { it.isFinal }.size == teamGames.size) {
+            view?.goToConferenceTournament()
+        }
     }
 
     override fun onViewAttached(view: ScheduleContract.View) {

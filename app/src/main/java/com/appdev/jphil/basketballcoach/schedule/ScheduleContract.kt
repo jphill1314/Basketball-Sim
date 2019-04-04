@@ -8,6 +8,7 @@ interface ScheduleContract {
     interface View : MVPContract.View {
         fun displaySchedule(games: List<ScheduleDataModel>, isUsersSchedule: Boolean)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
+        fun goToConferenceTournament()
         fun showProgressBar()
         fun hideProgressBar()
         fun disableFab()
@@ -22,6 +23,7 @@ interface ScheduleContract {
         fun simulateToGame(gameId: Int)
         fun simulateGame(gameId: Int)
         fun onSeasonOver()
+        fun goToConferenceTournament()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
