@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball
 
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.game.Game
 
 class Conference(

@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 import android.content.res.Resources
+import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
@@ -49,16 +50,18 @@ class SchedulePresenter @Inject constructor(
             val awayTeamRecord = RecordUtil.getRecordAsPair(games, game.awayTeamId)
             val awayRecord = resources.getString(R.string.standings_dash, awayTeamRecord.first, awayTeamRecord.second)
 
-            dataModels.add(ScheduleDataModel(
-                game.id ?: 0,
-                game.homeTeamName,
-                homeRecord,
-                game.homeScore,
-                game.awayTeamName,
-                awayRecord,
-                game.awayScore,
-                game.isFinal,
-                game.inProgress)
+            dataModels.add(
+                ScheduleDataModel(
+                    game.id ?: 0,
+                    game.homeTeamName,
+                    homeRecord,
+                    game.homeScore,
+                    game.awayTeamName,
+                    awayRecord,
+                    game.awayScore,
+                    game.isFinal,
+                    game.inProgress
+                )
             )
         }
         if (!isUsersSchedule) {

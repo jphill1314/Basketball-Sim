@@ -1,29 +1,29 @@
 package com.appdev.jphil.basketballcoach.tournament
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.support.v4.view.ViewPager
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
-import com.appdev.jphil.basketballcoach.schedule.ScheduleDataModel
+import com.appdev.jphil.basketball.datamodels.TournamentDataModel
+import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
+import com.appdev.jphil.basketballcoach.tournament.round.TournamentViewPagerAdapter
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-class TournamentFragment : Fragment(), TournamentContract.View {
+class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPageChangeListener {
 
     @Inject
     lateinit var presenter: TournamentContract.Presenter
 
     private lateinit var fab: FloatingActionButton
-    private lateinit var adapter: TournamentAdapter
+    private var adapter: TournamentViewPagerAdapter? = null
     var confId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,32 +44,35 @@ class TournamentFragment : Fragment(), TournamentContract.View {
         super.onStop()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CONF_ID, confId)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_schedule, container, false)
+        val view = inflater.inflate(R.layout.fragment_tournament, container, false)
         fab = view.findViewById(R.id.fab)
         fab.setOnClickListener { presenter.onFABClicked() }
         fab.show()
 
-        view.findViewById<ProgressBar>(R.id.progress_bar).apply { visibility = View.GONE }
-
-        adapter = TournamentAdapter(resources, mutableListOf(), presenter)
-        view.findViewById<RecyclerView>(R.id.recycler_view).apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@TournamentFragment.adapter
-        }
         return view
     }
 
-    override fun onTournamentLoaded(dataModels: MutableList<ScheduleDataModel>) {
-        adapter.updateGames(dataModels)
+    override fun onTournamentLoaded(dataModels: MutableList<TournamentDataModel>) {
+        if (adapter == null) {
+            adapter = TournamentViewPagerAdapter(dataModels, presenter, childFragmentManager)
+            view?.findViewById<ViewPager>(R.id.view_pager)?.let {
+                it.adapter = adapter
+                it.pageMargin = -(getScreenWidth() / 2)
+                it.offscreenPageLimit = 10
+                it.addOnPageChangeListener(this)
+            }
+        } else {
+            adapter?.updateDataModels(dataModels)
+            childFragmentManager.fragments.forEach { fragment ->
+                if (fragment is RoundFragment) {
+                    updateFragment(fragment, dataModels)
+                }
+            }
+        }
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
@@ -79,9 +82,33 @@ class TournamentFragment : Fragment(), TournamentContract.View {
             ?.commit()
     }
 
-    companion object {
-        private const val CONF_ID = "confID"
+    private fun getScreenWidth(): Int {
+        val metrics = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
+        return metrics.widthPixels
+    }
 
+    override fun onPageScrollStateChanged(p0: Int) {
+
+    }
+
+    override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
+
+    }
+
+    override fun onPageSelected(position: Int) {
+        childFragmentManager.fragments.forEach {
+            (it as? RoundFragment)?.updateRound(position + 1)
+        }
+    }
+
+    private fun updateFragment(fragment: RoundFragment, dataModels: MutableList<TournamentDataModel>) {
+        fragment.addData(mutableListOf<TournamentDataModel>().apply {
+            addAll(dataModels.filter { it.round == fragment.getFragmentRound() })
+        })
+    }
+
+    companion object {
         fun newInstance(): TournamentFragment {
             return TournamentFragment()
         }

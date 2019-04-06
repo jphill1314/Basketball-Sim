@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.appdev.jphil.basketball.StandingsDataModel
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
 
 class StandingsAdapter(

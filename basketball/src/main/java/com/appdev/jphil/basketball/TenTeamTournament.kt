@@ -1,15 +1,18 @@
 package com.appdev.jphil.basketball
 
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
+import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketball.game.Game
 
 class TenTeamTournament(
     val id: Int,
     teams: List<Team>,
-    dataModels: List<StandingsDataModel>
+    val dataModels: List<StandingsDataModel>
 ) {
 
     private val sortedTeams = mutableListOf<Team>()
-    val games = mutableListOf<Game>()
+    private val games = mutableListOf<Game>()
+    val scheduleDataModels = MutableList(9) { TournamentDataModel.emptyDataModel(getRoundForGameIndex(it)) }
 
     init {
         dataModels.sortedWith(compareBy(
@@ -44,6 +47,30 @@ class TenTeamTournament(
                     games.add(newGame(getWinner(games[6]), getWinner(games[7]), season))
                 }
             }
+            if (games.size == 2) makeInitialDataModels() else updateDataModels()
+        }
+    }
+
+    private fun updateDataModels() {
+        games.forEachIndexed { index, game ->
+            scheduleDataModels[index] = TournamentDataModel.from(game, getRoundForGameIndex(index))
+        }
+    }
+
+    private fun makeInitialDataModels() {
+        updateDataModels()
+        scheduleDataModels[2].homeTeamName = sortedTeams[0].name
+        scheduleDataModels[3].homeTeamName = sortedTeams[3].name
+        scheduleDataModels[4].homeTeamName = sortedTeams[2].name
+        scheduleDataModels[5].homeTeamName = sortedTeams[1].name
+    }
+
+    private fun getRoundForGameIndex(index: Int): Int {
+        return when (index) {
+            0, 1 -> 1
+            in 2..5 ->  2
+            6, 7 -> 3
+            else -> 4
         }
     }
 
@@ -70,4 +97,14 @@ class TenTeamTournament(
     private fun getWinner(game: Game): Team {
         return if (game.homeScore > game.awayScore) game.homeTeam else game.awayTeam
     }
+
+    fun replaceGames(newGames: List<Game>) {
+        games.clear()
+        games.addAll(newGames)
+        if (games.size == 2) makeInitialDataModels() else updateDataModels()
+    }
+
+    fun getAllGames() = games
+
+    fun numberOfGames() = games.size
 }

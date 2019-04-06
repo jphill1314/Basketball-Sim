@@ -143,6 +143,8 @@ class Game(
         else{
             // coach talk before game or between overtime periods
             runTimeout()
+            deadball = false
+            madeShot = false
         }
     }
 
