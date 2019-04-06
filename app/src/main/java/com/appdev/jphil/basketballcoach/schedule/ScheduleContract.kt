@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule
 
+import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract

@@ -67,6 +67,10 @@ class GameViewModel(
                             // Happens between each half and when the sim is first opened
                             Thread.sleep(100)
                         }
+                        withContext(Dispatchers.Main) {
+                            updateGame(game, getNewPlayEvents(game))
+                        }
+                        Thread.sleep(simSpeed)
 
                         while (isActive && game.timeRemaining > 0) {
                             game.simPlay()

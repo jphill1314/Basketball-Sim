@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.appdev.jphil.basketball.StandingsDataModel
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection

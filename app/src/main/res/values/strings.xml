@@ -17,7 +17,7 @@
     <string name="in_progress">In progress</string>
     <string name="game_final">Final</string>
     <string name="sim_to_game">Simulate to game</string>
-    <string name="sim_game">Sim game</string>
+    <string name="sim_game">Simulate game</string>
 
     <string name="half_placeholder">Half: %d</string>
     <string name="fouls">Fouls: %d</string>

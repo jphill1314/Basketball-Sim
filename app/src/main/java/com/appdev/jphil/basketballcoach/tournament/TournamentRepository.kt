@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.tournament
 
-import com.appdev.jphil.basketball.StandingsDataModel
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.TenTeamTournament
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
@@ -23,17 +23,12 @@ class TournamentRepository @Inject constructor(
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
             createTournament()?.let { tournament ->
-                val games = mutableListOf<GameEntity>()
-                games.addAll(GameDatabaseHelper.loadAllGameEntities(database))
-                if (games.filter { !it.isFinal }.isEmpty()) {
+                if (GameDatabaseHelper.loadAllGameEntities(database).filter { !it.isFinal }.isEmpty()) {
                     generateNextRound()
-                    games.clear()
-                    tournament.games.clear()
-                    tournament.games.addAll(GameDatabaseHelper.loadGamesForTournament(tournament.id, database))
-                    games.addAll(GameDatabaseHelper.loadAllGameEntities(database))
+                    tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(tournament.id, database))
                 }
                 withContext(Dispatchers.Main) {
-                    presenter.onTournamentLoaded(tournament, games)
+                    presenter.onTournamentLoaded(tournament.scheduleDataModels)
                 }
             }
         }
@@ -42,9 +37,8 @@ class TournamentRepository @Inject constructor(
     private fun generateNextRound() {
         createTournament()?.let {
             it.generateNextRound(2018) // TODO: inject current season
-            GameDatabaseHelper.saveOnlyGames(it.games, database)
-            it.games.clear()
-            it.games.addAll(GameDatabaseHelper.loadGamesForTournament(it.id, database))
+            GameDatabaseHelper.saveOnlyGames(it.getAllGames(), database)
+            it.replaceGames(GameDatabaseHelper.loadGamesForTournament(it.id, database))
         }
     }
 
@@ -62,14 +56,11 @@ class TournamentRepository @Inject constructor(
         )))
 
         conference?.tournament?.let { tournament ->
-            var tournamentGames = GameDatabaseHelper.loadGamesForTournament(conferenceId, database)
-            tournament.games.addAll(tournamentGames)
-            if (tournament.games.size == 0) {
+            tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conferenceId, database))
+            if (tournament.numberOfGames() == 0) {
                 tournament.generateNextRound(2018) // TODO: inject
-                GameDatabaseHelper.saveOnlyGames(tournament.games, database)
-                tournamentGames = GameDatabaseHelper.loadGamesForTournament(conferenceId, database)
-                tournament.games.clear()
-                tournament.games.addAll(tournamentGames)
+                GameDatabaseHelper.saveOnlyGames(tournament.getAllGames(), database)
+                tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conferenceId, database))
             }
         }
         return conference?.tournament
