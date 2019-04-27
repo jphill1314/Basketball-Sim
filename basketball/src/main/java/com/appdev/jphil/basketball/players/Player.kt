@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketball
+package com.appdev.jphil.basketball.players
 
 class Player(
     val id: Int?,

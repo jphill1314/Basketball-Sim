@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.database.player
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 
 @Entity
 data class PlayerEntity(

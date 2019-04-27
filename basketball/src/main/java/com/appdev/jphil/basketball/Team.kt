@@ -3,6 +3,7 @@ package com.appdev.jphil.basketball
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.game.CoachTalk
+import com.appdev.jphil.basketball.players.Player
 import java.util.*
 
 class Team(

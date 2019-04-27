@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 
 class PlayerAttributeAdapter(private val player: Player, private val resources: Resources) : RecyclerView.Adapter<PlayerAttributeAdapter.ViewHolder>() {

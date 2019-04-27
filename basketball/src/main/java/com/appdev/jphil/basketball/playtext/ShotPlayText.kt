@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketball.playtext
 
-import com.appdev.jphil.basketball.Player
-import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.Shot
 import com.appdev.jphil.basketball.textcontracts.ShotTextContract
 

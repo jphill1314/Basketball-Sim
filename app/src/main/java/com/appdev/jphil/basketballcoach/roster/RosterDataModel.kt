@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.roster
 
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 
 data class RosterDataModel(
     val player: Player,
