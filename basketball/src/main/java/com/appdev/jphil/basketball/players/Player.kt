@@ -35,6 +35,8 @@ class Player(
     var subPosition = courtIndex
     val fullName = "$firstName $lastName"
 
+    var progression: PlayerProgression? = null
+
     var twoPointAttempts = 0
     var twoPointMakes = 0
     var threePointAttempts = 0
@@ -209,6 +211,10 @@ class Player(
 
     fun resumeGame() {
         inGame = true
+    }
+
+    fun runPractice(practiceType: PracticeType) {
+        progression?.runPractice(practiceType)
     }
 
     fun isInFoulTrouble(half: Int, timeRemaining: Int): Boolean {

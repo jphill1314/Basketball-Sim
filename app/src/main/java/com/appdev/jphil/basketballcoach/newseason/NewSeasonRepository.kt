@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.TeamFactory
+import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
@@ -26,7 +27,6 @@ class NewSeasonRepository @Inject constructor(
     private val firstNames = resources.getStringArray(R.array.first_names).asList()
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
-    // TODO: new players aren't being saved? or loaded???
     fun startNewSeason(callback: () -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             GameDatabaseHelper.deleteAllGames(database)
@@ -53,6 +53,10 @@ class NewSeasonRepository @Inject constructor(
 
         team.returningPlayers(team.players.filter { it.year < 4 })
 
+        for (i in 1..(PRACTICES / 2)) {
+            team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS) }
+        }
+
         for (position in 1..5) {
             while (team.players.filter { it.position == position }.size < 3) {
                 team.addNewPlayer(PlayerFactory.generateBalancedPlayer(
@@ -76,6 +80,14 @@ class NewSeasonRepository @Inject constructor(
             }
         }
 
+        for (i in 1..(PRACTICES / 2)) {
+            team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS) }
+        }
+
         team.players.sortBy { it.rosterIndex }
+    }
+
+    companion object {
+        private const val PRACTICES = 50
     }
 }
