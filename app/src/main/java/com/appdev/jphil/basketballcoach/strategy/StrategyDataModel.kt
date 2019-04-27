@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.strategy
 
 import android.content.res.Resources
-import com.appdev.jphil.basketball.Coach
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
 
 data class StrategyDataModel(

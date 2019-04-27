@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.game
 
 import android.arch.lifecycle.ViewModel
-import com.appdev.jphil.basketball.Coach
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
@@ -36,7 +36,7 @@ class GameViewModel(
 
             nullGame?.let { game ->
                 game.userIsCoaching = true // allow the user to make their own subs
-                coach = if (game.homeTeam.isUser) game.homeTeam.coach else game.awayTeam.coach
+                coach = if (game.homeTeam.isUser) game.homeTeam.getHeadCoach() else game.awayTeam.getHeadCoach()
                 if (gameEvents.isEmpty()) {
                     gameEvents.addAll(GameDatabaseHelper.loadGameEvents(gameId, database))
                     totalEvents = gameEvents.size

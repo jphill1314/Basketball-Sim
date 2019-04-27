@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 
@@ -29,9 +30,11 @@ data class TeamEntity(
     val lastScoreDif: Int
 ) {
 
-    fun createTeam(players: List<PlayerEntity>, coach: CoachEntity): Team {
+    fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>): Team {
         val teamPlayers = mutableListOf<Player>()
         players.forEach { player -> teamPlayers.add(player.createPlayer()) }
+        val teamCoaches = mutableListOf<Coach>()
+        coaches.forEach { coach -> teamCoaches.add(coach.createCoach()) }
         val team = Team(
             teamId,
             name,
@@ -39,7 +42,7 @@ data class TeamEntity(
             teamPlayers,
             conferenceId,
             isUser,
-            coach.createCoach()
+            teamCoaches
         )
 
         team.twoPointAttempts = twoPointAttempts

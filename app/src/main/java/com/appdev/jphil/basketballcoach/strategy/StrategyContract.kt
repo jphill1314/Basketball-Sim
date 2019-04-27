@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.strategy
 
-import com.appdev.jphil.basketball.Coach
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.MVPContract
 
 interface StrategyContract {

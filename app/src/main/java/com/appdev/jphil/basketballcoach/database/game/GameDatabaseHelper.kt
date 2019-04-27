@@ -53,11 +53,11 @@ object GameDatabaseHelper {
     private fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
         val homeTeam = database.teamDao().getTeamWithId(entity.homeTeamId)!!.createTeam(
                 database.playerDao().getPlayersOnTeam(entity.homeTeamId),
-                database.coachDao().getCoachByTeamId(entity.homeTeamId)
+                database.coachDao().getCoachesByTeamId(entity.homeTeamId)
             )
         val awayTeam = database.teamDao().getTeamWithId(entity.awayTeamId)!!.createTeam(
                 database.playerDao().getPlayersOnTeam(entity.awayTeamId),
-                database.coachDao().getCoachByTeamId(entity.awayTeamId)
+                database.coachDao().getCoachesByTeamId(entity.awayTeamId)
             )
         return entity.createGame(homeTeam, awayTeam)
     }
