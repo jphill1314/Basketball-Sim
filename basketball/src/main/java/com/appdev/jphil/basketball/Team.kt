@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.players.Player
+import com.appdev.jphil.basketball.players.PracticeType
 import java.util.*
 
 class Team(
@@ -19,6 +20,8 @@ class Team(
     val roster = mutableListOf<Player>() // for use everywhere else
     private val userSubs = mutableListOf<Pair<Int, Int>>()
     var teamRating: Int = 0
+
+    var practiceType = PracticeType.NO_FOCUS
 
     var twoPointAttempts = 0
     var twoPointMakes = 0
@@ -121,6 +124,7 @@ class Team(
     fun endGame() {
         for (p in players) {
             p.inGame = false
+            p.runPractice(practiceType)
         }
     }
 

@@ -43,9 +43,8 @@ object ConferenceDatabaseHelper {
     private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): List<Team> {
         val teams = mutableListOf<Team>()
         teamEntities.forEach { entity ->
-            val players = database.playerDao().getPlayersOnTeam(entity.teamId)
-            val coach = database.coachDao().getCoachesByTeamId(entity.teamId)
-            teams.add(entity.createTeam(players, coach))
+            val team = TeamDatabaseHelper.createTeam(entity, database)
+            teams.add(team!!)
         }
         return teams
     }

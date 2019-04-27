@@ -36,4 +36,14 @@ interface PlayerDao {
 
     @Delete
     fun deleteGameStats(gameStats: List<GameStatsEntity>)
+
+    // Player Progression Entity
+    @Query("SELECT * FROM PlayerProgressionEntity where playerId in (:playerId)")
+    fun getProgressForPlayer(playerId: Int): PlayerProgressionEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPlayerProgression(playerProgressionEntity: PlayerProgressionEntity)
+
+    @Query("DELETE FROM PlayerProgressionEntity where playerId in (:playerId)")
+    fun deleteProgressionForPlayer(playerId: Int)
 }

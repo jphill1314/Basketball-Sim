@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketball.players
 
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -14,7 +15,7 @@ class PlayerAttributeDelegate(private var value: Int) : ReadWriteProperty<Player
     }
 
     override fun setValue(thisRef: Player, property: KProperty<*>, value: Int) {
-        this.value = value
+        this.value = max(min(value, MAX_ATTRIBUTE), MIN_ATTRIBUTE)
     }
 
     private fun getFatigueFactor(player: Player): Double {
@@ -23,5 +24,10 @@ class PlayerAttributeDelegate(private var value: Int) : ReadWriteProperty<Player
         } else {
             1.0
         }
+    }
+
+    companion object {
+        private const val MAX_ATTRIBUTE = 100
+        private const val MIN_ATTRIBUTE = 1
     }
 }

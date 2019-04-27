@@ -5,8 +5,11 @@ import android.arch.persistence.room.PrimaryKey
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketball.players.PlayerProgression
+import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
+import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
 
 @Entity
 data class TeamEntity(
@@ -27,12 +30,22 @@ data class TeamEntity(
     val freeThrowShots: Int,
     val freeThrowMakes: Int,
     val isUser: Boolean,
-    val lastScoreDif: Int
+    val lastScoreDif: Int,
+    val practiceType: Int
 ) {
 
-    fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>): Team {
+    fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>, progression: List<PlayerProgressionEntity?>): Team {
         val teamPlayers = mutableListOf<Player>()
-        players.forEach { player -> teamPlayers.add(player.createPlayer()) }
+        players.forEach { player ->
+            val p = player.createPlayer()
+            val progress = progression.filter { it?.playerId == p.id!! }
+            p.progression = if (progress.isNotEmpty()) {
+                progress[0]?.createProgression(p) ?: PlayerProgression(null, p)
+            } else {
+                PlayerProgression(null, p)
+            }
+            teamPlayers.add(p)
+        }
         val teamCoaches = mutableListOf<Coach>()
         coaches.forEach { coach -> teamCoaches.add(coach.createCoach()) }
         val team = Team(
@@ -58,6 +71,13 @@ data class TeamEntity(
         team.freeThrowMakes = freeThrowMakes
         team.lastScoreDiff = lastScoreDif
 
+        team.practiceType = when (practiceType) {
+            PracticeType.OFFENSE.type -> PracticeType.OFFENSE
+            PracticeType.DEFENSE.type -> PracticeType.DEFENSE
+            PracticeType.CONDITIONING.type -> PracticeType.CONDITIONING
+            else -> PracticeType.NO_FOCUS
+        }
+
         return team
     }
 
@@ -80,7 +100,8 @@ data class TeamEntity(
                 team.freeThrowShots,
                 team.freeThrowMakes,
                 team.isUser,
-                team.lastScoreDiff
+                team.lastScoreDiff,
+                team.practiceType.type
             )
         }
     }
