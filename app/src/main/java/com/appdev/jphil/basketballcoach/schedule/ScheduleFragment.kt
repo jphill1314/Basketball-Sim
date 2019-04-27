@@ -14,6 +14,7 @@ import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -31,10 +32,8 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(teamId == -1) {
-            savedInstanceState?.let {
-                teamId = it.getInt("teamId")
-            }
+        (activity as? NavigationManager)?.let {
+            teamId = it.getTeamId()
         }
         AndroidSupportInjection.inject(this)
     }
@@ -80,7 +79,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     override fun goToConferenceTournament() {
         fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, TournamentFragment.newInstance())
+            ?.replace(R.id.frame_layout, TournamentFragment())
             ?.addToBackStack(null)
             ?.commit()
     }
@@ -99,18 +98,5 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     override fun enableFab() {
         fab.show()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("teamId", teamId)
-        super.onSaveInstanceState(outState)
-    }
-
-    companion object {
-        fun newInstance(teamId: Int): ScheduleFragment {
-            return ScheduleFragment().apply {
-                this.teamId = teamId
-            }
-        }
     }
 }
