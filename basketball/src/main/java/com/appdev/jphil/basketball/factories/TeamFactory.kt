@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.coaches.Coach
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.coaches.CoachType
 import java.util.*

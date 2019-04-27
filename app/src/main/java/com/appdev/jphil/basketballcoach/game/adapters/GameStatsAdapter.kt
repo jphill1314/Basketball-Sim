@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameViewModel
 import java.util.*

@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.playeroverview
 
 import android.widget.AdapterView
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 

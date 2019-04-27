@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.playeroverview
 
 import android.view.View
 import android.widget.AdapterView
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import javax.inject.Inject
 

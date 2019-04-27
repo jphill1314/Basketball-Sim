@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketball.textcontracts
 
-import com.appdev.jphil.basketball.Player
+import com.appdev.jphil.basketball.players.Player
 
 interface FoulTextContract {
 
