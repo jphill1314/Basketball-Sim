@@ -1,7 +1,5 @@
 package com.appdev.jphil.basketball
 
-import kotlin.math.max
-
 class Player(
     val id: Int?,
     val teamId: Int,
@@ -51,48 +49,22 @@ class Player(
     var freeThrowMakes = 0
 
     // offense
-    var closeRangeShot: Int = closeRangeShot
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var midRangeShot: Int = midRangeShot
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var longRangeShot: Int = longRangeShot
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var freeThrowShot: Int = freeThrowShot
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var postMove: Int = postMove
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var ballHandling: Int = ballHandling
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var passing: Int = passing
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var offBallMovement: Int = offBallMovement
-    get() = if (inGame) max(((field + offensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var closeRangeShot: Int by PlayerAttributeDelegate(closeRangeShot)
+    var midRangeShot: Int by PlayerAttributeDelegate(midRangeShot)
+    var longRangeShot: Int by PlayerAttributeDelegate(longRangeShot)
+    var freeThrowShot: Int by PlayerAttributeDelegate(freeThrowShot)
+    var postMove: Int by PlayerAttributeDelegate(postMove)
+    var ballHandling: Int by PlayerAttributeDelegate(ballHandling)
+    var passing: Int by PlayerAttributeDelegate(passing)
+    var offBallMovement: Int by PlayerAttributeDelegate(offBallMovement)
 
     // Defense
-    var postDefense: Int = postDefense
-    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var perimeterDefense: Int = perimeterDefense
-    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var onBallDefense: Int = onBallDefense
-    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var offBallDefense: Int = offBallDefense
-    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var stealing: Int = stealing
-    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
-
-    var rebounding: Int = rebounding
-    get() = if (inGame) max(((field + defensiveStatMod) * getFatigueFactor()).toInt(), 20) else field
+    var postDefense: Int by PlayerAttributeDelegate(postDefense)
+    var perimeterDefense: Int by PlayerAttributeDelegate(perimeterDefense)
+    var onBallDefense: Int by PlayerAttributeDelegate(onBallDefense)
+    var offBallDefense: Int by PlayerAttributeDelegate(offBallDefense)
+    var stealing: Int by PlayerAttributeDelegate(stealing)
+    var rebounding: Int by PlayerAttributeDelegate(rebounding)
 
     fun addTimePlayed(time: Int, isHalftime: Boolean, isTimeout: Boolean) {
         timePlayed += time
@@ -118,14 +90,6 @@ class Player(
 
     fun addFatigueFromPress() {
         fatigue += 1.5 - (stamina / 100.0)
-    }
-
-    private fun getFatigueFactor(): Double {
-        return if (fatigue > 0.1) {
-            Math.max(1 - (Math.exp(fatigue / 25.0) / 100.0), .5)
-        } else {
-            1.0
-        }
     }
 
     fun getOverallRating(): Int {

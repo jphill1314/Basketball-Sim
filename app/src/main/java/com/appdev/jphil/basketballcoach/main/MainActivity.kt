@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
@@ -69,7 +70,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             R.id.standings -> StandingsFragment.newInstance(teamId, conferenceId)
             R.id.recruiting -> null
             R.id.strategy -> StrategyFragment.newInstance(teamId)
-            R.id.staff -> null
+            R.id.staff -> CoachesFragment()
             R.id.training -> null
             else -> null
         }

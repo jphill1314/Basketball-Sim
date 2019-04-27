@@ -44,7 +44,7 @@ object ConferenceDatabaseHelper {
         val teams = mutableListOf<Team>()
         teamEntities.forEach { entity ->
             val players = database.playerDao().getPlayersOnTeam(entity.teamId)
-            val coach = database.coachDao().getCoachByTeamId(entity.teamId)
+            val coach = database.coachDao().getCoachesByTeamId(entity.teamId)
             teams.add(entity.createTeam(players, coach))
         }
         return teams

@@ -11,8 +11,8 @@ object TeamDatabaseHelper {
         val teamEntity = database.teamDao().getTeamWithId(teamId)
         return teamEntity?.let {
             val players = database.playerDao().getPlayersOnTeam(teamId)
-            val coach = database.coachDao().getCoachByTeamId(teamId)
-            it.createTeam(players, coach)
+            val coaches = database.coachDao().getCoachesByTeamId(teamId)
+            it.createTeam(players, coaches)
         }
     }
 
@@ -20,14 +20,14 @@ object TeamDatabaseHelper {
         val teamEntity = database.teamDao().getTeamIsUser(true)
         return teamEntity?.let {
             val players = database.playerDao().getPlayersOnTeam(it.teamId)
-            val coach = database.coachDao().getCoachByTeamId(it.teamId)
-            it.createTeam(players, coach)
+            val coaches = database.coachDao().getCoachesByTeamId(it.teamId)
+            it.createTeam(players, coaches)
         }
     }
 
     fun saveTeam(team: Team, database: BasketballDatabase) {
         team.roster.forEach { player -> database.playerDao().insertPlayer(PlayerEntity.from(player)) }
-        database.coachDao().saveCoach(CoachEntity.from(team.coach))
+        team.coaches.forEach { coach -> database.coachDao().saveCoach(CoachEntity.from(coach)) }
         database.teamDao().insertTeam(TeamEntity.from(team))
     }
 }

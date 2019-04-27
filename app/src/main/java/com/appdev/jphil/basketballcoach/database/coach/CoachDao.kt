@@ -9,7 +9,7 @@ import android.arch.persistence.room.Query
 abstract class CoachDao {
 
     @Query("SELECT * FROM CoachEntity where teamId in (:teamId)")
-    abstract fun getCoachByTeamId(teamId: Int): CoachEntity
+    abstract fun getCoachesByTeamId(teamId: Int): List<CoachEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun saveCoach(coachEntity: CoachEntity)

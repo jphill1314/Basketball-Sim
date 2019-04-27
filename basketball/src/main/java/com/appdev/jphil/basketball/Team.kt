@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketball
 
+import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.game.CoachTalk
 import java.util.*
 
@@ -10,7 +12,7 @@ class Team(
     val players: MutableList<Player>,
     val conferenceId: Int,// for use in games
     val isUser: Boolean,
-    val coach: Coach
+    val coaches: MutableList<Coach>
 ) {
 
     val roster = mutableListOf<Player>() // for use everywhere else
@@ -29,12 +31,12 @@ class Team(
     var freeThrowShots = 0
     var freeThrowMakes = 0
 
-    var offenseFavorsThrees = coach.offenseFavorsThreesGame
-    var defenseFavorsThrees = coach.defenseFavorsThreesGame
-    var pressFrequency = coach.pressFrequencyGame
-    var pressAggression = coach.pressAggressionGame
-    var aggression = coach.aggressionGame
-    var pace = coach.paceGame
+    var offenseFavorsThrees: Int
+    var defenseFavorsThrees: Int
+    var pressFrequency: Int
+    var pressAggression: Int
+    var aggression: Int
+    var pace: Int
 
     var userWantsTimeout = false
     var lastScoreDiff = 0
@@ -45,6 +47,14 @@ class Team(
         roster.addAll(players)
         roster.sortBy { it.rosterIndex }
         teamRating = calculateTeamRating()
+
+        val hc = getHeadCoach()
+        offenseFavorsThrees = hc.offenseFavorsThreesGame
+        defenseFavorsThrees = hc.defenseFavorsThreesGame
+        pressFrequency = hc.pressFrequencyGame
+        pressAggression = hc.pressAggressionGame
+        aggression = hc.aggressionGame
+        pace = hc.paceGame
     }
 
     fun getPlayerAtPosition(position: Int): Player {
@@ -74,7 +84,7 @@ class Team(
         for (p in players) {
             p.startGame()
         }
-        coach.startGame()
+        getHeadCoach().startGame()
 
         players.sortBy { it.courtIndex }
     }
@@ -258,4 +268,6 @@ class Team(
         }
         return rating / roster.size
     }
+
+    fun getHeadCoach(): Coach = coaches.filter { it.type == CoachType.HEAD_COACH }[0]
 }

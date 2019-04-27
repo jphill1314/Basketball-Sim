@@ -39,6 +39,7 @@
 
     <string name="name">Name</string>
     <string name="pos">Pos</string>
+    <string name="position">Position</string>
     <string name="minutes">Minutes</string>
     <string name="player_fouls">Fouls</string>
     <string name="condition">Cond</string>

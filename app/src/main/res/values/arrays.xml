@@ -14,4 +14,9 @@
         <item>PF</item>
         <item>C</item>
     </string-array>
+
+    <string-array name="coach_positions">
+        <item>Head Coach</item>
+        <item>Assistant Coach</item>
+    </string-array>
 </resources>

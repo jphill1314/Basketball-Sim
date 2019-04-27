@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketballcoach.main.injection
 
+import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
+import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.game.GameModule
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
@@ -48,4 +50,8 @@ abstract class MainActivityModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [TournamentModule::class])
     abstract fun tournamentFragment(): TournamentFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [CoachesModule::class])
+    abstract fun coachesFragment(): CoachesFragment
 }

@@ -1,8 +1,9 @@
 package com.appdev.jphil.basketball.factories
 
-import com.appdev.jphil.basketball.Coach
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.Player
 import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.coaches.CoachType
 import java.util.*
 
 class TeamFactory(private val firstNames: List<String>, private val lastNames: List<String>) {
@@ -16,7 +17,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
             generatePlayers(teamId, 15, teamRating),
             conferenceId,
             isUser,
-            generateCoach(teamId)
+            generateCoaches(teamId, teamRating)
         )
     }
 
@@ -69,12 +70,23 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
         return players
     }
 
-    private fun generateCoach(teamId: Int): Coach {
+    private fun generateCoaches(teamId: Int, rating: Int): MutableList<Coach> {
+        val coaches = mutableListOf(generateCoach(teamId, CoachType.HEAD_COACH, rating))
+        val r = Random()
+        for (i in 1..3) {
+            coaches.add(generateCoach(teamId, CoachType.ASSISTANT_COACH, rating - r.nextInt(5 * i)))
+        }
+        return coaches
+    }
+
+    private fun generateCoach(teamId: Int, type: CoachType, rating: Int): Coach {
         val r = Random()
         return CoachFactory.generateCoach(
             teamId,
+            type,
             firstNames[r.nextInt(firstNames.size)],
-            lastNames[r.nextInt(lastNames.size)]
+            lastNames[r.nextInt(lastNames.size)],
+            rating
         )
     }
 }
