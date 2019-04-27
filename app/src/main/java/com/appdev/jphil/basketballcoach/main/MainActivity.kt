@@ -65,11 +65,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         }
 
         val fragment: Fragment? = when (menuItem.itemId) {
-            R.id.roster -> RosterFragment.newInstance(teamId)
-            R.id.schedule -> ScheduleFragment.newInstance(teamId)
-            R.id.standings -> StandingsFragment.newInstance(teamId, conferenceId)
+            R.id.roster -> RosterFragment()
+            R.id.schedule -> ScheduleFragment()
+            R.id.standings -> StandingsFragment()
             R.id.recruiting -> null
-            R.id.strategy -> StrategyFragment.newInstance(teamId)
+            R.id.strategy -> StrategyFragment()
             R.id.staff -> CoachesFragment()
             R.id.training -> null
             else -> null
@@ -83,8 +83,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 supportFragmentManager.popBackStackImmediate()
             }
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, fragment)
-                    .commit()
+                .replace(R.id.frame_layout, fragment)
+                .commit()
             return true
         }
         return false

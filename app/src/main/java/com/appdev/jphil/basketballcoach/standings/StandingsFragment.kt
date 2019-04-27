@@ -25,9 +25,9 @@ class StandingsFragment : Fragment(), StandingsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.let {
-            conferenceId = it.getInt(CONF_ID_STRING, 1)
-            teamId = it.getInt(TEAM_ID_STRING, 1)
+        (activity as? NavigationManager)?.let {
+            conferenceId = it.getConferenceId()
+            teamId = it.getTeamId()
         }
         AndroidSupportInjection.inject(this)
     }
@@ -41,12 +41,6 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     override fun onStop() {
         presenter.onViewDetached()
         super.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CONF_ID_STRING, conferenceId)
-        outState.putInt(TEAM_ID_STRING, teamId)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -65,18 +59,6 @@ class StandingsFragment : Fragment(), StandingsContract.View {
         (activity as? NavigationManager?)?.let {
             it.changeConference(conferenceId, teamId)
             it.navigateToHomePage()
-        }
-    }
-
-    companion object {
-        private const val TEAM_ID_STRING = "teamId"
-        private const val CONF_ID_STRING = "confId"
-
-        fun newInstance(teamId: Int, conferenceId: Int): StandingsFragment {
-            val fragment = StandingsFragment()
-            fragment.conferenceId = conferenceId
-            fragment.teamId = teamId
-            return fragment
         }
     }
 }

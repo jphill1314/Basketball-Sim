@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -21,11 +22,8 @@ class StrategyFragment : Fragment(), StrategyContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (teamId == -1) {
-            savedInstanceState?.let {
-                teamId = it.getInt("teamId")
-            }
+        (activity as? NavigationManager)?.let {
+            teamId = it.getTeamId()
         }
 
         AndroidSupportInjection.inject(this)
@@ -50,20 +48,6 @@ class StrategyFragment : Fragment(), StrategyContract.View {
         view?.findViewById<RecyclerView>(R.id.recycler_view)?.let {
             it.adapter = StrategyAdapter(strategyDataModels, presenter)
             it.layoutManager = LinearLayoutManager(context)
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("teamId", teamId)
-
-        super.onSaveInstanceState(outState)
-    }
-
-    companion object {
-        fun newInstance(teamId: Int): StrategyFragment {
-            val fragment = StrategyFragment()
-            fragment.teamId = teamId
-            return fragment
         }
     }
 }

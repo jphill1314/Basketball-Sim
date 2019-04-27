@@ -23,10 +23,8 @@ class RosterFragment : Fragment(), RosterContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(teamId == -1) {
-            savedInstanceState?.let {
-                teamId = it.getInt("teamId")
-            }
+        (activity as? NavigationManager)?.let {
+            teamId = it.getTeamId()
         }
         AndroidSupportInjection.inject(this)
     }
@@ -56,11 +54,6 @@ class RosterFragment : Fragment(), RosterContract.View {
         recyclerView.adapter = adapter
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("teamId", teamId)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {
         (activity as? NavigationManager?)?.changeConference(conferenceId, teamId)
     }
@@ -70,13 +63,5 @@ class RosterFragment : Fragment(), RosterContract.View {
             ?.replace(R.id.frame_layout, PlayerOverviewFragment.newInstance(playerId))
             ?.addToBackStack(null)
             ?.commit()
-    }
-
-    companion object {
-        fun newInstance(teamId: Int): RosterFragment {
-            return RosterFragment().apply {
-                this.teamId = teamId
-            }
-        }
     }
 }

@@ -107,10 +107,4 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
             addAll(dataModels.filter { it.round == fragment.getFragmentRound() })
         })
     }
-
-    companion object {
-        fun newInstance(): TournamentFragment {
-            return TournamentFragment()
-        }
-    }
 }

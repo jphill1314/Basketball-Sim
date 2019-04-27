@@ -37,6 +37,11 @@ class CoachesFragment : Fragment(), CoachesContract.View {
         presenter.fetchData()
     }
 
+    override fun onStop() {
+        presenter.onViewDetached()
+        super.onStop()
+    }
+
     override fun displayCoaches(coaches: List<Coach>) {
         view?.findViewById<RecyclerView>(R.id.recycler_view)?.let {
             it.layoutManager = LinearLayoutManager(requireContext())
