@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.players
 
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.ballWeight
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.closeWeight
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.ftWeight
@@ -38,8 +39,8 @@ class PlayerProgression(
     private val r = Random()
 
     // TODO: allow attributes to decrease too
-    // TODO: have coach attributes affect the amount of change
-    fun runPractice(practiceType: PracticeType) {
+    fun runPractice(practiceType: PracticeType, coaches: List<Coach>) {
+        setCoachAttributes(coaches)
         when (practiceType) {
             PracticeType.NO_FOCUS -> generalPractice()
             PracticeType.OFFENSE -> offensePractice()
@@ -49,74 +50,106 @@ class PlayerProgression(
         incrementAttributes()
     }
 
+    private var teachShooting: Double = 1.0
+    private var teachPostMoves: Double = 1.0
+    private var teachBallControl: Double = 1.0
+    private var teachPostDefense: Double = 1.0
+    private var teachPerimeterDefense: Double = 1.0
+    private var teachPositioning: Double = 1.0
+    private var teachRebounding: Double = 1.0
+    private var teachConditioning: Double = 1.0
+
+    private fun setCoachAttributes(coaches: List<Coach>) {
+        val denominator = coaches.size * 10.0
+        coaches.forEach {
+            teachShooting += it.teachShooting
+            teachPostMoves += it.teachPostMoves
+            teachBallControl += it.teachBallControl
+            teachPostDefense += it.teachPostDefense
+            teachPerimeterDefense += it.teachPerimeterDefense
+            teachPositioning += it.teachPositioning
+            teachRebounding += it.teachRebounding
+            teachConditioning += it.teachConditioning
+        }
+
+        teachShooting /= denominator
+        teachPostMoves /= denominator
+        teachBallControl /= denominator
+        teachPostDefense /= denominator
+        teachPerimeterDefense /= denominator
+        teachPositioning /= denominator
+        teachRebounding /= denominator
+        teachConditioning /= denominator
+    }
+
     private fun generalPractice() {
         val practiceMax = MAX_INCREASE
         val position = player.position - 1
-        closeRangeShot += r.nextInt(practiceMax) * closeWeight[position]
-        midRangeShot += r.nextInt(practiceMax) * midWeight[position]
-        longRangeShot += r.nextInt(practiceMax) * longWeight[position]
-        freeThrowShot += r.nextInt(practiceMax) * ftWeight[position]
-        postMove += r.nextInt(practiceMax) * postOffWeight[position]
-        ballHandling += r.nextInt(practiceMax) * ballWeight[position]
-        passing += r.nextInt(practiceMax) * passWeight[position]
-        offBallMovement += r.nextInt(practiceMax) * offMoveWeight[position]
+        closeRangeShot += r.nextInt(practiceMax) * closeWeight[position] + teachShooting
+        midRangeShot += r.nextInt(practiceMax) * midWeight[position] + teachShooting
+        longRangeShot += r.nextInt(practiceMax) * longWeight[position] + teachShooting
+        freeThrowShot += r.nextInt(practiceMax) * ftWeight[position] + teachShooting
+        postMove += r.nextInt(practiceMax) * postOffWeight[position] + teachPostMoves
+        ballHandling += r.nextInt(practiceMax) * ballWeight[position] + teachBallControl
+        passing += r.nextInt(practiceMax) * passWeight[position] + teachBallControl
+        offBallMovement += r.nextInt(practiceMax) * offMoveWeight[position] + teachPositioning
 
-        postDefense += r.nextInt(practiceMax) * postDefWeight[position]
-        perimeterDefense += r.nextInt(practiceMax) * perimDefWeight[position]
-        onBallDefense += r.nextInt(practiceMax) * onBallWeight[position]
-        offBallDefense += r.nextInt(practiceMax) * offBallWeight[position]
-        stealing += r.nextInt(practiceMax) * stealWeight[position]
-        rebounding += r.nextInt(practiceMax) * reboundWeight[position]
+        postDefense += r.nextInt(practiceMax) * postDefWeight[position] + teachPostDefense
+        perimeterDefense += r.nextInt(practiceMax) * perimDefWeight[position] + teachPerimeterDefense
+        onBallDefense += r.nextInt(practiceMax) * onBallWeight[position] + teachPositioning
+        offBallDefense += r.nextInt(practiceMax) * offBallWeight[position] + teachPositioning
+        stealing += r.nextInt(practiceMax) * stealWeight[position] + (teachPerimeterDefense + teachPostDefense) / 2
+        rebounding += r.nextInt(practiceMax) * reboundWeight[position] + teachRebounding
 
-        stamina += r.nextInt(MAX_INCREASE)
+        stamina += r.nextInt(MAX_INCREASE) + teachConditioning
     }
 
     private fun offensePractice() {
         val practiceMax = MAX_INCREASE * 2
         val position = player.position - 1
-        closeRangeShot += r.nextInt(practiceMax) * closeWeight[position]
-        midRangeShot += r.nextInt(practiceMax) * midWeight[position]
-        longRangeShot += r.nextInt(practiceMax) * longWeight[position]
-        freeThrowShot += r.nextInt(practiceMax) * ftWeight[position]
-        postMove += r.nextInt(practiceMax) * postOffWeight[position]
-        ballHandling += r.nextInt(practiceMax) * ballWeight[position]
-        passing += r.nextInt(practiceMax) * passWeight[position]
-        offBallMovement += r.nextInt(practiceMax) * offMoveWeight[position]
+        closeRangeShot += r.nextInt(practiceMax) * closeWeight[position] + teachShooting
+        midRangeShot += r.nextInt(practiceMax) * midWeight[position] + teachShooting
+        longRangeShot += r.nextInt(practiceMax) * longWeight[position] + teachShooting
+        freeThrowShot += r.nextInt(practiceMax) * ftWeight[position] + teachShooting
+        postMove += r.nextInt(practiceMax) * postOffWeight[position] + teachPostMoves
+        ballHandling += r.nextInt(practiceMax) * ballWeight[position] + teachBallControl
+        passing += r.nextInt(practiceMax) * passWeight[position] + teachBallControl
+        offBallMovement += r.nextInt(practiceMax) * offMoveWeight[position] + teachPositioning
 
-        postDefense += r.nextInt(practiceMax / 4) * postDefWeight[position]
-        perimeterDefense += r.nextInt(practiceMax / 4) * perimDefWeight[position]
-        onBallDefense += r.nextInt(practiceMax / 4) * onBallWeight[position]
-        offBallDefense += r.nextInt(practiceMax / 4) * offBallWeight[position]
-        stealing += r.nextInt(practiceMax / 4) * stealWeight[position]
-        rebounding += r.nextInt(practiceMax / 4) * reboundWeight[position]
+        postDefense += r.nextInt(practiceMax / 4) * postDefWeight[position] + teachPostDefense
+        perimeterDefense += r.nextInt(practiceMax / 4) * perimDefWeight[position] + teachPerimeterDefense
+        onBallDefense += r.nextInt(practiceMax / 4) * onBallWeight[position] + teachPositioning
+        offBallDefense += r.nextInt(practiceMax / 4) * offBallWeight[position] + teachPositioning
+        stealing += r.nextInt(practiceMax / 4) * stealWeight[position] / 2 + (teachPerimeterDefense + teachPostDefense) / 2
+        rebounding += r.nextInt(practiceMax / 4) * reboundWeight[position] + teachRebounding
 
-        stamina += r.nextInt(MAX_INCREASE)
+        stamina += r.nextInt(MAX_INCREASE) + teachConditioning
     }
 
     private fun defensePractice() {
         val practiceMax = MAX_INCREASE * 2
         val position = player.position - 1
-        closeRangeShot += r.nextInt(practiceMax / 4) * closeWeight[position]
-        midRangeShot += r.nextInt(practiceMax / 4) * midWeight[position]
-        longRangeShot += r.nextInt(practiceMax / 4) * longWeight[position]
-        freeThrowShot += r.nextInt(practiceMax / 4) * ftWeight[position]
-        postMove += r.nextInt(practiceMax / 4) * postOffWeight[position]
-        ballHandling += r.nextInt(practiceMax / 4) * ballWeight[position]
-        passing += r.nextInt(practiceMax / 4) * passWeight[position]
-        offBallMovement += r.nextInt(practiceMax / 4) * offMoveWeight[position]
+        closeRangeShot += r.nextInt(practiceMax / 4) * closeWeight[position] + teachShooting
+        midRangeShot += r.nextInt(practiceMax / 4) * midWeight[position] + teachShooting
+        longRangeShot += r.nextInt(practiceMax / 4) * longWeight[position] + teachShooting
+        freeThrowShot += r.nextInt(practiceMax / 4) * ftWeight[position] + teachShooting
+        postMove += r.nextInt(practiceMax / 4) * postOffWeight[position] + teachPostMoves
+        ballHandling += r.nextInt(practiceMax / 4) * ballWeight[position] + teachBallControl
+        passing += r.nextInt(practiceMax / 4) * passWeight[position] + teachBallControl
+        offBallMovement += r.nextInt(practiceMax / 4) * offMoveWeight[position] + teachPositioning
 
-        postDefense += r.nextInt(practiceMax) * postDefWeight[position]
-        perimeterDefense += r.nextInt(practiceMax) * perimDefWeight[position]
-        onBallDefense += r.nextInt(practiceMax) * onBallWeight[position]
-        offBallDefense += r.nextInt(practiceMax) * offBallWeight[position]
-        stealing += r.nextInt(practiceMax) * stealWeight[position]
-        rebounding += r.nextInt(practiceMax) * reboundWeight[position]
+        postDefense += r.nextInt(practiceMax) * postDefWeight[position] + teachPostDefense
+        perimeterDefense += r.nextInt(practiceMax) * perimDefWeight[position] + teachPerimeterDefense
+        onBallDefense += r.nextInt(practiceMax) * onBallWeight[position] + teachPositioning
+        offBallDefense += r.nextInt(practiceMax) * offBallWeight[position] + teachPositioning
+        stealing += r.nextInt(practiceMax) * stealWeight[position] / 2 + (teachPerimeterDefense + teachPostDefense) / 2
+        rebounding += r.nextInt(practiceMax) * reboundWeight[position] + teachRebounding
 
-        stamina += r.nextInt(MAX_INCREASE)
+        stamina += r.nextInt(MAX_INCREASE) + teachConditioning
     }
 
     private fun conditioning() {
-        stamina += r.nextInt(MAX_INCREASE * 4)
+        stamina += r.nextInt(MAX_INCREASE * 4) + teachConditioning
     }
 
     private fun incrementAttributes() {

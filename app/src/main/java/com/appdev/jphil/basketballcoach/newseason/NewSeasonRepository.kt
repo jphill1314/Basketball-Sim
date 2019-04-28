@@ -54,7 +54,7 @@ class NewSeasonRepository @Inject constructor(
         team.returningPlayers(team.players.filter { it.year < 4 })
 
         for (i in 1..(PRACTICES / 2)) {
-            team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS) }
+            team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS, team.coaches) }
         }
 
         for (position in 1..5) {
@@ -81,7 +81,7 @@ class NewSeasonRepository @Inject constructor(
         }
 
         for (i in 1..(PRACTICES / 2)) {
-            team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS) }
+            team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS, team.coaches) }
         }
 
         team.players.sortBy { it.rosterIndex }
