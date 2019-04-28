@@ -15,12 +15,4 @@ abstract class StrategyModule {
     @Binds
     @PerFragment
     abstract fun bindRepository(repository: StrategyRepository): StrategyContract.Repository
-
-    @Module
-    companion object {
-        @JvmStatic
-        @Provides
-        @PerFragment
-        fun providesTeamId(fragment: StrategyFragment) = fragment.teamId
-    }
 }

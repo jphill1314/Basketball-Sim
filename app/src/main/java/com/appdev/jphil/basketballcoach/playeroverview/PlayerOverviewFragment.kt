@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.playeroverview
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -29,11 +28,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
     private lateinit var playerName: TextView
     private lateinit var statsSpinner: Spinner
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,6 +38,8 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
 
     override fun onResume() {
         super.onResume()
+        AndroidSupportInjection.inject(this)
+        view?.findViewById<Spinner>(R.id.top_spinner)?.onItemSelectedListener = presenter
         presenter.onViewAttached(this)
     }
 
@@ -63,7 +59,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             topSpinner.adapter = adapter
         }
-        topSpinner.onItemSelectedListener = presenter
 
         statsSpinner = view.findViewById(R.id.stats_spinner)
         ArrayAdapter.createFromResource(

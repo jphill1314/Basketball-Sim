@@ -4,6 +4,10 @@ import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.game.GameModule
+import com.appdev.jphil.basketballcoach.main.MainActivity
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
+import com.appdev.jphil.basketballcoach.main.injection.scopes.PerActivity
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
@@ -20,6 +24,7 @@ import com.appdev.jphil.basketballcoach.strategy.StrategyModule
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 
 @Module
@@ -60,4 +65,17 @@ abstract class MainActivityModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [PracticeModule::class])
     abstract fun practiceFragment(): PracticeFragment
+
+    @Module
+    companion object {
+        @JvmStatic
+        @Provides
+        @ConferenceId
+        fun providesConferenceId(activity: MainActivity): Int = activity.getConferenceId()
+
+        @JvmStatic
+        @Provides
+        @TeamId
+        fun providesTeamId(activity: MainActivity): Int = activity.getTeamId()
+    }
 }

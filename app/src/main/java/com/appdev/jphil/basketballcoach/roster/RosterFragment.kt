@@ -17,20 +17,12 @@ class RosterFragment : Fragment(), RosterContract.View {
 
     @Inject
     lateinit var presenter: RosterContract.Presenter
-    private lateinit var adapter: RosterAdapter
+    private val adapter: RosterAdapter by lazy { RosterAdapter(presenter, mutableListOf(), resources) }
     private lateinit var recyclerView: RecyclerView
-    var teamId = -1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as? NavigationManager)?.let {
-            teamId = it.getTeamId()
-        }
-        AndroidSupportInjection.inject(this)
-    }
 
     override fun onResume() {
         super.onResume()
+        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         presenter.fetchData()
     }
@@ -43,7 +35,6 @@ class RosterFragment : Fragment(), RosterContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_roster, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
-        adapter = RosterAdapter(presenter, mutableListOf(), resources)
         recyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }

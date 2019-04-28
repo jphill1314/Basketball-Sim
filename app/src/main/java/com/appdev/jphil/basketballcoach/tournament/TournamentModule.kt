@@ -21,12 +21,4 @@ abstract class TournamentModule {
     @Binds
     @PerFragment
     abstract fun providesGameSimRepository(repository: GameSimRepository): SimulationContract.GameSimRepository
-
-    @Module
-    companion object {
-        @JvmStatic
-        @Provides
-        @PerFragment
-        fun providesConferenceId(fragment: TournamentFragment) = fragment.confId
-    }
 }

@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -18,18 +17,10 @@ class PracticeFragment : Fragment(), PracticeContract.View {
 
     @Inject
     lateinit var presenter: PracticeContract.Presenter
-    var teamId: Int = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as? NavigationManager)?.let {
-            teamId = it.getTeamId()
-        }
-        AndroidSupportInjection.inject(this)
-    }
 
     override fun onResume() {
         super.onResume()
+        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         presenter.fetchData()
     }

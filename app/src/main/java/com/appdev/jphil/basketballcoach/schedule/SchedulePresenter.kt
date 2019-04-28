@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
@@ -12,7 +13,7 @@ import com.flurry.android.FlurryAgent
 import javax.inject.Inject
 
 class SchedulePresenter @Inject constructor(
-    private val teamId: Int,
+    @TeamId private val teamId: Int,
     private val resources: Resources,
     private val repository: ScheduleContract.Repository,
     private val gameSimRepository: SimulationContract.GameSimRepository,
