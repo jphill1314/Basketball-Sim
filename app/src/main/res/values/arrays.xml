@@ -19,4 +19,11 @@
         <item>Head Coach</item>
         <item>Assistant Coach</item>
     </string-array>
+
+    <string-array name="practice_types">
+        <item>General focus</item>
+        <item>Offensive focus</item>
+        <item>Defensive focus</item>
+        <item>Conditioning only</item>
+    </string-array>
 </resources>

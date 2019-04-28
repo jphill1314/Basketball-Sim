@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
+import com.appdev.jphil.basketballcoach.practice.PracticeFragment
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
@@ -71,7 +72,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             R.id.recruiting -> null
             R.id.strategy -> StrategyFragment()
             R.id.staff -> CoachesFragment()
-            R.id.training -> null
+            R.id.training -> PracticeFragment()
             else -> null
         }
 
