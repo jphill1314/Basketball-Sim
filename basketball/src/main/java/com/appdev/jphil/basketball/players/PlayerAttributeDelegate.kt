@@ -7,6 +7,10 @@ import kotlin.reflect.KProperty
 
 class PlayerAttributeDelegate(private var value: Int) : ReadWriteProperty<Player, Int> {
 
+    init {
+        this.value = max(min(value, MAX_ATTRIBUTE), MIN_ATTRIBUTE)
+    }
+
     override fun getValue(thisRef: Player, property: KProperty<*>): Int {
         return when (thisRef.inGame) {
             true -> max(((value + thisRef.offensiveStatMod) * getFatigueFactor(thisRef)).toInt(), 20)

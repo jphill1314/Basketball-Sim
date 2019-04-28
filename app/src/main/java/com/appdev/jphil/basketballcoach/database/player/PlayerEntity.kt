@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.database.player
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.appdev.jphil.basketball.players.Player
+import com.appdev.jphil.basketball.players.PlayerType
 
 @Entity
 data class PlayerEntity(
@@ -13,6 +14,7 @@ data class PlayerEntity(
     val lastName: String,
     val position: Int,
     val year: Int,
+    val type: Int,
     val closeRangeShot: Int,
     val midRangeShot: Int,
     val longRangeShot: Int,
@@ -51,6 +53,14 @@ data class PlayerEntity(
 ) {
 
     fun createPlayer(): Player {
+        val pType = when (type) {
+            1 -> PlayerType.SHOOTER
+            2 -> PlayerType.DISTRIBUTOR
+            3 -> PlayerType.REBOUNDER
+            4 -> PlayerType.DEFENDER
+            else -> PlayerType.BALANCED
+        }
+
         val player = Player(
             id!!,
             teamId,
@@ -58,6 +68,7 @@ data class PlayerEntity(
             lastName,
             position,
             year,
+            pType,
             closeRangeShot,
             midRangeShot,
             longRangeShot,
@@ -108,6 +119,7 @@ data class PlayerEntity(
                 player.lastName,
                 player.position,
                 player.year,
+                player.type.type,
                 player.closeRangeShot,
                 player.midRangeShot,
                 player.longRangeShot,

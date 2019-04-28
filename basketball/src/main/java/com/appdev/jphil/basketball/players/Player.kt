@@ -9,6 +9,7 @@ class Player(
     val lastName: String,
     val position: Int,
     var year: Int,
+    val type: PlayerType,
     closeRangeShot: Int,
     midRangeShot: Int,
     longRangeShot: Int,

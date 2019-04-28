@@ -93,7 +93,8 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
     override fun addPlayerInfo(player: Player) {
         attributeAdapter = PlayerAttributeAdapter(player, resources)
         recyclerView.adapter = attributeAdapter
-        playerName.text = resources.getString(R.string.colon, player.fullName, player.getOverallRating().toString())
+        playerName.text = resources.getString(R.string.colon, player.fullName, player.getOverallRating().toString()) +
+                " - " + resources.getStringArray(R.array.player_types)[player.type.type]
     }
 
     override fun addPlayerStats(stats: List<GameStatsEntity>) {

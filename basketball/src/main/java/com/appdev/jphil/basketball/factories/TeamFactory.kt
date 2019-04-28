@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.coaches.CoachType
+import com.appdev.jphil.basketball.players.PlayerType
 import java.util.*
 
 class TeamFactory(private val firstNames: List<String>, private val lastNames: List<String>) {
@@ -25,44 +26,44 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
         val r = Random()
         val players = mutableListOf<Player>()
 
-        for (i in 1..5) {
+        for (position in 1..5) {
             players.add(
                 PlayerFactory.generateBalancedPlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
-                    i,
+                    position,
                     r.nextInt(4),
                     teamId,
                     teamRating,
-                    i - 1
+                    position - 1
                 )
             )
         }
 
-        for (i in 1..5) {
+        for (position in 1..5) {
             players.add(
                 PlayerFactory.generateBalancedPlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
-                    i,
+                    position,
                     r.nextInt(4),
                     teamId,
                     teamRating - r.nextInt(10),
-                    i + 4
+                    position + 4
                 )
             )
         }
 
-        for (i in 1..(teamSize - 10)) {
+        for (position in 1..(teamSize - 10)) {
             players.add(
                 PlayerFactory.generateBalancedPlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
-                    i,
+                    position,
                     r.nextInt(4),
                     teamId,
                     teamRating - r.nextInt(15),
-                    i + 9
+                    position + 9
                 )
             )
         }

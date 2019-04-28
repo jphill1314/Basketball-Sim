@@ -16,13 +16,18 @@ import javax.inject.Inject
 class RosterFragment : Fragment(), RosterContract.View {
 
     @Inject
+    @JvmField
+    var nullPresenter: RosterContract.Presenter? = null
     lateinit var presenter: RosterContract.Presenter
     private val adapter: RosterAdapter by lazy { RosterAdapter(presenter, mutableListOf(), resources) }
     private lateinit var recyclerView: RecyclerView
 
     override fun onResume() {
         super.onResume()
-        AndroidSupportInjection.inject(this)
+        if (nullPresenter == null) {
+            AndroidSupportInjection.inject(this)
+            presenter = nullPresenter!!
+        }
         presenter.onViewAttached(this)
         presenter.fetchData()
     }
