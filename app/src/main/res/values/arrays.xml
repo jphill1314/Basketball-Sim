@@ -26,4 +26,12 @@
         <item>Defensive focus</item>
         <item>Conditioning only</item>
     </string-array>
+
+    <string-array name="player_types">
+        <item>Balanced</item>
+        <item>Shooter</item>
+        <item>Distributor</item>
+        <item>Rebounder</item>
+        <item>Defender</item>
+    </string-array>
 </resources>
