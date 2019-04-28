@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketball.players
 
+import com.appdev.jphil.basketball.coaches.Coach
+
 class Player(
     val id: Int?,
     val teamId: Int,
@@ -213,8 +215,8 @@ class Player(
         inGame = true
     }
 
-    fun runPractice(practiceType: PracticeType) {
-        progression?.runPractice(practiceType)
+    fun runPractice(practiceType: PracticeType, coaches: List<Coach>) {
+        progression?.runPractice(practiceType, coaches)
     }
 
     fun isInFoulTrouble(half: Int, timeRemaining: Int): Boolean {

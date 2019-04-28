@@ -124,7 +124,7 @@ class Team(
     fun endGame() {
         for (p in players) {
             p.inGame = false
-            p.runPractice(practiceType)
+            p.runPractice(practiceType, coaches)
         }
     }
 
