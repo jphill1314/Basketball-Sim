@@ -91,6 +91,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         return false
     }
 
+    fun getTeamId(): Int {
+        return teamId
+    }
+
+    fun getConferenceId(): Int {
+        return conferenceId
+    }
+
     override fun changeTeam(teamId: Int) {
         this.teamId = teamId
     }
@@ -98,14 +106,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     override fun changeConference(conferenceId: Int, teamId: Int) {
         this.conferenceId = conferenceId
         this.teamId = teamId
-    }
-
-    override fun getTeamId(): Int {
-        return teamId // TODO: refactor fragments to use these functions
-    }
-
-    override fun getConferenceId(): Int {
-        return conferenceId
     }
 
     override fun disableNavigation() {

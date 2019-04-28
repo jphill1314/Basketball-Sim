@@ -6,6 +6,7 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
     private val database: BasketballDatabase,
-    private val conferenceId: Int
+    @ConferenceId private val conferenceId: Int
 ): TournamentContract.Repository {
 
     private lateinit var presenter: TournamentContract.Presenter

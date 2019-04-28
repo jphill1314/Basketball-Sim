@@ -21,12 +21,4 @@ abstract class ScheduleModule {
     @Binds
     @PerFragment
     abstract fun providesGameSimRepository(repository: GameSimRepository): SimulationContract.GameSimRepository
-
-    @Module
-    companion object {
-        @Provides
-        @JvmStatic
-        @PerFragment
-        fun providesTeamId(fragment: ScheduleFragment): Int = fragment.teamId
-    }
 }

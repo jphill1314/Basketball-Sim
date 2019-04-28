@@ -15,12 +15,4 @@ abstract class StandingsModule {
     @Binds
     @PerFragment
     abstract fun bindsRepository(repository: StandingsRepository): StandingsContract.Repository
-
-    @Module
-    companion object {
-        @JvmStatic
-        @PerFragment
-        @Provides
-        fun providesConferenceId(fragment: StandingsFragment) = fragment.conferenceId
-    }
 }

@@ -8,10 +8,9 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
-import com.appdev.jphil.basketballcoach.main.NavigationManager
-import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
 import com.appdev.jphil.basketballcoach.tournament.round.TournamentViewPagerAdapter
 import dagger.android.support.AndroidSupportInjection
@@ -24,18 +23,10 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
 
     private lateinit var fab: FloatingActionButton
     private var adapter: TournamentViewPagerAdapter? = null
-    var confId = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as? NavigationManager)?.let {
-            confId = it.getConferenceId()
-        }
-        AndroidSupportInjection.inject(this)
-    }
 
     override fun onResume() {
         super.onResume()
+        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
     }
 

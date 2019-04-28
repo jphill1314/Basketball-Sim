@@ -10,6 +10,7 @@ import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHe
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.MainActivity
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RosterRepository @Inject constructor(
-    private val teamId: Int,
+    @TeamId private val teamId: Int,
     private val database: BasketballDatabase,
     private val resources: Resources
 ): RosterContract.Repository {

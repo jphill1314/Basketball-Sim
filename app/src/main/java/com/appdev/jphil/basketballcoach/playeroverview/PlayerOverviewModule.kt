@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.playeroverview
 
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.PlayerId
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
 import dagger.Binds
 import dagger.Module
@@ -21,6 +22,7 @@ abstract class PlayerOverviewModule {
         @Provides
         @PerFragment
         @JvmStatic
+        @PlayerId
         fun providesPlayerId(fragment: PlayerOverviewFragment): Int = fragment.playerId
     }
 }

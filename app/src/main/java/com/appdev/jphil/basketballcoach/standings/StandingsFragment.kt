@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.MainActivity
 import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -17,23 +19,15 @@ class StandingsFragment : Fragment(), StandingsContract.View {
 
     @Inject
     lateinit var presenter: StandingsContract.Presenter
-    var conferenceId = 1
-    var teamId = 1
+    private var teamId = 1
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: StandingsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as? NavigationManager)?.let {
-            conferenceId = it.getConferenceId()
-            teamId = it.getTeamId()
-        }
-        AndroidSupportInjection.inject(this)
-    }
-
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.let { teamId = it.getTeamId() }
+        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         presenter.fetchData()
     }

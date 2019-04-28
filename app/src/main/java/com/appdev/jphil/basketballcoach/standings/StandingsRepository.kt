@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.standings
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -10,7 +11,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class StandingsRepository @Inject constructor(
-    private val conferenceId: Int,
+    @ConferenceId private val conferenceId: Int,
     private val database: BasketballDatabase
 ) : StandingsContract.Repository {
 

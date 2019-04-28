@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -17,15 +16,6 @@ class CoachesFragment : Fragment(), CoachesContract.View {
 
     @Inject
     lateinit var presenter: CoachesContract.Presenter
-    var teamId = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as? NavigationManager)?.let {
-            teamId = it.getTeamId()
-        }
-        AndroidSupportInjection.inject(this)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_coaches, container, false)
@@ -33,6 +23,7 @@ class CoachesFragment : Fragment(), CoachesContract.View {
 
     override fun onResume() {
         super.onResume()
+        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         presenter.fetchData()
     }

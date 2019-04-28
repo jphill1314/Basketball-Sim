@@ -11,10 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
-
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -23,23 +21,15 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
-    var teamId = 1
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ScheduleAdapter
 
     private lateinit var fab: FloatingActionButton
     private lateinit var progressBar: ProgressBar
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as? NavigationManager)?.let {
-            teamId = it.getTeamId()
-        }
-        AndroidSupportInjection.inject(this)
-    }
-
     override fun onResume() {
         super.onResume()
+        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
     }
 

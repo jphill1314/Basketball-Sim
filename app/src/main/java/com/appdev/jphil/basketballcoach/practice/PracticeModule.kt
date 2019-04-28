@@ -15,12 +15,4 @@ abstract class PracticeModule {
     @Binds
     @PerFragment
     abstract fun bindsRepository(repository: PracticeRepository): PracticeContract.Repository
-
-    @Module
-    companion object {
-        @JvmStatic
-        @PerFragment
-        @Provides
-        fun providesTeamId(fragment: PracticeFragment) = fragment.teamId
-    }
 }
