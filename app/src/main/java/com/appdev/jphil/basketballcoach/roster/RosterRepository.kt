@@ -8,6 +8,7 @@ import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.MainActivity
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
@@ -48,15 +49,15 @@ class RosterRepository @Inject constructor(
     }
 
     private fun createGame() {
-        val teamFactory = TeamFactory(
+        val world = BasketballFactory.setupWholeBasketballWorld(
             resources.getStringArray(R.array.first_names).asList(),
             resources.getStringArray(R.array.last_names).asList()
         )
-        val conferences = BasketballFactory.setupWholeBasketballWorld(teamFactory)
-        conferences.forEach {
+        world.conferences.forEach {
             ConferenceDatabaseHelper.saveConference(it, database)
             GameDatabaseHelper.saveOnlyGames(it.generateSchedule(2018), database)
         }
+        RecruitDatabaseHelper.saveRecruits(world.recruits, database)
     }
 
     override fun attachPresenter(presenter: RosterContract.Presenter) {

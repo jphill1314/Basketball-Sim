@@ -1,14 +1,18 @@
 package com.appdev.jphil.basketball.factories
 
+import com.appdev.jphil.basketball.BasketballWorld
 import com.appdev.jphil.basketball.Conference
 import com.appdev.jphil.basketball.Team
 
 object BasketballFactory {
 
-    fun setupWholeBasketballWorld(teamFactory: TeamFactory): List<Conference> {
+    fun setupWholeBasketballWorld(firstNames: List<String>, lastNames: List<String>): BasketballWorld {
         val conferences = mutableListOf<Conference>()
-        conferences.add(createTestConference(teamFactory))
-        return conferences
+        conferences.add(createTestConference(TeamFactory(firstNames, lastNames)))
+        return BasketballWorld(
+            conferences,
+            RecruitFactory.generateRecruits(firstNames, lastNames, 100)
+        )
     }
 
     private fun createTestConference(teamFactory: TeamFactory): Conference {

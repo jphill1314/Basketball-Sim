@@ -39,6 +39,7 @@ class PlayerProgression(
     private val r = Random()
 
     // TODO: allow attributes to decrease too
+    // TODO: more increase for more PT (to a point?)
     fun runPractice(practiceType: PracticeType, coaches: List<Coach>) {
         setCoachAttributes(coaches)
         when (practiceType) {
