@@ -4,7 +4,6 @@ import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.coaches.CoachType
-import com.appdev.jphil.basketball.players.PlayerType
 import java.util.*
 
 class TeamFactory(private val firstNames: List<String>, private val lastNames: List<String>) {
@@ -28,7 +27,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
 
         for (position in 1..5) {
             players.add(
-                PlayerFactory.generateBalancedPlayer(
+                PlayerFactory.generatePlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     position,
@@ -42,7 +41,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
 
         for (position in 1..5) {
             players.add(
-                PlayerFactory.generateBalancedPlayer(
+                PlayerFactory.generatePlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     position,
@@ -56,7 +55,7 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
 
         for (position in 1..(teamSize - 10)) {
             players.add(
-                PlayerFactory.generateBalancedPlayer(
+                PlayerFactory.generatePlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     position,

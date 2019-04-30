@@ -22,7 +22,7 @@ object PlayerFactory {
 
     private const val ratingVariability = 10
 
-    fun generateBalancedPlayer(
+    fun generatePlayer(
         firstName: String,
         lastName: String,
         position: Int,
@@ -31,11 +31,31 @@ object PlayerFactory {
         rating: Int,
         index: Int
     ): Player {
-        // TODO: instead of making worse players worse across the board, they should be good at a couple of things, and worse at others
+        return generatePlayerWithType(
+            firstName,
+            lastName,
+            position,
+            year,
+            teamId,
+            rating,
+            index,
+            getPlayerType(position - 1)
+        )
+    }
+
+    fun generatePlayerWithType(
+        firstName: String,
+        lastName: String,
+        position: Int,
+        year: Int,
+        teamId: Int,
+        rating: Int,
+        index: Int,
+        type: PlayerType
+    ) : Player {
         val r = Random()
         val newRating = rating + 10
         val i = position - 1
-        val type = getPlayerType(i)
         val pType = type.type
 
         // Offensive
@@ -94,7 +114,7 @@ object PlayerFactory {
         return ((rating + 2 * r.nextInt(ratingVariability) - ratingVariability) * weight).toInt()
     }
 
-    private fun getPlayerType(position: Int): PlayerType {
+    fun getPlayerType(position: Int): PlayerType {
         val r = Random()
         val num = r.nextInt(100)
         return when (num) {

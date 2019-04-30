@@ -3,9 +3,7 @@ package com.appdev.jphil.basketballcoach.newseason
 import android.content.res.Resources
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
-import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketball.players.PracticeType
-import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
@@ -59,7 +57,7 @@ class NewSeasonRepository @Inject constructor(
 
         for (position in 1..5) {
             while (team.players.filter { it.position == position }.size < 3) {
-                team.addNewPlayer(PlayerFactory.generateBalancedPlayer(
+                team.addNewPlayer(PlayerFactory.generatePlayer(
                     firstNames[r.nextInt(firstNames.size)],
                     lastNames[r.nextInt(lastNames.size)],
                     position,
