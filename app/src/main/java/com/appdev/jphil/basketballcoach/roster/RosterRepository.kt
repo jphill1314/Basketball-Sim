@@ -28,7 +28,7 @@ class RosterRepository @Inject constructor(
 
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
-            var team = if (teamId == MainActivity.DEFAULT_TEAM_ID) {
+            var team = if (teamId == -1) {
                 TeamDatabaseHelper.loadUserTeam(database)
             } else {
                 TeamDatabaseHelper.loadTeamById(teamId, database)

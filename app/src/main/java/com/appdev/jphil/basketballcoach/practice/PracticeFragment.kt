@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.practice
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -18,9 +19,13 @@ class PracticeFragment : Fragment(), PracticeContract.View {
     @Inject
     lateinit var presenter: PracticeContract.Presenter
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onResume() {
         super.onResume()
-        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         presenter.fetchData()
     }

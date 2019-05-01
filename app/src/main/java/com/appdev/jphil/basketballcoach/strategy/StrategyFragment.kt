@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.strategy
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -17,9 +18,13 @@ class StrategyFragment : Fragment(), StrategyContract.View {
     @Inject
     lateinit var presenter: StrategyContract.Presenter
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onStart() {
         super.onStart()
-        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         presenter.fetchStrategy()
     }

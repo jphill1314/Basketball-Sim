@@ -5,6 +5,8 @@ import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.game.GameModule
 import com.appdev.jphil.basketballcoach.main.MainActivity
+import com.appdev.jphil.basketballcoach.main.MainApplication
+import com.appdev.jphil.basketballcoach.main.TeamManager
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerActivity
@@ -77,11 +79,11 @@ abstract class MainActivityModule {
         @JvmStatic
         @Provides
         @ConferenceId
-        fun providesConferenceId(activity: MainActivity): Int = activity.getConferenceId()
+        fun providesConferenceId(teamManager: TeamManager): Int = teamManager.getConferenceId()
 
         @JvmStatic
         @Provides
         @TeamId
-        fun providesTeamId(activity: MainActivity): Int = activity.getTeamId()
+        fun providesTeamId(teamManager: TeamManager): Int = teamManager.getTeamId()
     }
 }

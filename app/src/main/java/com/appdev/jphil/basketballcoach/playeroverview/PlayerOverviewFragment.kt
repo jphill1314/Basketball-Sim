@@ -34,11 +34,11 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
         savedInstanceState?.let {
             playerId = it.getInt(PLAYER, 0)
         }
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onResume() {
         super.onResume()
-        AndroidSupportInjection.inject(this)
         view?.findViewById<Spinner>(R.id.top_spinner)?.onItemSelectedListener = presenter
         presenter.onViewAttached(this)
     }

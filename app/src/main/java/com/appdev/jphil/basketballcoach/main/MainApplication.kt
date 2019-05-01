@@ -13,9 +13,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 import com.flurry.android.FlurryAgent
 
-
-
-class MainApplication : HasActivityInjector, HasSupportFragmentInjector, Application() {
+class MainApplication @Inject constructor() : Application(), HasActivityInjector, HasSupportFragmentInjector {
 
     @Inject
     lateinit var activityInjector: DispatchingAndroidInjector<Activity>
