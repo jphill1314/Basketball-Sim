@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.tournament
 
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -24,9 +25,13 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     private lateinit var fab: FloatingActionButton
     private var adapter: TournamentViewPagerAdapter? = null
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onResume() {
         super.onResume()
-        AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
     }
 

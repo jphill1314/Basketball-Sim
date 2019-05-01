@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import com.appdev.jphil.basketballcoach.main.MainActivity
+import com.appdev.jphil.basketballcoach.main.MainApplication
+import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.main.TeamManagerImpl
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.AppContext
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerActivity
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerApplication
@@ -19,6 +22,10 @@ abstract class AppModule {
     @AppContext
     @PerApplication
     abstract fun providesContext(application: Application): Context
+
+    @Binds
+    @PerApplication
+    abstract fun bindsTeamManager(teamManager: TeamManagerImpl): TeamManager
 
     @PerActivity
     @ContributesAndroidInjector(modules = [MainActivityModule::class])

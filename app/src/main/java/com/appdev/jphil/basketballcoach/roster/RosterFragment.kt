@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.roster
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.main.TeamManager
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -16,18 +17,19 @@ import javax.inject.Inject
 class RosterFragment : Fragment(), RosterContract.View {
 
     @Inject
-    @JvmField
-    var nullPresenter: RosterContract.Presenter? = null
     lateinit var presenter: RosterContract.Presenter
+    @Inject
+    lateinit var teamManager: TeamManager
     private val adapter: RosterAdapter by lazy { RosterAdapter(presenter, mutableListOf(), resources) }
     private lateinit var recyclerView: RecyclerView
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onResume() {
         super.onResume()
-        if (nullPresenter == null) {
-            AndroidSupportInjection.inject(this)
-            presenter = nullPresenter!!
-        }
         presenter.onViewAttached(this)
         presenter.fetchData()
     }
@@ -51,7 +53,7 @@ class RosterFragment : Fragment(), RosterContract.View {
     }
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {
-        (activity as? NavigationManager?)?.changeConference(conferenceId, teamId)
+        teamManager.changeConference(conferenceId, teamId)
     }
 
     override fun gotoPlayerOverview(playerId: Int) {
