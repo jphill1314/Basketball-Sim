@@ -24,7 +24,7 @@ class RecruitPresenter @Inject constructor(
         if (sortedRecruits.isEmpty()) {
             repository.loadRecruits()
         } else {
-            updateView()
+            view?.displayRecruits(getSortedList(getInteractionFilteredList(getPositionFilteredList(sortedRecruits))), team)
         }
     }
 
@@ -92,8 +92,8 @@ class RecruitPresenter @Inject constructor(
         }
     }
 
-    override fun onRecruitLongPressed(recruit: Recruit) {
-        view?.displayRecruitDialog(recruit)
+    override fun onRecruitPressed(recruit: Recruit) {
+        view?.goToRecruitOverview(recruit.id)
     }
 
     override fun interactWithRecruit(recruit: Recruit, interaction: Int) {

@@ -24,7 +24,7 @@ class Recruit(
 
     fun generateInitialInterest(team: Team) {
         val interest = min(100, (Random.nextInt(RecruitInterest.MAX_INTEREST / 2) * getTeamMultiplier(team)).toInt())
-        interestInTeams.add(RecruitInterest(null, id, team.teamId, interest, false, false, false, false, 0))
+        interestInTeams.add(RecruitInterest(null, id, team.teamId, team.name, interest, false, false, false, false, 0))
     }
 
     fun updateInterest(team: Team, event: RecruitingEvent, gameNumber: Int) {

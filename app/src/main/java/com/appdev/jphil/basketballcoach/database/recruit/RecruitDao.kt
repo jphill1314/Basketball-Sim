@@ -8,6 +8,9 @@ interface RecruitDao {
     @Query("SELECT * FROM RecruitEntity")
     fun getAllRecruits(): List<RecruitEntity>
 
+    @Query("SELECT * FROM RecruitEntity where id in (:recruitId)")
+    fun getRecruitWithId(recruitId: Int): RecruitEntity
+
     @Query("SELECT * FROM RecruitInterestEntity where recruitId in (:recruitId)")
     fun getAllInterestsWithRecruitID(recruitId: Int): List<RecruitInterestEntity>
 

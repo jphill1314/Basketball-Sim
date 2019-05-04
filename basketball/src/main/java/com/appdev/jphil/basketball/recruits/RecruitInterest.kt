@@ -10,6 +10,7 @@ class RecruitInterest(
     val id: Int?,
     val recruitId: Int,
     val teamId: Int,
+    val teamName: String,
     interest: Int,
     var isScouted: Boolean,
     var isContacted: Boolean,
