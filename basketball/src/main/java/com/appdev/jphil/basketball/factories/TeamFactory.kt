@@ -17,7 +17,8 @@ class TeamFactory(private val firstNames: List<String>, private val lastNames: L
             generatePlayers(teamId, 15, teamRating),
             conferenceId,
             isUser,
-            generateCoaches(teamId, teamRating)
+            generateCoaches(teamId, teamRating),
+            0
         )
     }
 

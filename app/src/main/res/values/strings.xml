@@ -117,5 +117,12 @@
 
     <string name="sort_rating">Sort by rating</string>
     <string name="filter_positions">Filter positions</string>
-    <string name="filter_interation">Filter interaction</string>
+    <string name="filter_interaction">Filter interaction</string>
+
+    <string name="scout_player">Scout Player</string>
+    <string name="contact_player">Contact Player</string>
+    <string name="offer_scholarship">Offer Scholarship</string>
+    <string name="official_visit">Official Visit</string>
+
+    <string name="two_hyphens">%1$s - %2$s - %3$s</string>
 </resources>

@@ -65,6 +65,7 @@ class RecruitAdapter(
                 val interest = interestInTeam.first()
                 viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.interest.toString())
                 val interaction = when {
+                    interest.isScholarshipRevoked -> 4
                     interest.isOfficialVisitDone -> 3
                     interest.isOfferedScholarship -> 2
                     interest.isContacted -> 1

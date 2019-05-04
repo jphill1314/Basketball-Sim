@@ -14,7 +14,8 @@ class Team(
     val players: MutableList<Player>,
     val conferenceId: Int,// for use in games
     val isUser: Boolean,
-    val coaches: MutableList<Coach>
+    val coaches: MutableList<Coach>,
+    var gamesPlayed: Int
 ) {
 
     val roster = mutableListOf<Player>() // for use everywhere else
@@ -126,6 +127,7 @@ class Team(
             p.inGame = false
             p.runPractice(practiceType, coaches)
         }
+        gamesPlayed++
     }
 
     fun getStatsAsString(): String {

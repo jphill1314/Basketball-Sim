@@ -21,36 +21,33 @@ class RecruitPresenter @Inject constructor(
     }
 
     override fun fetchData() {
-        if (sortedRecruits.isEmpty()) {
-            repository.loadRecruits()
-        } else {
-            view?.displayRecruits(getSortedList(getInteractionFilteredList(getPositionFilteredList(sortedRecruits))), team)
-        }
+        repository.loadRecruits()
     }
 
     override fun onRecruitsLoaded(recruits: MutableList<Recruit>, team: Team) {
         this.team = team
+        sortedRecruits.clear()
         sortedRecruits.addAll(recruits.sortedBy { -it.rating })
-        view?.displayRecruits(sortedRecruits, team)
+        view?.displayRecruits(getRecruits(), team)
     }
 
     override fun onSortSelected() {
         sortHighToLow = !sortHighToLow
-        updateView()
+        view?.updateRecruits(getRecruits())
     }
 
     override fun onPositionFilterSelected(filterType: Int) {
         positionFilter = filterType
-        updateView()
+        view?.updateRecruits(getRecruits())
     }
 
     override fun onInteractionFilterSelected(filterType: Int) {
         interactionFilter = filterType
-        updateView()
+        view?.updateRecruits(getRecruits())
     }
 
-    private fun updateView() {
-        view?.updateRecruits(getSortedList(getInteractionFilteredList(getPositionFilteredList(sortedRecruits))))
+    private fun getRecruits(): List<Recruit> {
+        return getSortedList(getInteractionFilteredList(getPositionFilteredList(sortedRecruits)))
     }
 
     private fun getSortedList(list: List<Recruit>): List<Recruit> {
@@ -94,12 +91,6 @@ class RecruitPresenter @Inject constructor(
 
     override fun onRecruitPressed(recruit: Recruit) {
         view?.goToRecruitOverview(recruit.id)
-    }
-
-    override fun interactWithRecruit(recruit: Recruit, interaction: Int) {
-        val type = RecruitingEvent.getEventByType(interaction)
-        //recruit.updateInterest(team, type, )
-        updateView()
     }
 
     override fun onViewAttached(view: RecruitContract.View) {

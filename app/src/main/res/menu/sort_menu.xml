@@ -4,6 +4,6 @@
         android:id="@+id/sort_high_to_low"/>
     <item android:title="@string/filter_positions"
         android:id="@+id/filter_positions"/>
-    <item android:title="@string/filter_interation"
+    <item android:title="@string/filter_interaction"
         android:id="@+id/filter_interation" />
 </menu>
