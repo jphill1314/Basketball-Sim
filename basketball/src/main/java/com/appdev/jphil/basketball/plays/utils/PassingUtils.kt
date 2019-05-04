@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketball.plays.utils
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import java.util.*
 
 class PassingUtils(

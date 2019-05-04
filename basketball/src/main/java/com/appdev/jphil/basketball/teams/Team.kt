@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketball
+package com.appdev.jphil.basketball.teams
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType

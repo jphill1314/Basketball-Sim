@@ -50,6 +50,7 @@ object RecruitFactory {
             PlayerFactory.getPlayerType(position - 1),
             rating,
             false,
+            0,
             mutableListOf()
         )
     }

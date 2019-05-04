@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.roster
 
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.flurry.android.FlurryAgent
 import javax.inject.Inject

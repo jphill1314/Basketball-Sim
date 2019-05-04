@@ -3,6 +3,7 @@ package com.appdev.jphil.basketball
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.teams.Team
 
 class TenTeamTournament(
     val id: Int,

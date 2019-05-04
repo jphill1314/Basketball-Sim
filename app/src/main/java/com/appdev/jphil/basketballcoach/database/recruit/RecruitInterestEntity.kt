@@ -14,7 +14,8 @@ data class RecruitInterestEntity(
     val isScouted: Boolean,
     val isContacted: Boolean,
     val isOfferedScholarship: Boolean,
-    val isOfficialVisitDone: Boolean
+    val isOfficialVisitDone: Boolean,
+    val lastInteractionGame: Int
 ) {
 
     fun create(): RecruitInterest {
@@ -26,7 +27,8 @@ data class RecruitInterestEntity(
             isScouted,
             isContacted,
             isOfferedScholarship,
-            isOfficialVisitDone
+            isOfficialVisitDone,
+            lastInteractionGame
         )
     }
 
@@ -40,7 +42,8 @@ data class RecruitInterestEntity(
                 interest.isScouted,
                 interest.isContacted,
                 interest.isOfferedScholarship,
-                interest.isOfficialVisitDone
+                interest.isOfficialVisitDone,
+                interest.lastInteractionGame
             )
         }
     }

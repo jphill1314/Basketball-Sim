@@ -14,6 +14,7 @@ data class RecruitEntity(
     val position: Int,
     val playerType: Int,
     val rating: Int,
+    val teamCommittedTo: Int,
     val isCommitted: Boolean
 ) {
 
@@ -37,6 +38,7 @@ data class RecruitEntity(
             type,
             rating,
             isCommitted,
+            teamCommittedTo,
             interest
         )
     }
@@ -50,6 +52,7 @@ data class RecruitEntity(
                 recruit.position,
                 recruit.playerType.type,
                 recruit.rating,
+                recruit.teamCommittedTo,
                 recruit.isCommitted
             )
         }

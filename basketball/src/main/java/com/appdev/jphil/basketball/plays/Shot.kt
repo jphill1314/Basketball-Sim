@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.textcontracts.FoulTextContract

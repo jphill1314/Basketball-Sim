@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.practice
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.players.PracticeType
 import javax.inject.Inject
 

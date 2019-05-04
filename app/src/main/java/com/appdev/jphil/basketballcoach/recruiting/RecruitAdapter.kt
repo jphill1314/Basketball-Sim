@@ -18,6 +18,7 @@ class RecruitAdapter(
 
     private val positionNames = resources.getStringArray(R.array.position_abbreviation)
     private val playerTypes = resources.getStringArray(R.array.player_types)
+    private val interactions = resources.getStringArray(R.array.interactions)
 
     fun updateRecruits(newRecruits: List<Recruit>) {
         recruits = newRecruits
@@ -30,6 +31,7 @@ class RecruitAdapter(
         val rating: TextView = view.findViewById(R.id.rating)
         val playerType: TextView = view.findViewById(R.id.player_type)
         val interest: TextView = view.findViewById(R.id.interest)
+        val interaction: TextView = view.findViewById(R.id.interation)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,12 +51,24 @@ class RecruitAdapter(
         viewHolder.playerType.text = playerTypes[recruit.playerType.type]
 
         val interestInTeam = recruit.interestInTeams.filter { it.teamId == teamId }
-        val interest: String = if (interestInTeam.isNotEmpty()) {
-            interestInTeam[0].interest.toString()
+        if (interestInTeam.isNotEmpty()) {
+            val interest = interestInTeam.first()
+            viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.interest.toString())
+            val interaction = when {
+                interest.isOfficialVisitDone -> 3
+                interest.isOfferedScholarship -> 2
+                interest.isContacted -> 1
+                interest.isScouted -> 0
+                else -> -1
+            }
+            viewHolder.interaction.text = if (interaction == -1) "" else interactions[interaction]
         } else {
-            resources.getString(R.string.unknown)
+            viewHolder.interest.text = resources.getString(R.string.interest_colon, resources.getString(R.string.unknown))
         }
-        viewHolder.interest.text = resources.getString(R.string.interest_colon, interest)
+
+        if (recruit.isCommitted) {
+            viewHolder.interaction.text = if (recruit.teamCommittedTo == teamId) "Committed to you" else "Committed elsewhere"
+        }
 
         viewHolder.itemView.setOnLongClickListener {
             presenter.onRecruitLongPressed(recruit)
