@@ -3,12 +3,14 @@ package com.appdev.jphil.basketballcoach.newseason
 import android.content.res.Resources
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
+import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -36,6 +38,12 @@ class NewSeasonRepository @Inject constructor(
                 GameDatabaseHelper.saveOnlyGames(conference.generateSchedule(2018), database)
                 ConferenceDatabaseHelper.saveConference(conference, database)
             }
+            RecruitDatabaseHelper.deleteAllRecruits(database)
+            RecruitDatabaseHelper.saveRecruits(
+                RecruitFactory.generateRecruits(firstNames, lastNames, 100),
+                database
+            )
+
             withContext(Dispatchers.Main) { callback() }
         }
     }

@@ -32,7 +32,7 @@ fun main(){
     var lowScore: Game? = null
     var maxMargin: Game? = null
     var minMargin: Game? = null
-    val totalGames = 1
+    val totalGames = 100
 
     val teamFactory = TeamFactory(listOf("first"), listOf("last"))
 

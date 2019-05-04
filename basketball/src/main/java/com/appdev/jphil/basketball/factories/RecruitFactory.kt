@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.recruits.Recruit
+import kotlin.math.min
 import kotlin.random.Random
 
 object RecruitFactory {
@@ -18,11 +19,20 @@ object RecruitFactory {
                 firstNames[Random.nextInt(firstNames.size)],
                 lastNames[Random.nextInt(lastNames.size)],
                 (i % 5) + 1,
-                Random.nextInt(25, 75)
+                generateRating()
             ))
         }
 
         return recruits
+    }
+
+    private fun generateRating(): Int {
+        var rating = 25
+        do {
+            rating += Random.nextInt(26)
+        } while (Random.nextDouble() > min(0.5,  (rating / 200.0)) && rating < 75)
+
+        return rating
     }
 
     private fun generateRecruit(
