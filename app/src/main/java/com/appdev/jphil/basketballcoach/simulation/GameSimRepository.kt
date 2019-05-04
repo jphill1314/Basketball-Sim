@@ -100,7 +100,13 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
     private fun simGame(game: Game, recruits: List<Recruit>) {
         game.simulateFullGame()
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
-        TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits, 0)
-        TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits, 0)
+
+        if (!game.homeTeam.isUser) {
+            TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits)
+        }
+
+        if (!game.awayTeam.isUser) {
+            TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
+        }
     }
 }

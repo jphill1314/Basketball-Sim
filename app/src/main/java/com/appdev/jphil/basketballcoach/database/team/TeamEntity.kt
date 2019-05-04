@@ -31,7 +31,8 @@ data class TeamEntity(
     val freeThrowMakes: Int,
     val isUser: Boolean,
     val lastScoreDif: Int,
-    val practiceType: Int
+    val practiceType: Int,
+    val gamesPlayed: Int
 ) {
 
     fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>, progression: List<PlayerProgressionEntity?>): Team {
@@ -55,7 +56,8 @@ data class TeamEntity(
             teamPlayers,
             conferenceId,
             isUser,
-            teamCoaches
+            teamCoaches,
+            gamesPlayed
         )
 
         team.twoPointAttempts = twoPointAttempts
@@ -101,7 +103,8 @@ data class TeamEntity(
                 team.freeThrowMakes,
                 team.isUser,
                 team.lastScoreDiff,
-                team.practiceType.type
+                team.practiceType.type,
+                team.gamesPlayed
             )
         }
     }

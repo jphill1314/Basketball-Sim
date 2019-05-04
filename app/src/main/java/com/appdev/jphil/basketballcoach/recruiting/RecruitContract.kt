@@ -9,7 +9,6 @@ interface RecruitContract {
     interface View : MVPContract.View {
         fun displayRecruits(recruits: List<Recruit>, team: Team)
         fun updateRecruits(recruits: List<Recruit>)
-        fun displayRecruitDialog(recruit: Recruit)
         fun goToRecruitOverview(recruitId: Int)
     }
 
@@ -20,7 +19,6 @@ interface RecruitContract {
         fun onPositionFilterSelected(filterType: Int)
         fun onInteractionFilterSelected(filterType: Int)
         fun onRecruitPressed(recruit: Recruit)
-        fun interactWithRecruit(recruit: Recruit, interaction: Int)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {

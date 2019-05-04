@@ -16,7 +16,10 @@ class RecruitInterest(
     var isContacted: Boolean,
     var isOfferedScholarship: Boolean,
     var isOfficialVisitDone: Boolean,
-    var lastInteractionGame: Int
+    var lastInteractionGame: Int,
+    var timesScouted: Int,
+    var timesContacted: Int,
+    var isScholarshipRevoked: Boolean
 ) {
 
     var interest = interest
@@ -32,6 +35,11 @@ class RecruitInterest(
                 updateInterestAfterGame(awayScore, awayTeam.teamRating, homeScore, homeTeam.teamRating, multiplier)
             }
         }
+    }
+
+    fun revokeScholarshipOffer() {
+        isScholarshipRevoked = true
+        interest = 0
     }
 
     private fun updateInterestAfterGame(teamScore: Int, teamRating: Int, otherScore: Int, otherRating: Int, teamMultiplier: Double) {
@@ -53,8 +61,8 @@ class RecruitInterest(
     }
 
     fun updateInterest(multiplier: Double, event: RecruitingEvent, gameNumber: Int): Boolean {
-        if (isOfficialVisitDone) {
-            return considerScholarship()
+        if (isScholarshipRevoked) {
+            return false
         }
 
         when (event) {
@@ -77,18 +85,14 @@ class RecruitInterest(
     }
 
     private fun doScoutingEvent(multiplier: Double) {
-        if (isScouted) {
-            return
-        }
-        interest += getInterestChange(multiplier)
+        interest += (getInterestChange(multiplier) * getRecurrentPenalty(true)).toInt()
+        timesScouted++
         isScouted = true
     }
 
     private fun doInitialContact(multiplier: Double) {
-        if (isContacted || !isScouted) {
-            return
-        }
-        interest += getInterestChange(multiplier)
+        interest += (getInterestChange(multiplier) * getRecurrentPenalty(false)).toInt()
+        timesContacted++
         isContacted = true
     }
 
@@ -109,6 +113,22 @@ class RecruitInterest(
     }
 
     private fun getInterestChange(multiplier: Double) = ((Random.nextInt(MAX_INCREASE) - MAX_DECREASE) * multiplier).toInt()
+
+    private fun getRecurrentPenalty(isScouting: Boolean): Double {
+        return if (isScouting) {
+            when (timesScouted) {
+                in 0..1 -> 1.0
+                in 2..3 -> .5
+                else -> 1.0 / timesScouted
+            }
+        } else {
+            when (timesContacted) {
+                in 0..3 -> 1.0
+                in 4..6 -> .5
+                else -> 1.0 / timesScouted
+            }
+        }
+    }
 
     companion object {
         const val MAX_INCREASE = 40

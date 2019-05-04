@@ -49,6 +49,7 @@
         <item>Coach Contact</item>
         <item>Offer Scholarship</item>
         <item>Official Visit</item>
+        <item>Offer Revoked</item>
     </string-array>
 
     <string-array name="interactions_filters">

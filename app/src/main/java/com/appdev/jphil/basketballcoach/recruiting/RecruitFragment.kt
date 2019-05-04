@@ -93,18 +93,6 @@ class RecruitFragment : Fragment(), RecruitContract.View {
         }
     }
 
-    override fun displayRecruitDialog(recruit: Recruit) {
-        AlertDialog.Builder(context!!)
-            .setTitle("Recruit!")
-            .setItems(resources.getStringArray(R.array.interactions),
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                        presenter.interactWithRecruit(recruit, which)
-                    }
-                })
-            .show()
-    }
-
     override fun goToRecruitOverview(recruitId: Int) {
         fragmentManager?.beginTransaction()
             ?.replace(R.id.frame_layout, RecruitOverviewFragment.newInstance(recruitId))

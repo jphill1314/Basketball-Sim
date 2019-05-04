@@ -24,7 +24,31 @@ class Recruit(
 
     fun generateInitialInterest(team: Team) {
         val interest = min(100, (Random.nextInt(RecruitInterest.MAX_INTEREST / 2) * getTeamMultiplier(team)).toInt())
-        interestInTeams.add(RecruitInterest(null, id, team.teamId, team.name, interest, false, false, false, false, 0))
+        interestInTeams.add(RecruitInterest(
+            null,
+            id,
+            team.teamId,
+            team.name,
+            interest,
+            false,
+            false,
+            false,
+            false,
+            -1000,
+            0,
+            0,
+            false
+        ))
+    }
+
+    fun revokeScholarship(teamId: Int) {
+        val interestInTeam = interestInTeams.filter { it.teamId == teamId }
+        if (interestInTeams.isNotEmpty()) {
+            val interest = interestInTeam.first()
+            if (interest.isOfferedScholarship && !isCommitted) {
+                interest.revokeScholarshipOffer()
+            }
+        }
     }
 
     fun updateInterest(team: Team, event: RecruitingEvent, gameNumber: Int) {

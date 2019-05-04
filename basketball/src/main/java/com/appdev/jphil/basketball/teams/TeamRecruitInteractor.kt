@@ -6,9 +6,9 @@ import com.appdev.jphil.basketball.recruits.RecruitingEvent
 
 object TeamRecruitInteractor {
 
-    private const val GAMES_BETWEEN_INTERACTIONS = 0
+    const val GAMES_BETWEEN_INTERACTIONS = 3
 
-    fun interactWithRecruits(team: Team, recruits: List<Recruit>, gameNumber: Int) {
+    fun interactWithRecruits(team: Team, recruits: List<Recruit>) {
         val teamRating = team.teamRating
         for (position in 1..5) {
             if (hasNeedAtPosition(position, team, recruits)) {
@@ -17,9 +17,11 @@ object TeamRecruitInteractor {
                     .filter { teamRating - 10 <= it.rating && teamRating + 10 >= it.rating }
                     .forEach { recruit ->
                         if (hasNeedAtPosition(position, team, recruits)) {
-                            interactWithRecruit(recruit, team, gameNumber)
+                            interactWithRecruit(recruit, team)
                         }
                     }
+            } else {
+                recruits.filter { it.position == position }.forEach { it.revokeScholarship(team.teamId) }
             }
         }
     }
@@ -30,65 +32,27 @@ object TeamRecruitInteractor {
         return 3 - players > 0
     }
 
-    private fun interactWithRecruit(recruit: Recruit, team: Team, gameNumber: Int) {
-        val interestInTeam = recruit.interestInTeams.filter { it.teamId == team.teamId }
-        val interest = if (interestInTeam.isEmpty()) {
-            recruit.generateInitialInterest(team)
-            recruit.interestInTeams.filter { it.teamId == team.teamId }.first()
-        } else {
-            interestInTeam.first()
-        }
-        if (interest.lastInteractionGame + GAMES_BETWEEN_INTERACTIONS <= gameNumber) {
+    private fun interactWithRecruit(recruit: Recruit, team: Team) {
+        val interest = getInterestInTeam(recruit, team)
+
+        if (interest.lastInteractionGame + GAMES_BETWEEN_INTERACTIONS <= team.gamesPlayed) {
             when {
-                !interest.isScouted -> {
-                    if (doInteraction(interest, RecruitingEvent.SCOUT)) {
-                        recruit.updateInterest(
-                            team,
-                            RecruitingEvent.SCOUT,
-                            gameNumber
-                        )
-                    }
-                }
-                !interest.isContacted -> {
-                    if (doInteraction(interest, RecruitingEvent.COACH_CONTACT)) {
-                        recruit.updateInterest(
-                            team,
-                            RecruitingEvent.COACH_CONTACT,
-                            gameNumber
-                        )
-                    }
-                }
-                !interest.isOfferedScholarship -> {
-                    if (doInteraction(interest, RecruitingEvent.OFFER_SCHOLARSHIP)) {
-                        recruit.updateInterest(
-                            team,
-                            RecruitingEvent.OFFER_SCHOLARSHIP,
-                            gameNumber
-                        )
-                    }
-                }
-                !interest.isOfficialVisitDone -> {
-                    if (doInteraction(interest, RecruitingEvent.OFFICIAL_VISIT)) {
-                        recruit.updateInterest(
-                            team,
-                            RecruitingEvent.OFFICIAL_VISIT,
-                            gameNumber
-                        )
-                    }
-                }
-                else -> {
-                    recruit.considerScholarship(team)
-                }
+                !interest.isScouted -> InteractWithRecruitHelper.notScouted(recruit, interest, team)
+                !interest.isContacted -> InteractWithRecruitHelper.notContacted(recruit, interest, team)
+                !interest.isOfferedScholarship -> InteractWithRecruitHelper.noScholarshipOffer(recruit, interest, team)
+                !interest.isOfficialVisitDone -> InteractWithRecruitHelper.noOfficialVisit(recruit, interest, team)
+                else -> InteractWithRecruitHelper.notCommitted(recruit, interest, team)
             }
         }
     }
 
-    private fun doInteraction(interest: RecruitInterest, event: RecruitingEvent): Boolean {
-        return when (event) {
-            RecruitingEvent.SCOUT -> interest.interest >= 0
-            RecruitingEvent.COACH_CONTACT -> interest.interest >= 20
-            RecruitingEvent.OFFER_SCHOLARSHIP -> interest.interest >= 50
-            RecruitingEvent.OFFICIAL_VISIT -> interest.interest >= 50
+    private fun getInterestInTeam(recruit: Recruit, team: Team): RecruitInterest {
+        val interestInTeam = recruit.interestInTeams.filter { it.teamId == team.teamId }
+        return if (interestInTeam.isEmpty()) {
+            recruit.generateInitialInterest(team)
+            recruit.interestInTeams.filter { it.teamId == team.teamId }.first()
+        } else {
+            interestInTeam.first()
         }
     }
 }
