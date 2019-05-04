@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.recruits
 
 import com.appdev.jphil.basketball.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerType
 import kotlin.math.min
@@ -18,6 +19,8 @@ class Recruit(
     val interestInTeams: MutableList<RecruitInterest>
 ) {
 
+    val fullName = "$firstName $lastName"
+
     fun generateInitialInterest(team: Team) {
         val interest = min(100, (Random.nextInt(RecruitInterest.MAX_INTEREST / 2) * getTeamMultiplier(team)).toInt())
         interestInTeams.add(RecruitInterest(null, id, team.teamId, interest, false, false, false, false))
@@ -28,10 +31,30 @@ class Recruit(
         interestInTeam.updateInterest(getTeamMultiplier(team), event)
     }
 
+    fun updateInterestAfterGame(game: Game) {
+        val homeInterest = interestInTeams.filter { it.teamId == game.homeTeam.teamId }
+        if (homeInterest.isNotEmpty()) {
+            with (homeInterest.first()) {
+                if (isScouted) {
+                    onTeamGameCompleted(game, getTeamMultiplier(game.homeTeam))
+                }
+            }
+        }
+
+        val awayInterest = interestInTeams.filter { it.teamId == game.awayTeam.teamId }
+        if (awayInterest.isNotEmpty()) {
+            with (awayInterest.first()) {
+                if (isScouted) {
+                    onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
+                }
+            }
+        }
+    }
+
     private fun getTeamMultiplier(team: Team): Double {
         // Players are more interested in a good team that they can immediately start at
         var multiplier = 1.0
-        val ratingDifference = rating - team.teamRating
+        val ratingDifference = team.teamRating - rating
         val playersInPosition = team.players.filter { it.position == position && it.year != 3 }.size
 
         multiplier += .25 * (ratingDifference / 10)

@@ -9,9 +9,17 @@ object BasketballFactory {
     fun setupWholeBasketballWorld(firstNames: List<String>, lastNames: List<String>): BasketballWorld {
         val conferences = mutableListOf<Conference>()
         conferences.add(createTestConference(TeamFactory(firstNames, lastNames)))
+        val recruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)
+
+        conferences.forEach { conference ->
+            conference.teams.forEach { team ->
+                recruits.forEach { recruit -> recruit.generateInitialInterest(team) }
+            }
+        }
+
         return BasketballWorld(
             conferences,
-            RecruitFactory.generateRecruits(firstNames, lastNames, 100)
+            recruits
         )
     }
 

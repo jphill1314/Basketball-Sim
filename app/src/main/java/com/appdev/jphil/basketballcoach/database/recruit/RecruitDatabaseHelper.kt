@@ -27,4 +27,9 @@ object RecruitDatabaseHelper {
         }
         return recruits
     }
+
+    fun deleteAllRecruits(database: BasketballDatabase) {
+        database.recruitDao().deleteAllRecruitInterests()
+        database.recruitDao().deleteAllRecruits()
+    }
 }

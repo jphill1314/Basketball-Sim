@@ -15,6 +15,15 @@
         <item>C</item>
     </string-array>
 
+    <string-array name="position_filters">
+        <item>Show all</item>
+        <item>PG</item>
+        <item>SG</item>
+        <item>SF</item>
+        <item>PF</item>
+        <item>C</item>
+    </string-array>
+
     <string-array name="coach_positions">
         <item>Head Coach</item>
         <item>Assistant Coach</item>
@@ -33,5 +42,20 @@
         <item>Distributor</item>
         <item>Rebounder</item>
         <item>Defender</item>
+    </string-array>
+
+    <string-array name="interactions">
+        <item>Scout Player</item>
+        <item>Coach Contact</item>
+        <item>Offer Scholarship</item>
+        <item>Official Visit</item>
+    </string-array>
+
+    <string-array name="interactions_filters">
+        <item>Show all</item>
+        <item>Scout Player</item>
+        <item>Coach Contact</item>
+        <item>Offer Scholarship</item>
+        <item>Official Visit</item>
     </string-array>
 </resources>

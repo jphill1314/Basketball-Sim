@@ -111,5 +111,11 @@
     <string name="stamina">Stamina: %d</string>
     <string name="aggressiveness">Aggressiveness: %d</string>
 
+    <string name="interest_colon">Interest: %s</string>
+    <string name="rating_colon">Rating: %d</string>
+    <string name="unknown">Unknown</string>
 
+    <string name="sort_rating">Sort by rating</string>
+    <string name="filter_positions">Filter positions</string>
+    <string name="filter_interation">Filter interaction</string>
 </resources>
