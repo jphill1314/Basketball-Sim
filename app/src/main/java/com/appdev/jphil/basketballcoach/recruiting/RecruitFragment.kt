@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.TeamManager
 import dagger.android.support.AndroidSupportInjection
@@ -83,8 +84,8 @@ class RecruitFragment : Fragment(), RecruitContract.View {
         return inflater.inflate(R.layout.fragment_coaches, container, false) // TODO: make own layout
     }
 
-    override fun displayRecruits(recruits: List<Recruit>) {
-        adapter = RecruitAdapter(recruits, teamManager.getTeamId(), presenter, resources)
+    override fun displayRecruits(recruits: List<Recruit>, team: Team) {
+        adapter = RecruitAdapter(recruits, teamManager.getTeamId(), team, presenter, resources)
         view?.findViewById<RecyclerView>(R.id.recycler_view)?.let {
             it.layoutManager = LinearLayoutManager(context)
             it.adapter = adapter

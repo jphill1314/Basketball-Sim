@@ -24,9 +24,9 @@ object TeamRecruitInteractor {
         }
     }
 
-    private fun hasNeedAtPosition(position: Int, team: Team, recruits: List<Recruit>): Boolean {
-        var players = team.roster.filter { it.position == position + 1 && it.year != 3 }.size
-        players += recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.size
+    fun hasNeedAtPosition(position: Int, team: Team, recruits: List<Recruit>): Boolean {
+        var players = team.roster.filter { it.position == position && it.year != 3 }.size
+        players += recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId && it.position == position }.size
         return 3 - players > 0
     }
 
