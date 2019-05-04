@@ -31,7 +31,7 @@ class RecruitPresenter @Inject constructor(
     override fun onRecruitsLoaded(recruits: MutableList<Recruit>, team: Team) {
         this.team = team
         sortedRecruits.addAll(recruits.sortedBy { -it.rating })
-        view?.displayRecruits(sortedRecruits)
+        view?.displayRecruits(sortedRecruits, team)
     }
 
     override fun onSortSelected() {
@@ -79,7 +79,11 @@ class RecruitPresenter @Inject constructor(
 
     private fun getInteractionFilterBool(recruit: Recruit): Boolean {
         val type = RecruitingEvent.getEventByType(interactionFilter)
-        val interest = recruit.interestInTeams.filter { it.teamId == team.teamId }[0]
+        val interests = recruit.interestInTeams.filter { it.teamId == team.teamId }
+        if (interests.isEmpty()) {
+            return false
+        }
+        val interest = interests[0]
         return when (type) {
             RecruitingEvent.SCOUT -> interest.isScouted
             RecruitingEvent.COACH_CONTACT -> interest.isContacted

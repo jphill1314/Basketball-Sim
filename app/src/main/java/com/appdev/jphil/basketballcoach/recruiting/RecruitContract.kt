@@ -7,7 +7,7 @@ import com.appdev.jphil.basketballcoach.MVPContract
 interface RecruitContract {
 
     interface View : MVPContract.View {
-        fun displayRecruits(recruits: List<Recruit>)
+        fun displayRecruits(recruits: List<Recruit>, team: Team)
         fun updateRecruits(recruits: List<Recruit>)
         fun displayRecruitDialog(recruit: Recruit)
     }
