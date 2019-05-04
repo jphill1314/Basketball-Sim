@@ -25,6 +25,28 @@ class Conference(
 
         games.shuffle()
 
+        val maxSize = teams.size / 2
+        val gameWeeks = mutableListOf(GameWeek(0, maxSize))
+        var index = 1
+        while (games.size > 0) {
+            if (gameWeeks.last().isAtMaxSize() || index > games.size) {
+                gameWeeks.add(GameWeek(gameWeeks.size, maxSize))
+                index = 1
+            }
+
+            if (gameWeeks.last().addGame(games[games.size - index])) {
+                games.remove(games[games.size - index])
+            } else {
+                index++
+            }
+        }
+
+        gameWeeks.forEach { gameWeek ->
+            gameWeek.getGames().forEach { game ->
+                games.add(game)
+            }
+        }
+
         return games
     }
 
