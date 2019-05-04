@@ -13,6 +13,7 @@ import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -102,6 +103,13 @@ class RecruitFragment : Fragment(), RecruitContract.View {
                     }
                 })
             .show()
+    }
+
+    override fun goToRecruitOverview(recruitId: Int) {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.frame_layout, RecruitOverviewFragment.newInstance(recruitId))
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
     override fun updateRecruits(recruits: List<Recruit>) {

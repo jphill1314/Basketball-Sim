@@ -83,10 +83,7 @@ class RecruitAdapter(
                 viewHolder.interaction.text = ""
             }
 
-            viewHolder.itemView.setOnLongClickListener {
-                presenter.onRecruitLongPressed(recruit)
-                true
-            }
+            viewHolder.itemView.setOnClickListener { presenter.onRecruitPressed(recruit) }
         }
     }
 }
