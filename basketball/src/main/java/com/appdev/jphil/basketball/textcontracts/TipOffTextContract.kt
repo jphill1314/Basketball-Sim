@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketball.textcontracts
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 
 interface TipOffTextContract {
 

@@ -2,7 +2,7 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.BasketballWorld
 import com.appdev.jphil.basketball.Conference
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 
 object BasketballFactory {
 

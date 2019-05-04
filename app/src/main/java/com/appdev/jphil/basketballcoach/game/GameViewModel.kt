@@ -24,6 +24,8 @@ class GameViewModel(
     private var saveGame: Job? = null
     private val gameEvents = mutableListOf<GameEventEntity>()
 
+    // TODO: interact with recruits after game is finished!!!!!
+
     fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: () -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             if (nullGame == null) {

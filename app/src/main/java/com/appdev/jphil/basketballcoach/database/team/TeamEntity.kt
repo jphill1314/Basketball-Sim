@@ -3,7 +3,7 @@ package com.appdev.jphil.basketballcoach.database.team
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.players.PlayerProgression
 import com.appdev.jphil.basketball.players.PracticeType

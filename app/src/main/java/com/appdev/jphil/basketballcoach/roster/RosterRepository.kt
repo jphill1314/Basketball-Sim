@@ -2,15 +2,13 @@ package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
 import com.appdev.jphil.basketball.factories.BasketballFactory
-import com.appdev.jphil.basketball.Team
-import com.appdev.jphil.basketball.factories.TeamFactory
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import com.appdev.jphil.basketballcoach.main.MainActivity
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

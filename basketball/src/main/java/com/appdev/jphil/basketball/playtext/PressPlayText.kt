@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketball.playtext
 
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.textcontracts.PressTextContract
 
 class PressPlayText : PressTextContract {

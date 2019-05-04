@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.recruiting
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.recruits.RecruitingEvent
 import javax.inject.Inject
@@ -94,7 +94,7 @@ class RecruitPresenter @Inject constructor(
 
     override fun interactWithRecruit(recruit: Recruit, interaction: Int) {
         val type = RecruitingEvent.getEventByType(interaction)
-        recruit.updateInterest(team, type)
+        //recruit.updateInterest(team, type, )
         updateView()
     }
 

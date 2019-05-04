@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketball.playtext
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.textcontracts.MiscTextContract
 
 class MiscPlayText : MiscTextContract {

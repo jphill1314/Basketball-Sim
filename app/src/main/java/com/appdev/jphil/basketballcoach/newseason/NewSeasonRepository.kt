@@ -1,10 +1,11 @@
 package com.appdev.jphil.basketballcoach.newseason
 
 import android.content.res.Resources
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.players.PracticeType
+import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
@@ -31,24 +32,31 @@ class NewSeasonRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.IO) {
             GameDatabaseHelper.deleteAllGames(database)
             val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
+            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             conferences.forEach { conference ->
                 conference.teams.forEach {
-                    startNewSeasonForTeam(it)
+                    startNewSeasonForTeam(it, recruits)
                 }
                 GameDatabaseHelper.saveOnlyGames(conference.generateSchedule(2018), database)
                 ConferenceDatabaseHelper.saveConference(conference, database)
             }
             RecruitDatabaseHelper.deleteAllRecruits(database)
-            RecruitDatabaseHelper.saveRecruits(
-                RecruitFactory.generateRecruits(firstNames, lastNames, 100),
-                database
-            )
+
+            val newRecruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)
+            conferences.forEach { conference ->
+                conference.teams.forEach { team ->
+                    recruits.forEach { recruit -> recruit.generateInitialInterest(team) }
+                }
+            }
+
+            RecruitDatabaseHelper.saveRecruits(newRecruits, database)
 
             withContext(Dispatchers.Main) { callback() }
         }
     }
 
-    private fun startNewSeasonForTeam(team: Team) {
+    private fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
+        // Make each player a year older
         team.players.forEach { player ->
             player.year++
 
@@ -57,13 +65,22 @@ class NewSeasonRepository @Inject constructor(
             }
         }
 
+        // Remove players who graduated
         team.returningPlayers(team.players.filter { it.year < 4 })
 
+        // Extra improvement for returning players
         for (i in 1..(PRACTICES / 2)) {
             team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS, team.coaches) }
         }
 
+        // Add commits to team
+        recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.forEach { commit ->
+            team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
+        }
+
+
         for (position in 1..5) {
+            // Fill empty spots in roster
             while (team.players.filter { it.position == position }.size < 3) {
                 team.addNewPlayer(PlayerFactory.generatePlayer(
                     firstNames[r.nextInt(firstNames.size)],
@@ -71,11 +88,13 @@ class NewSeasonRepository @Inject constructor(
                     position,
                     0,
                     team.teamId,
-                    team.teamRating + r.nextInt(20) - 10,
+//                    team.teamRating + r.nextInt(20) - 10,
+                    20,
                     team.players.size
                 ))
             }
 
+            // Sort roster so that best players start
             val players = team.players.filter { it.position == position }.sortedByDescending { it.getOverallRating() }
             for (index in players.indices) {
                 players[index].apply {
@@ -86,6 +105,7 @@ class NewSeasonRepository @Inject constructor(
             }
         }
 
+        // Improve all players on team
         for (i in 1..(PRACTICES / 2)) {
             team.roster.forEach { it.runPractice(PracticeType.NO_FOCUS, team.coaches) }
         }

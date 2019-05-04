@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.standings
 
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 

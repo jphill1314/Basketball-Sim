@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketball.recruits
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
@@ -16,6 +16,7 @@ class Recruit(
     val playerType: PlayerType,
     val rating: Int,
     var isCommitted: Boolean,
+    var teamCommittedTo: Int,
     val interestInTeams: MutableList<RecruitInterest>
 ) {
 
@@ -23,12 +24,17 @@ class Recruit(
 
     fun generateInitialInterest(team: Team) {
         val interest = min(100, (Random.nextInt(RecruitInterest.MAX_INTEREST / 2) * getTeamMultiplier(team)).toInt())
-        interestInTeams.add(RecruitInterest(null, id, team.teamId, interest, false, false, false, false))
+        interestInTeams.add(RecruitInterest(null, id, team.teamId, interest, false, false, false, false, 0))
     }
 
-    fun updateInterest(team: Team, event: RecruitingEvent) {
-        val interestInTeam = interestInTeams.filter { it.teamId == team.teamId }[0]
-        interestInTeam.updateInterest(getTeamMultiplier(team), event)
+    fun updateInterest(team: Team, event: RecruitingEvent, gameNumber: Int) {
+        if (!isCommitted) {
+            val interestInTeam = interestInTeams.filter { it.teamId == team.teamId }[0]
+            isCommitted = interestInTeam.updateInterest(getTeamMultiplier(team), event, gameNumber)
+            if (isCommitted) {
+                teamCommittedTo = team.teamId
+            }
+        }
     }
 
     fun updateInterestAfterGame(game: Game) {
@@ -47,6 +53,16 @@ class Recruit(
                 if (isScouted) {
                     onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
                 }
+            }
+        }
+    }
+
+    fun considerScholarship(team: Team) {
+        if (!isCommitted) {
+            val interestInTeam = interestInTeams.filter { it.teamId == team.teamId }[0]
+            isCommitted = interestInTeam.considerScholarship()
+            if (isCommitted) {
+                teamCommittedTo = team.teamId
             }
         }
     }

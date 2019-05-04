@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.team
 
-import com.appdev.jphil.basketball.Team
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity

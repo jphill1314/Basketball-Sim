@@ -14,7 +14,8 @@ class RecruitInterest(
     var isScouted: Boolean,
     var isContacted: Boolean,
     var isOfferedScholarship: Boolean,
-    var isOfficialVisitDone: Boolean
+    var isOfficialVisitDone: Boolean,
+    var lastInteractionGame: Int
 ) {
 
     var interest = interest
@@ -39,33 +40,46 @@ class RecruitInterest(
                 otherRating - teamRating > 10 -> ((otherRating - teamRating) / 10.0) * teamMultiplier
                 else -> 1.0
             }
-            interest += (Random.nextInt(MAX_CHANGE) * multiplier * teamMultiplier).toInt()
+            interest += (Random.nextInt(MAX_INCREASE) * multiplier * teamMultiplier).toInt()
         } else {
             val multiplier = when {
                 teamRating - otherRating > 10 -> ((teamRating - otherRating) / 10.0) / teamMultiplier
                 otherRating - teamRating > 10 -> -1.0 / ((otherRating - teamRating) / 10.0) * teamMultiplier
                 else -> 1.0
             }
-            interest -= (Random.nextInt(MAX_CHANGE) * multiplier / teamMultiplier).toInt()
+            interest -= (Random.nextInt(MAX_DECREASE) * multiplier / teamMultiplier).toInt()
         }
     }
 
-    fun updateInterest(multiplier: Double, event: RecruitingEvent) {
+    fun updateInterest(multiplier: Double, event: RecruitingEvent, gameNumber: Int): Boolean {
+        if (isOfficialVisitDone) {
+            return considerScholarship()
+        }
+
         when (event) {
             RecruitingEvent.SCOUT -> doScoutingEvent(multiplier)
             RecruitingEvent.COACH_CONTACT -> doInitialContact(multiplier)
             RecruitingEvent.OFFER_SCHOLARSHIP -> offerScholarship(multiplier)
             RecruitingEvent.OFFICIAL_VISIT -> doOfficialVisit(multiplier)
         }
-
+        lastInteractionGame = gameNumber
         interest = max(0, min(interest, MAX_INTEREST))
+
+        return considerScholarship()
+    }
+
+    fun considerScholarship(): Boolean {
+        if (isOfficialVisitDone && interest > 50) {
+            return Random.nextInt(100) < interest
+        }
+        return false
     }
 
     private fun doScoutingEvent(multiplier: Double) {
         if (isScouted) {
             return
         }
-        interest += ((2 * Random.nextInt(MAX_CHANGE) - MAX_CHANGE) * multiplier).toInt()
+        interest += getInterestChange(multiplier)
         isScouted = true
     }
 
@@ -73,7 +87,7 @@ class RecruitInterest(
         if (isContacted || !isScouted) {
             return
         }
-        interest += ((2 * Random.nextInt(MAX_CHANGE) - MAX_CHANGE) * multiplier).toInt()
+        interest += getInterestChange(multiplier)
         isContacted = true
     }
 
@@ -81,7 +95,7 @@ class RecruitInterest(
         if (isOfferedScholarship || !isScouted || !isContacted) {
             return
         }
-        interest += ((2 * Random.nextInt(MAX_CHANGE) - MAX_CHANGE) * multiplier).toInt()
+        interest += getInterestChange(multiplier)
         isOfferedScholarship = true
     }
 
@@ -89,12 +103,15 @@ class RecruitInterest(
         if (isOfficialVisitDone|| !isScouted || !isContacted || !isOfferedScholarship) {
             return
         }
-        interest += ((2 * Random.nextInt(MAX_CHANGE) - MAX_CHANGE) * multiplier).toInt()
+        interest += getInterestChange(multiplier)
         isOfficialVisitDone = true
     }
 
+    private fun getInterestChange(multiplier: Double) = ((Random.nextInt(MAX_INCREASE) - MAX_DECREASE) * multiplier).toInt()
+
     companion object {
-        const val MAX_CHANGE = 20
+        const val MAX_INCREASE = 40
+        const val MAX_DECREASE = 10
         const val MAX_INTEREST = 100
     }
 }

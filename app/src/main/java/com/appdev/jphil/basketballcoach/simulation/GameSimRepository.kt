@@ -1,5 +1,8 @@
 package com.appdev.jphil.basketballcoach.simulation
 
+import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
@@ -34,8 +37,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     if (!game.isFinal) {
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
-                            game.simulateFullGame()
-                            recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+                            simGame(game, recruits)
                             GameDatabaseHelper.saveGames(listOf(game), database)
                         } else {
                             gameLoaded = true
@@ -64,8 +66,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
             while (id < gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
-                        game.simulateFullGame()
-                        recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+                        simGame(game, recruits)
                         GameDatabaseHelper.saveGames(listOf(game), database)
                     }
                 }
@@ -84,8 +85,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
             while (id <= gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
-                        game.simulateFullGame()
-                        recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+                        simGame(game, recruits)
                         GameDatabaseHelper.saveGames(listOf(game), database)
                     }
                 }
@@ -95,5 +95,12 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 presenter.onSimCompleted()
             }
         }
+    }
+
+    private fun simGame(game: Game, recruits: List<Recruit>) {
+        game.simulateFullGame()
+        recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+        TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits, 0)
+        TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits, 0)
     }
 }
