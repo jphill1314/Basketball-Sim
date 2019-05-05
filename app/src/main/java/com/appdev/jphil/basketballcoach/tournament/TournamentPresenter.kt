@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.tournament
 
+import android.view.View
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import javax.inject.Inject
@@ -17,14 +18,17 @@ class TournamentPresenter @Inject constructor(
     }
 
     override fun onTournamentLoaded(games: MutableList<TournamentDataModel>) {
+        view?.setProgressBarVisibility(View.GONE)
         view?.onTournamentLoaded(games)
     }
 
     override fun simToGame(gameId: Int) {
+        view?.setProgressBarVisibility(View.VISIBLE)
         gameSimRepository.simToGame(gameId)
     }
 
     override fun simGame(gameId: Int) {
+        view?.setProgressBarVisibility(View.VISIBLE)
         gameSimRepository.simGame(gameId)
     }
 
@@ -37,10 +41,12 @@ class TournamentPresenter @Inject constructor(
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
+        view?.setProgressBarVisibility(View.GONE)
         view?.startGameFragment(gameId, homeName, awayName, userIsHomeTeam)
     }
 
     override fun onFABClicked() {
+        view?.setProgressBarVisibility(View.VISIBLE)
         gameSimRepository.startNextGame()
     }
 

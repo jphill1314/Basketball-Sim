@@ -3,12 +3,14 @@ package com.appdev.jphil.basketballcoach.tournament
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
@@ -24,6 +26,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
 
     private lateinit var fab: FloatingActionButton
     private var adapter: TournamentViewPagerAdapter? = null
+    private val progressBar: ProgressBar by lazy { view!!.findViewById<ProgressBar>(R.id.progress_bar) }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -60,6 +63,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
                 it.pageMargin = -(getScreenWidth() / 2)
                 it.offscreenPageLimit = 10
                 it.addOnPageChangeListener(this)
+                view?.findViewById<TabLayout>(R.id.tab_layout)?.setupWithViewPager(it) // TODO: customize?
             }
         } else {
             adapter?.updateDataModels(dataModels)
@@ -76,6 +80,10 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
             ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName, userIsHomeTeam))
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    override fun setProgressBarVisibility(visibility: Int) {
+        progressBar.visibility = visibility
     }
 
     private fun getScreenWidth(): Int {

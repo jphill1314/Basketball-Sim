@@ -9,7 +9,8 @@ import java.util.*
 
 class Team(
     val teamId: Int,
-    val name: String,
+    val schoolName: String,
+    val mascot: String,
     val abbreviation: String,
     val players: MutableList<Player>,
     val conferenceId: Int,// for use in games
@@ -18,6 +19,7 @@ class Team(
     var gamesPlayed: Int
 ) {
 
+    val name = "$schoolName $mascot"
     val roster = mutableListOf<Player>() // for use everywhere else
     private val userSubs = mutableListOf<Pair<Int, Int>>()
     var teamRating: Int = 0

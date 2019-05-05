@@ -12,6 +12,9 @@ class TournamentViewPagerAdapter(
     fm: FragmentManager?
 ) : FragmentStatePagerAdapter(fm) {
 
+    // TODO: replace with resources
+    private val titles = listOf("Round 1", "Round 2", "Semi-finals", "Championship")
+
     override fun getItem(position: Int): Fragment {
         return RoundFragment.newInstance(
             mutableListOf<TournamentDataModel>().apply{ addAll(dataModels.filter { it.round == position + 1 }) },
@@ -20,6 +23,8 @@ class TournamentViewPagerAdapter(
     }
 
     override fun getCount(): Int = if (dataModels.isNotEmpty()) dataModels.last().round else 0
+
+    override fun getPageTitle(position: Int) = titles[position]
 
     fun updateDataModels(newDataModels: MutableList<TournamentDataModel>) {
         dataModels.clear()

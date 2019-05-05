@@ -4,9 +4,11 @@ import android.arch.lifecycle.ViewModel
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
+import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
+import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.strategy.StrategyContract
 import kotlinx.coroutines.*
 
@@ -23,8 +25,6 @@ class GameViewModel(
     private var gameSim: Job? = null
     private var saveGame: Job? = null
     private val gameEvents = mutableListOf<GameEventEntity>()
-
-    // TODO: interact with recruits after game is finished!!!!!
 
     fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: () -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -64,13 +64,15 @@ class GameViewModel(
                             }
                         }
 
-                        while (pauseGame) {
+                        while (pauseGame && isActive) {
                             // Wait for the user to press play
                             // Happens between each half and when the sim is first opened
                             Thread.sleep(100)
                         }
                         withContext(Dispatchers.Main) {
-                            updateGame(game, getNewPlayEvents(game))
+                            if (isActive) {
+                                updateGame(game, getNewPlayEvents(game))
+                            }
                         }
                         Thread.sleep(simSpeed)
 
@@ -97,6 +99,7 @@ class GameViewModel(
                             // Game is over, update the view
                             updateGame(game, getNewPlayEvents(game))
                         }
+                        updateRecruitsAfterGame(game)
                     }
                     // save game to db
                     GameDatabaseHelper.saveGames(listOf(game), database)
@@ -185,6 +188,19 @@ class GameViewModel(
         lastPlay = plays.size
         gameEvents.addAll(newEvents)
         return newEvents
+    }
+
+    private fun updateRecruitsAfterGame(game: Game) {
+        val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+        recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+
+        if (!game.homeTeam.isUser) {
+            TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits)
+        }
+
+        if (!game.awayTeam.isUser) {
+            TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
+        }
     }
 
     override fun onPaceChanged(pace: Int) {

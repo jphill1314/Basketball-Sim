@@ -8,11 +8,12 @@ import java.util.*
 
 class TeamFactory(private val firstNames: List<String>, private val lastNames: List<String>) {
 
-    fun generateTeam(teamId: Int, teamName: String, teamAbbreviation: String, teamRating: Int, conferenceId: Int, isUser: Boolean): Team {
+    fun generateTeam(teamId: Int, schoolName: String, mascot: String, teamAbbreviation: String, teamRating: Int, conferenceId: Int, isUser: Boolean): Team {
         // TODO: generate different kinds of teams: run and gun, press heavy, good offense, good defense, balances, etc
         return Team(
             teamId,
-            teamName,
+            schoolName,
+            mascot,
             teamAbbreviation,
             generatePlayers(teamId, 15, teamRating),
             conferenceId,

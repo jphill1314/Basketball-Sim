@@ -15,7 +15,8 @@ import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
 data class TeamEntity(
     @PrimaryKey
     val teamId: Int,
-    val name: String,
+    val schoolName: String,
+    val mascot: String,
     val abbreviation: String,
     val conferenceId: Int,
     val twoPointAttempts: Int,
@@ -51,7 +52,8 @@ data class TeamEntity(
         coaches.forEach { coach -> teamCoaches.add(coach.createCoach()) }
         val team = Team(
             teamId,
-            name,
+            schoolName,
+            mascot,
             abbreviation,
             teamPlayers,
             conferenceId,
@@ -87,7 +89,8 @@ data class TeamEntity(
         fun from(team: Team): TeamEntity {
             return TeamEntity(
                 team.teamId,
-                team.name,
+                team.schoolName,
+                team.mascot,
                 team.abbreviation,
                 team.conferenceId,
                 team.twoPointAttempts,
