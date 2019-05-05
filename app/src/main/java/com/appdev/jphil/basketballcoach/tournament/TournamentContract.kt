@@ -9,6 +9,7 @@ interface TournamentContract {
     interface View : MVPContract.View {
         fun onTournamentLoaded(dataModels: MutableList<TournamentDataModel>)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
+        fun setProgressBarVisibility(visibility: Int)
     }
 
     interface Presenter : MVPContract.Presenter<View>, SimulationContract.GameSimPresenter {

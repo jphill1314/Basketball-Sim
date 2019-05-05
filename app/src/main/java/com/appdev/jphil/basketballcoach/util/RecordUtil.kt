@@ -58,7 +58,7 @@ object RecordUtil {
         return StandingsDataModel(
             team.teamId,
             team.conferenceId,
-            team.name,
+            team.schoolName,
             wins,
             loses,
             wins,

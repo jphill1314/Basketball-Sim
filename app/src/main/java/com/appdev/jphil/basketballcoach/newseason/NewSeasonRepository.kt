@@ -16,15 +16,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
     resources: Resources
 ) {
 
-    private val r = Random()
     private val firstNames = resources.getStringArray(R.array.first_names).asList()
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
@@ -81,15 +80,14 @@ class NewSeasonRepository @Inject constructor(
 
         for (position in 1..5) {
             // Fill empty spots in roster
-            while (team.players.filter { it.position == position }.size < 3) {
+            while (team.players.filter { it.position == position }.size < 2) {
                 team.addNewPlayer(PlayerFactory.generatePlayer(
-                    firstNames[r.nextInt(firstNames.size)],
-                    lastNames[r.nextInt(lastNames.size)],
+                    firstNames[Random.nextInt(firstNames.size)],
+                    lastNames[Random.nextInt(lastNames.size)],
                     position,
                     0,
                     team.teamId,
-//                    team.teamRating + r.nextInt(20) - 10,
-                    20,
+                    Random.nextInt(WALK_ON_VARIATION) + WALK_ON_MIN,
                     team.players.size
                 ))
             }
@@ -115,5 +113,7 @@ class NewSeasonRepository @Inject constructor(
 
     companion object {
         private const val PRACTICES = 50
+        private const val WALK_ON_VARIATION = 15
+        private const val WALK_ON_MIN = 20
     }
 }

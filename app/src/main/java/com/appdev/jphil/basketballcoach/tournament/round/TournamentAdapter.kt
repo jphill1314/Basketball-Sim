@@ -42,6 +42,7 @@ class TournamentAdapter(
         }
 
         view.layoutParams.width = parent.width / 2 - margin.toInt()
+        view.layoutParams.height = getSize(games.first().round)
         if (viewType == 1 || viewType == 0) {
             val margins = view.layoutParams as ViewGroup.MarginLayoutParams
             margins.bottomMargin = Pixels.dpToPx(defaultSize.toFloat(), resources).toInt() * 2 + margin.toInt() * 3
