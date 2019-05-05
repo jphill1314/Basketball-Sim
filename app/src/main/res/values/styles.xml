@@ -13,6 +13,10 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="NormalTextBlack.Bold" parent="NormalTextBlack">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="HeaderTextBlack" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">24sp</item>

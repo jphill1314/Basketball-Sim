@@ -9,16 +9,26 @@ import android.widget.TextView
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 
-class PlayerStatsAdapter(private val resources: Resources, private val stats: List<GameStatsEntity>) : RecyclerView.Adapter<PlayerStatsAdapter.ViewHolder>() {
-
-    var statType = OFFENSIVE
+class PlayerStatsAdapter(
+    private val resources: Resources,
+    private val stats: List<GameStatsEntity>
+) : RecyclerView.Adapter<PlayerStatsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.game)
-        val stat1: TextView = view.findViewById(R.id.stat1)
-        val stat2: TextView = view.findViewById(R.id.stat2)
-        val stat3: TextView = view.findViewById(R.id.stat3)
-        val stat4: TextView = view.findViewById(R.id.stat4)
+        val opponent: TextView = view.findViewById(R.id.opponent)
+        val result: TextView = view.findViewById(R.id.result)
+        val min: TextView = view.findViewById(R.id.min_stat)
+        val twoFG: TextView = view.findViewById(R.id.twofg_stat)
+        val threeFG: TextView = view.findViewById(R.id.threefg_stat)
+        val ftFG: TextView = view.findViewById(R.id.ft_stat)
+        val pts: TextView = view.findViewById(R.id.pts_stat)
+        val ast: TextView = view.findViewById(R.id.ast_stat)
+        val ob: TextView = view.findViewById(R.id.ob_stat)
+        val db: TextView = view.findViewById(R.id.db_stat)
+        val reb: TextView = view.findViewById(R.id.reb_stat)
+        val stl: TextView = view.findViewById(R.id.stl_stat)
+        val fouls: TextView = view.findViewById(R.id.fouls_stat)
+        val to: TextView = view.findViewById(R.id.to_stat)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,77 +37,59 @@ class PlayerStatsAdapter(private val resources: Resources, private val stats: Li
     }
 
     override fun getItemCount(): Int {
-        return stats.size + 1
+        return stats.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position == 0) {
-            when (statType) {
-                OFFENSIVE -> bindOffensiveHeader(viewHolder)
-                DEFENSIVE -> bindDefensiveHeader(viewHolder)
-                else -> bindOtherHeader(viewHolder)
+        val stat = stats[position]
+        with (viewHolder) {
+            opponent.text = if (stat.isHomeGame) {
+                resources.getString(R.string.vs_opp, stat.opponent)
+            } else {
+                resources.getString(R.string.at_opp, stat.opponent)
             }
-        } else {
-            val game = stats[position - 1]
-            when (statType) {
-                OFFENSIVE -> bindOffensiveStats(viewHolder, game)
-                DEFENSIVE -> bindDefensiveStats(viewHolder, game)
-                else -> bindOtherStats(viewHolder, game)
+            result.text = getResult(stat)
+
+            if (position == itemCount - 1) {
+                opponent.text = stat.opponent
+                result.text = ""
             }
+
+            min.text = String.format("%.1f", stat.timePlayed / 60.0)
+            twoFG.text = resources.getString(R.string.x_slash_y, stat.twoPointMakes, stat.twoPointAttempts)
+            threeFG.text = resources.getString(R.string.x_slash_y, stat.threePointMakes, stat.threePointAttempts)
+            ftFG.text = resources.getString(R.string.x_slash_y, stat.freeThrowMakes, stat.freeThrowShots)
+            pts.text = getPoints(stat)
+            ast.text = stat.assists.toString()
+            ob.text = stat.offensiveRebounds.toString()
+            db.text = stat.defensiveRebounds.toString()
+            reb.text = (stat.offensiveRebounds + stat.defensiveRebounds).toString()
+            stl.text = stat.steals.toString()
+            fouls.text = stat.fouls.toString()
+            to.text = stat.turnovers.toString()
         }
     }
 
-    private fun bindOffensiveHeader(viewHolder: ViewHolder) {
-        viewHolder.name.text = resources.getString(R.string.game)
-        viewHolder.stat1.text = resources.getString(R.string.two_fg)
-        viewHolder.stat2.text = resources.getString(R.string.three_fg)
-        viewHolder.stat3.text = resources.getString(R.string.ft_fg)
-        viewHolder.stat4.text = resources.getString(R.string.assists)
+    private fun getPoints(stat: GameStatsEntity): String {
+        val points = 3 * stat.threePointMakes + 2 * stat.twoPointMakes + stat.freeThrowMakes
+        return points.toString()
     }
 
-    private fun bindDefensiveHeader(viewHolder: ViewHolder) {
-        viewHolder.name.text = resources.getString(R.string.game)
-        viewHolder.stat1.text = resources.getString(R.string.ob)
-        viewHolder.stat2.text = resources.getString(R.string.db)
-        viewHolder.stat3.text = resources.getString(R.string.steals)
-        viewHolder.stat4.text = resources.getString(R.string.to)
-    }
-
-    private fun bindOtherHeader(viewHolder: ViewHolder) {
-        viewHolder.name.text = resources.getString(R.string.game)
-        viewHolder.stat1.text = resources.getString(R.string.minutes)
-        viewHolder.stat2.text = ""
-        viewHolder.stat3.text = ""
-        viewHolder.stat4.text = ""
-    }
-
-    private fun bindOffensiveStats(viewHolder: ViewHolder, game: GameStatsEntity) {
-        viewHolder.name.text = game.opponent
-        viewHolder.stat1.text = resources.getString(R.string.x_slash_y, game.twoPointMakes, game.twoPointAttempts)
-        viewHolder.stat2.text = resources.getString(R.string.x_slash_y, game.threePointMakes, game.threePointAttempts)
-        viewHolder.stat3.text = resources.getString(R.string.x_slash_y, game.freeThrowMakes, game.freeThrowShots)
-        viewHolder.stat4.text = game.assists.toString()
-    }
-
-    private fun bindDefensiveStats(viewHolder: ViewHolder, game: GameStatsEntity) {
-        viewHolder.name.text = game.opponent
-        viewHolder.stat1.text = game.offensiveRebounds.toString()
-        viewHolder.stat2.text = game.defensiveRebounds.toString()
-        viewHolder.stat3.text = game.steals.toString()
-        viewHolder.stat4.text = game.fouls.toString()
-    }
-
-    private fun bindOtherStats(viewHolder: ViewHolder, game: GameStatsEntity) {
-        viewHolder.name.text = game.opponent
-        viewHolder.stat1.text = (game.timePlayed / 60).toString()
-        viewHolder.stat2.text = ""
-        viewHolder.stat3.text = ""
-        viewHolder.stat4.text = ""
-    }
-
-    companion object {
-        const val OFFENSIVE = 1
-        const val DEFENSIVE = 2
-        const val OTHER = 3
+    private fun getResult(stat: GameStatsEntity): String {
+        return with (stat) {
+             if (isHomeGame) {
+                if (homeScore > awayScore) {
+                    resources.getString(R.string.w_score, homeScore, awayScore)
+                } else {
+                    resources.getString(R.string.l_score, homeScore, awayScore)
+                }
+            } else {
+                 if (homeScore > awayScore) {
+                     resources.getString(R.string.l_score, awayScore, homeScore)
+                 } else {
+                     resources.getString(R.string.w_score, awayScore, homeScore)
+                 }
+            }
+        }
     }
 }

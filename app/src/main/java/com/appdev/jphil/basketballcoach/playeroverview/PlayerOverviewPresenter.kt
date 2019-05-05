@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
+import com.appdev.jphil.basketballcoach.util.StatsUtil
 import javax.inject.Inject
 
 class PlayerOverviewPresenter @Inject constructor(private val repository: PlayerOverviewContract.Repository): PlayerOverviewContract.Presenter {
@@ -16,12 +17,14 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
         repository.attachPresenter(this)
     }
 
-    override fun onPlayerLoaded(player: Player) {
+    override fun onPlayerLoaded(player: Player, stats: List<GameStatsEntity>) {
         this.player = player
-        view?.addPlayerInfo(player)
+        view?.addPlayerInfo(player, StatsUtil().apply { calculateTotals(stats) })
+        onStatsLoaded(stats)
     }
 
-    override fun onStatsLoaded(stats: List<GameStatsEntity>) {
+    private fun onStatsLoaded(stats: List<GameStatsEntity>) {
+        this.stats.clear()
         this.stats.addAll(stats)
         var timePlayed = 0
         var twoPointAttempts = 0
@@ -60,6 +63,8 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
             -1,
             "Career",
             true,
+                0,
+                0,
             timePlayed,
             twoPointAttempts,
             twoPointMakes,
@@ -89,8 +94,7 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
 
     override fun onViewAttached(view: PlayerOverviewContract.View) {
         this.view = view
-        repository.fetchPlayer()
-        repository.fetchPlayerStats()
+        repository.fetchPlayerAndStats()
     }
 
     override fun onViewDetached() {

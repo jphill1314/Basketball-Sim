@@ -27,7 +27,7 @@ class GameStatsAdapter(
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val pos: TextView? = view.findViewById(R.id.player_position)
         val name: TextView? = view.findViewById(R.id.player_name)
-        val stat1: TextView? = view.findViewById(R.id.stat1)
+        val stat1: TextView? = view.findViewById(R.id.result)
         val stat2: TextView? = view.findViewById(R.id.stat2)
         val stat3: TextView? = view.findViewById(R.id.stat3)
         val stat4: TextView? = view.findViewById(R.id.stat4)
