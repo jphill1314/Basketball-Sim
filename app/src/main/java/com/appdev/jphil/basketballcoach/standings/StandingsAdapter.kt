@@ -18,10 +18,10 @@ class StandingsAdapter(
 ): RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val position: TextView = view.findViewById(R.id.text_view1)
-        val name: TextView = view.findViewById(R.id.text_view2)
-        val conference: TextView = view.findViewById(R.id.text_view3)
-        val overall: TextView = view.findViewById(R.id.text_view4)
+        val position: TextView = view.findViewById(R.id.position)
+        val name: TextView = view.findViewById(R.id.name)
+        val conference: TextView = view.findViewById(R.id.conference_record)
+        val overall: TextView = view.findViewById(R.id.overall_record)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,33 +30,21 @@ class StandingsAdapter(
     }
 
     override fun getItemCount(): Int {
-        return standings.size + 1
+        return standings.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position == 0) {
-            viewHolder.position.text = resources.getString(R.string.pos)
-            viewHolder.name.text = resources.getString(R.string.name)
-            viewHolder.conference.text = resources.getString(R.string.conf_w_l)
-            viewHolder.overall.text = resources.getString(R.string.overall_w_l)
+        val data = standings[position]
+        viewHolder.position.text = (position + 1).toString()
+        viewHolder.name.text = data.teamName
+        viewHolder.conference.text = resources.getString(R.string.standings_dash, data.conferenceWins, data.conferenceLoses)
+        viewHolder.overall.text = resources.getString(R.string.standings_dash, data.totalWins, data.totalLoses)
+        viewHolder.itemView.setBackgroundColor(if (data.teamId == teamId) {
+            Color.GRAY
         } else {
-            val data = standings[position - 1]
-            viewHolder.position.text = position.toString()
-            viewHolder.name.text = data.teamName
-            viewHolder.conference.text = resources.getString(R.string.standings_dash, data.conferenceWins, data.conferenceLoses)
-            viewHolder.overall.text = resources.getString(R.string.standings_dash, data.totalWins, data.totalLoses)
-            viewHolder.itemView.setBackgroundColor(if (data.teamId == teamId) {
-                Color.GRAY
-            } else {
-                Color.WHITE
-            })
+            Color.WHITE
+        })
 
-            viewHolder.itemView.setOnClickListener { presenter.onTeamSelected(data) }
-        }
-    }
-
-    fun updateTeamId(teamId: Int) {
-        this.teamId = teamId
-        notifyDataSetChanged()
+        viewHolder.itemView.setOnClickListener { presenter.onTeamSelected(data) }
     }
 }

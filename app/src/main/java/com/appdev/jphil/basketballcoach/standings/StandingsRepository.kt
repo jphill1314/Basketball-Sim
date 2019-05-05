@@ -19,11 +19,12 @@ class StandingsRepository @Inject constructor(
 
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
+            val conferences = ConferenceDatabaseHelper.loadAllConferenceEntities(database)
             val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database)
             val games = GameDatabaseHelper.loadCompletedGameEntities(database)
             withContext(Dispatchers.Main) {
                 conference?.teams?.let {
-                    presenter.onData(it, games)
+                    presenter.onData(it, games, conferences)
                 }
             }
         }
