@@ -12,6 +12,8 @@ class GameStatsEntity(
     val season: Int,
     val opponent: String,
     val isHomeGame: Boolean,
+    val homeScore: Int,
+    val awayScore: Int,
     val timePlayed: Int,
     val twoPointAttempts: Int,
     val twoPointMakes: Int,
@@ -28,13 +30,15 @@ class GameStatsEntity(
 ) {
 
     companion object {
-        fun generate(player: Player, season: Int, opponent: String, isHomeGame: Boolean): GameStatsEntity {
+        fun generate(player: Player, season: Int, opponent: String, isHomeGame: Boolean, homeScore: Int, awayScore: Int): GameStatsEntity {
             return GameStatsEntity(
                 null,
                 player.id!!,
                 season,
                 opponent,
                 isHomeGame,
+                homeScore,
+                awayScore,
                 player.timePlayed,
                 player.twoPointAttempts,
                 player.twoPointMakes,

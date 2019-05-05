@@ -125,4 +125,16 @@
     <string name="official_visit">Official Visit</string>
 
     <string name="two_hyphens">%1$s - %2$s - %3$s</string>
+
+    <string name="min">Min</string>
+    <string name="pts">Pts</string>
+    <string name="ast">Ast</string>
+    <string name="reb">Reb</string>
+    <string name="stl">Stl</string>
+    <string name="fouls_label">Fouls</string>
+
+    <string name="vs_opp">vs. %s</string>
+    <string name="at_opp">\@ %s</string>
+    <string name="w_score">W %1$d - %2$d</string>
+    <string name="l_score">L %1$d - %2$d</string>
 </resources>

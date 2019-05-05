@@ -14,6 +14,7 @@ import android.widget.TextView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
+import com.appdev.jphil.basketballcoach.util.StatsUtil
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -25,8 +26,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
     private lateinit var recyclerView: RecyclerView
     private var attributeAdapter: PlayerAttributeAdapter? = null
     private var statsAdapter: PlayerStatsAdapter? = null
-    private lateinit var playerName: TextView
-    private lateinit var statsSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,38 +47,14 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        playerName = view.findViewById(R.id.player_name)
-
         val topSpinner = view.findViewById<Spinner>(R.id.top_spinner)
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.player_overview,
-            android.R.layout.simple_spinner_dropdown_item
+            R.layout.spinner_title
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(R.layout.spinner_list_item)
             topSpinner.adapter = adapter
-        }
-
-        statsSpinner = view.findViewById(R.id.stats_spinner)
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.player_stats,
-            android.R.layout.simple_spinner_dropdown_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            statsSpinner.adapter = adapter
-        }
-        statsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) { }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                statsAdapter?.statType = when (position) {
-                    0 -> PlayerStatsAdapter.OFFENSIVE
-                    1 -> PlayerStatsAdapter.DEFENSIVE
-                    else -> PlayerStatsAdapter.OTHER
-                }
-                statsAdapter?.notifyDataSetChanged()
-            }
         }
 
         return view
@@ -90,11 +65,23 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
         super.onSaveInstanceState(outState)
     }
 
-    override fun addPlayerInfo(player: Player) {
+    override fun addPlayerInfo(player: Player, stats: StatsUtil) {
         attributeAdapter = PlayerAttributeAdapter(player, resources)
         recyclerView.adapter = attributeAdapter
-        playerName.text = resources.getString(R.string.colon, player.fullName, player.getOverallRating().toString()) +
-                " - " + resources.getStringArray(R.array.player_types)[player.type.type]
+        view?.apply {
+            findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[player.position - 1]
+            findViewById<TextView>(R.id.player_name).text = player.fullName
+            findViewById<TextView>(R.id.rating).text = player.getOverallRating().toString()
+            findViewById<TextView>(R.id.year).text = resources.getStringArray(R.array.years)[player.year]
+            findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[player.type.type]
+
+            findViewById<TextView>(R.id.min_stats).text = stats.getMinutesAvg()
+            findViewById<TextView>(R.id.pts_stat).text = stats.getPointsAvg()
+            findViewById<TextView>(R.id.ast_stat).text = stats.getAssistAvg()
+            findViewById<TextView>(R.id.reb_stats).text = stats.getReboundAvg()
+            findViewById<TextView>(R.id.stl_stats).text = stats.getStealAvg()
+            findViewById<TextView>(R.id.fouls_stats).text = stats.getFoulAvg()
+        }
     }
 
     override fun addPlayerStats(stats: List<GameStatsEntity>) {
@@ -103,12 +90,10 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
 
     override fun displayPlayerInfo() {
         recyclerView.adapter = attributeAdapter
-        statsSpinner.visibility = View.GONE
     }
 
     override fun displayPlayerStats() {
         recyclerView.adapter = statsAdapter
-        statsSpinner.visibility = View.VISIBLE
     }
 
     companion object {

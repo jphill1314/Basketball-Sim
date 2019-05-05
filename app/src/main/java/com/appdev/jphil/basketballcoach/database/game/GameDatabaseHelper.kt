@@ -16,11 +16,25 @@ object GameDatabaseHelper {
             if (game.isFinal) {
                 game.homeTeam.players.forEach { player ->
                     database.playerDao()
-                        .insertGameStats(GameStatsEntity.generate(player, game.season, game.awayTeam.name, true))
+                        .insertGameStats(GameStatsEntity.generate(
+                            player,
+                            game.season,
+                            game.awayTeam.schoolName,
+                            true,
+                            game.homeScore,
+                            game.awayScore
+                        ))
                 }
                 game.awayTeam.players.forEach { player ->
                     database.playerDao()
-                        .insertGameStats(GameStatsEntity.generate(player, game.season, game.homeTeam.name, false))
+                        .insertGameStats(GameStatsEntity.generate(
+                            player,
+                            game.season,
+                            game.homeTeam.schoolName,
+                            false,
+                            game.homeScore,
+                            game.awayScore
+                        ))
                 }
             }
         }

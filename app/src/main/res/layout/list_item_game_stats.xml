@@ -58,7 +58,7 @@
             app:layout_constraintGuide_percent=".35" />
 
         <TextView
-            android:id="@+id/stat1"
+            android:id="@+id/result"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -83,7 +83,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/stat3"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/stat1"
+            app:layout_constraintStart_toEndOf="@+id/result"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2/6" />
 
