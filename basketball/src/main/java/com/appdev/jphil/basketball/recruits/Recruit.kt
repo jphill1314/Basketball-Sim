@@ -44,8 +44,8 @@ class Recruit(
     fun revokeScholarship(teamId: Int) {
         val interestInTeam = interestInTeams.filter { it.teamId == teamId }
         if (interestInTeams.isNotEmpty()) {
-            val interest = interestInTeam.first()
-            if (interest.isOfferedScholarship && !isCommitted) {
+            val interest = interestInTeam.firstOrNull()
+            if (interest?.isOfferedScholarship == true && !isCommitted) {
                 interest.revokeScholarshipOffer()
             }
         }
@@ -67,6 +67,7 @@ class Recruit(
             with (homeInterest.first()) {
                 if (isScouted) {
                     onTeamGameCompleted(game, getTeamMultiplier(game.homeTeam))
+                    this@Recruit.considerScholarship(game.homeTeam)
                 }
             }
         }
@@ -76,6 +77,7 @@ class Recruit(
             with (awayInterest.first()) {
                 if (isScouted) {
                     onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
+                    this@Recruit.considerScholarship(game.awayTeam)
                 }
             }
         }
