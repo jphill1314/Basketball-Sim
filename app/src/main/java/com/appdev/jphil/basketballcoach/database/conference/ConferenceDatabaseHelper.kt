@@ -26,6 +26,10 @@ object ConferenceDatabaseHelper {
         )
     }
 
+    fun loadAllConferenceEntities(database: BasketballDatabase): List<ConferenceEntity> {
+        return database.conferenceDao().getAllConferenceEntities()
+    }
+
     fun loadAllConferences(database: BasketballDatabase): List<Conference> {
         val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
         val conferences = mutableListOf<Conference>()
