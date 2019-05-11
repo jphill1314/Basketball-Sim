@@ -44,6 +44,7 @@
     <string name="player_fouls">Fouls</string>
     <string name="condition">Cond</string>
     <string name="rating">Rating</string>
+    <string name="year">Year</string>
 
     <string name="x_slash_y">%1$d/%2$d</string>
     <string name="two_fg">2FG</string>
@@ -114,6 +115,7 @@
     <string name="interest_colon">Interest: %s</string>
     <string name="rating_colon">Rating: %d</string>
     <string name="unknown">Unknown</string>
+    <string name="returning_players_plus_commits">Returning Players (Commitments)</string>
 
     <string name="sort_rating">Sort by rating</string>
     <string name="filter_positions">Filter positions</string>
@@ -137,4 +139,11 @@
     <string name="at_opp">\@ %s</string>
     <string name="w_score">W %1$d - %2$d</string>
     <string name="l_score">L %1$d - %2$d</string>
+
+    <string name="pg">PG</string>
+    <string name="sg">SG</string>
+    <string name="sf">SF</string>
+    <string name="pf">PF</string>
+    <string name="c">C</string>
+    <string name="number_and_parens">%1$d (%2$d)</string>
 </resources>

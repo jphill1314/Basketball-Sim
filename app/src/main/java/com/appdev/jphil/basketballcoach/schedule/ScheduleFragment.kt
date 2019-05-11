@@ -23,7 +23,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     @Inject
     lateinit var presenter: ScheduleContract.Presenter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ScheduleAdapter
+    private var adapter: ScheduleAdapter? = null
 
     private lateinit var fab: FloatingActionButton
     private lateinit var progressBar: ProgressBar
@@ -59,10 +59,12 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun displaySchedule(games: List<ScheduleDataModel>, isUsersSchedule: Boolean) {
-        adapter = ScheduleAdapter(resources, presenter, isUsersSchedule)
-        recyclerView.adapter = adapter
-        adapter.games = games
-        adapter.notifyDataSetChanged()
+        if (adapter == null) {
+            adapter = ScheduleAdapter(resources, presenter, isUsersSchedule)
+            recyclerView.adapter = adapter
+        }
+        adapter?.games = games
+        adapter?.notifyDataSetChanged()
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {

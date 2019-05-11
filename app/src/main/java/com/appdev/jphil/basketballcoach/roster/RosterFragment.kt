@@ -43,13 +43,13 @@ class RosterFragment : Fragment(), RosterContract.View {
         val view = inflater.inflate(R.layout.fragment_roster, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
         return view
     }
 
     override fun displayData(players: MutableList<RosterDataModel>, isUsersTeam: Boolean) {
         adapter.isUsersTeam = isUsersTeam
         adapter.updateRoster(players)
-        recyclerView.adapter = adapter
     }
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {

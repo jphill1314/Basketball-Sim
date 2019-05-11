@@ -22,7 +22,8 @@ object GameDatabaseHelper {
                             game.awayTeam.schoolName,
                             true,
                             game.homeScore,
-                            game.awayScore
+                            game.awayScore,
+                            game.id!!
                         ))
                 }
                 game.awayTeam.players.forEach { player ->
@@ -33,7 +34,8 @@ object GameDatabaseHelper {
                             game.homeTeam.schoolName,
                             false,
                             game.homeScore,
-                            game.awayScore
+                            game.awayScore,
+                            game.id!!
                         ))
                 }
             }

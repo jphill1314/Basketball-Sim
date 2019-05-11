@@ -58,26 +58,27 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
 
         this.stats.add(
             GameStatsEntity(
-            -1,
-            -1,
-            -1,
-            "Career",
-            true,
+                -1,
+                -1,
+                -1,
+                -1,
+                "Career",
+                true,
                 0,
                 0,
-            timePlayed,
-            twoPointAttempts,
-            twoPointMakes,
-            threePointAttempts,
-            threePointMakes,
-            assists,
-            offensiveRebounds,
-            defensiveRebounds,
-            turnovers,
-            steals,
-            fouls,
-            freeThrowShots,
-            freeThrowMakes
+                timePlayed,
+                twoPointAttempts,
+                twoPointMakes,
+                threePointAttempts,
+                threePointMakes,
+                assists,
+                offensiveRebounds,
+                defensiveRebounds,
+                turnovers,
+                steals,
+                fouls,
+                freeThrowShots,
+                freeThrowMakes
         ))
 
         view?.addPlayerStats(this.stats)
