@@ -21,8 +21,8 @@ fun main(){
 //        println(player.getStatsAsString()+"\n")
 //    }
 
-    val homeRating = 50
-    val awayRating = 50
+    val homeRating = 70
+    val awayRating = 70
 
     var homeWins = 0
     var otGames = 0
@@ -32,13 +32,11 @@ fun main(){
     var lowScore: Game? = null
     var maxMargin: Game? = null
     var minMargin: Game? = null
-    val totalGames = 100
-
-    val teamFactory = TeamFactory(listOf("first"), listOf("last"))
+    val totalGames = 500
 
     for(i in 1..totalGames) {
-        val homeTeam = teamFactory.generateTeam(1, "home", "team","home", homeRating, 1, false)
-        val awayTeam = teamFactory.generateTeam(2, "away", "team", "away", awayRating, 1, false)
+        val homeTeam = TeamFactory.generateTeam(1, "home", "team","home", homeRating, 1, false, listOf("first"), listOf("last"))
+        val awayTeam = TeamFactory.generateTeam(2, "away", "team", "away", awayRating, 1, false, listOf("first"), listOf("last"))
         val game = Game(homeTeam, awayTeam, true, 1)
         if(highScore == null){
             highScore = game
@@ -72,7 +70,7 @@ fun main(){
             minMargin = game
         }
 
-        totalMargin += game.homeScore - game.awayScore
+        totalMargin += abs(game.homeScore - game.awayScore)
         totalScore += game.homeScore
         totalScore += game.awayScore
     }
@@ -98,8 +96,8 @@ fun main(){
     minMargin = null
 
     for(i in 1..totalGames) {
-        val homeTeam = teamFactory.generateTeam(1, "home", "team","home", homeRating, 1, false)
-        val awayTeam = teamFactory.generateTeam(2, "away", "team", "away", awayRating, 1, false)
+        val homeTeam = TeamFactory.generateTeam(1, "home", "team","home", homeRating, 1, false, listOf("first"), listOf("last"))
+        val awayTeam = TeamFactory.generateTeam(2, "away", "team", "away", awayRating, 1, false, listOf("first"), listOf("last"))
         val game = Game(homeTeam, awayTeam, false, 1)
         if(highScore == null){
             highScore = game
@@ -133,7 +131,7 @@ fun main(){
             minMargin = game
         }
 
-        totalMargin += game.homeScore - game.awayScore
+        totalMargin += abs(game.homeScore - game.awayScore)
         totalScore += game.homeScore
         totalScore += game.awayScore
     }

@@ -111,7 +111,7 @@ object PlayerFactory {
 
     private fun generateAttribute(rating: Int, weight: Double): Int {
         val r = Random()
-        return ((rating + 2 * r.nextInt(ratingVariability) - ratingVariability) * weight).toInt()
+        return ((rating + r.nextInt(2 * ratingVariability) - ratingVariability) * weight).toInt()
     }
 
     fun getPlayerType(position: Int): PlayerType {

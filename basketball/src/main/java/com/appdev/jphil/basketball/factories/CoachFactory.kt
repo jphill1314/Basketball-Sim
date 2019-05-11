@@ -2,7 +2,7 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
-import java.util.*
+import kotlin.random.Random
 
 object CoachFactory {
 
@@ -15,24 +15,23 @@ object CoachFactory {
         lastName: String,
         rating: Int
     ): Coach {
-        val r = Random()
-        val offenseFavorsThrees = r.nextInt(100)
-        val pace = r.nextInt(30) + Coach.minimumPace
-        val aggression = r.nextInt(100)
-        val defenseFavorsThrees = r.nextInt(100)
+        val offenseFavorsThrees = Random.nextInt(100)
+        val pace = Random.nextInt(30) + Coach.minimumPace
+        val aggression = Random.nextInt(100)
+        val defenseFavorsThrees = Random.nextInt(100)
 
-        val presses = r.nextInt(100) < 20
-        val pressFrequency = if (presses) r.nextInt(66) + 34 else 0
-        val pressAggression = if (presses) r.nextInt(99) + 1 else 0
+        val presses = Random.nextInt(100) < 20
+        val pressFrequency = if (presses) Random.nextInt(66) + 34 else 0
+        val pressAggression = if (presses) Random.nextInt(99) + 1 else 0
 
-        val teachShooting = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachPostMoves = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachBallControl = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachPostDefense = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachPerimeterDefense = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachPositioning = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachRebounding = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
-        val teachConditioning = rating + (2 * r.nextInt(attributeVariance)) - attributeVariance
+        val teachShooting = getRating(rating)
+        val teachPostMoves = getRating(rating)
+        val teachBallControl = getRating(rating)
+        val teachPostDefense = getRating(rating)
+        val teachPerimeterDefense = getRating(rating)
+        val teachPositioning = getRating(rating)
+        val teachRebounding = getRating(rating)
+        val teachConditioning = getRating(rating)
 
         return Coach(
             null,
@@ -61,5 +60,9 @@ object CoachFactory {
             teachRebounding,
             teachConditioning
         )
+    }
+
+    private fun getRating(rating: Int): Int {
+        return rating + Random.nextInt(2 * attributeVariance) - attributeVariance
     }
 }

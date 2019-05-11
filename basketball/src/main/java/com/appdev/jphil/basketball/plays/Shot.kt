@@ -47,9 +47,9 @@ class Shot(
         val defender = defense.getPlayerAtPosition(playerWithBall)
 
         // First determine where the shot will be taken from
-        val shotClose = (shooter.closeRangeShot - offense.offenseFavorsThrees + 50  + r.nextInt(randomBound))
-        val shotMid = (shooter.midRangeShot + r.nextInt(randomBound))
-        val shotLong = (shooter.longRangeShot + offense.offenseFavorsThrees - 50 + r.nextInt(randomBound))
+        val shotClose = (shooter.closeRangeShot - (offense.offenseFavorsThrees / 2) + 25  + r.nextInt(SHOT_LOCATION_BOUND))
+        val shotMid = (shooter.midRangeShot + r.nextInt(SHOT_LOCATION_BOUND))
+        val shotLong = (shooter.longRangeShot + (offense.offenseFavorsThrees / 2) - 25 + r.nextInt(SHOT_LOCATION_BOUND))
 
         val shotLocation: Int = getShotLocation(shooter, shotClose, shotMid, shotLong)
 
@@ -195,7 +195,7 @@ class Shot(
                 }
             }
             2 -> {
-                if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 5))) {
+                if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 6))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
                         shotText.midMake(shooter, defender, wellDefended, this)
@@ -220,7 +220,7 @@ class Shot(
                 }
             }
             3 -> {
-                if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 6))) {
+                if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 7))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
                         shotText.longMake(shooter, defender, wellDefended, this)
@@ -295,5 +295,9 @@ class Shot(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val SHOT_LOCATION_BOUND = 100
     }
 }
