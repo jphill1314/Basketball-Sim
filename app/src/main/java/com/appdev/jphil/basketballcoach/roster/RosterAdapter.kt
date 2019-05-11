@@ -76,10 +76,10 @@ class RosterAdapter(
                     dataModel.isSelected = !dataModel.isSelected
                     notifyDataSetChanged()
                 }
-                viewHolder.itemView.setOnLongClickListener {
-                    presenter.onPlayerLongPressed(player)
-                    true
-                }
+            }
+            viewHolder.itemView.setOnLongClickListener {
+                presenter.onPlayerLongPressed(player)
+                true
             }
         }
     }

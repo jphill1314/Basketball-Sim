@@ -13,7 +13,7 @@ class PlayerAttributeDelegate(private var value: Int) : ReadWriteProperty<Player
 
     override fun getValue(thisRef: Player, property: KProperty<*>): Int {
         return when (thisRef.inGame) {
-            true -> max(((value + thisRef.offensiveStatMod) * getFatigueFactor(thisRef)).toInt(), 20)
+            true -> max(((value + thisRef.offensiveStatMod) * getFatigueFactor(thisRef)).toInt(), MIN_ATTRIBUTE)
             false -> value
         }
     }
