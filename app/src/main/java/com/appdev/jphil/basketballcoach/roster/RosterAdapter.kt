@@ -12,7 +12,8 @@ import com.appdev.jphil.basketballcoach.R
 class RosterAdapter(
     val presenter: RosterContract.Presenter,
     val roster: MutableList<RosterDataModel>,
-    val resources: Resources) : RecyclerView.Adapter<RosterAdapter.ViewHolder>() {
+    val resources: Resources
+) : RecyclerView.Adapter<RosterAdapter.ViewHolder>() {
 
     private val positions: Array<String> = resources.getStringArray(R.array.position_abbreviation)
     private val classes: Array<String> = resources.getStringArray(R.array.years)
@@ -39,35 +40,44 @@ class RosterAdapter(
     override fun getItemViewType(position: Int): Int {
         return when(position) {
             0 -> 0
-            6 -> 0
+            7 -> 0
             else -> 1
         }
     }
 
     override fun getItemCount(): Int {
-        return roster.size + 2
+        return if (roster.isNotEmpty()) roster.size + 4 else 0
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position == 0 || position == 6) {
+        if (position == 0 || position == 7) {
             if (position == 0) {
                 viewHolder.title?.text = resources.getString(R.string.starting_lineup)
             } else {
                 viewHolder.title?.text = resources.getString(R.string.bench)
             }
+        } else if (position == 1 || position == 8) {
+            viewHolder.position?.text = resources.getString(R.string.pos)
+            viewHolder.name?.text = resources.getString(R.string.name)
+            viewHolder.rating?.text = resources.getString(R.string.rating)
+            viewHolder.year?.text = resources.getString(R.string.year)
+
+            val params = viewHolder.itemView.layoutParams as ViewGroup.MarginLayoutParams
+            params.bottomMargin = resources.getDimensionPixelSize(R.dimen.card_margin_bottom)
+            setTextColor(viewHolder, false)
         } else {
-            val dataModel = if (position < 6) roster[position - 1] else roster[position - 2]
+            val dataModel = if (position < 7) roster[position - 2] else roster[position - 4]
             val player = dataModel.player
             setTextColor(viewHolder, dataModel.isSelected)
 
-            viewHolder.position?.text = if (position < 6) positions[position - 1] else positions[player.position - 1]
+            viewHolder.position?.text = if (position < 7) positions[position - 2] else positions[player.position - 1]
             viewHolder.name?.text = player.fullName
             viewHolder.rating?.text = player.getOverallRating().toString()
             viewHolder.year?.text = classes[player.year]
 
-            if (position == 5) {
+            if (position == 6) {
                 val params = viewHolder.itemView.layoutParams as ViewGroup.MarginLayoutParams
-                params.bottomMargin = resources.getDimension(R.dimen.sixteen_dp).toInt()
+                params.bottomMargin = resources.getDimensionPixelSize(R.dimen.sixteen_dp)
             }
 
             if (isUsersTeam) {
