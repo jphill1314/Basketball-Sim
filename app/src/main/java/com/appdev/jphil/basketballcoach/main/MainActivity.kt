@@ -32,9 +32,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
-        navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
+        navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem, false) }
         if (savedInstanceState == null) {
-            navigateToHomePage()
+            navigateToHomePage(true)
         }
     }
 
@@ -48,7 +48,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         }
     }
 
-    private fun handleFragmentNavigation(menuItem: MenuItem): Boolean {
+    private fun handleFragmentNavigation(menuItem: MenuItem, isStartup: Boolean): Boolean {
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -68,12 +68,19 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         if (fragment != null && !menuItem.isChecked) {
             FlurryAgent.logEvent(TrackingKeys.EVENT_VIEW_SCREEN, mutableMapOf(TrackingKeys.PAYLOAD_SCREEN_NAME to fragment::class.java.simpleName))
             menuItem.isChecked = true
-            while (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStackImmediate()
+            if (!isStartup && supportFragmentManager.backStackEntryCount == 0) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                while (supportFragmentManager.backStackEntryCount > 1) {
+                    supportFragmentManager.popBackStackImmediate()
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_layout, fragment)
+                    .commit()
             }
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, fragment)
-                .commit()
             return true
         }
         return false
@@ -96,6 +103,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     }
 
     override fun navigateToHomePage() {
-        handleFragmentNavigation(navView.menu.getItem(0))
+        navigateToHomePage(false)
+    }
+
+    private fun navigateToHomePage(isStartup: Boolean) {
+        handleFragmentNavigation(navView.menu.getItem(0), isStartup)
     }
 }
