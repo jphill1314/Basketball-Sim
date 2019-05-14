@@ -27,7 +27,7 @@ class RecruitOverviewPresenter @Inject constructor(
     override fun onRecruitLoaded(recruit: Recruit, team: Team) {
         this.recruit = recruit
         this.team = team
-        interest = recruit.interestInTeams.filter { it.teamId == team.teamId }[0]
+        interest = recruit.interestInTeams.first { it.teamId == team.teamId }
         view?.displayRecruit(recruit)
         if (!team.isUser) {
             view?.disableAllButtons()

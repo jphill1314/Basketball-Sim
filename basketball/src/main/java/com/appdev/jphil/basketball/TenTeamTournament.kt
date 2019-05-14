@@ -21,10 +21,7 @@ class TenTeamTournament(
             { -it.conferenceWins },
             { -it.getWinPercentage() },
             { -it.totalWins }
-        )).forEach { dataModel ->
-            val team = teams.filter { it.teamId == dataModel.teamId }
-            sortedTeams.add(team[0])
-        }
+        )).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
     }
 
     fun generateNextRound(season: Int) {

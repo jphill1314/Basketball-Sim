@@ -41,9 +41,8 @@ class GameStatsAdapter(
                 players.sortBy { it.subPosition }
             } else {
                 newPlayers.forEach { newPlayer ->
-                    val player = players.filter { it.id == newPlayer.id }
-                    if (player.isNotEmpty()) {
-                        Collections.replaceAll(players, player[0], newPlayer)
+                    players.firstOrNull { it.id == newPlayer.id }?.let { player ->
+                        Collections.replaceAll(players, player, newPlayer)
                     }
                 }
             }

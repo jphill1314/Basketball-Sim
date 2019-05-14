@@ -42,10 +42,8 @@ class Recruit(
     }
 
     fun revokeScholarship(teamId: Int) {
-        val interestInTeam = interestInTeams.filter { it.teamId == teamId }
-        if (interestInTeams.isNotEmpty()) {
-            val interest = interestInTeam.firstOrNull()
-            if (interest?.isOfferedScholarship == true && !isCommitted) {
+        interestInTeams.firstOrNull { it.teamId == teamId }?.let { interest ->
+            if (interest.isOfferedScholarship && !isCommitted) {
                 interest.revokeScholarshipOffer()
             }
         }
@@ -53,7 +51,7 @@ class Recruit(
 
     fun updateInterest(team: Team, event: RecruitingEvent, gameNumber: Int) {
         if (!isCommitted) {
-            val interestInTeam = interestInTeams.filter { it.teamId == team.teamId }[0]
+            val interestInTeam = interestInTeams.first { it.teamId == team.teamId }
             isCommitted = interestInTeam.updateInterest(getTeamMultiplier(team), event, gameNumber)
             if (isCommitted) {
                 teamCommittedTo = team.teamId
@@ -62,30 +60,24 @@ class Recruit(
     }
 
     fun updateInterestAfterGame(game: Game) {
-        val homeInterest = interestInTeams.filter { it.teamId == game.homeTeam.teamId }
-        if (homeInterest.isNotEmpty()) {
-            with (homeInterest.first()) {
-                if (isScouted) {
-                    onTeamGameCompleted(game, getTeamMultiplier(game.homeTeam))
-                    this@Recruit.considerScholarship(game.homeTeam)
-                }
+        interestInTeams.firstOrNull { it.teamId == game.homeTeam.teamId }?.let { homeInterest ->
+            if (homeInterest.isScouted) {
+                homeInterest.onTeamGameCompleted(game, getTeamMultiplier(game.homeTeam))
+                this@Recruit.considerScholarship(game.homeTeam)
             }
         }
 
-        val awayInterest = interestInTeams.filter { it.teamId == game.awayTeam.teamId }
-        if (awayInterest.isNotEmpty()) {
-            with (awayInterest.first()) {
-                if (isScouted) {
-                    onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
-                    this@Recruit.considerScholarship(game.awayTeam)
-                }
+        interestInTeams.firstOrNull { it.teamId == game.awayTeam.teamId }?.let { awayInterest ->
+            if (awayInterest.isScouted) {
+                awayInterest.onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
+                this@Recruit.considerScholarship(game.awayTeam)
             }
         }
     }
 
     fun considerScholarship(team: Team) {
         if (!isCommitted) {
-            val interestInTeam = interestInTeams.filter { it.teamId == team.teamId }[0]
+            val interestInTeam = interestInTeams.first { it.teamId == team.teamId }
             isCommitted = interestInTeam.considerScholarship()
             if (isCommitted) {
                 teamCommittedTo = team.teamId

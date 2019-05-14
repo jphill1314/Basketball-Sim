@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketball.recruits
 
 import com.appdev.jphil.basketball.game.Game
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random

@@ -76,17 +76,14 @@ class RecruitPresenter @Inject constructor(
 
     private fun getInteractionFilterBool(recruit: Recruit): Boolean {
         val type = RecruitingEvent.getEventByType(interactionFilter)
-        val interests = recruit.interestInTeams.filter { it.teamId == team.teamId }
-        if (interests.isEmpty()) {
-            return false
-        }
-        val interest = interests[0]
-        return when (type) {
-            RecruitingEvent.SCOUT -> interest.isScouted
-            RecruitingEvent.COACH_CONTACT -> interest.isContacted
-            RecruitingEvent.OFFER_SCHOLARSHIP -> interest.isOfferedScholarship
-            RecruitingEvent.OFFICIAL_VISIT -> interest.isOfficialVisitDone
-        }
+        return recruit.interestInTeams.firstOrNull { it.teamId == team.teamId }?.let { interest ->
+            when (type) {
+                RecruitingEvent.SCOUT -> interest.isScouted
+                RecruitingEvent.COACH_CONTACT -> interest.isContacted
+                RecruitingEvent.OFFER_SCHOLARSHIP -> interest.isOfferedScholarship
+                RecruitingEvent.OFFICIAL_VISIT -> interest.isOfficialVisitDone
+            }
+        } ?: false
     }
 
     override fun onRecruitPressed(recruit: Recruit) {
