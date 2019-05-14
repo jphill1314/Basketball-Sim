@@ -51,7 +51,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
         fab = view.findViewById(R.id.fab)
         fab.setOnClickListener { presenter.onFABClicked() }
         fab.show()
-
+        adapter = null
         return view
     }
 

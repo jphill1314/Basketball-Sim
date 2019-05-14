@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,8 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun startNextGame() {
         GlobalScope.launch(Dispatchers.IO) {
-            var gameId = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
+            var gameId = GameDatabaseHelper.loadAllGameEntities(database)
+                .filter { !it.isFinal }.sortedBy { it.id }.first().id ?: 1
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             var homeName = ""
             var awayName = ""
@@ -38,7 +40,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
                             simGame(game, recruits)
-                            GameDatabaseHelper.saveGames(listOf(game), database)
                         } else {
                             gameLoaded = true
                             homeName = game.homeTeam.name
@@ -49,11 +50,20 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 }
             }
             RecruitDatabaseHelper.saveRecruits(recruits, database)
-            withContext(Dispatchers.Main) {
-                if (gameLoaded) {
+            if (gameLoaded) {
+                withContext(Dispatchers.Main) {
                     presenter.startGameFragment(gameId - 1, homeName, awayName, userIsHomeTeam)
-                } else {
-                    presenter.onSeasonCompleted()
+                }
+            } else {
+                val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
+                var conferenceTournamentsAreComplete = true
+                conferences.forEach { conference ->
+                    if (conference.tournament?.getWinnerOfTournament() == null) {
+                        conferenceTournamentsAreComplete = false
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    presenter.onSeasonCompleted(conferenceTournamentsAreComplete)
                 }
             }
         }
@@ -67,7 +77,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
                         simGame(game, recruits)
-                        GameDatabaseHelper.saveGames(listOf(game), database)
                     }
                 }
             }
@@ -86,7 +95,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
                         simGame(game, recruits)
-                        GameDatabaseHelper.saveGames(listOf(game), database)
                     }
                 }
             }
@@ -97,8 +105,38 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
     }
 
+    override fun finishSeason() {
+        GlobalScope.launch(Dispatchers.IO) {
+            var areTournamentsOver = false
+            ConferenceDatabaseHelper.loadAllConferences(database).forEach { conference ->
+                if (conference.tournament != null) {
+                    areTournamentsOver = true
+                    if (conference.tournament?.getWinnerOfTournament() == null) {
+                        onSeasonFinished(false)
+                        return@launch
+                    }
+                }
+            }
+            if (areTournamentsOver) {
+                onSeasonFinished(true)
+                return@launch
+            }
+
+            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+            GameDatabaseHelper.loadAllGameEntities(database).filter { !it.isFinal && it.tournamentId == null }
+                .sortedBy { it.id }
+                .forEach { gameEntity ->
+                    val game = GameDatabaseHelper.loadGameById(gameEntity.id!!, database)!!
+                    simGame(game, recruits)
+            }
+            RecruitDatabaseHelper.saveRecruits(recruits, database)
+            onSeasonFinished(false)
+        }
+    }
+
     private fun simGame(game: Game, recruits: List<Recruit>) {
         game.simulateFullGame()
+        GameDatabaseHelper.saveGames(listOf(game), database)
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
 
         if (!game.homeTeam.isUser) {
@@ -107,6 +145,12 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
         if (!game.awayTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
+        }
+    }
+
+    private suspend fun onSeasonFinished(areTournamentsOver: Boolean) {
+        withContext(Dispatchers.Main) {
+            presenter.onSeasonCompleted(areTournamentsOver)
         }
     }
 }
