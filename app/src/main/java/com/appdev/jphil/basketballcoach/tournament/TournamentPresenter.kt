@@ -36,7 +36,7 @@ class TournamentPresenter @Inject constructor(
         repository.fetchData()
     }
 
-    override fun onSeasonCompleted() {
+    override fun onSeasonCompleted(conferenceTournamentIsFinished: Boolean) {
         repository.fetchData()
     }
 

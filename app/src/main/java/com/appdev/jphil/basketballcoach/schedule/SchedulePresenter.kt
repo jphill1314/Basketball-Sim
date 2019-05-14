@@ -36,10 +36,19 @@ class SchedulePresenter @Inject constructor(
         fetchSchedule()
     }
 
-    override fun onSeasonCompleted() {
-        view?.showProgressBar()
-        newSeasonRepository.startNewSeason { fetchSchedule() }
-        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_START_NEW_SEASON))
+    override fun onSeasonCompleted(conferenceTournamentIsFinished: Boolean) {
+        if (conferenceTournamentIsFinished) {
+            // Season is over start new season
+            view?.showProgressBar()
+            newSeasonRepository.startNewSeason { fetchSchedule() }
+            FlurryAgent.logEvent(
+                TrackingKeys.EVENT_TAP,
+                mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_START_NEW_SEASON)
+            )
+        } else {
+            // Season is not over, open tournament view
+            view?.goToConferenceTournament()
+        }
     }
 
     override fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean) {
@@ -101,7 +110,7 @@ class SchedulePresenter @Inject constructor(
 
     override fun goToConferenceTournament() {
         if (teamGames.filter { it.isFinal }.size == teamGames.size) {
-            view?.goToConferenceTournament()
+            gameSimRepository.finishSeason()
         }
     }
 
