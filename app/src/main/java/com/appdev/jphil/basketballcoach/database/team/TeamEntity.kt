@@ -40,9 +40,9 @@ data class TeamEntity(
         val teamPlayers = mutableListOf<Player>()
         players.forEach { player ->
             val p = player.createPlayer()
-            val progress = progression.filter { it?.playerId == p.id!! }
-            p.progression = if (progress.isNotEmpty()) {
-                progress[0]?.createProgression(p) ?: PlayerProgression(null, p)
+            val progress = progression.firstOrNull { it?.playerId == p.id!! }
+            p.progression = if (progress != null) {
+                progress.createProgression(p)
             } else {
                 PlayerProgression(null, p)
             }

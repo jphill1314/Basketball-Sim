@@ -6,7 +6,7 @@ import com.appdev.jphil.basketball.recruits.RecruitingEvent
 
 object TeamRecruitInteractor {
 
-    const val GAMES_BETWEEN_INTERACTIONS = 3
+    const val GAMES_BETWEEN_INTERACTIONS = 1
 
     fun interactWithRecruits(team: Team, recruits: List<Recruit>) {
         val teamRating = team.teamRating

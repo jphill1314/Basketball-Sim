@@ -278,5 +278,5 @@ class Team(
         return rating / roster.size
     }
 
-    fun getHeadCoach(): Coach = coaches.filter { it.type == CoachType.HEAD_COACH }[0]
+    fun getHeadCoach(): Coach = coaches.first { it.type == CoachType.HEAD_COACH }
 }

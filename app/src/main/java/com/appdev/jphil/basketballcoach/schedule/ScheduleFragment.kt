@@ -55,6 +55,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = null
         return view
     }
 

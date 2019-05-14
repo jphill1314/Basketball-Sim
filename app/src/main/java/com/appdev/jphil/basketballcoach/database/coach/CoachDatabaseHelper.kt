@@ -8,7 +8,7 @@ object CoachDatabaseHelper {
 
     fun loadHeadCoachByTeamId(teamId: Int, database: BasketballDatabase): Coach {
         val coaches = database.coachDao().getCoachesByTeamId(teamId)
-        return coaches.filter { it.type == CoachType.HEAD_COACH.type }[0].createCoach()
+        return coaches.first { it.type == CoachType.HEAD_COACH.type }.createCoach()
     }
 
     fun loadAllCoachesByTeamId(teamId: Int, database: BasketballDatabase): List<Coach> {
