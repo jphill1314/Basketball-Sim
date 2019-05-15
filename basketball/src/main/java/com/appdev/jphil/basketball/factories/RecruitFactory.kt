@@ -19,6 +19,7 @@ object RecruitFactory {
                 firstNames[Random.nextInt(firstNames.size)],
                 lastNames[Random.nextInt(lastNames.size)],
                 (i % 5) + 1,
+                generateRating(),
                 generateRating()
             ))
         }
@@ -40,7 +41,8 @@ object RecruitFactory {
         firstName: String,
         lastName: String,
         position: Int,
-        rating: Int
+        rating: Int,
+        potential: Int
     ): Recruit {
         return Recruit(
             id,
@@ -49,6 +51,7 @@ object RecruitFactory {
             position,
             PlayerFactory.getPlayerType(position - 1),
             rating,
+            potential,
             false,
             0,
             mutableListOf()

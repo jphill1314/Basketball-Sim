@@ -40,6 +40,7 @@ class Player(
     rebounding: Int,
     var stamina: Int,
     var aggressiveness: Int,
+    val potential: Int,
     var rosterIndex: Int,
     var courtIndex: Int
 ) {
@@ -215,7 +216,7 @@ class Player(
     }
 
     fun runPractice(practiceType: PracticeType, coaches: List<Coach>) {
-        progression?.runPractice(practiceType, coaches)
+        progression?.runPractice(practiceType, coaches, timePlayed / 60)
     }
 
     fun isInFoulTrouble(half: Int, timeRemaining: Int): Boolean {

@@ -15,6 +15,7 @@ class Recruit(
     val position: Int,
     val playerType: PlayerType,
     val rating: Int,
+    val potential: Int,
     var isCommitted: Boolean,
     var teamCommittedTo: Int,
     val interestInTeams: MutableList<RecruitInterest>
@@ -114,7 +115,8 @@ class Recruit(
             teamId,
             rating,
             index,
-            playerType
+            playerType,
+            potential
         )
     }
 }

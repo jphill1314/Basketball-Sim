@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketball.plays.utils
 
 import com.appdev.jphil.basketball.teams.Team
-import java.util.*
+import kotlin.random.Random
 
 class PassingUtils(
     private val homeTeam: Team,
@@ -12,15 +12,13 @@ class PassingUtils(
     private lateinit var offense: Team
     private lateinit var defense: Team
 
-    private val r = Random()
-
     fun getTarget(homeTeamHasBall: Boolean, playerWithBall: Int): Int {
         setTeams(homeTeamHasBall)
-        val pg = if (playerWithBall == 1) 0 else offense.getPlayerAtPosition(1).offBallMovement + r.nextInt(randomBound)
-        val sg = if (playerWithBall == 2) 0 else offense.getPlayerAtPosition(2).offBallMovement + r.nextInt(randomBound)
-        val sf = if (playerWithBall == 3) 0 else offense.getPlayerAtPosition(3).offBallMovement + r.nextInt(randomBound)
-        val pf = if (playerWithBall == 4) 0 else offense.getPlayerAtPosition(4).offBallMovement + r.nextInt(randomBound)
-        val c = if (playerWithBall == 5) 0 else offense.getPlayerAtPosition(5).offBallMovement + r.nextInt(randomBound)
+        val pg = if (playerWithBall == 1) 0 else offense.getPlayerAtPosition(1).offBallMovement + Random.nextInt(randomBound)
+        val sg = if (playerWithBall == 2) 0 else offense.getPlayerAtPosition(2).offBallMovement + Random.nextInt(randomBound)
+        val sf = if (playerWithBall == 3) 0 else offense.getPlayerAtPosition(3).offBallMovement + Random.nextInt(randomBound)
+        val pf = if (playerWithBall == 4) 0 else offense.getPlayerAtPosition(4).offBallMovement + Random.nextInt(randomBound)
+        val c = if (playerWithBall == 5) 0 else offense.getPlayerAtPosition(5).offBallMovement + Random.nextInt(randomBound)
 
         return if (c > pf && c > sf && c > sg && c > pg) {
             5
@@ -37,11 +35,11 @@ class PassingUtils(
 
     fun getInbounder(homeTeamHasBall: Boolean): Int {
         setTeams(homeTeamHasBall)
-        val pg = offense.getPlayerAtPosition(1).passing + r.nextInt(randomBound)
-        val sg = offense.getPlayerAtPosition(2).passing + r.nextInt(randomBound)
-        val sf = offense.getPlayerAtPosition(3).passing + r.nextInt(randomBound)
-        val pf = offense.getPlayerAtPosition(4).passing + r.nextInt(randomBound)
-        val c = offense.getPlayerAtPosition(5).passing + r.nextInt(randomBound)
+        val pg = offense.getPlayerAtPosition(1).passing + Random.nextInt(randomBound)
+        val sg = offense.getPlayerAtPosition(2).passing + Random.nextInt(randomBound)
+        val sf = offense.getPlayerAtPosition(3).passing + Random.nextInt(randomBound)
+        val pf = offense.getPlayerAtPosition(4).passing + Random.nextInt(randomBound)
+        val c = offense.getPlayerAtPosition(5).passing + Random.nextInt(randomBound)
 
         return if (c > pf && c > sf && c > sg && c > pg) {
             5

@@ -6,6 +6,7 @@ import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import java.util.*
+import kotlin.random.Random
 
 class Team(
     val teamId: Int,
@@ -47,8 +48,6 @@ class Team(
 
     var userWantsTimeout = false
     var lastScoreDiff = 0
-
-    val r = Random()
 
     init {
         roster.addAll(players)
@@ -146,10 +145,9 @@ class Team(
         val maxModifier = 30
         val gameVariability = 15
         val focusMod = 5
-        val r = Random()
 
         for (p in players) {
-            var gameMod = (r.nextDouble() * 2 * gameVariability) - gameVariability
+            var gameMod = (Random.nextDouble() * 2 * gameVariability) - gameVariability
 
             if (talkType == CoachTalk.CALM) {
                 gameMod /= 2
@@ -204,7 +202,7 @@ class Team(
         for (index in 0..4) {
             if (index != freeThrowShooter) {
                 val sub = getBestPlayerForPosition(index + 1)
-                if (index != sub && (r.nextDouble() > .6 || players[index].isInFoulTrouble(half, timeRemaining))) {
+                if (index != sub && (Random.nextDouble() > .6 || players[index].isInFoulTrouble(half, timeRemaining))) {
                     // TODO: add coach's tendency to sub here
                     Collections.swap(players, index, sub)
                     players[index].courtIndex = index
@@ -241,7 +239,7 @@ class Team(
         return if (isUser) {
             userWantsTimeout
         } else {
-            (Math.abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && r.nextBoolean())
+            (Math.abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && Random.nextBoolean())
         }
     }
 

@@ -48,6 +48,7 @@ data class PlayerEntity(
     val fouls: Int,
     val freeThrowShots: Int,
     val freeThrowMakes: Int,
+    val potential: Int,
     val rosterIndex: Int,
     val courtIndex: Int
 ) {
@@ -85,6 +86,7 @@ data class PlayerEntity(
             rebounding,
             stamina,
             aggressiveness,
+            potential,
             rosterIndex,
             courtIndex
         )
@@ -153,6 +155,7 @@ data class PlayerEntity(
                 player.fouls,
                 player.freeThrowShots,
                 player.freeThrowMakes,
+                player.potential,
                 player.rosterIndex,
                 player.courtIndex
             )
