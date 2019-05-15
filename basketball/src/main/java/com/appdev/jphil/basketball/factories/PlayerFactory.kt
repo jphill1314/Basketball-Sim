@@ -16,7 +16,7 @@ import com.appdev.jphil.basketball.players.PlayerPositionWeights.postOffWeight
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.reboundWeight
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.stealWeight
 import com.appdev.jphil.basketball.players.PlayerType
-import java.util.*
+import kotlin.random.Random
 
 object PlayerFactory {
 
@@ -51,9 +51,9 @@ object PlayerFactory {
         teamId: Int,
         rating: Int,
         index: Int,
-        type: PlayerType
+        type: PlayerType,
+        recruitPotential: Int = 0
     ) : Player {
-        val r = Random()
         val newRating = rating + 10
         val i = position - 1
         val pType = type.type
@@ -77,8 +77,9 @@ object PlayerFactory {
         val rebounding = generateAttribute(newRating, reboundWeight[i] + PlayerType.reboundWeight[pType])
 
         // Physical
-        val stamina = r.nextInt(60) + 40
-        val aggressiveness = r.nextInt(100)
+        val stamina = Random.nextInt(60) + 40
+        val aggressiveness = Random.nextInt(100)
+        val potential = Random.nextInt(75) + 25
 
         return Player(
             null,
@@ -104,19 +105,18 @@ object PlayerFactory {
             rebounding,
             stamina,
             aggressiveness,
+            if (recruitPotential == 0) potential else recruitPotential,
             index,
             index
         )
     }
 
     private fun generateAttribute(rating: Int, weight: Double): Int {
-        val r = Random()
-        return ((rating + r.nextInt(2 * ratingVariability) - ratingVariability) * weight).toInt()
+        return ((rating + Random.nextInt(2 * ratingVariability) - ratingVariability) * weight).toInt()
     }
 
     fun getPlayerType(position: Int): PlayerType {
-        val r = Random()
-        val num = r.nextInt(100)
+        val num = Random.nextInt(100)
         return when (num) {
             in PlayerType.positionWeights[position][0]..PlayerType.positionWeights[position][1] -> PlayerType.SHOOTER
             in PlayerType.positionWeights[position][1]..PlayerType.positionWeights[position][2] -> PlayerType.DISTRIBUTOR

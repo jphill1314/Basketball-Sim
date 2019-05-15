@@ -8,7 +8,7 @@ import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
 import com.appdev.jphil.basketball.playtext.*
 import com.appdev.jphil.basketball.textcontracts.*
-import java.util.*
+import kotlin.random.Random
 
 class Game(
     val homeTeam: Team,
@@ -58,8 +58,6 @@ class Game(
     var lastPlayerWithBall = 0
 
     val gamePlays = mutableListOf<BasketballPlay>()
-
-    private val r = Random()
     val passingUtils = PassingUtils(homeTeam, awayTeam, BasketballPlay.randomBound)
 
     fun getAsString(): String{
@@ -295,9 +293,9 @@ class Game(
             else -> 50
         }
         val press: Boolean = if (homeTeamHasBall) {
-            r.nextInt(100) < awayTeam.pressFrequency - liveBallModifier
+            Random.nextInt(100) < awayTeam.pressFrequency - liveBallModifier
         } else {
-            r.nextInt(100) < homeTeam.pressFrequency - liveBallModifier
+            Random.nextInt(100) < homeTeam.pressFrequency - liveBallModifier
         }
 
         val backcourtPlays: MutableList<BasketballPlay> = if (press) {
@@ -321,7 +319,7 @@ class Game(
         val plays = mutableListOf<BasketballPlay>()
 
         madeShot = false
-        if (((shotClock < (lengthOfShotClock - shotUrgency) || r.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && r.nextDouble() > 0.05) || lastPassWasGreat) {
+        if (((shotClock < (lengthOfShotClock - shotUrgency) || Random.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && Random.nextDouble() > 0.05) || lastPassWasGreat) {
             plays.add(newShot(shotClock <= 5))
             val shot = plays[0]
             if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
