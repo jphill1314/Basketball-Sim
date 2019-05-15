@@ -71,7 +71,8 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
         view?.apply {
             findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[player.position - 1]
             findViewById<TextView>(R.id.player_name).text = player.fullName
-            findViewById<TextView>(R.id.rating).text = player.getOverallRating().toString()
+            findViewById<TextView>(R.id.rating).text = resources.getString(R.string.rating_colon, player.getOverallRating())
+            findViewById<TextView>(R.id.potential).text = resources.getString(R.string.potential_color, player.potential)
             findViewById<TextView>(R.id.year).text = resources.getStringArray(R.array.years)[player.year]
             findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[player.type.type]
 

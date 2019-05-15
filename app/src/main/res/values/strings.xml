@@ -114,6 +114,7 @@
 
     <string name="interest_colon">Interest: %s</string>
     <string name="rating_colon">Rating: %d</string>
+    <string name="potential_color">Potential: %d</string>
     <string name="unknown">Unknown</string>
     <string name="returning_players_plus_commits">Returning Players (Commitments)</string>
 
