@@ -28,6 +28,7 @@ class Game(
     var reboundText: ReboundTextContract = ReboundPlayText()
     var shotText: ShotTextContract = ShotPlayText()
     var tipOffText: TipOffTextContract = TipOffPlayText()
+    var postMoveText: PostMoveTextContract = PostMoveText()
 
     var shotClock = 0
     var timeRemaining = 0
@@ -58,7 +59,7 @@ class Game(
     var lastPlayerWithBall = 0
 
     val gamePlays = mutableListOf<BasketballPlay>()
-    val passingUtils = PassingUtils(homeTeam, awayTeam, BasketballPlay.randomBound)
+    val passingUtils = PassingUtils(homeTeam, awayTeam, 100)
 
     fun getAsString(): String{
         return "Half:$half \t ${homeTeam.name}:$homeScore - ${awayTeam.name}:$awayScore"
@@ -320,14 +321,13 @@ class Game(
 
         madeShot = false
         if (((shotClock < (lengthOfShotClock - shotUrgency) || Random.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && Random.nextDouble() > 0.05) || lastPassWasGreat) {
-            plays.add(newShot(shotClock <= 5))
+            plays.add(newPostMoveOrShot())
             val shot = plays[0]
             if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
                 // missed shot need to get a rebound
                 plays.add(newRebound(shot))
                 deadball = false
-            }
-            else if (shot.foul.foulType != FoulType.CLEAN) {
+            } else if (shot.foul.foulType != FoulType.CLEAN) {
                 shootFreeThrows = true
                 if (shot.points != 0) {
                     addPoints(shot.points)
@@ -341,8 +341,7 @@ class Game(
                 }
 
                 deadball = true
-            }
-            else {
+            } else {
                 // made shot
                 madeShot = true
                 deadball = true
