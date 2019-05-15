@@ -2,6 +2,8 @@ package com.appdev.jphil.basketball
 
 import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.plays.PostMove
+import com.appdev.jphil.basketball.plays.Shot
 import java.lang.Math.*
 
 fun main(){
@@ -21,13 +23,15 @@ fun main(){
 //        println(player.getStatsAsString()+"\n")
 //    }
 
-    val homeRating = 70
-    val awayRating = 70
+    val homeRating = 50
+    val awayRating = 50
 
     var homeWins = 0
     var otGames = 0
     var totalMargin = 0
     var totalScore = 0
+    var postMoves = 0
+    var shots = 0
     var highScore: Game? = null
     var lowScore: Game? = null
     var maxMargin: Game? = null
@@ -73,6 +77,8 @@ fun main(){
         totalMargin += abs(game.homeScore - game.awayScore)
         totalScore += game.homeScore
         totalScore += game.awayScore
+        postMoves += game.gamePlays.filter { it is PostMove }.size
+        shots += game.gamePlays.filter { it is Shot }.size
     }
 
     println("Neutral Court")
@@ -84,12 +90,16 @@ fun main(){
     println("min margin:${minMargin!!.getAsString()}")
     println("high score:${highScore!!.getAsString()}")
     println("low score:${lowScore!!.getAsString()}")
+    println("post moves: $postMoves -- ${postMoves / totalGames}")
+    println("shots: $shots -- ${shots / totalGames}")
     println("-----------------------------------------------------------------")
 
     homeWins = 0
     otGames = 0
     totalMargin = 0
     totalScore = 0
+    postMoves = 0
+    shots = 0
     highScore = null
     lowScore = null
     maxMargin = null
@@ -134,6 +144,8 @@ fun main(){
         totalMargin += abs(game.homeScore - game.awayScore)
         totalScore += game.homeScore
         totalScore += game.awayScore
+        postMoves += game.gamePlays.filter { it is PostMove }.size
+        shots += game.gamePlays.filter { it is Shot }.size
     }
 
     println("Home court adv")
@@ -145,4 +157,6 @@ fun main(){
     println("min margin:${minMargin!!.getAsString()}")
     println("high score:${highScore!!.getAsString()}")
     println("low score:${lowScore!!.getAsString()}")
+    println("post moves: $postMoves -- ${postMoves / totalGames}")
+    println("shots: $shots -- ${shots / totalGames}")
 }
