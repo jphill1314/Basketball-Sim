@@ -41,9 +41,9 @@ class PracticeFragment : Fragment(), PracticeContract.View {
             ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.practice_types,
-                android.R.layout.simple_spinner_dropdown_item
+                R.layout.spinner_title
             ).also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.spinner_list_item)
                 spinner.adapter = adapter
             }
 
