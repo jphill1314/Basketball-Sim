@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/button_scout"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/header"
             app:layout_constraintStart_toStartOf="parent"
             android:text="@string/scout_player"
             app:layout_constraintEnd_toStartOf="@+id/guideline8"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/button_contact"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/header"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/contact_player"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
@@ -56,18 +56,11 @@
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             android:layout_marginStart="8dp"/>
 
-        <TextView
-            android:id="@+id/name"
-            style="@style/NormalTextBlack"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+        <include layout="@layout/recruit_overview_header"
+            android:id="@+id/header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
-            app:layout_constraintHorizontal_bias="1.0"
-            tools:text="Player Name - PG - 69"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"

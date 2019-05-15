@@ -55,15 +55,17 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     }
 
     override fun displayRecruit(recruit: Recruit) {
-        view?.findViewById<TextView>(R.id.name)?.text = resources.getString(
-            R.string.two_hyphens,
-            recruit.fullName,
-            resources.getStringArray(R.array.position_abbreviation)[recruit.position - 1],
-            recruit.rating.toString()
-        )
-        view?.findViewById<RecyclerView>(R.id.recycler_view)?.let {
-            it.adapter = RecruitOverviewAdapter(recruit.interestInTeams, resources)
-            it.layoutManager = LinearLayoutManager(context)
+        view?.apply {
+            findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[recruit.position - 1]
+            findViewById<TextView>(R.id.player_name).text = recruit.fullName
+            findViewById<TextView>(R.id.rating).text = resources.getString(R.string.rating_colon, recruit.rating)
+            findViewById<TextView>(R.id.potential).text = resources.getString(R.string.potential_color, recruit.potential)
+            findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[recruit.playerType.type]
+
+            findViewById<RecyclerView>(R.id.recycler_view)?.let {
+                it.adapter = RecruitOverviewAdapter(recruit.interestInTeams, resources)
+                it.layoutManager = LinearLayoutManager(context)
+            }
         }
     }
 
