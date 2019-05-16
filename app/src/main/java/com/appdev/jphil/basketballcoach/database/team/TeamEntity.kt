@@ -36,15 +36,12 @@ data class TeamEntity(
     val gamesPlayed: Int
 ) {
 
-    fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>, progression: List<PlayerProgressionEntity?>): Team {
+    fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>, progression: List<PlayerProgressionEntity>): Team {
         val teamPlayers = mutableListOf<Player>()
         players.forEach { player ->
             val p = player.createPlayer()
-            val progress = progression.firstOrNull { it?.playerId == p.id!! }
-            p.progression = if (progress != null) {
-                progress.createProgression(p)
-            } else {
-                PlayerProgression(null, p)
+            progression.filter { it.playerId == p.id }.sortedBy { it.progressionNumber }.forEach {
+                p.progression.add(it.createProgression(p))
             }
             teamPlayers.add(p)
         }

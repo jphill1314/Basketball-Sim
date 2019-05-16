@@ -3,12 +3,15 @@ package com.appdev.jphil.basketballcoach.practice
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import dagger.android.support.AndroidSupportInjection
@@ -54,10 +57,17 @@ class PracticeFragment : Fragment(), PracticeContract.View {
                     presenter.onPracticeTypeChanged(position)
                 }
             }
+
+            it.findViewById<TextView>(R.id.player_name).text = resources.getString(R.string.name)
+            it.findViewById<TextView>(R.id.practice_result).text = resources.getString(R.string.practice_performance)
         }
     }
 
     override fun displayPracticeInfo(team: Team) {
         view?.findViewById<Spinner>(R.id.practice_type)?.setSelection(team.practiceType.type)
+        view?.findViewById<RecyclerView>(R.id.recycler_view)?.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = PracticeAdapter(team.roster)
+        }
     }
 }

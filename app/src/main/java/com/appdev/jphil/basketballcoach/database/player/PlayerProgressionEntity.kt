@@ -10,6 +10,7 @@ data class PlayerProgressionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     val playerId: Int,
+    val progressionNumber: Int,
     val closeRangeShot: Double,
     val midRangeShot: Double,
     val longRangeShot: Double,
@@ -31,6 +32,7 @@ data class PlayerProgressionEntity(
         return PlayerProgression(
             id,
             player,
+            progressionNumber,
             closeRangeShot,
             midRangeShot,
             longRangeShot,
@@ -50,25 +52,26 @@ data class PlayerProgressionEntity(
     }
 
     companion object {
-        fun from(progression: PlayerProgression?): PlayerProgressionEntity {
+        fun from(progression: PlayerProgression): PlayerProgressionEntity {
             return PlayerProgressionEntity(
-                progression?.id,
-                progression?.player?.id ?: 0,
-                progression?.closeRangeShot ?: 0.0,
-                progression?.midRangeShot ?: 0.0,
-                progression?.longRangeShot ?: 0.0,
-                progression?.freeThrowShot ?: 0.0,
-                progression?.postMove ?: 0.0,
-                progression?.ballHandling ?: 0.0,
-                progression?.passing ?: 0.0,
-                progression?.offBallMovement ?: 0.0,
-                progression?.postDefense ?: 0.0,
-                progression?.perimeterDefense ?: 0.0,
-                progression?.onBallDefense ?: 0.0,
-                progression?.offBallDefense ?: 0.0,
-                progression?.stealing ?: 0.0,
-                progression?.rebounding ?: 0.0,
-                progression?.stamina ?: 0.0
+                progression.id,
+                progression.player.id ?: 0,
+                progression.progressionNumber,
+                progression.closeRangeShot,
+                progression.midRangeShot,
+                progression.longRangeShot,
+                progression.freeThrowShot,
+                progression.postMove,
+                progression.ballHandling,
+                progression.passing,
+                progression.offBallMovement,
+                progression.postDefense,
+                progression.perimeterDefense,
+                progression.onBallDefense,
+                progression.offBallDefense,
+                progression.stealing,
+                progression.rebounding,
+                progression.stamina
             )
         }
     }

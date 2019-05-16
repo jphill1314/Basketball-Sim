@@ -20,6 +20,7 @@ import kotlin.random.Random
 class PlayerProgression(
     val id: Int?,
     val player: Player,
+    val progressionNumber: Int,
     var closeRangeShot: Double = 0.0,
     var midRangeShot: Double = 0.0,
     var longRangeShot: Double = 0.0,
@@ -110,7 +111,7 @@ class PlayerProgression(
     private fun getPracticeMax(minutes: Int): Int {
         val initMax = MAX_INCREASE * player.potential / 100.0
         return when {
-            minutes in 1..4 -> (initMax *  1.25).toInt()
+            minutes in 1..4 -> (initMax * 1.25).toInt()
             minutes in 5..10 -> (initMax * 1.5).toInt()
             minutes > 10 -> (initMax * 2).toInt()
             else -> initMax.toInt()
@@ -142,7 +143,7 @@ class PlayerProgression(
             longRangeShot = 0.0
         }
 
-        if (freeThrowShot> POINTS_TO_INCREMENT) {
+        if (freeThrowShot > POINTS_TO_INCREMENT) {
             player.freeThrowShot++
             freeThrowShot = 0.0
         } else if (freeThrowShot < -POINTS_TO_INCREMENT) {
@@ -237,6 +238,49 @@ class PlayerProgression(
             player.stamina--
             stamina = 0.0
         }
+    }
+
+    fun copy(): PlayerProgression {
+        return PlayerProgression(
+            null,
+            player,
+            progressionNumber + 1,
+            closeRangeShot,
+            midRangeShot,
+            longRangeShot,
+            freeThrowShot,
+            postMove,
+            ballHandling,
+            passing,
+            offBallMovement,
+            postDefense,
+            perimeterDefense,
+            onBallDefense,
+            offBallDefense,
+            stealing,
+            rebounding,
+            stamina
+        )
+    }
+
+    fun getProgressAsList(): List<Double> {
+        val progress = mutableListOf<Double>()
+        progress.add(closeRangeShot)
+        progress.add(midRangeShot)
+        progress.add(longRangeShot)
+        progress.add(freeThrowShot)
+        progress.add(postMove)
+        progress.add(ballHandling)
+        progress.add(passing)
+        progress.add(offBallMovement)
+        progress.add(postDefense)
+        progress.add(perimeterDefense)
+        progress.add(onBallDefense)
+        progress.add(offBallDefense)
+        progress.add(stealing)
+        progress.add(rebounding)
+        progress.add(stamina)
+        return progress
     }
 
     companion object {
