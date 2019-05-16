@@ -369,7 +369,7 @@ class Game(
             lastPassWasGreat = false
 
             if (foul.isOnDefense) {
-                if (homeTeamHasBall) {
+                if (foul.homeTeamHasBall) {
                     awayFouls++
                 }
                 else {
@@ -377,7 +377,7 @@ class Game(
                 }
             }
             else {
-                if (homeTeamHasBall) {
+                if (foul.homeTeamHasBall) {
                     homeFouls++
                 }
                 else {
@@ -386,7 +386,7 @@ class Game(
             }
 
             if (foul.isOnDefense) {
-                if (homeTeamHasBall && awayFouls > 6) {
+                if (foul.homeTeamHasBall && awayFouls > 6) {
                     shootFreeThrows = true
                     numberOfFreeThrows = if (awayFouls >= 10) {
                         2
@@ -413,7 +413,9 @@ class Game(
                 }
             }
             else {
-                changePossession()
+                if (homeTeamHasBall && foul.homeTeamHasBall || !homeTeamHasBall &&!foul.homeTeamHasBall) {
+                    changePossession()
+                }
             }
         }
     }
