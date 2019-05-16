@@ -39,7 +39,7 @@ interface PlayerDao {
 
     // Player Progression Entity
     @Query("SELECT * FROM PlayerProgressionEntity where playerId in (:playerId)")
-    fun getProgressForPlayer(playerId: Int): PlayerProgressionEntity?
+    fun getProgressForPlayer(playerId: Int): List<PlayerProgressionEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPlayerProgression(playerProgressionEntity: PlayerProgressionEntity)

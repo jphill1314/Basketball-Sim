@@ -8,8 +8,10 @@ object PlayerDatabaseHelper {
 
     fun loadPlayerById(id: Int, database: BasketballDatabase): Player {
         val player = database.playerDao().getPlayerById(id).createPlayer()
-        player.progression = database.playerDao().getProgressForPlayer(player.id!!)?.createProgression(player) ?:
-                PlayerProgression(null, player)
+        val progressions = database.playerDao().getProgressForPlayer(player.id!!)
+        progressions.sortedBy { it.progressionNumber }.forEach {
+            player.progression.add(it.createProgression(player))
+        }
         return player
     }
 

@@ -53,7 +53,7 @@ class Player(
     var subPosition = courtIndex
     val fullName = "$firstName $lastName"
 
-    var progression: PlayerProgression? = null
+    val progression = mutableListOf<PlayerProgression>()
 
     var twoPointAttempts = 0
     var twoPointMakes = 0
@@ -216,7 +216,13 @@ class Player(
     }
 
     fun runPractice(practiceType: PracticeType, coaches: List<Coach>) {
-        progression?.runPractice(practiceType, coaches, timePlayed / 60)
+        if (progression.isEmpty()) {
+            progression.add(PlayerProgression(null, this, 0))
+        } else {
+            progression.add(
+                progression.last().copy().also { it.runPractice(practiceType, coaches, timePlayed / 60) }
+            )
+        }
     }
 
     fun isInFoulTrouble(half: Int, timeRemaining: Int): Boolean {

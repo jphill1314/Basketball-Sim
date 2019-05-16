@@ -20,9 +20,9 @@ object TeamDatabaseHelper {
         return teamEntity?.let {
             val players = database.playerDao().getPlayersOnTeam(it.teamId)
             val coaches = database.coachDao().getCoachesByTeamId(it.teamId)
-            val progress = mutableListOf<PlayerProgressionEntity?>()
+            val progress = mutableListOf<PlayerProgressionEntity>()
             players.forEach { player ->
-                progress.add(database.playerDao().getProgressForPlayer(player.id!!))
+                progress.addAll(database.playerDao().getProgressForPlayer(player.id!!))
             }
             it.createTeam(players, coaches, progress)
         }
@@ -31,7 +31,9 @@ object TeamDatabaseHelper {
     fun saveTeam(team: Team, database: BasketballDatabase) {
         team.roster.forEach { player ->
             database.playerDao().insertPlayer(PlayerEntity.from(player))
-            database.playerDao().insertPlayerProgression(PlayerProgressionEntity.from(player.progression))
+            player.progression.forEach {
+                database.playerDao().insertPlayerProgression(PlayerProgressionEntity.from(it))
+            }
         }
         team.coaches.forEach { coach -> database.coachDao().saveCoach(CoachEntity.from(coach)) }
         database.teamDao().insertTeam(TeamEntity.from(team))
