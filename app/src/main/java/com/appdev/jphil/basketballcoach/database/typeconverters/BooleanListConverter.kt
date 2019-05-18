@@ -1,9 +1,9 @@
-package com.appdev.jphil.basketballcoach.database.game
+package com.appdev.jphil.basketballcoach.database.typeconverters
 
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
 
-class GameTypeConverter {
+class BooleanListConverter {
 
     @TypeConverter
     fun listToJson(value: MutableList<Boolean>): String {

@@ -34,6 +34,7 @@ object TeamFactory {
             conferenceId,
             isUser,
             generateCoaches(teamId, teamRating, firstNames, lastNames),
+            mutableListOf(),
             0
         )
     }

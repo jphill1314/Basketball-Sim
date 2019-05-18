@@ -1,9 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.coach
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 
 @Dao
 abstract class CoachDao {
@@ -13,4 +10,13 @@ abstract class CoachDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun saveCoach(coachEntity: CoachEntity)
+
+    @Query("SELECT * FROM ScoutingAssignmentEntity where coachId in (:coachId)")
+    abstract fun getScoutingAssignmentByCoachId(coachId: Int): ScoutingAssignmentEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun saveScoutingAssignment(scoutingAssignmentEntity: ScoutingAssignmentEntity?)
+
+    @Delete
+    abstract fun deleteScoutingAssignment(scoutingAssignmentEntity: ScoutingAssignmentEntity?)
 }

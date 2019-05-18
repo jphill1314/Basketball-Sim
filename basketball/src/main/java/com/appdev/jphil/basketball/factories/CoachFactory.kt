@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
+import com.appdev.jphil.basketball.coaches.ScoutingAssignment
 import kotlin.random.Random
 
 object CoachFactory {
@@ -33,12 +34,15 @@ object CoachFactory {
         val teachRebounding = getRating(rating)
         val teachConditioning = getRating(rating)
 
+        val recruiting = getRating(rating)
+
         return Coach(
             null,
             teamId,
             type,
             firstName,
             lastName,
+            recruiting,
             offenseFavorsThrees,
             pace,
             aggression,
@@ -58,7 +62,8 @@ object CoachFactory {
             teachPerimeterDefense,
             teachPositioning,
             teachRebounding,
-            teachConditioning
+            teachConditioning,
+            ScoutingAssignment()
         )
     }
 

@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
+import com.appdev.jphil.basketball.recruits.Recruit
 import java.util.*
 import kotlin.random.Random
 
@@ -17,6 +18,7 @@ class Team(
     val conferenceId: Int,// for use in games
     val isUser: Boolean,
     val coaches: MutableList<Coach>,
+    val knownRecruits: MutableList<Recruit>,
     var gamesPlayed: Int
 ) {
 
@@ -277,4 +279,18 @@ class Team(
     }
 
     fun getHeadCoach(): Coach = coaches.first { it.type == CoachType.HEAD_COACH }
+
+    fun doScouting(allRecruits: List<Recruit>) {
+        val unknownRecruits = mutableListOf<Recruit>()
+        unknownRecruits.addAll(allRecruits)
+        knownRecruits.forEach {
+            unknownRecruits.remove(it)
+        }
+        coaches.filter { it.type != CoachType.HEAD_COACH }.forEach { coach ->
+            coach.doScouting(unknownRecruits).forEach {
+                unknownRecruits.remove(it)
+                knownRecruits.add(it)
+            }
+        }
+    }
 }

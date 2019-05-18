@@ -2,16 +2,16 @@ package com.appdev.jphil.basketballcoach.database.team
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.TypeConverters
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.coaches.Coach
-import com.appdev.jphil.basketball.players.PlayerProgression
 import com.appdev.jphil.basketball.players.PracticeType
-import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
-import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
-import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
+import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketballcoach.database.typeconverters.IntListTypeConverter
 
 @Entity
+@TypeConverters(IntListTypeConverter::class)
 data class TeamEntity(
     @PrimaryKey
     val teamId: Int,
@@ -33,29 +33,21 @@ data class TeamEntity(
     val isUser: Boolean,
     val lastScoreDif: Int,
     val practiceType: Int,
+    val knownRecruits: MutableList<Int>,
     val gamesPlayed: Int
 ) {
 
-    fun createTeam(players: List<PlayerEntity>, coaches: List<CoachEntity>, progression: List<PlayerProgressionEntity>): Team {
-        val teamPlayers = mutableListOf<Player>()
-        players.forEach { player ->
-            val p = player.createPlayer()
-            progression.filter { it.playerId == p.id }.sortedBy { it.progressionNumber }.forEach {
-                p.progression.add(it.createProgression(p))
-            }
-            teamPlayers.add(p)
-        }
-        val teamCoaches = mutableListOf<Coach>()
-        coaches.forEach { coach -> teamCoaches.add(coach.createCoach()) }
+    fun createTeam(players: MutableList<Player>, coaches: MutableList<Coach>, knownRecruits: MutableList<Recruit>): Team {
         val team = Team(
             teamId,
             schoolName,
             mascot,
             abbreviation,
-            teamPlayers,
+            players,
             conferenceId,
             isUser,
-            teamCoaches,
+            coaches,
+            knownRecruits,
             gamesPlayed
         )
 
@@ -84,6 +76,8 @@ data class TeamEntity(
 
     companion object {
         fun from(team: Team): TeamEntity {
+            val knownRecruits = mutableListOf<Int>()
+            team.knownRecruits.forEach { knownRecruits.add(it.id) }
             return TeamEntity(
                 team.teamId,
                 team.schoolName,
@@ -104,6 +98,7 @@ data class TeamEntity(
                 team.isUser,
                 team.lastScoreDiff,
                 team.practiceType.type,
+                knownRecruits,
                 team.gamesPlayed
             )
         }

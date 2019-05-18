@@ -1,11 +1,14 @@
 package com.appdev.jphil.basketball.coaches
 
+import com.appdev.jphil.basketball.recruits.Recruit
+
 class Coach(
     var id: Int?,
     val teamId: Int,
     var type: CoachType,
     val firstName: String,
     val lastName: String,
+    var recruiting: Int,
     var offenseFavorsThrees: Int,
     var pace: Int,
     var aggression: Int,
@@ -25,7 +28,8 @@ class Coach(
     var teachPerimeterDefense: Int,
     var teachPositioning: Int,
     var teachRebounding: Int,
-    var teachConditioning: Int
+    var teachConditioning: Int,
+    var scoutingAssignment: ScoutingAssignment
 ) {
     // TODO: give coaches a sub frequency rating that impacts when subs are made
     // TODO: add functions to change a team's strategy based on who is on the court and the score
@@ -42,6 +46,10 @@ class Coach(
     fun getRating(): Int {
         return (teachShooting + teachPostMoves + teachBallControl + teachPostDefense + teachPerimeterDefense +
                 teachPositioning + teachRebounding + teachConditioning) / 8
+    }
+
+    fun doScouting(unknownRecruits: MutableList<Recruit>): List<Recruit> {
+        return scoutingAssignment.doScouting(recruiting, unknownRecruits)
     }
 
     companion object {

@@ -5,9 +5,10 @@ import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.TypeConverters
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
+import com.appdev.jphil.basketballcoach.database.typeconverters.BooleanListConverter
 
 @Entity
-@TypeConverters(GameTypeConverter::class)
+@TypeConverters(BooleanListConverter::class)
 data class GameEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,

@@ -24,10 +24,10 @@ class RecruitPresenter @Inject constructor(
         repository.loadRecruits()
     }
 
-    override fun onRecruitsLoaded(recruits: MutableList<Recruit>, team: Team) {
+    override fun onRecruitsLoaded(team: Team) {
         this.team = team
         sortedRecruits.clear()
-        sortedRecruits.addAll(recruits.sortedBy { -it.rating })
+        sortedRecruits.addAll(team.knownRecruits.sortedBy { -it.rating })
         view?.displayRecruits(getRecruits(), team)
     }
 

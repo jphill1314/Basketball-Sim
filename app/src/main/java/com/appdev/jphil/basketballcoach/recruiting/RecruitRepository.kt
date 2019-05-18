@@ -21,14 +21,11 @@ class RecruitRepository @Inject constructor(
 
     override fun loadRecruits() {
         GlobalScope.launch(Dispatchers.IO) {
-            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             val team = TeamDatabaseHelper.loadTeamById(teamId, database)
             team?.let {
-                if (recruits.first().interestInTeams.isEmpty()) {
-                    generateInitialInterest(recruits, it)
-                }
+                generateInitialInterest(it)
                 withContext(Dispatchers.Main) {
-                    presenter.onRecruitsLoaded(recruits, it)
+                    presenter.onRecruitsLoaded(it)
                 }
             }
         }
@@ -44,9 +41,8 @@ class RecruitRepository @Inject constructor(
         this.presenter = presenter
     }
 
-    private fun generateInitialInterest(recruits: List<Recruit>, team: Team): List<Recruit> {
-        recruits.forEach { it.generateInitialInterest(team) }
-        RecruitDatabaseHelper.saveRecruits(recruits, database)
-        return recruits
+    private fun generateInitialInterest(team: Team){
+        team.knownRecruits.forEach { it.generateInitialInterest(team) }
+        RecruitDatabaseHelper.saveRecruits(team.knownRecruits, database)
     }
 }

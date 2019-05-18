@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDao
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
+import com.appdev.jphil.basketballcoach.database.coach.ScoutingAssignmentEntity
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameDao
@@ -29,7 +30,8 @@ import com.appdev.jphil.basketballcoach.database.team.TeamEntity
     GameEventEntity::class,
     PlayerProgressionEntity::class,
     RecruitEntity::class,
-    RecruitInterestEntity::class],
+    RecruitInterestEntity::class,
+    ScoutingAssignmentEntity::class],
     version = 1)
 abstract class BasketballDatabase: RoomDatabase() {
     abstract fun playerDao(): PlayerDao

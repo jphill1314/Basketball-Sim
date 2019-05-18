@@ -8,8 +8,13 @@ object TeamRecruitInteractor {
 
     const val GAMES_BETWEEN_INTERACTIONS = 1
 
-    fun interactWithRecruits(team: Team, recruits: List<Recruit>) {
+    fun interactWithRecruits(team: Team, allRecruits: List<Recruit>) {
         val teamRating = team.teamRating
+        val recruits = mutableListOf<Recruit>()
+        team.knownRecruits.forEach {
+            recruits.add(allRecruits[allRecruits.indexOf(it)]) // want to use up to date recruits / ones in team might have old data
+        }
+
         for (position in 1..5) {
             if (hasNeedAtPosition(position, team, recruits)) {
                 recruits.filter { it.position == position }
