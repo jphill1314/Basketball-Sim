@@ -119,4 +119,8 @@ class Recruit(
             potential
         )
     }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Recruit) other.id == id else false
+    }
 }

@@ -7,6 +7,7 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -136,8 +137,9 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     private fun simGame(game: Game, recruits: List<Recruit>) {
         game.simulateFullGame()
-        GameDatabaseHelper.saveGames(listOf(game), database)
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+        game.homeTeam.doScouting(recruits)
+        game.awayTeam.doScouting(recruits)
 
         if (!game.homeTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits)
@@ -146,6 +148,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         if (!game.awayTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
         }
+        GameDatabaseHelper.saveGames(listOf(game), database)
     }
 
     private suspend fun onSeasonFinished(areTournamentsOver: Boolean) {

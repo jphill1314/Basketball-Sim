@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
+import com.appdev.jphil.basketball.coaches.ScoutingAssignment
 
 @Entity
 data class CoachEntity(
@@ -13,6 +14,7 @@ data class CoachEntity(
     val type: Int,
     val firstName: String,
     val lastName: String,
+    val recruiting: Int,
     val offenseFavorsThrees: Int,
     val pace: Int,
     val aggression: Int,
@@ -35,7 +37,7 @@ data class CoachEntity(
     val teachConditioning: Int
 ) {
 
-    fun createCoach(): Coach {
+    fun createCoach(scoutingAssignmentEntity: ScoutingAssignmentEntity?): Coach {
         val coachType = when (type) {
             CoachType.HEAD_COACH.type -> CoachType.HEAD_COACH
             else -> CoachType.ASSISTANT_COACH
@@ -47,6 +49,7 @@ data class CoachEntity(
             coachType,
             firstName,
             lastName,
+            recruiting,
             offenseFavorsThrees,
             pace,
             aggression,
@@ -66,7 +69,8 @@ data class CoachEntity(
             teachPerimeterDefense,
             teachPositioning,
             teachRebounding,
-            teachConditioning
+            teachConditioning,
+            scoutingAssignmentEntity?.create() ?: ScoutingAssignment()
         )
     }
 
@@ -78,6 +82,7 @@ data class CoachEntity(
                 coach.type.type,
                 coach.firstName,
                 coach.lastName,
+                coach.recruiting,
                 coach.offenseFavorsThrees,
                 coach.pace,
                 coach.aggression,

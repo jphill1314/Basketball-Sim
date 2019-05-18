@@ -14,7 +14,7 @@ interface RecruitContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onRecruitsLoaded(recruits: MutableList<Recruit>, team: Team)
+        fun onRecruitsLoaded(team: Team)
         fun onSortSelected()
         fun onPositionFilterSelected(filterType: Int)
         fun onInteractionFilterSelected(filterType: Int)

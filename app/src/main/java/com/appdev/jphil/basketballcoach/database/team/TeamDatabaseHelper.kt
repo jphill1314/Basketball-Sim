@@ -1,10 +1,14 @@
 package com.appdev.jphil.basketballcoach.database.team
 
+import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.coach.CoachDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
+import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
+import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 
 object TeamDatabaseHelper {
 
@@ -18,13 +22,11 @@ object TeamDatabaseHelper {
 
     fun createTeam(teamEntity: TeamEntity?, database: BasketballDatabase): Team? {
         return teamEntity?.let {
-            val players = database.playerDao().getPlayersOnTeam(it.teamId)
-            val coaches = database.coachDao().getCoachesByTeamId(it.teamId)
-            val progress = mutableListOf<PlayerProgressionEntity>()
-            players.forEach { player ->
-                progress.addAll(database.playerDao().getProgressForPlayer(player.id!!))
-            }
-            it.createTeam(players, coaches, progress)
+            val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(it.teamId, database)
+            val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(it.teamId, database)
+            val recruits = mutableListOf<Recruit>()
+            it.knownRecruits.forEach { id -> recruits.add(RecruitDatabaseHelper.loadRecruitWithId(id, database)) }
+            it.createTeam(players, coaches, recruits)
         }
     }
 
