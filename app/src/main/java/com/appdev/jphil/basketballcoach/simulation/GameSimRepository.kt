@@ -126,7 +126,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
     }
 
-    private fun simGame(game: Game) {
+    private suspend fun simGame(game: Game) {
         game.simulateFullGame()
         Log.d("SIM GAME", game.getAsString())
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
@@ -143,11 +143,16 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
         GameDatabaseHelper.saveGames(listOf(game), database)
         RecruitDatabaseHelper.saveRecruits(recruits, database)
+        updatePresenter()
     }
 
     private suspend fun onSeasonFinished(areTournamentsOver: Boolean) {
         withContext(Dispatchers.Main) {
             presenter.onSeasonCompleted(areTournamentsOver)
         }
+    }
+
+    private suspend fun updatePresenter() {
+        withContext(Dispatchers.Main) { presenter.updateSchedule() }
     }
 }

@@ -21,7 +21,9 @@ class ScheduleRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.IO) {
             val gameEntities = GameDatabaseHelper.loadAllGameEntities(database).filter { it.tournamentId == null }
             val team = TeamDatabaseHelper.loadUserTeam(database)
-            withContext(Dispatchers.Main) { presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId) }
+            withContext(Dispatchers.Main) {
+                presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId)
+            }
         }
     }
 

@@ -27,12 +27,18 @@ class SchedulePresenter @Inject constructor(
 
     private var view: ScheduleContract.View? = null
     private var teamGames = listOf<GameEntity>()
+    private var isSimming = false
 
     override fun fetchSchedule() {
         repository.fetchSchedule()
     }
 
+    override fun updateSchedule() {
+        fetchSchedule()
+    }
+
     override fun onSimCompleted() {
+        isSimming = false
         fetchSchedule()
     }
 
@@ -80,7 +86,9 @@ class SchedulePresenter @Inject constructor(
             view?.enableFab()
         }
 
-        view?.hideProgressBar()
+        if (!isSimming) {
+            view?.hideProgressBar()
+        }
         view?.displaySchedule(dataModels, isUsersSchedule)
 
     }
@@ -88,6 +96,7 @@ class SchedulePresenter @Inject constructor(
     override fun onFABClicked() {
         view?.disableFab()
         view?.showProgressBar()
+        isSimming = true
         gameSimRepository.startNextGame()
     }
 
@@ -98,18 +107,21 @@ class SchedulePresenter @Inject constructor(
 
     override fun simulateToGame(gameId: Int) {
         view?.showProgressBar()
+        isSimming = true
         gameSimRepository.simToGame(gameId)
         FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SIM_TO_GAME))
     }
 
     override fun simulateGame(gameId: Int) {
         view?.showProgressBar()
+        isSimming = true
         gameSimRepository.simGame(gameId)
         FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SIM_GAME))
     }
 
     override fun goToConferenceTournament() {
         if (teamGames.filter { it.isFinal }.size == teamGames.size) {
+            view?.showProgressBar()
             gameSimRepository.finishSeason()
         }
     }
