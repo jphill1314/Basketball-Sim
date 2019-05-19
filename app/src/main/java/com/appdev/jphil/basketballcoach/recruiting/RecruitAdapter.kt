@@ -62,7 +62,7 @@ class RecruitAdapter(
             val interaction = when {
                 interest.isScholarshipRevoked -> 4
                 interest.isOfferedScholarship -> 2
-                else -> 0
+                else -> -1
             }
             if (recruit.isCommitted) {
                 viewHolder.interaction.text =
