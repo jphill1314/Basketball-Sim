@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.CardView
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        app:cardCornerRadius="0dp"
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/min_stats"
+                android:textAppearance="@style/NormalTextBlack.Bold"
+                tools:text="32"
+                app:layout_constraintEnd_toEndOf="@+id/min_label"
+                app:layout_constraintStart_toStartOf="@+id/min_label"
+                app:layout_constraintTop_toBottomOf="@+id/type"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pts_stat"
+                android:textAppearance="@style/NormalTextBlack.Bold"
+                tools:text="15.2"
+                app:layout_constraintEnd_toEndOf="@+id/ft_label"
+                app:layout_constraintStart_toStartOf="@+id/ft_label"
+                app:layout_constraintTop_toBottomOf="@+id/type"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ast_stat"
+                android:textAppearance="@style/NormalTextBlack.Bold"
+                tools:text="3.2"
+                app:layout_constraintEnd_toEndOf="@+id/ast_label"
+                app:layout_constraintStart_toStartOf="@+id/ast_label"
+                app:layout_constraintTop_toBottomOf="@+id/type"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reb_stats"
+                android:textAppearance="@style/NormalTextBlack.Bold"
+                tools:text="1.4"
+                app:layout_constraintEnd_toEndOf="@+id/reb_label"
+                app:layout_constraintStart_toStartOf="@+id/reb_label"
+                app:layout_constraintTop_toBottomOf="@+id/type"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stl_stats"
+                android:textAppearance="@style/NormalTextBlack.Bold"
+                tools:text="0.5"
+                app:layout_constraintEnd_toEndOf="@+id/stl_label"
+                app:layout_constraintStart_toStartOf="@+id/stl_label"
+                app:layout_constraintTop_toBottomOf="@+id/type"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fouls_stats"
+                android:textAppearance="@style/NormalTextBlack.Bold"
+                tools:text="2.4"
+                app:layout_constraintStart_toStartOf="@+id/fouls_label"
+                app:layout_constraintEnd_toEndOf="@+id/fouls_label"
+                app:layout_constraintTop_toBottomOf="@+id/type"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:id="@+id/player_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/HeaderTextBlack"
+                tools:text="Steve Person"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/position"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline12"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/position"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="PG"
+                android:textAppearance="@style/HeaderTextBlack"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/year"
+                tools:text="Jr"
+                android:textAppearance="@style/HeaderTextBlack"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/position"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/type"
+                tools:text="Shooter"
+                android:textAppearance="@style/HeaderTextBlack"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/player_name"
+                app:layout_constraintEnd_toStartOf="@+id/guideline12"
+                app:layout_constraintStart_toStartOf="@+id/player_name"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/rating"
+                android:gravity="end"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Rating: 69"
+                android:textAppearance="@style/HeaderTextBlack"
+                app:layout_constraintStart_toStartOf="@+id/guideline12"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:text="@string/min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/min_label"
+                android:textAppearance="@style/NormalTextBlack"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/ft_label"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/min_stats"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:text="@string/pts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ft_label"
+                android:textAppearance="@style/NormalTextBlack"
+                app:layout_constraintStart_toEndOf="@+id/min_label"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/ast_label"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/pts_stat"/>
+
+            <TextView
+                android:text="@string/ast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ast_label"
+                android:textAppearance="@style/NormalTextBlack"
+                app:layout_constraintStart_toEndOf="@+id/ft_label"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/reb_label"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/ast_stat"/>
+
+            <TextView
+                android:text="@string/reb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reb_label"
+                android:textAppearance="@style/NormalTextBlack"
+                app:layout_constraintStart_toEndOf="@+id/ast_label"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/stl_label"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/reb_stats"/>
+
+            <TextView
+                android:text="@string/stl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stl_label"
+                android:textAppearance="@style/NormalTextBlack"
+                app:layout_constraintStart_toEndOf="@+id/reb_label"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/fouls_label"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/stl_stats"/>
+
+            <TextView
+                android:text="@string/fouls_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fouls_label"
+                android:textAppearance="@style/NormalTextBlack"
+                app:layout_constraintStart_toEndOf="@+id/stl_label"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/fouls_stats"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/potential"
+                android:gravity="end"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/rating"
+                app:layout_constraintEnd_toEndOf="@+id/rating"
+                tools:text="Potential: 56"
+                android:textAppearance="@style/HeaderTextBlack"
+                app:layout_constraintStart_toStartOf="@+id/guideline12"/>
+
+            <android.support.constraint.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/guideline12"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".6"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@id/header"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

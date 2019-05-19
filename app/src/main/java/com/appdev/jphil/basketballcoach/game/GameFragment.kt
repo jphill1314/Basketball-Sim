@@ -5,14 +5,17 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.FreeThrows
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
@@ -22,6 +25,7 @@ import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
 import com.appdev.jphil.basketballcoach.strategy.StrategyDataModel
+import com.appdev.jphil.basketballcoach.util.Pixels
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -161,8 +165,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             { notifyNewHalf() }
         )
 
-        homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!)
-        awayStatsAdapter = GameStatsAdapter(!userIsHomeTeam, mutableListOf(), resources, viewModel!!)
+        homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
+        awayStatsAdapter = GameStatsAdapter(!userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
@@ -285,6 +289,12 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         viewModel?.callTimeout()
     }
 
+    private fun showPlayerAttributeDialog(player: Player) {
+        val dialog = PlayerOverviewDialogFragment()
+        dialog.player = player
+        dialog.show(fragmentManager, DIALOG)
+    }
+
     companion object {
         fun newInstance(gameId: Int, homeTeamName: String, awayTeamName: String, userIsHomeTeam: Boolean): GameFragment {
             return GameFragment().apply {
@@ -294,5 +304,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
                 this.userIsHomeTeam = userIsHomeTeam
             }
         }
+
+        private const val DIALOG = "dialog"
     }
 }

@@ -16,7 +16,8 @@ class GameStatsAdapter(
     private val isUsersTeam: Boolean,
     private val players: MutableList<Player>,
     private val resources: Resources,
-    private val viewModel: GameViewModel
+    private val viewModel: GameViewModel,
+    private val onLongPress: (player: Player) -> Unit
 ): RecyclerView.Adapter<GameStatsAdapter.ViewHolder>() {
 
     var rosterViewId = 0
@@ -122,6 +123,10 @@ class GameStatsAdapter(
                 if (isUsersTeam) {
                     viewHolder.itemView.setOnClickListener { onPlayerSelected(player) }
                 }
+                viewHolder.itemView.setOnLongClickListener {
+                    onLongPress(player)
+                    true
+                }
             }
         }
     }
@@ -131,7 +136,7 @@ class GameStatsAdapter(
         viewHolder.name?.text = resources.getString(R.string.name)
         when (rosterViewId) {
             0 -> {
-                viewHolder.stat1?.text = resources.getString(R.string.rating)
+                viewHolder.stat1?.text = resources.getString(R.string.min)
                 viewHolder.stat2?.text = resources.getString(R.string.condition)
                 viewHolder.stat3?.text = resources.getString(R.string.minutes)
                 viewHolder.stat4?.text = resources.getString(R.string.player_fouls)
