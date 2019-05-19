@@ -22,6 +22,13 @@ object PlayerDatabaseHelper {
         return players
     }
 
+    fun savePlayer(player: Player, database: BasketballDatabase) {
+        database.playerDao().insertPlayer(PlayerEntity.from(player))
+        player.progression.forEach {
+            database.playerDao().insertPlayerProgression(PlayerProgressionEntity.from(it))
+        }
+    }
+
     private fun createPlayer(playerEntity: PlayerEntity, database: BasketballDatabase): Player {
         val player = playerEntity.createPlayer()
         val progressions = database.playerDao().getProgressForPlayer(playerEntity.id!!)

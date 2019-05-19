@@ -6,10 +6,10 @@ import kotlin.random.Random
 class ScoutingAssignment(
     val id: Int? = null,
     val positions: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5),
-    val minRating: Int = 0,
-    val maxRating: Int = 100,
-    val minPotential: Int = 0,
-    val maxPotential: Int = 100
+    var minRating: Int = 0,
+    var maxRating: Int = 100,
+    var minPotential: Int = 0,
+    var maxPotential: Int = 100
 ) {
 
     fun doScouting(recruitingRating: Int, unknownRecruits: List<Recruit>): List<Recruit> {

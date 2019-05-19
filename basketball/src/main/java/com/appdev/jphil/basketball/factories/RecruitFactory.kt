@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.recruits.RecruitDesire
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -36,6 +37,21 @@ object RecruitFactory {
         return rating
     }
 
+    private fun generateDesires(): List<RecruitDesire> {
+        val desires = mutableListOf<RecruitDesire>()
+        if (Random.nextBoolean()) {
+            desires.add(RecruitDesire.DEVELOP)
+        }
+
+        if (Random.nextBoolean()) {
+            desires.add(RecruitDesire.COMPETE)
+        } else {
+            desires.add(RecruitDesire.STAR)
+        }
+
+        return desires
+    }
+
     private fun generateRecruit(
         id: Int,
         firstName: String,
@@ -50,6 +66,7 @@ object RecruitFactory {
             lastName,
             position,
             PlayerFactory.getPlayerType(position - 1),
+            generateDesires(),
             rating,
             potential,
             false,

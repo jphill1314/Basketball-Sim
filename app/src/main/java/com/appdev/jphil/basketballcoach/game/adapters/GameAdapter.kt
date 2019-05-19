@@ -9,11 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.appdev.jphil.basketball.plays.BasketballPlay
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.util.TimeUtil
-import kotlinx.android.synthetic.main.list_item_game_event.view.*
 
 class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAdapter.ViewHolder>() {
 

@@ -81,6 +81,9 @@ class ScheduleAdapter(
                         viewHolder.simToGame.visibility = View.VISIBLE
                     }
                 }
+            } else {
+                viewHolder.simGame.visibility = View.GONE
+                viewHolder.simToGame.visibility = View.GONE
             }
         }
     }

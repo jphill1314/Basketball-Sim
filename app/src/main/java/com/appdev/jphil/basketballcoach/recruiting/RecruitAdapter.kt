@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.R
-import kotlinx.android.synthetic.main.list_item_returning_players.view.*
 
 class RecruitAdapter(
     private var recruits: List<Recruit>,
@@ -51,8 +49,11 @@ class RecruitAdapter(
         val recruit = recruits[position]
         viewHolder.position.text = positionNames[recruit.position - 1]
         viewHolder.name.text = recruit.fullName
-        viewHolder.rating.text = resources.getString(R.string.rating_colon, recruit.rating)
         viewHolder.playerType.text = playerTypes[recruit.playerType.type]
+        // TODO: make sure to only show the range that the user knows about
+        val ratingMin = recruit.getRatingMinForTeam(teamId)
+        val ratingMax = recruit.getRatingMaxForTeam(teamId)
+        viewHolder.rating.text = resources.getString(R.string.rating_range, ratingMin, ratingMax)
 
         val interestInTeam = recruit.interestInTeams.filter { it.teamId == teamId }
         if (interestInTeam.isNotEmpty()) {
@@ -60,11 +61,8 @@ class RecruitAdapter(
             viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.interest.toString())
             val interaction = when {
                 interest.isScholarshipRevoked -> 4
-                interest.isOfficialVisitDone -> 3
                 interest.isOfferedScholarship -> 2
-                interest.isContacted -> 1
-                interest.isScouted -> 0
-                else -> -1
+                else -> 0
             }
             if (recruit.isCommitted) {
                 viewHolder.interaction.text =

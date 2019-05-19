@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.simulation
 
+import android.util.Log
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
@@ -26,7 +27,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         GlobalScope.launch(Dispatchers.IO) {
             var gameId = GameDatabaseHelper.loadAllGameEntities(database)
                 .filter { !it.isFinal }.sortedBy { it.id }.first().id ?: 1
-            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             var homeName = ""
             var awayName = ""
             var userIsHomeTeam = false
@@ -40,7 +40,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     if (!game.isFinal) {
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
-                            simGame(game, recruits)
+                            simGame(game)
                         } else {
                             gameLoaded = true
                             homeName = game.homeTeam.name
@@ -50,7 +50,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
-            RecruitDatabaseHelper.saveRecruits(recruits, database)
             if (gameLoaded) {
                 withContext(Dispatchers.Main) {
                     presenter.startGameFragment(gameId - 1, homeName, awayName, userIsHomeTeam)
@@ -72,16 +71,14 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simToGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             var id = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
             while (id < gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
-                        simGame(game, recruits)
+                        simGame(game)
                     }
                 }
             }
-            RecruitDatabaseHelper.saveRecruits(recruits, database)
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -90,16 +87,14 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             var id = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
             while (id <= gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
-                        simGame(game, recruits)
+                        simGame(game)
                     }
                 }
             }
-            RecruitDatabaseHelper.saveRecruits(recruits, database)
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -123,20 +118,20 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 return@launch
             }
 
-            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             GameDatabaseHelper.loadAllGameEntities(database).filter { !it.isFinal && it.tournamentId == null }
                 .sortedBy { it.id }
                 .forEach { gameEntity ->
                     val game = GameDatabaseHelper.loadGameById(gameEntity.id!!, database)!!
-                    simGame(game, recruits)
+                    simGame(game)
             }
-            RecruitDatabaseHelper.saveRecruits(recruits, database)
             onSeasonFinished(false)
         }
     }
 
-    private fun simGame(game: Game, recruits: List<Recruit>) {
+    private fun simGame(game: Game) {
         game.simulateFullGame()
+        Log.d("SIM GAME", game.getAsString())
+        val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
         game.homeTeam.doScouting(recruits)
         game.awayTeam.doScouting(recruits)
@@ -149,6 +144,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
         }
         GameDatabaseHelper.saveGames(listOf(game), database)
+        RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
 
     private suspend fun onSeasonFinished(areTournamentsOver: Boolean) {

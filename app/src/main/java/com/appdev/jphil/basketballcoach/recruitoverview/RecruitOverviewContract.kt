@@ -9,8 +9,6 @@ interface RecruitOverviewContract {
     interface View : MVPContract.View {
         fun displayRecruit(recruit: Recruit)
         fun disableAllButtons()
-        fun setEnableForScholarshipButton(isEnabled: Boolean)
-        fun setEnableForVisitButton(isEnabled: Boolean)
         fun showToast(message: String)
     }
 
@@ -18,9 +16,7 @@ interface RecruitOverviewContract {
         fun fetchData()
         fun onRecruitLoaded(recruit: Recruit, team: Team)
         fun onScoutClicked()
-        fun onContactClicked()
         fun onOfferScholarshipClicked()
-        fun onOfficialVisitClicked()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
