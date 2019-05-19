@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.recruits.Recruit
-import com.appdev.jphil.basketball.recruits.RecruitInterest
 import com.appdev.jphil.basketballcoach.R
 
 class RecruitOverviewAdapter(
@@ -37,6 +36,7 @@ class RecruitOverviewAdapter(
             team.text = teamInterest.teamName
 
             val index = when {
+                teamInterest.isScholarshipRevoked -> 4
                 teamInterest.isOfferedScholarship -> 2
                 else -> -1
             }

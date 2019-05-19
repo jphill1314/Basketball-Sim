@@ -9,12 +9,10 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Spinner
 import android.widget.TextView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerAttributeAdapter
-import com.appdev.jphil.basketballcoach.util.Pixels
 
 class PlayerOverviewDialogFragment : DialogFragment() {
 
@@ -60,19 +58,9 @@ class PlayerOverviewDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(getScreenWidth(), getScreenHeight())
-    }
-
-    private fun getScreenWidth(): Int {
         val metrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
-        return metrics.widthPixels
-    }
-
-    private fun getScreenHeight(): Int {
-        val metrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
-        return metrics.heightPixels
+        dialog?.window?.setLayout(metrics.widthPixels, metrics.heightPixels)
     }
 
     private fun getPoints(player: Player): Int {
