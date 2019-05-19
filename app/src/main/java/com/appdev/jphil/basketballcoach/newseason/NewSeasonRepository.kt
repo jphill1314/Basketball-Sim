@@ -42,12 +42,6 @@ class NewSeasonRepository @Inject constructor(
             RecruitDatabaseHelper.deleteAllRecruits(database)
 
             val newRecruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)
-            conferences.forEach { conference ->
-                conference.teams.forEach { team ->
-                    recruits.forEach { recruit -> recruit.generateInitialInterest(team) }
-                }
-            }
-
             RecruitDatabaseHelper.saveRecruits(newRecruits, database)
 
             withContext(Dispatchers.Main) { callback() }

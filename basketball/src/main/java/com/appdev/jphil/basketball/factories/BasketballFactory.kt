@@ -11,12 +11,6 @@ object BasketballFactory {
         conferences.add(createTestConference(firstNames, lastNames))
         val recruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)
 
-        conferences.forEach { conference ->
-            conference.teams.forEach { team ->
-                recruits.forEach { recruit -> recruit.generateInitialInterest(team) }
-            }
-        }
-
         return BasketballWorld(
             conferences,
             recruits

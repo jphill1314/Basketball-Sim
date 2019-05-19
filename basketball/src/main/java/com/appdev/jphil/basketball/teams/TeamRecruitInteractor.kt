@@ -3,25 +3,26 @@ package com.appdev.jphil.basketball.teams
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.recruits.RecruitInterest
 import com.appdev.jphil.basketball.recruits.RecruitingEvent
+import kotlin.math.max
+import kotlin.math.min
 
 object TeamRecruitInteractor {
 
     const val GAMES_BETWEEN_INTERACTIONS = 1
 
     fun interactWithRecruits(team: Team, allRecruits: List<Recruit>) {
-        val teamRating = team.teamRating
         val recruits = mutableListOf<Recruit>()
         team.knownRecruits.forEach {
             recruits.add(allRecruits[allRecruits.indexOf(it)]) // want to use up to date recruits / ones in team might have old data
         }
 
         for (position in 1..5) {
-            if (hasNeedAtPosition(position, team, recruits)) {
+            if (team.hasNeedAtPosition(position)) {
                 recruits.filter { it.position == position }
                     .filter { !it.isCommitted }
-                    .filter { teamRating - 10 <= it.rating && teamRating + 10 >= it.rating }
+                    .filter { isInterestedInRecruit(team, it) }
                     .forEach { recruit ->
-                        if (hasNeedAtPosition(position, team, recruits)) {
+                        if (team.hasNeedAtPosition(position)) {
                             interactWithRecruit(recruit, team)
                         }
                     }
@@ -31,33 +32,29 @@ object TeamRecruitInteractor {
         }
     }
 
-    private fun hasNeedAtPosition(position: Int, team: Team, recruits: List<Recruit>): Boolean {
-        var players = team.roster.filter { it.position == position && it.year != 3 }.size
-        players += recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId && it.position == position }.size
-        return 3 - players > 0
-    }
-
     private fun interactWithRecruit(recruit: Recruit, team: Team) {
-        val interest = getInterestInTeam(recruit, team)
+        val interest = recruit.interestInTeams.first { it.teamId == team.teamId }
 
         if (interest.lastInteractionGame + GAMES_BETWEEN_INTERACTIONS <= team.gamesPlayed) {
-            when {
-                !interest.isScouted -> InteractWithRecruitHelper.notScouted(recruit, interest, team)
-                !interest.isContacted -> InteractWithRecruitHelper.notContacted(recruit, interest, team)
-                !interest.isOfferedScholarship -> InteractWithRecruitHelper.noScholarshipOffer(recruit, interest, team)
-                !interest.isOfficialVisitDone -> InteractWithRecruitHelper.noOfficialVisit(recruit, interest, team)
-                else -> InteractWithRecruitHelper.notCommitted(recruit, interest, team)
+            if (recruit.getRatingRangeForTeam(team.teamId) > 10) {
+                recruit.updateInterest(team, RecruitingEvent.SCOUT, team.gamesPlayed)
+            } else if (!interest.isOfferedScholarship){
+                recruit.updateInterest(team, RecruitingEvent.OFFER_SCHOLARSHIP, team.gamesPlayed)
+            } else {
+                recruit.considerScholarship(team)
             }
         }
     }
 
-    private fun getInterestInTeam(recruit: Recruit, team: Team): RecruitInterest {
-        val interestInTeam = recruit.interestInTeams.filter { it.teamId == team.teamId }
-        return if (interestInTeam.isEmpty()) {
-            recruit.generateInitialInterest(team)
-            recruit.interestInTeams.filter { it.teamId == team.teamId }.first()
-        } else {
-            interestInTeam.first()
-        }
+    private fun isInterestedInRecruit(team: Team, recruit: Recruit): Boolean {
+        val recruitRating = (recruit.getRatingMaxForTeam(team.teamId) + recruit.getRatingMinForTeam(team.teamId)) / 2
+        val allowableRange = getRatingRange(team)
+        return recruitRating in allowableRange.first..allowableRange.second
+    }
+
+    fun getRatingRange(team: Team): Pair<Int, Int> {
+        val min = max(0, team.teamRating - (team.gamesPlayed * 2))
+        val max = min(100, team.teamRating + 60 - (team.gamesPlayed * 2))
+        return Pair(min, max)
     }
 }

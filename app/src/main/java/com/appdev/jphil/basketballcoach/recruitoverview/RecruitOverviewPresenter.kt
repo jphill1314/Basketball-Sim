@@ -31,9 +31,6 @@ class RecruitOverviewPresenter @Inject constructor(
         view?.displayRecruit(recruit)
         if (!team.isUser) {
             view?.disableAllButtons()
-        } else {
-            view?.setEnableForScholarshipButton(interest.isScouted && interest.isContacted && !interest.isOfferedScholarship)
-            view?.setEnableForVisitButton(interest.isScouted && interest.isContacted && interest.isOfferedScholarship && !interest.isOfficialVisitDone)
         }
     }
 
@@ -47,27 +44,9 @@ class RecruitOverviewPresenter @Inject constructor(
         }
     }
 
-    override fun onContactClicked() {
-        if (doInteraction()){
-            recruit.updateInterest(team, RecruitingEvent.COACH_CONTACT, team.gamesPlayed)
-            view?.displayRecruit(recruit)
-        } else {
-            view?.showToast("You've done this too recently to do again")
-        }
-    }
-
     override fun onOfferScholarshipClicked() {
         if (doInteraction() && !interest.isOfferedScholarship){
             recruit.updateInterest(team, RecruitingEvent.OFFER_SCHOLARSHIP, team.gamesPlayed)
-            view?.displayRecruit(recruit)
-        } else {
-            view?.showToast("You can only do this action once")
-        }
-    }
-
-    override fun onOfficialVisitClicked() {
-        if (doInteraction() && !interest.isOfficialVisitDone){
-            recruit.updateInterest(team, RecruitingEvent.OFFICIAL_VISIT, team.gamesPlayed)
             view?.displayRecruit(recruit)
         } else {
             view?.showToast("You can only do this action once")

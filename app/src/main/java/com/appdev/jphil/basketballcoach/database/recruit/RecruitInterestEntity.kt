@@ -12,13 +12,10 @@ data class RecruitInterestEntity(
     val teamId: Int,
     val teamName: String,
     val interest: Int,
-    val isScouted: Boolean,
-    val isContacted: Boolean,
+    val ratingRange: Int,
+    val ratingOffset: Int,
     val isOfferedScholarship: Boolean,
-    val isOfficialVisitDone: Boolean,
     val lastInteractionGame: Int,
-    val timesScouted: Int,
-    val timesContacted: Int,
     val isScholarshipRevoked: Boolean
 ) {
 
@@ -29,13 +26,10 @@ data class RecruitInterestEntity(
             teamId,
             teamName,
             interest,
-            isScouted,
-            isContacted,
+            ratingRange,
+            ratingOffset,
             isOfferedScholarship,
-            isOfficialVisitDone,
             lastInteractionGame,
-            timesScouted,
-            timesContacted,
             isScholarshipRevoked
         )
     }
@@ -48,13 +42,10 @@ data class RecruitInterestEntity(
                 interest.teamId,
                 interest.teamName,
                 interest.interest,
-                interest.isScouted,
-                interest.isContacted,
+                interest.ratingRange,
+                interest.ratingOffset,
                 interest.isOfferedScholarship,
-                interest.isOfficialVisitDone,
                 interest.lastInteractionGame,
-                interest.timesScouted,
-                interest.timesContacted,
                 interest.isScholarshipRevoked
             )
         }

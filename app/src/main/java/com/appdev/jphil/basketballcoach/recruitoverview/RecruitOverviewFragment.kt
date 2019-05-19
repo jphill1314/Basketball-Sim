@@ -48,9 +48,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recruit_overview, container, false).apply {
             findViewById<Button>(R.id.button_scout).setOnClickListener { presenter.onScoutClicked() }
-            findViewById<Button>(R.id.button_contact).setOnClickListener { presenter.onContactClicked() }
             findViewById<Button>(R.id.button_scholarship).setOnClickListener { presenter.onOfferScholarshipClicked() }
-            findViewById<Button>(R.id.button_visit).setOnClickListener { presenter.onOfficialVisitClicked() }
         }
     }
 
@@ -63,7 +61,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
             findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[recruit.playerType.type]
 
             findViewById<RecyclerView>(R.id.recycler_view)?.let {
-                it.adapter = RecruitOverviewAdapter(recruit.interestInTeams, resources)
+                it.adapter = RecruitOverviewAdapter(recruit, resources)
                 it.layoutManager = LinearLayoutManager(context)
             }
         }
@@ -72,18 +70,8 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     override fun disableAllButtons() {
         view?.apply {
             findViewById<Button>(R.id.button_scout).isEnabled = false
-            findViewById<Button>(R.id.button_contact).isEnabled = false
             findViewById<Button>(R.id.button_scholarship).isEnabled = false
-            findViewById<Button>(R.id.button_visit).isEnabled = false
         }
-    }
-
-    override fun setEnableForScholarshipButton(isEnabled: Boolean) {
-        view?.findViewById<Button>(R.id.button_scholarship)?.isEnabled = isEnabled
-    }
-
-    override fun setEnableForVisitButton(isEnabled: Boolean) {
-        view?.findViewById<Button>(R.id.button_visit)?.isEnabled = isEnabled
     }
 
     override fun showToast(message: String) {

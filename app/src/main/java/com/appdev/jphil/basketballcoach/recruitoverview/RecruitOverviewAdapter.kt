@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.recruits.RecruitInterest
 import com.appdev.jphil.basketballcoach.R
 
 class RecruitOverviewAdapter(
-    private val interests: List<RecruitInterest>,
+    private val recruit: Recruit,
     private val resources: Resources
 ) : RecyclerView.Adapter<RecruitOverviewAdapter.ViewHolder>() {
 
@@ -27,23 +28,26 @@ class RecruitOverviewAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = interests.size
+    override fun getItemCount(): Int = recruit.interestInTeams.size
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val teamInterest = interests[position]
+        val teamInterest = recruit.interestInTeams[position]
 
         with (viewHolder) {
             team.text = teamInterest.teamName
 
             val index = when {
-                teamInterest.isOfficialVisitDone -> 3
                 teamInterest.isOfferedScholarship -> 2
-                teamInterest.isContacted -> 1
-                teamInterest.isScouted -> 0
                 else -> -1
             }
 
             interaction.text = if (index == -1) "" else interactions[index]
+
+            if (recruit.isCommitted) {
+                if (recruit.teamCommittedTo == teamInterest.teamId) {
+                    interaction.text = resources.getString(R.string.committed)
+                }
+            }
 
             interest.text = resources.getString(R.string.interest_colon, teamInterest.interest.toString())
         }

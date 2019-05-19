@@ -203,6 +203,7 @@ class GameViewModel(
         if (!game.awayTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
         }
+        RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
 
     override fun onPaceChanged(pace: Int) {

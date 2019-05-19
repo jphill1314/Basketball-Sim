@@ -31,13 +31,8 @@ object TeamDatabaseHelper {
     }
 
     fun saveTeam(team: Team, database: BasketballDatabase) {
-        team.roster.forEach { player ->
-            database.playerDao().insertPlayer(PlayerEntity.from(player))
-            player.progression.forEach {
-                database.playerDao().insertPlayerProgression(PlayerProgressionEntity.from(it))
-            }
-        }
-        team.coaches.forEach { coach -> database.coachDao().saveCoach(CoachEntity.from(coach)) }
+        team.roster.forEach { player -> PlayerDatabaseHelper.savePlayer(player, database) }
+        team.coaches.forEach { coach -> CoachDatabaseHelper.saveCoach(coach, database) }
         database.teamDao().insertTeam(TeamEntity.from(team))
     }
 }

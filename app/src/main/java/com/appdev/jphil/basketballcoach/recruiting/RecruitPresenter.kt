@@ -78,10 +78,8 @@ class RecruitPresenter @Inject constructor(
         val type = RecruitingEvent.getEventByType(interactionFilter)
         return recruit.interestInTeams.firstOrNull { it.teamId == team.teamId }?.let { interest ->
             when (type) {
-                RecruitingEvent.SCOUT -> interest.isScouted
-                RecruitingEvent.COACH_CONTACT -> interest.isContacted
                 RecruitingEvent.OFFER_SCHOLARSHIP -> interest.isOfferedScholarship
-                RecruitingEvent.OFFICIAL_VISIT -> interest.isOfficialVisitDone
+                RecruitingEvent.SCOUT -> false
             }
         } ?: false
     }

@@ -114,6 +114,7 @@
 
     <string name="interest_colon">Interest: %s</string>
     <string name="rating_colon">Rating: %d</string>
+    <string name="rating_range">Rating: %1$d-%2$d</string>
     <string name="potential_color">Potential: %d</string>
     <string name="unknown">Unknown</string>
     <string name="returning_players_plus_commits">Returning Players (Commitments)</string>
@@ -126,6 +127,7 @@
     <string name="contact_player">Contact Player</string>
     <string name="offer_scholarship">Offer Scholarship</string>
     <string name="official_visit">Official Visit</string>
+    <string name="committed">Committed</string>
 
     <string name="two_hyphens">%1$s - %2$s - %3$s</string>
 

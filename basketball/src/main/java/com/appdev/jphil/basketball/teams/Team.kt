@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.teams
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
+import com.appdev.jphil.basketball.coaches.ScoutingAssignmentHelper
 import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
@@ -14,8 +15,8 @@ class Team(
     val schoolName: String,
     val mascot: String,
     val abbreviation: String,
-    val players: MutableList<Player>,
-    val conferenceId: Int,// for use in games
+    val players: MutableList<Player>,// for use in games
+    val conferenceId: Int,
     val isUser: Boolean,
     val coaches: MutableList<Coach>,
     val knownRecruits: MutableList<Recruit>,
@@ -287,10 +288,20 @@ class Team(
             unknownRecruits.remove(it)
         }
         coaches.filter { it.type != CoachType.HEAD_COACH }.forEach { coach ->
-            coach.doScouting(unknownRecruits).forEach {
-                unknownRecruits.remove(it)
-                knownRecruits.add(it)
+            if (!isUser) {
+                ScoutingAssignmentHelper.updateScoutingAssignment(this, coach.scoutingAssignment)
+            }
+            coach.doScouting(unknownRecruits).forEach { recruit ->
+                recruit.generateInitialInterest(this, coach.recruiting)
+                unknownRecruits.remove(recruit)
+                knownRecruits.add(recruit)
             }
         }
+    }
+
+    fun hasNeedAtPosition(position: Int): Boolean {
+        var nextYearsPlayers = roster.filter { it.position == position && it.year != 3 }.size
+        nextYearsPlayers += knownRecruits.filter { it.isCommitted && it.teamCommittedTo == teamId && it.position == position }.size
+        return 3 - nextYearsPlayers > 0
     }
 }

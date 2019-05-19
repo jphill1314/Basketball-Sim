@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerType
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -14,6 +15,7 @@ class Recruit(
     val lastName: String,
     val position: Int,
     val playerType: PlayerType,
+    val desires: List<RecruitDesire>,
     val rating: Int,
     val potential: Int,
     var isCommitted: Boolean,
@@ -23,21 +25,31 @@ class Recruit(
 
     val fullName = "$firstName $lastName"
 
-    fun generateInitialInterest(team: Team) {
-        val interest = min(100, (Random.nextInt(RecruitInterest.MAX_INTEREST / 2) * getTeamMultiplier(team)).toInt())
+    fun generateInitialInterest(team: Team, coachRecruitingRating: Int) {
+        var interest = 100
+
+        if (desires.isNotEmpty()) {
+            val maxChange = 100 / desires.size
+            desires.forEach { if (!DesireHelper.teamMeetsDesire(it, team, this)) interest -= maxChange }
+        }
+
+        if (!team.hasNeedAtPosition(position)) {
+            interest = 0
+        }
+
+        val range = Random.nextInt(100 - coachRecruitingRating)
+        val offset = if (range > 0 ) Random.nextInt(range) - range / 2 else 0
+
         interestInTeams.add(RecruitInterest(
             null,
             id,
             team.teamId,
             team.name,
             interest,
-            false,
-            false,
-            false,
+            range,
+            offset,
             false,
             -1000,
-            0,
-            0,
             false
         ))
     }
@@ -62,16 +74,20 @@ class Recruit(
 
     fun updateInterestAfterGame(game: Game) {
         interestInTeams.firstOrNull { it.teamId == game.homeTeam.teamId }?.let { homeInterest ->
-            if (homeInterest.isScouted) {
+            if (game.homeTeam.hasNeedAtPosition(position)) {
                 homeInterest.onTeamGameCompleted(game, getTeamMultiplier(game.homeTeam))
-                this@Recruit.considerScholarship(game.homeTeam)
+                considerScholarship(game.homeTeam)
+            } else {
+                homeInterest.interest = 0
             }
         }
 
         interestInTeams.firstOrNull { it.teamId == game.awayTeam.teamId }?.let { awayInterest ->
-            if (awayInterest.isScouted) {
+            if (game.awayTeam.hasNeedAtPosition(position)) {
                 awayInterest.onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
-                this@Recruit.considerScholarship(game.awayTeam)
+                considerScholarship(game.awayTeam)
+            } else {
+                awayInterest.interest = 0
             }
         }
     }
@@ -120,7 +136,20 @@ class Recruit(
         )
     }
 
+    fun getRatingMinForTeam(teamId: Int) =
+        interestInTeams.firstOrNull { it.teamId == teamId }?.getMinRating(rating) ?: 0
+
+    fun getRatingMaxForTeam(teamId: Int) =
+        interestInTeams.firstOrNull { it.teamId == teamId }?.getMaxRating(rating) ?: 100
+
+    fun getRatingRangeForTeam(teamId: Int) =
+        interestInTeams.firstOrNull { it.teamId == teamId }?.ratingRange ?: 100
+
     override fun equals(other: Any?): Boolean {
         return if (other is Recruit) other.id == id else false
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
     }
 }
