@@ -1,6 +1,8 @@
 package com.appdev.jphil.basketball.plays.utils
 
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
+import kotlin.math.max
 import kotlin.random.Random
 
 class PassingUtils(
@@ -14,11 +16,12 @@ class PassingUtils(
 
     fun getTarget(homeTeamHasBall: Boolean, playerWithBall: Int): Int {
         setTeams(homeTeamHasBall)
-        val pg = if (playerWithBall == 1) 0 else offense.getPlayerAtPosition(1).offBallMovement + Random.nextInt(randomBound)
-        val sg = if (playerWithBall == 2) 0 else offense.getPlayerAtPosition(2).offBallMovement + Random.nextInt(randomBound)
-        val sf = if (playerWithBall == 3) 0 else offense.getPlayerAtPosition(3).offBallMovement + Random.nextInt(randomBound)
-        val pf = if (playerWithBall == 4) 0 else offense.getPlayerAtPosition(4).offBallMovement + Random.nextInt(randomBound)
-        val c = if (playerWithBall == 5) 0 else offense.getPlayerAtPosition(5).offBallMovement + Random.nextInt(randomBound)
+        val favorsThrees = offense.offenseFavorsThrees
+        val pg = if (playerWithBall == 1) 0 else getPassTargetChance(favorsThrees, offense.getPlayerAtPosition(1))
+        val sg = if (playerWithBall == 2) 0 else getPassTargetChance(favorsThrees, offense.getPlayerAtPosition(2))
+        val sf = if (playerWithBall == 3) 0 else getPassTargetChance(favorsThrees, offense.getPlayerAtPosition(3))
+        val pf = if (playerWithBall == 4) 0 else getPassTargetChance(favorsThrees, offense.getPlayerAtPosition(4))
+        val c = if (playerWithBall == 5) 0 else getPassTargetChance(favorsThrees, offense.getPlayerAtPosition(5))
 
         return if (c > pf && c > sf && c > sg && c > pg) {
             5
@@ -31,6 +34,12 @@ class PassingUtils(
         } else {
             1
         }
+    }
+
+    private fun getPassTargetChance(favorsThrees: Int, player: Player): Int {
+        val three = player.longRangeShot * (favorsThrees / 100.0)
+        val two = max(player.closeRangeShot, player.postMove) * ((100 - favorsThrees) / 100.0)
+        return (player.offBallMovement + three + two + Random.nextInt(randomBound)).toInt()
     }
 
     fun getInbounder(homeTeamHasBall: Boolean): Int {
