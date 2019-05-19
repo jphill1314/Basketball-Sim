@@ -94,7 +94,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
                 it.adapter = adapter
             }
 
-            findViewById<TextView>(R.id.pg)?.text = resources.getString(
+            findViewById<TextView>(R.id.center)?.text = resources.getString(
                 R.string.number_and_parens,
                 getReturningPlayersAtPosition(team, 1),
                 getCommitsAtPosition(team, recruits, 1)

@@ -8,6 +8,9 @@ abstract class CoachDao {
     @Query("SELECT * FROM CoachEntity where teamId in (:teamId)")
     abstract fun getCoachesByTeamId(teamId: Int): List<CoachEntity>
 
+    @Query("SELECT * FROM CoachEntity where id in (:id)")
+    abstract fun getCoachById(id: Int): CoachEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun saveCoach(coachEntity: CoachEntity)
 
