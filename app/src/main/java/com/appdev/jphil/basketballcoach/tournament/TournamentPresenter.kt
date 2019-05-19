@@ -11,28 +11,38 @@ class TournamentPresenter @Inject constructor(
 ) : TournamentContract.Presenter {
 
     private var view: TournamentContract.View? = null
+    private var isSimming = false
 
     init {
         repository.attachPresenter(this)
         gameSimRepository.attachPresenter(this)
     }
 
+    override fun updateSchedule() {
+        repository.fetchData()
+    }
+
     override fun onTournamentLoaded(games: MutableList<TournamentDataModel>) {
-        view?.setProgressBarVisibility(View.GONE)
+        if (!isSimming) {
+            view?.setProgressBarVisibility(View.GONE)
+        }
         view?.onTournamentLoaded(games)
     }
 
     override fun simToGame(gameId: Int) {
+        isSimming = true
         view?.setProgressBarVisibility(View.VISIBLE)
         gameSimRepository.simToGame(gameId)
     }
 
     override fun simGame(gameId: Int) {
+        isSimming = true
         view?.setProgressBarVisibility(View.VISIBLE)
         gameSimRepository.simGame(gameId)
     }
 
     override fun onSimCompleted() {
+        isSimming = false
         repository.fetchData()
     }
 
@@ -46,6 +56,7 @@ class TournamentPresenter @Inject constructor(
     }
 
     override fun onFABClicked() {
+        isSimming = true
         view?.setProgressBarVisibility(View.VISIBLE)
         gameSimRepository.startNextGame()
     }
