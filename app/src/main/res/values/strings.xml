@@ -129,6 +129,18 @@
     <string name="official_visit">Official Visit</string>
     <string name="committed">Committed</string>
 
+    <string name="scouting_assignment">Scouting Assignment</string>
+    <string name="min_rating">Min. Rating</string>
+    <string name="max_rating">Max rating</string>
+    <string name="min_potential">Min. Potential</string>
+    <string name="max_potential">Max Potential</string>
+    <string name="coaching_attributes">Coaching Attributes</string>
+
+    <string name="recruiting_colon">Recruiting: %d</string>
+    <string name="shooting_colon">Shooting: %d</string>
+    <string name="positioning_colon">Positioning: %d</string>
+    <string name="conditioning_colon">Conditioning: %d</string>
+
     <string name="two_hyphens">%1$s - %2$s - %3$s</string>
 
     <string name="min">Min</string>

@@ -20,6 +20,12 @@ object CoachDatabaseHelper {
         return list
     }
 
+    fun loadCoachById(coachId: Int, database: BasketballDatabase): Coach {
+        val coach = database.coachDao().getCoachById(coachId)
+        val assignment = database.coachDao().getScoutingAssignmentByCoachId(coachId)
+        return coach.createCoach(assignment)
+    }
+
     fun saveCoach(coach: Coach, database: BasketballDatabase) {
         database.coachDao().saveCoach(CoachEntity.from(coach))
         coach.id?.let {

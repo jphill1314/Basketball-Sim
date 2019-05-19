@@ -11,7 +11,8 @@ import com.appdev.jphil.basketballcoach.R
 
 class CoachesAdapter(
     private val coaches: List<Coach>,
-    private val resources: Resources
+    private val resources: Resources,
+    private val onClick: (coachId: Int) -> Unit
 ): RecyclerView.Adapter<CoachesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -36,9 +37,10 @@ class CoachesAdapter(
             viewHolder.rating.text = resources.getString(R.string.rating)
         } else {
             val coach = coaches[position - 1]
-            viewHolder.name.text = coach.firstName + " " + coach.lastName
+            viewHolder.name.text = coach.fullName
             viewHolder.position.text = resources.getStringArray(R.array.coach_positions)[coach.type.type]
             viewHolder.rating.text = coach.getRating().toString()
+            viewHolder.itemView.setOnClickListener { onClick(coach.id ?: 0) }
         }
     }
 }

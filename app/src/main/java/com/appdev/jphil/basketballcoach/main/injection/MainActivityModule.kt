@@ -2,6 +2,8 @@ package com.appdev.jphil.basketballcoach.main.injection
 
 import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.coaches.CoachesModule
+import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
+import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewModule
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.game.GameModule
 import com.appdev.jphil.basketballcoach.main.MainActivity
@@ -79,6 +81,10 @@ abstract class MainActivityModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [RecruitOverviewModule::class])
     abstract fun recruitOverviewFragment(): RecruitOverviewFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [CoachOverviewModule::class])
+    abstract fun coachOverviewFragment(): CoachOverviewFragment
 
     @Module
     companion object {

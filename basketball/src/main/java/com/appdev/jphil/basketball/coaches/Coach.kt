@@ -33,6 +33,7 @@ class Coach(
 ) {
     // TODO: give coaches a sub frequency rating that impacts when subs are made
     // TODO: add functions to change a team's strategy based on who is on the court and the score
+    val fullName = "$firstName $lastName"
 
     fun startGame() {
         paceGame = pace

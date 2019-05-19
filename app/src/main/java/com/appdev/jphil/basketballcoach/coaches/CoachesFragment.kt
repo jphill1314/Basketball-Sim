@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -38,10 +39,17 @@ class CoachesFragment : Fragment(), CoachesContract.View {
         super.onStop()
     }
 
+    private fun openCoachOverview(coachId: Int) {
+        fragmentManager?.beginTransaction()
+            ?.addToBackStack(null)
+            ?.replace(R.id.frame_layout, CoachOverviewFragment.newInstance(coachId))
+            ?.commit()
+    }
+
     override fun displayCoaches(coaches: List<Coach>) {
         view?.findViewById<RecyclerView>(R.id.recycler_view)?.let {
             it.layoutManager = LinearLayoutManager(requireContext())
-            it.adapter = CoachesAdapter(coaches, resources)
+            it.adapter = CoachesAdapter(coaches, resources) { coachId -> openCoachOverview(coachId) }
         }
     }
 }
