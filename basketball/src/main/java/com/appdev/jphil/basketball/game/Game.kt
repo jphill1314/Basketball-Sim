@@ -385,42 +385,60 @@ class Game(
                 }
             }
 
-            if (foul.isOnDefense) {
+            if (foul.isOnDefense || foul.foulType == FoulType.REBOUNDING) {
                 if (foul.homeTeamHasBall && awayFouls > 6) {
                     shootFreeThrows = true
                     numberOfFreeThrows = if (awayFouls >= 10) {
                         2
-                    }
-                    else {
+                    } else {
                         -1
                     }
-                }
-                else if (homeFouls > 6) {
+                } else if (homeFouls > 6) {
                     shootFreeThrows = true
                     numberOfFreeThrows = if (homeFouls >= 10) {
                         2
-                    }
-                    else {
+                    } else {
                         -1
                     }
                 }
 
                 if (shotClock < resetShotClockTime) {
-                    shotClock = if(timeRemaining > resetShotClockTime) resetShotClockTime else timeRemaining
+                    shotClock = if (timeRemaining > resetShotClockTime) resetShotClockTime else timeRemaining
                 }
                 if (shootFreeThrows) {
-                    shotClock = lengthOfShotClock
+                    shotClock = if (timeRemaining > lengthOfShotClock) lengthOfShotClock else timeRemaining
                 }
             }
-            else {
-                if (homeTeamHasBall && foul.homeTeamHasBall || !homeTeamHasBall &&!foul.homeTeamHasBall) {
-                    changePossession()
+
+            if (!foul.isOnDefense && foul.foulType != FoulType.REBOUNDING) {
+                changePossession()
+            } else if (foul.foulType == FoulType.REBOUNDING) {
+                if (foul.isOnDefense) {
+                    if (homeTeamHasBall) {
+                        if (foul.defense.teamId == homeTeam.teamId) {
+                            changePossession()
+                        }
+                    } else {
+                        if (foul.defense.teamId == awayTeam.teamId) {
+                            changePossession()
+                        }
+                    }
+                } else {
+                    if (homeTeamHasBall) {
+                        if (foul.offense.teamId == homeTeam.teamId) {
+                            changePossession()
+                        }
+                    } else {
+                        if (foul.offense.teamId == awayTeam.teamId) {
+                            changePossession()
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun addPoints(points: Int){
+    private fun addPoints(points: Int) {
         if (homeTeamHasBall) {
             homeScore += points
         }
@@ -457,6 +475,9 @@ class Game(
             location = -location
         }
         possessions++
+
+        homeTeam.updateStrategy()
+        awayTeam.updateStrategy()
     }
 
     private fun updateTimePlayed(isTimeout: Boolean, isHalftime: Boolean) {
