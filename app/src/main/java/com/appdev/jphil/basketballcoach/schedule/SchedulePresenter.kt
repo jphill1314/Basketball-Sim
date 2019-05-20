@@ -82,7 +82,7 @@ class SchedulePresenter @Inject constructor(
         }
         if (!isUsersSchedule) {
             view?.disableFab()
-        } else {
+        } else if(!isSimming) {
             view?.enableFab()
         }
 

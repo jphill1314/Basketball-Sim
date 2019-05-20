@@ -137,20 +137,22 @@ class Foul(
         fouler = if (r.nextDouble() > 0.35) {
             // more likely that the person who wasn't going to get the rebound is called for the foul
             isOnDefense = true
-            aggression =
-                    (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
+            aggression = (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
             defense.getPlayerAtPosition(playerWithBall)
         } else {
             isOnDefense = false
-            aggression =
-                    (offense.getPlayerAtPosition(playerWithBall).aggressiveness + ((offense.aggression + 10) * 5) / 2.0)
+            aggression = (offense.getPlayerAtPosition(playerWithBall).aggressiveness + ((offense.aggression + 10) * 5) / 2.0)
             offense.getPlayerAtPosition(playerWithBall)
         }
 
         foulChance -= ((fouler!!.rebounding - aggression) / 20000)
         val fouled = if (isOnDefense) offense.getPlayerAtPosition(positionOfPlayerFouled) else defense.getPlayerAtPosition(positionOfPlayerFouled)
         return if (r.nextDouble() < foulChance) {
-            playAsString = foulText.reboundingFoul(fouler!!, fouled)
+            playAsString = if (isOnDefense) {
+                foulText.defensiveReboundingFoul(fouler!!, fouled)
+            } else {
+                foulText.offensiveReboundingFoul(fouler!!, fouled)
+            }
             fouler!!.fouls++
             1
         } else {

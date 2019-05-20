@@ -96,11 +96,9 @@ class GameStatsAdapter(
                 when (rosterViewId) {
                     0 -> {
                         viewHolder.stat1?.text = if (playerPos > 4 ) {
-                            //player.getRatingAtPositionNoFatigue(player.position).toString()
-                            player.getOverallRating().toString()
+                            player.getRatingAtPositionNoFatigue(player.position).toString()
                         } else {
-                            //player.getRatingAtPositionNoFatigue(playerPos + 1).toString()
-                            player.getRatingAtPosition(playerPos + 1).toString()
+                            player.getRatingAtPositionNoFatigue(playerPos + 1).toString()
                         }
                         viewHolder.stat2?.text = String.format("%.2f", player.fatigue)
                         viewHolder.stat3?.text = (player.timePlayed / 60).toString()
@@ -136,7 +134,7 @@ class GameStatsAdapter(
         viewHolder.name?.text = resources.getString(R.string.name)
         when (rosterViewId) {
             0 -> {
-                viewHolder.stat1?.text = resources.getString(R.string.min)
+                viewHolder.stat1?.text = resources.getString(R.string.rating)
                 viewHolder.stat2?.text = resources.getString(R.string.condition)
                 viewHolder.stat3?.text = resources.getString(R.string.minutes)
                 viewHolder.stat4?.text = resources.getString(R.string.player_fouls)

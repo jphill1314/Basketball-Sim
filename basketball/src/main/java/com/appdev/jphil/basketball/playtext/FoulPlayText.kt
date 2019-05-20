@@ -21,7 +21,11 @@ class FoulPlayText : FoulTextContract {
         return "${fouler.fullName} is called for a foul!"
     }
 
-    override fun reboundingFoul(fouler: Player, fouled: Player): String {
+    override fun offensiveReboundingFoul(fouler: Player, fouled: Player): String {
         return "${fouler.fullName} is called for the illegal box out!"
+    }
+
+    override fun defensiveReboundingFoul(fouler: Player, fouled: Player): String {
+        return "${fouler.fullName} is called for the over the back foul!"
     }
 }

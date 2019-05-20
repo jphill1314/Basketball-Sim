@@ -110,6 +110,17 @@ class Team(
         players.sortBy { it.courtIndex }
     }
 
+    fun updateStrategy() {
+        // TODO: have AI coaches actually update their strategy
+        val hc = getHeadCoach()
+        offenseFavorsThrees = hc.offenseFavorsThreesGame
+        defenseFavorsThrees = hc.defenseFavorsThreesGame
+        pressFrequency = hc.pressFrequencyGame
+        pressAggression = hc.pressAggressionGame
+        aggression = hc.aggressionGame
+        pace = hc.paceGame
+    }
+
     fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {
         for (index in players.indices) {
             if (index < 5) {
