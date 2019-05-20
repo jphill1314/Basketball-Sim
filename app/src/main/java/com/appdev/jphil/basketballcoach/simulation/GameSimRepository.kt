@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.simulation
 
-import android.util.Log
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
@@ -128,7 +127,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     private suspend fun simGame(game: Game) {
         game.simulateFullGame()
-        Log.d("SIM GAME", game.getAsString())
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
         game.homeTeam.doScouting(recruits)

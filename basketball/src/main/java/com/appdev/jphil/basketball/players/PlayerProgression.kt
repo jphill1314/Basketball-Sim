@@ -21,21 +21,21 @@ class PlayerProgression(
     val id: Int?,
     val player: Player,
     val progressionNumber: Int,
-    var closeRangeShot: Double = 0.0,
-    var midRangeShot: Double = 0.0,
-    var longRangeShot: Double = 0.0,
-    var freeThrowShot: Double = 0.0,
-    var postMove: Double = 0.0,
-    var ballHandling: Double = 0.0,
-    var passing: Double = 0.0,
-    var offBallMovement: Double = 0.0,
-    var postDefense: Double = 0.0,
-    var perimeterDefense: Double = 0.0,
-    var onBallDefense: Double = 0.0,
-    var offBallDefense: Double = 0.0,
-    var stealing: Double = 0.0,
-    var rebounding: Double = 0.0,
-    var stamina: Double = 0.0
+    var closeRangeShot: Double = (player.closeRangeShot * POINTS_TO_INCREMENT).toDouble(),
+    var midRangeShot: Double = (player.midRangeShot * POINTS_TO_INCREMENT).toDouble(),
+    var longRangeShot: Double = (player.longRangeShot * POINTS_TO_INCREMENT).toDouble(),
+    var freeThrowShot: Double = (player.freeThrowShot * POINTS_TO_INCREMENT).toDouble(),
+    var postMove: Double = (player.postMove * POINTS_TO_INCREMENT).toDouble(),
+    var ballHandling: Double = (player.ballHandling * POINTS_TO_INCREMENT).toDouble(),
+    var passing: Double = (player.passing * POINTS_TO_INCREMENT).toDouble(),
+    var offBallMovement: Double = (player.offBallMovement * POINTS_TO_INCREMENT).toDouble(),
+    var postDefense: Double = (player.postDefense * POINTS_TO_INCREMENT).toDouble(),
+    var perimeterDefense: Double = (player.perimeterDefense * POINTS_TO_INCREMENT).toDouble(),
+    var onBallDefense: Double = (player.onBallDefense * POINTS_TO_INCREMENT).toDouble(),
+    var offBallDefense: Double = (player.offBallDefense * POINTS_TO_INCREMENT).toDouble(),
+    var stealing: Double = (player.stealing * POINTS_TO_INCREMENT).toDouble(),
+    var rebounding: Double = (player.rebounding * POINTS_TO_INCREMENT).toDouble(),
+    var stamina: Double = (player.stamina * POINTS_TO_INCREMENT).toDouble()
 ) {
 
     // TODO: allow attributes to decrease too?
@@ -119,124 +119,94 @@ class PlayerProgression(
     }
 
     private fun incrementAttributes() {
-        if (closeRangeShot > POINTS_TO_INCREMENT) {
+        if (closeRangeShot.toInt() > player.closeRangeShot * POINTS_TO_INCREMENT) {
             player.closeRangeShot++
-            closeRangeShot = 0.0
-        } else if (closeRangeShot < -POINTS_TO_INCREMENT) {
+        } else if (closeRangeShot.toInt() < player.closeRangeShot * POINTS_TO_INCREMENT) {
             player.closeRangeShot--
-            closeRangeShot = 0.0
         }
 
-        if (midRangeShot > POINTS_TO_INCREMENT) {
+        if (midRangeShot > player.midRangeShot * POINTS_TO_INCREMENT) {
             player.midRangeShot++
-            midRangeShot = 0.0
-        } else if (midRangeShot < -POINTS_TO_INCREMENT) {
+        } else if (midRangeShot < player.midRangeShot * POINTS_TO_INCREMENT) {
             player.midRangeShot--
-            midRangeShot = 0.0
         }
 
-        if (longRangeShot > POINTS_TO_INCREMENT) {
+        if (longRangeShot > player.longRangeShot * POINTS_TO_INCREMENT) {
             player.longRangeShot++
-            longRangeShot = 0.0
-        } else if (longRangeShot < -POINTS_TO_INCREMENT) {
+        } else if (longRangeShot < player.longRangeShot * POINTS_TO_INCREMENT) {
             player.longRangeShot--
-            longRangeShot = 0.0
         }
 
-        if (freeThrowShot > POINTS_TO_INCREMENT) {
+        if (freeThrowShot > player.freeThrowShot * POINTS_TO_INCREMENT) {
             player.freeThrowShot++
-            freeThrowShot = 0.0
-        } else if (freeThrowShot < -POINTS_TO_INCREMENT) {
+        } else if (freeThrowShot < player.freeThrowShot * POINTS_TO_INCREMENT) {
             player.freeThrowShot--
-            freeThrowShot = 0.0
         }
 
-        if (postMove > POINTS_TO_INCREMENT) {
+        if (postMove > player.postMove * POINTS_TO_INCREMENT) {
             player.postMove++
-            postMove = 0.0
-        } else if (postMove < -POINTS_TO_INCREMENT) {
+        } else if (postMove < player.postMove * POINTS_TO_INCREMENT) {
             player.postMove--
-            postMove = 0.0
         }
 
-        if (ballHandling > POINTS_TO_INCREMENT) {
+        if (ballHandling > player.ballHandling * POINTS_TO_INCREMENT) {
             player.ballHandling++
-            ballHandling = 0.0
-        } else if (ballHandling < -POINTS_TO_INCREMENT) {
+        } else if (ballHandling < player.ballHandling * POINTS_TO_INCREMENT) {
             player.ballHandling--
-            ballHandling = 0.0
         }
 
-        if (passing > POINTS_TO_INCREMENT) {
+        if (passing > player.passing * POINTS_TO_INCREMENT) {
             player.passing++
-            passing = 0.0
-        } else if (passing < -POINTS_TO_INCREMENT) {
+        } else if (passing < player.passing * POINTS_TO_INCREMENT) {
             player.passing--
-            passing = 0.0
         }
 
-        if (offBallMovement > POINTS_TO_INCREMENT) {
+        if (offBallMovement > player.offBallMovement * POINTS_TO_INCREMENT) {
             player.offBallMovement++
-            offBallMovement = 0.0
-        } else if (offBallMovement < -POINTS_TO_INCREMENT) {
+        } else if (offBallMovement < player.offBallMovement * POINTS_TO_INCREMENT) {
             player.offBallMovement--
-            offBallMovement = 0.0
         }
 
-        if (postDefense > POINTS_TO_INCREMENT) {
+        if (postDefense > player.postDefense * POINTS_TO_INCREMENT) {
             player.postDefense++
-            postDefense = 0.0
-        } else if (postDefense < -POINTS_TO_INCREMENT) {
+        } else if (postDefense < player.postDefense * POINTS_TO_INCREMENT) {
             player.postDefense--
-            postDefense = 0.0
         }
 
-        if (perimeterDefense > POINTS_TO_INCREMENT) {
+        if (perimeterDefense > player.perimeterDefense * POINTS_TO_INCREMENT) {
             player.perimeterDefense++
-            perimeterDefense = 0.0
-        } else if (perimeterDefense < -POINTS_TO_INCREMENT) {
+        } else if (perimeterDefense < player.perimeterDefense * POINTS_TO_INCREMENT) {
             player.perimeterDefense--
-            perimeterDefense = 0.0
         }
 
-        if (onBallDefense > POINTS_TO_INCREMENT) {
+        if (onBallDefense > player.onBallDefense * POINTS_TO_INCREMENT) {
             player.onBallDefense++
-            onBallDefense = 0.0
-        } else if (onBallDefense < -POINTS_TO_INCREMENT) {
+        } else if (onBallDefense < player.onBallDefense * POINTS_TO_INCREMENT) {
             player.onBallDefense--
-            onBallDefense = 0.0
         }
 
-        if (offBallDefense > POINTS_TO_INCREMENT) {
+        if (offBallDefense > player.offBallDefense * POINTS_TO_INCREMENT) {
             player.offBallDefense++
-            offBallDefense = 0.0
-        } else if (offBallDefense < -POINTS_TO_INCREMENT) {
+        } else if (offBallDefense < player.offBallDefense * POINTS_TO_INCREMENT) {
             player.offBallDefense--
-            offBallDefense = 0.0
         }
 
-        if (stealing > POINTS_TO_INCREMENT) {
+        if (stealing > player.stealing * POINTS_TO_INCREMENT) {
             player.stealing++
-            stealing = 0.0
-        } else if (stealing < -POINTS_TO_INCREMENT) {
+        } else if (stealing < player.stealing * POINTS_TO_INCREMENT) {
             player.stealing--
-            stealing = 0.0
         }
 
-        if (rebounding > POINTS_TO_INCREMENT) {
+        if (rebounding > player.rebounding * POINTS_TO_INCREMENT) {
             player.rebounding++
-            rebounding = 0.0
-        } else if (rebounding < -POINTS_TO_INCREMENT) {
+        } else if (rebounding < player.rebounding * POINTS_TO_INCREMENT) {
             player.rebounding--
-            rebounding = 0.0
         }
 
-        if (stamina > POINTS_TO_INCREMENT) {
+        if (stamina > player.stamina * POINTS_TO_INCREMENT) {
             player.stamina++
-            stamina = 0.0
-        } else if (stamina < -POINTS_TO_INCREMENT) {
+        } else if (stamina < player.stamina * POINTS_TO_INCREMENT) {
             player.stamina--
-            stamina = 0.0
         }
     }
 
