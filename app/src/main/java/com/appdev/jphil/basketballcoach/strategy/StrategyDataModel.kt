@@ -10,12 +10,13 @@ data class StrategyDataModel(
     var higher: String,
     var lower: String,
     var value: Int,
-    val max: Int = 100
+    val max: Int = 100,
+    var isEnabled: Boolean = false
 ) {
 
     companion object {
         fun generateDataModels(coach: Coach, resources: Resources, isInGame: Boolean): List<StrategyDataModel> {
-            return listOf(
+            val dataModels = mutableListOf(
                 StrategyDataModel(
                     StrategyType.PACE,
                     resources.getString(R.string.pace),
@@ -60,6 +61,22 @@ data class StrategyDataModel(
                     if (isInGame) coach.pressAggressionGame else coach.pressAggression
                 )
             )
+
+            if (isInGame) {
+                dataModels.add(
+                    StrategyDataModel(
+                        StrategyType.INTENTIONAL_FOUL,
+                        resources.getString(R.string.intentionally_foul),
+                        "",
+                        "",
+                        0,
+                        0,
+                        coach.intentionallyFoul
+                    )
+                )
+            }
+
+            return dataModels
         }
     }
 }

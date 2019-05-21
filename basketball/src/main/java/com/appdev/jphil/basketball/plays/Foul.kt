@@ -45,6 +45,7 @@ class Foul(
             FoulType.ON_BALL -> getFloorFoul()
             FoulType.OFF_BALL -> getFloorFoul()
             FoulType.REBOUNDING -> getReboundingFoul()
+            FoulType.INTENTIONAL -> getIntentionalFoul()
             FoulType.CLEAN -> 0
             else -> getShootingFoul()
         }
@@ -196,5 +197,14 @@ class Foul(
         } else {
             0
         }
+    }
+
+    private fun getIntentionalFoul(): Int {
+        positionOfPlayerFouled = playerWithBall
+        isOnDefense = true
+        fouler = defense.getPlayerAtPosition(playerWithBall)
+        playAsString = foulText.intentionalFoul(fouler!!, offense.getPlayerAtPosition(playerWithBall))
+        fouler!!.fouls++
+        return 1
     }
 }

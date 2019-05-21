@@ -12,4 +12,6 @@ interface FoulTextContract {
 
     fun offensiveReboundingFoul(fouler: Player, fouled: Player): String
     fun defensiveReboundingFoul(fouler: Player, fouled: Player): String
+
+    fun intentionalFoul(fouler: Player, fouled: Player): String
 }

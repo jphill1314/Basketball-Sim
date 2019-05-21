@@ -27,6 +27,7 @@ interface StrategyContract {
             fun onDefenseFavorsThreesChanged(favorsThrees: Int)
             fun onPressFrequencyChanged(frequency: Int)
             fun onPressAggressionChanged(aggression: Int)
+            fun onIntentionallyFoulToggled(isChecked: Boolean)
         }
     }
 }

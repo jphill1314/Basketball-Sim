@@ -21,6 +21,7 @@ class Coach(
     var defenseFavorsThreesGame: Int,
     var pressFrequencyGame: Int,
     var pressAggressionGame: Int,
+    var intentionallyFoul: Boolean,
     var teachShooting: Int,
     var teachPostMoves: Int,
     var teachBallControl: Int,
@@ -42,6 +43,7 @@ class Coach(
         defenseFavorsThreesGame = defenseFavorsThrees
         pressFrequencyGame = pressFrequency
         pressAggressionGame = pressAggression
+        intentionallyFoul = false
     }
 
     fun getRating(): Int {
@@ -51,6 +53,27 @@ class Coach(
 
     fun doScouting(unknownRecruits: MutableList<Recruit>): List<Recruit> {
         return scoutingAssignment.doScouting(recruiting, unknownRecruits)
+    }
+
+    fun updateStrategy(teamScore: Int, opponentScore: Int, half: Int, timeRemaining: Int) {
+        // TODO: change more than intentionally foul and make coaches actually different as to when to call this
+        if (teamScore < opponentScore && half > 1 && timeRemaining < 2 * 60) {
+            // Losing with less than 2 min to go
+            val minLeft = timeRemaining / 60.0
+            if (intentionallyFoul) {
+                // Continue to intentionally foul?
+                if ((opponentScore - teamScore) / minLeft > 5) {
+                    intentionallyFoul = false
+                }
+            } else {
+                // Start to intentionally foul
+                if ((opponentScore - teamScore) / minLeft <= 5) {
+                    intentionallyFoul = true
+                }
+            }
+        } else {
+            intentionallyFoul = false
+        }
     }
 
     companion object {

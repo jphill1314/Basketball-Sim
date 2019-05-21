@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball
 
 import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.plays.IntentionalFoul
 import com.appdev.jphil.basketball.plays.PostMove
 import com.appdev.jphil.basketball.plays.Shot
 import java.lang.Math.*
@@ -31,6 +32,8 @@ fun main(){
     var totalMargin = 0
     var totalScore = 0
     var postMoves = 0
+    var intentionalFouls = 0
+    var gamesWithIntentionalFoul = 0
     var shots = 0
     var highScore: Game? = null
     var lowScore: Game? = null
@@ -79,6 +82,11 @@ fun main(){
         totalScore += game.awayScore
         postMoves += game.gamePlays.filter { it is PostMove }.size
         shots += game.gamePlays.filter { it is Shot }.size
+        val fouls = game.gamePlays.filter { it is IntentionalFoul }.size
+        intentionalFouls += fouls
+        if (fouls != 0) {
+            gamesWithIntentionalFoul++
+        }
     }
 
     println("Neutral Court")
@@ -92,6 +100,7 @@ fun main(){
     println("low score:${lowScore!!.getAsString()}")
     println("post moves: $postMoves -- ${postMoves / totalGames}")
     println("shots: $shots -- ${shots / totalGames}")
+    println("intentional fouls: $intentionalFouls -- $gamesWithIntentionalFoul -- ${intentionalFouls / gamesWithIntentionalFoul}")
     println("-----------------------------------------------------------------")
 
     homeWins = 0
@@ -100,6 +109,8 @@ fun main(){
     totalScore = 0
     postMoves = 0
     shots = 0
+    intentionalFouls = 0
+    gamesWithIntentionalFoul = 0
     highScore = null
     lowScore = null
     maxMargin = null
@@ -146,6 +157,12 @@ fun main(){
         totalScore += game.awayScore
         postMoves += game.gamePlays.filter { it is PostMove }.size
         shots += game.gamePlays.filter { it is Shot }.size
+
+        val fouls = game.gamePlays.filter { it is IntentionalFoul }.size
+        intentionalFouls += fouls
+        if (fouls != 0) {
+            gamesWithIntentionalFoul++
+        }
     }
 
     println("Home court adv")
@@ -159,4 +176,5 @@ fun main(){
     println("low score:${lowScore!!.getAsString()}")
     println("post moves: $postMoves -- ${postMoves / totalGames}")
     println("shots: $shots -- ${shots / totalGames}")
+    println("intentional fouls: $intentionalFouls -- $gamesWithIntentionalFoul -- ${intentionalFouls / gamesWithIntentionalFoul}")
 }

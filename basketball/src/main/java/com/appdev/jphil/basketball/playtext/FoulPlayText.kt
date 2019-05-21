@@ -28,4 +28,8 @@ class FoulPlayText : FoulTextContract {
     override fun defensiveReboundingFoul(fouler: Player, fouled: Player): String {
         return "${fouler.fullName} is called for the over the back foul!"
     }
+
+    override fun intentionalFoul(fouler: Player, fouled: Player): String {
+        return "${fouler.fullName} intentionally fouls ${fouled.fullName}."
+    }
 }

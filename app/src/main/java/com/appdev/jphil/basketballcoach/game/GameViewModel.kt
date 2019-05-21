@@ -229,4 +229,13 @@ class GameViewModel(
     override fun onPressAggressionChanged(aggression: Int) {
         coach.pressAggressionGame = aggression
     }
+
+    override fun onIntentionallyFoulToggled(isChecked: Boolean) {
+        coach.intentionallyFoul = isChecked
+        if (nullGame?.homeTeam?.isUser == true) {
+            nullGame?.homeTeam?.intentionallyFoul = isChecked
+        } else if (nullGame?.awayTeam?.isUser == true) {
+            nullGame?.awayTeam?.intentionallyFoul = isChecked
+        }
+    }
 }
