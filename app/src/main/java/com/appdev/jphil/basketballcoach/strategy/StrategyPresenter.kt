@@ -50,6 +50,10 @@ class StrategyPresenter @Inject constructor(
         coach.pressAggression = aggression
     }
 
+    override fun onIntentionallyFoulToggled(isChecked: Boolean) {
+        // NO OP
+    }
+
     override fun onViewAttached(view: StrategyContract.View) {
         this.view = view
     }

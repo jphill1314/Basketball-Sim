@@ -148,6 +148,10 @@ class Game(
     }
 
     fun simPlay() {
+        if (deadball) {
+            updateStrategy()
+        }
+
         gamePlays.addAll(getNextPlay())
         val lastPlay = gamePlays.last()
         lastPlayerWithBall = if (lastPlay is Pass) lastPlay.playerStartsWithBall else playerWithBall
@@ -185,11 +189,15 @@ class Game(
     }
 
     private fun getNextPlay(): MutableList<BasketballPlay>{
-        val plays: MutableList<BasketballPlay> = if(shootFreeThrows){
+        val plays: MutableList<BasketballPlay> = if (shootFreeThrows) {
             getFreeThrows()
         }
-        else{
-            getGamePlay()
+        else {
+            getIntentionalFoul()
+        }
+
+        if (plays.isEmpty()) {
+            plays.addAll(getGamePlay())
         }
 
         val play = plays.last()
@@ -260,6 +268,21 @@ class Game(
         }
 
         return plays
+    }
+
+    private fun getIntentionalFoul(): MutableList<BasketballPlay> {
+        if (!deadball) {
+            if (homeTeamHasBall) {
+                if (awayTeam.intentionallyFoul) {
+                    return mutableListOf(newIntentionalFoul())
+                }
+            } else {
+                if (homeTeam.intentionallyFoul) {
+                    return mutableListOf(newIntentionalFoul())
+                }
+            }
+        }
+        return mutableListOf()
     }
 
     private fun getGamePlay(): MutableList<BasketballPlay>{
@@ -476,8 +499,22 @@ class Game(
         }
         possessions++
 
-        homeTeam.updateStrategy()
-        awayTeam.updateStrategy()
+        updateStrategy()
+    }
+
+    private fun updateStrategy() {
+        if (userIsCoaching) {
+            if (homeTeam.isUser) {
+                homeTeam.updateStrategy(0, 0, -1, 0)
+                awayTeam.updateStrategy(awayScore, homeScore, half, timeRemaining)
+            } else {
+                awayTeam.updateStrategy(0, 0, -1, 0)
+                homeTeam.updateStrategy(homeScore, awayScore, half, timeRemaining)
+            }
+        } else {
+            homeTeam.updateStrategy(homeScore, awayScore, half, timeRemaining)
+            awayTeam.updateStrategy(awayScore, homeScore, half, timeRemaining)
+        }
     }
 
     private fun updateTimePlayed(isTimeout: Boolean, isHalftime: Boolean) {

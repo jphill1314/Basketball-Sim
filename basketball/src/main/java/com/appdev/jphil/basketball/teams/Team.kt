@@ -48,6 +48,7 @@ class Team(
     var pressAggression: Int
     var aggression: Int
     var pace: Int
+    var intentionallyFoul = false
 
     var userWantsTimeout = false
     var lastScoreDiff = 0
@@ -94,6 +95,7 @@ class Team(
             p.startGame()
         }
         getHeadCoach().startGame()
+        updateStrategy(0, 0, -1, 0)
 
         players.sortBy { it.courtIndex }
     }
@@ -110,15 +112,19 @@ class Team(
         players.sortBy { it.courtIndex }
     }
 
-    fun updateStrategy() {
+    fun updateStrategy(teamScore: Int, opponentScore: Int, half: Int, timeRemaining: Int) {
         // TODO: have AI coaches actually update their strategy
         val hc = getHeadCoach()
+        if (half > 0) {
+            hc.updateStrategy(teamScore, opponentScore, half, timeRemaining)
+        }
         offenseFavorsThrees = hc.offenseFavorsThreesGame
         defenseFavorsThrees = hc.defenseFavorsThreesGame
         pressFrequency = hc.pressFrequencyGame
         pressAggression = hc.pressAggressionGame
         aggression = hc.aggressionGame
         pace = hc.paceGame
+        intentionallyFoul = hc.intentionallyFoul
     }
 
     fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {

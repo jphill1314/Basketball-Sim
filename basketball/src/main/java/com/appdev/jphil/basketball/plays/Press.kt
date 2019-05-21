@@ -70,6 +70,22 @@ class Press(
             // TODO: 5 second violation
         }
 
+        if (type != Plays.FOUL && !leadToFastBreak && defense.intentionallyFoul) {
+            foul = Foul(
+                homeTeamHasBall,
+                timeRemaining,
+                shotClock,
+                homeTeam,
+                awayTeam,
+                playerWithBall,
+                location,
+                foulText,
+                FoulType.INTENTIONAL
+            )
+            type = Plays.FOUL
+            playAsString += "\n${foul.playAsString}"
+        }
+
         timeRemaining -= timeChange
         shotClock -= timeChange
         return 0

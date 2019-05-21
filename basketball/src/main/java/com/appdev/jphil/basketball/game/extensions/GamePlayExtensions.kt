@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.game.extensions
 
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.*
+import com.appdev.jphil.basketball.plays.enums.FoulType
 import kotlin.random.Random
 
 fun Game.newShot(): Shot {
@@ -142,4 +143,17 @@ fun Game.newPostMoveOrShot(): BasketballPlay {
     } else {
         newShot()
     }
+}
+
+fun Game.newIntentionalFoul(): BasketballPlay {
+    return IntentionalFoul(
+        homeTeamHasBall,
+        timeRemaining,
+        shotClock,
+        homeTeam,
+        awayTeam,
+        playerWithBall,
+        location,
+        foulText
+    )
 }
