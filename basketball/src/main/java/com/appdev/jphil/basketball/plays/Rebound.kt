@@ -78,6 +78,9 @@ class Rebound(
             offense.getPlayerAtPosition(playerWithBall).offensiveRebounds++
             reboundText.offensiveRebound(offense.getPlayerAtPosition(playerWithBall))
         } else {
+            if (!foul.isOnDefense) {
+                homeTeamHasBall = !homeTeamHasBall
+            }
             foul.playAsString
         }
     }
@@ -101,7 +104,9 @@ class Rebound(
             defense.getPlayerAtPosition(playerWithBall).defensiveRebounds++
             reboundText.defensiveRebound(defense.getPlayerAtPosition(playerWithBall))
         } else {
-            homeTeamHasBall = !homeTeamHasBall
+            if (!foul.isOnDefense) {
+                homeTeamHasBall = !homeTeamHasBall
+            }
             location = 1
             foul.playAsString
         }

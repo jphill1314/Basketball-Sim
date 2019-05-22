@@ -64,6 +64,7 @@ data class StrategyDataModel(
 
             if (isInGame) {
                 dataModels.add(
+                    0,
                     StrategyDataModel(
                         StrategyType.INTENTIONAL_FOUL,
                         resources.getString(R.string.intentionally_foul),
