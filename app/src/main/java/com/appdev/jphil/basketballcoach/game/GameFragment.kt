@@ -56,6 +56,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private lateinit var rosterSpinner: Spinner
     private lateinit var recyclerView: RecyclerView
 
+    private var nullGame: Game? = null
+
     @Inject
     lateinit var viewModelFactory: GameViewModelFactory
     private var viewModel: GameViewModel? = null
@@ -196,10 +198,28 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         if (strategyAdapter == null && viewModel != null) {
             strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(viewModel!!.coach, resources, true), viewModel!!)
         }
+
+        handleFoulOuts(game)
     }
 
     private fun notifyNewHalf() {
         onDeadBall()
+    }
+
+    private fun handleFoulOuts(nullGame: Game?): Boolean {
+        nullGame?.let { game ->
+            val team = if (game.homeTeam.isUser) game.homeTeam else game.awayTeam
+            team.makeUserSubs(if (game.shootFreeThrows) game.playerWithBall else -1)
+            if (!team.allPlayersAreEligible()) {
+                Toast.makeText(context, "One of your players have fouled out!", Toast.LENGTH_LONG)
+                    .show() // TODO: use resources + better message
+                onDeadBall()
+                selectRosterView(if (game.homeTeam.isUser) 1 else 2)
+                this@GameFragment.nullGame = game
+                return false
+            }
+        }
+        return true
     }
 
     override fun onPause() {
@@ -265,12 +285,14 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     private fun onPlayFabClicked() {
-        playFab.isEnabled = false
-        playFab.hide()
-        viewModel?.pauseGame = false
-        deadBall = false
+        if (handleFoulOuts(nullGame)) {
+            playFab.isEnabled = false
+            playFab.hide()
+            viewModel?.pauseGame = false
+            deadBall = false
 
-        timeoutFab.show()
+            timeoutFab.show()
+        }
     }
 
     private fun onDeadBall() {
