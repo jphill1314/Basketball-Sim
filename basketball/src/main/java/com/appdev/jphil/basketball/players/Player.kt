@@ -226,6 +226,10 @@ class Player(
     }
 
     fun isInFoulTrouble(half: Int, timeRemaining: Int): Boolean {
+        if (!isEligible()) {
+            return false
+        }
+
         return if (half == 1) {
             fouls > 1
         } else {
@@ -236,6 +240,8 @@ class Player(
             }
         }
     }
+
+    fun isEligible(): Boolean = fouls < 5
 
     fun getStatsAsString(): String {
         return "$fullName\n" +

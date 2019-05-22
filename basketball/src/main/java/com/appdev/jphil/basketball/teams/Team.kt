@@ -218,6 +218,15 @@ class Team(
         }
     }
 
+    fun allPlayersAreEligible(): Boolean {
+        for (i in 0..4) {
+            if (!players[i].isEligible()) {
+                return false
+            }
+        }
+        return true
+    }
+
     fun aiMakeSubs(freeThrowShooter: Int, half: Int, timeRemaining: Int) {
         for (index in 0..4) {
             if (index != freeThrowShooter) {
@@ -227,6 +236,13 @@ class Team(
                     Collections.swap(players, index, sub)
                     players[index].courtIndex = index
                     players[sub].courtIndex = sub
+                }
+
+                if (!players[index].isEligible()) {
+                    val forceSub = getSubForIneligiblePlayer(index + 1)
+                    Collections.swap(players, index, forceSub)
+                    players[index].courtIndex = index
+                    players[forceSub].courtIndex = forceSub
                 }
             }
         }
@@ -280,9 +296,23 @@ class Team(
         var player = players[position - 1]
         var indexOfBest = position - 1
         for (index in players.indices) {
-            if ((player.getRatingAtPositionNoFatigue(position) - player.fatigue) < (players[index].getRatingAtPositionNoFatigue(position) - players[index].fatigue)) {
+            if ((player.getRatingAtPositionNoFatigue(position) - player.fatigue) <
+                (players[index].getRatingAtPositionNoFatigue(position) - players[index].fatigue) &&
+                    players[index].isEligible()) {
                 player = players[index]
                 indexOfBest = index
+            }
+        }
+        return indexOfBest
+    }
+
+    private fun getSubForIneligiblePlayer(position: Int): Int {
+        var player = players[5]
+        var indexOfBest = 5
+        for (index in 5 until players.size) {
+            if (!player.isEligible() || player.getRatingAtPosition(position) < players[index].getRatingAtPosition(position)) {
+                indexOfBest = index
+                player = players[index]
             }
         }
         return indexOfBest
