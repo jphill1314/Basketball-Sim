@@ -24,6 +24,7 @@ class FreeThrows(
 
     init {
         type = Plays.FREE_THROW
+        this.location = 1
         foul = Foul(
             homeTeamHasBall,
             timeRemaining,
