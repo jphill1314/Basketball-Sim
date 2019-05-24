@@ -23,7 +23,7 @@ class MiscPlayText : MiscTextContract {
     }
 
     override fun endOfHalf(half: Int, gameOver: Boolean): String {
-        return "\n" + when {
+        return when {
             half == 1 -> "And that will bring us to the end of the first half."
             half == 2 && gameOver -> "And that will be the end of the game!"
             half == 2 && !gameOver -> "And that is the end of regulation! This game is going to overtime!"

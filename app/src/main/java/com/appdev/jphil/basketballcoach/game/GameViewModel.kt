@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
+import com.appdev.jphil.basketball.plays.TipOff
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
@@ -26,7 +27,7 @@ class GameViewModel(
     private var saveGame: Job? = null
     private val gameEvents = mutableListOf<GameEventEntity>()
 
-    fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: () -> Unit) {
+    fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: (newEvents: List<GameEventEntity>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             if (nullGame == null) {
                 if (saveGame?.isCompleted == false) {
@@ -60,7 +61,7 @@ class GameViewModel(
                         if (game.timeRemaining == 0) {
                             game.startHalf()
                             withContext(Dispatchers.Main) {
-                                notifyNewHalf()
+                                notifyNewHalf(getNewPlayEvents(game))
                             }
                         }
 
@@ -161,7 +162,7 @@ class GameViewModel(
                         game.awayTeam.abbreviation,
                         game.homeScore,
                         game.awayScore,
-                        play.homeTeamStartsWithBall
+                        if (play is TipOff) play.homeTeamHasBall else play.homeTeamStartsWithBall
                     ))
                 } else {
                     val lastPlay = newPlays[index - 1]
@@ -178,7 +179,7 @@ class GameViewModel(
                             game.awayTeam.abbreviation,
                             game.homeScore,
                             game.awayScore,
-                            play.homeTeamStartsWithBall
+                            if (play is TipOff) play.homeTeamHasBall else play.homeTeamStartsWithBall
                         ))
                     }
                 }

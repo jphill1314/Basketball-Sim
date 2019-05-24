@@ -157,3 +157,19 @@ fun Game.newIntentionalFoul(): BasketballPlay {
         foulText
     )
 }
+
+fun Game.newEndOfHalf(gameOver: Boolean): BasketballPlay {
+    return EndOfHalf(
+        homeTeamHasBall,
+        timeRemaining,
+        shotClock,
+        homeTeam,
+        awayTeam,
+        playerWithBall,
+        location,
+        foulText,
+        miscText,
+        half - 1,
+        gameOver
+    )
+}
