@@ -51,7 +51,7 @@ fun Game.makeUserSubsIfPossible() {
         if (shootFreeThrows) {
             if (homeTeamHasBall) {
                 if (homeTeam.isUser) {
-                    homeTeam.makeUserSubs(playerWithBall)
+                    homeTeam.makeUserSubs(playerWithBall - 1)
                 } else {
                     awayTeam.makeUserSubs(-1)
                 }
@@ -59,7 +59,7 @@ fun Game.makeUserSubsIfPossible() {
                 if (homeTeam.isUser) {
                     homeTeam.makeUserSubs(-1)
                 } else {
-                    awayTeam.makeUserSubs(playerWithBall)
+                    awayTeam.makeUserSubs(playerWithBall - 1)
                 }
             }
         } else {

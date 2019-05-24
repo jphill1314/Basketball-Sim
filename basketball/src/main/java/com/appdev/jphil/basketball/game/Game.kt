@@ -93,10 +93,6 @@ class Game(
 
     fun startHalf() {
         updateTimePlayed(false, false)
-        timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
-        lastTimeRemaining = timeRemaining
-        shotClock = lengthOfShotClock
-        location = 0
 
         if (half != 2) {
             // Tip off starts game and all overtime periods
@@ -108,9 +104,7 @@ class Game(
             deadball = false
             madeShot = false
             if (half != 1) {
-                if (gamePlays.isNotEmpty()) {
-                    gamePlays.last().playAsString += miscText.endOfHalf(half - 1, false)
-                }
+                gamePlays.add(newEndOfHalf(false))
                 homeTimeouts++
                 awayTimeouts++
             }
@@ -118,9 +112,8 @@ class Game(
             homeTeamHasBall = homeTeamHasPossessionArrow
             deadball = true
             madeShot = false
-            if (gamePlays.isNotEmpty()) {
-                gamePlays.last().playAsString += miscText.endOfHalf(1, false)
-            }
+
+            gamePlays.add(newEndOfHalf(false))
 
             if (homeTimeouts == maxTimeouts) {
                 homeTimeouts--
@@ -129,6 +122,14 @@ class Game(
                 awayTimeouts--
             }
         }
+
+        timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
+        lastTimeRemaining = timeRemaining
+        shotClock = lengthOfShotClock
+        location = 0
+
+        homeTeam.lastScoreDiff = homeScore - awayScore
+        awayTeam.lastScoreDiff = awayScore - homeScore
 
         if(half < 3){
             homeFouls = 0
@@ -185,7 +186,7 @@ class Game(
         isFinal = true
         inProgress = false
 
-        gamePlays.last().playAsString += miscText.endOfHalf(half, true)
+        gamePlays.add(newEndOfHalf(true))
     }
 
     private fun getNextPlay(): MutableList<BasketballPlay>{
@@ -222,6 +223,9 @@ class Game(
         }
 
         manageFouls(play.foul)
+        if (shootFreeThrows) {
+            location = 1
+        }
 
         if(shotClock == 0 && timeRemaining > 0){
             play.playAsString += if (homeTeamHasBall) {
@@ -409,19 +413,21 @@ class Game(
             }
 
             if (foul.isOnDefense || foul.foulType == FoulType.REBOUNDING) {
-                if (foul.homeTeamHasBall && awayFouls > 6) {
-                    shootFreeThrows = true
-                    numberOfFreeThrows = if (awayFouls >= 10) {
-                        2
-                    } else {
-                        -1
-                    }
-                } else if (homeFouls > 6) {
-                    shootFreeThrows = true
-                    numberOfFreeThrows = if (homeFouls >= 10) {
-                        2
-                    } else {
-                        -1
+                if (!shootFreeThrows) {
+                    if (foul.homeTeamHasBall && awayFouls > 6) {
+                        shootFreeThrows = true
+                        numberOfFreeThrows = if (awayFouls >= 10) {
+                            2
+                        } else {
+                            -1
+                        }
+                    } else if (!foul.homeTeamHasBall && homeFouls > 6) {
+                        shootFreeThrows = true
+                        numberOfFreeThrows = if (homeFouls >= 10) {
+                            2
+                        } else {
+                            -1
+                        }
                     }
                 }
 

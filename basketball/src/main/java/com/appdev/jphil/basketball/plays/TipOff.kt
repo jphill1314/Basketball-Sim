@@ -28,7 +28,7 @@ class TipOff(
         val awayCenter = awayTeam.getPlayerAtPosition(5)
 
         homeTeamHasBall = homeCenter.rebounding + r.nextInt(randomBound) > awayCenter.rebounding + r.nextInt(randomBound)
-        playerWithBall = r.nextInt(5) + 1
+        playerWithBall = r.nextInt(4) + 1
         playAsString = tipOffText.tipOffText(homeTeam, awayTeam, homeTeamHasBall)
 
         return 0

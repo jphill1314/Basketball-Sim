@@ -161,7 +161,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         viewModel?.gameId = gameId
         viewModel?.simulateGame(
             { game, newEvents -> updateGame(game, newEvents) },
-            { notifyNewHalf() }
+            { newEvents ->  notifyNewHalf(newEvents) }
         )
 
         homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
@@ -202,8 +202,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         handleFoulOuts(game)
     }
 
-    private fun notifyNewHalf() {
+    private fun notifyNewHalf(newEvents: List<GameEventEntity>) {
         onDeadBall()
+        gameAdapter.addEvents(newEvents)
+        gameAdapter.notifyDataSetChanged()
     }
 
     private fun handleFoulOuts(nullGame: Game?): Boolean {
