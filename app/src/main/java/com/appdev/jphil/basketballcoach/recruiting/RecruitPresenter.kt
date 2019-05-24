@@ -12,7 +12,6 @@ class RecruitPresenter @Inject constructor(
     private var view : RecruitContract.View? = null
     private val sortedRecruits = mutableListOf<Recruit>()
     private var positionFilter = 0
-    private var interactionFilter = -1
     private var sortHighToLow = true
     private lateinit var team: Team
 
@@ -41,13 +40,8 @@ class RecruitPresenter @Inject constructor(
         view?.updateRecruits(getRecruits())
     }
 
-    override fun onInteractionFilterSelected(filterType: Int) {
-        interactionFilter = filterType
-        view?.updateRecruits(getRecruits())
-    }
-
     private fun getRecruits(): List<Recruit> {
-        return getSortedList(getInteractionFilteredList(getPositionFilteredList(sortedRecruits)))
+        return getSortedList(getPositionFilteredList(sortedRecruits))
     }
 
     private fun getSortedList(list: List<Recruit>): List<Recruit> {
@@ -64,24 +58,6 @@ class RecruitPresenter @Inject constructor(
         } else {
             list.filter { it.position == positionFilter }
         }
-    }
-
-    private fun getInteractionFilteredList(list: List<Recruit>): List<Recruit> {
-        return if (interactionFilter == -1) {
-            list
-        } else {
-            list.filter { getInteractionFilterBool(it) }
-        }
-    }
-
-    private fun getInteractionFilterBool(recruit: Recruit): Boolean {
-        val type = RecruitingEvent.getEventByType(interactionFilter)
-        return recruit.interestInTeams.firstOrNull { it.teamId == team.teamId }?.let { interest ->
-            when (type) {
-                RecruitingEvent.OFFER_SCHOLARSHIP -> interest.isOfferedScholarship
-                RecruitingEvent.SCOUT -> false
-            }
-        } ?: false
     }
 
     override fun onRecruitPressed(recruit: Recruit) {
