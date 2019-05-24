@@ -40,7 +40,7 @@ class PostMove(
     override fun generatePlay(): Int {
         val shooter = offense.getPlayerAtPosition(playerWithBall)
         val defender = defense.getPlayerAtPosition(playerWithBall)
-        var shotSuccess = shooter.postMove - defender.postDefense + r.nextInt(2 * randomBound) - randomBound
+        var shotSuccess = r.nextInt(shooter.postMove) - r.nextInt(defender.postDefense)
 
         if (assisted) {
             shotSuccess += 30
@@ -69,7 +69,7 @@ class PostMove(
 
         shooter.twoPointAttempts++
         offense.twoPointAttempts++
-        return if (shotSuccess > 30) {
+        return if (shotSuccess > 10 && r.nextDouble() > 0.2) {
             // made shot
             playAsString = postMoveText.madeShot(shooter, type == Plays.FOUL)
             shooter.twoPointMakes++

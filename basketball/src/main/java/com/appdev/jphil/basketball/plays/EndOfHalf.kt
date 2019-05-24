@@ -19,7 +19,8 @@ class EndOfHalf(
 ) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
 
     init {
-        playAsString = miscText.endOfHalf(half, gameOver)
+        val realHalf = if (gameOver) half else half - 1
+        playAsString = miscText.endOfHalf(realHalf, gameOver)
     }
 
     override fun generatePlay(): Int {

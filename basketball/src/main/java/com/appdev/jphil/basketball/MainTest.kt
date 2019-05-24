@@ -34,6 +34,8 @@ fun main(){
     var postMoves = 0
     var intentionalFouls = 0
     var gamesWithIntentionalFoul = 0
+    var ftAttempts = 0
+    var ftMakes = 0
     var shots = 0
     var highScore: Game? = null
     var lowScore: Game? = null
@@ -87,6 +89,9 @@ fun main(){
         if (fouls != 0) {
             gamesWithIntentionalFoul++
         }
+
+        ftAttempts = game.homeTeam.freeThrowShots + game.awayTeam.freeThrowShots
+        ftMakes = game.homeTeam.freeThrowMakes + game.awayTeam.freeThrowMakes
     }
 
     println("Neutral Court")
@@ -101,6 +106,7 @@ fun main(){
     println("post moves: $postMoves -- ${postMoves / totalGames}")
     println("shots: $shots -- ${shots / totalGames}")
     println("intentional fouls: $intentionalFouls -- $gamesWithIntentionalFoul -- ${intentionalFouls / gamesWithIntentionalFoul}")
+    println("ft %: ${ftMakes / (1.0 * ftAttempts)}")
     println("-----------------------------------------------------------------")
 
     homeWins = 0
@@ -111,6 +117,8 @@ fun main(){
     shots = 0
     intentionalFouls = 0
     gamesWithIntentionalFoul = 0
+    ftAttempts = 0
+    ftMakes = 0
     highScore = null
     lowScore = null
     maxMargin = null
@@ -163,6 +171,9 @@ fun main(){
         if (fouls != 0) {
             gamesWithIntentionalFoul++
         }
+
+        ftAttempts = game.homeTeam.freeThrowShots + game.awayTeam.freeThrowShots
+        ftMakes = game.homeTeam.freeThrowMakes + game.awayTeam.freeThrowMakes
     }
 
     println("Home court adv")
@@ -177,4 +188,5 @@ fun main(){
     println("post moves: $postMoves -- ${postMoves / totalGames}")
     println("shots: $shots -- ${shots / totalGames}")
     println("intentional fouls: $intentionalFouls -- $gamesWithIntentionalFoul -- ${intentionalFouls / gamesWithIntentionalFoul}")
+    println("ft %: ${ftMakes / (1.0 * ftAttempts)}")
 }
