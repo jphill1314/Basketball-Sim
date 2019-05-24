@@ -1,10 +1,12 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.FreeThrowTextContract
+import kotlin.math.max
 
 class FreeThrows(
     homeTeamHasBall: Boolean,
@@ -46,7 +48,7 @@ class FreeThrows(
             for (i in 1..numberOfShots) {
                 offense.freeThrowShots++
                 shooter.freeThrowShots++
-                if (r.nextInt(100) < shooter.freeThrowShot) {
+                if (getFreeThrowMake(shooter)) {
                     made++
                     offense.freeThrowMakes++
                     shooter.freeThrowMakes++
@@ -60,13 +62,13 @@ class FreeThrows(
             playAsString = ftText.freeThrowText(shooter, made, numberOfShots)
         } else {
             // 1 and 1 situation
-            if (r.nextInt(100) < shooter.freeThrowShot) {
+            if (getFreeThrowMake(shooter)) {
                 made++
                 offense.freeThrowShots++
                 offense.freeThrowMakes++
                 shooter.freeThrowShots++
                 shooter.freeThrowMakes++
-                if (r.nextInt(100) < shooter.freeThrowShot) {
+                if (getFreeThrowMake(shooter)) {
                     made++
                     offense.freeThrowShots++
                     offense.freeThrowMakes++
@@ -86,5 +88,9 @@ class FreeThrows(
             playAsString = ftText.oneAndOneText(shooter, made)
         }
         return made
+    }
+
+    private fun getFreeThrowMake(shooter: Player): Boolean {
+        return r.nextInt(125) < shooter.freeThrowShot || r.nextBoolean()
     }
 }

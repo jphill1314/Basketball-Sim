@@ -165,6 +165,7 @@ class Team(
         val maxModifier = 30
         val gameVariability = 15
         val focusMod = 5
+        val homeCourtAdvantage = 4
 
         for (p in players) {
             var gameMod = (Random.nextDouble() * 2 * gameVariability) - gameVariability
@@ -176,7 +177,7 @@ class Team(
             }
 
             if (homeTeam) {
-                gameMod += 10
+                gameMod += homeCourtAdvantage
             }
 
             if (scoreDif > 10) {

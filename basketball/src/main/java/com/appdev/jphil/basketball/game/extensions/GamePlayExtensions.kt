@@ -132,11 +132,11 @@ fun Game.newPostMove(): PostMove {
 
 fun Game.newPostMoveOrShot(): BasketballPlay {
     val shooter = if (homeTeamHasBall) homeTeam.getPlayerAtPosition(playerWithBall) else awayTeam.getPlayerAtPosition(playerWithBall)
-    val positionChanceMod = when (shooter.position) {
-        4, 5 -> 0
-        3 -> 30
-        2 -> 40
-        else -> 50
+    val positionChanceMod = when (shooter.courtIndex) {
+        4, 5 -> 15
+        3 -> 45
+        2 -> 55
+        else -> 65
     }
     return if (Random.nextInt(100) + positionChanceMod < shooter.postMove) {
         newPostMove()
@@ -169,7 +169,7 @@ fun Game.newEndOfHalf(gameOver: Boolean): BasketballPlay {
         location,
         foulText,
         miscText,
-        half - 1,
+        half,
         gameOver
     )
 }
