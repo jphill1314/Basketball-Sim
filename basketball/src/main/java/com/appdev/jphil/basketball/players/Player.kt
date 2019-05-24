@@ -125,14 +125,9 @@ class Player(
     }
 
     fun getRatingAtPosition(position: Int): Int {
-        val overallRating = (closeRangeShot * closeWeight[position - 1] +
-                midRangeShot * midWeight[position - 1] + longRangeShot * longWeight[position - 1] +
-                freeThrowShot * ftWeight[position - 1] + postMove * postOffWeight[position - 1] +
-                ballHandling * ballWeight[position - 1] + passing * passWeight[position - 1] +
-                offBallMovement * offMoveWeight[position - 1] +
-                postDefense * postDefWeight[position - 1] + perimeterDefense * perimDefWeight[position - 1] +
-                onBallDefense * onBallWeight[position - 1] + offBallDefense * offBallWeight[position - 1] +
-                stealing * stealWeight[position - 1] + rebounding * reboundWeight[position - 1]).toInt()
+        val overallRating = closeRangeShot + midRangeShot + longRangeShot + freeThrowShot + postMove +
+                ballHandling + passing + offBallMovement + postDefense + perimeterDefense +
+                onBallDefense + offBallDefense + stealing + rebounding
 
         val div = closeWeight[position - 1] + midWeight[position - 1] + longWeight[position - 1] +
                 ftWeight[position - 1] + postOffWeight[position - 1] + ballWeight[position - 1] +
