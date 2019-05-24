@@ -17,7 +17,6 @@ interface RecruitContract {
         fun onRecruitsLoaded(team: Team)
         fun onSortSelected()
         fun onPositionFilterSelected(filterType: Int)
-        fun onInteractionFilterSelected(filterType: Int)
         fun onRecruitPressed(recruit: Recruit)
     }
 

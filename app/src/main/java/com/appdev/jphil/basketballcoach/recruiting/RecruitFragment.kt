@@ -56,17 +56,6 @@ class RecruitFragment : Fragment(), RecruitContract.View {
                         })
                     .show()
             }
-            R.id.filter_interation -> {
-                AlertDialog.Builder(context!!)
-                    .setTitle("Interations")
-                    .setItems(resources.getStringArray(R.array.interactions_filters),
-                        object : DialogInterface.OnClickListener {
-                            override fun onClick(dialog: DialogInterface?, which: Int) {
-                                presenter.onInteractionFilterSelected(which - 1)
-                            }
-                        })
-                    .show()
-            }
         }
         return super.onOptionsItemSelected(item)
     }
