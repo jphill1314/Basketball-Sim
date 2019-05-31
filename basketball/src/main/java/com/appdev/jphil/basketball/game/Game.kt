@@ -394,6 +394,7 @@ class Game(
             madeShot = false // allow media timeouts to be called
             timeInBackcourt = 0 // reset time for 10 second call
             lastPassWasGreat = false
+            var isOnHomeTeam = false
 
             if (foul.isOnDefense) {
                 if (foul.homeTeamHasBall) {
@@ -401,11 +402,13 @@ class Game(
                 }
                 else {
                     homeFouls++
+                    isOnHomeTeam = true
                 }
             }
             else {
                 if (foul.homeTeamHasBall) {
                     homeFouls++
+                    isOnHomeTeam = true
                 }
                 else {
                     awayFouls++
@@ -414,14 +417,14 @@ class Game(
 
             if (foul.isOnDefense || foul.foulType == FoulType.REBOUNDING) {
                 if (!shootFreeThrows) {
-                    if (foul.homeTeamHasBall && awayFouls > 6) {
+                    if (isOnHomeTeam && awayFouls > 6) {
                         shootFreeThrows = true
                         numberOfFreeThrows = if (awayFouls >= 10) {
                             2
                         } else {
                             -1
                         }
-                    } else if (!foul.homeTeamHasBall && homeFouls > 6) {
+                    } else if (!isOnHomeTeam && homeFouls > 6) {
                         shootFreeThrows = true
                         numberOfFreeThrows = if (homeFouls >= 10) {
                             2

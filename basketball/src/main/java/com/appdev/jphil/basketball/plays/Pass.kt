@@ -68,7 +68,7 @@ class Pass(
             justDribbling()
         }
 
-        if (foul.foulType == FoulType.CLEAN && defense.intentionallyFoul) {
+        if (foul.foulType == FoulType.CLEAN && defense.intentionallyFoul && timeChange < timeRemaining) {
             foul = Foul(
                 homeTeamHasBall,
                 timeRemaining,
