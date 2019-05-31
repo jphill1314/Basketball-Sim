@@ -80,12 +80,14 @@ class RecruitInterest(
 
     private fun doScoutingEvent(multiplier: Double) {
         interest += getInterestChange(multiplier)
-        ratingRange = Random.nextInt(ratingRange)
+        if (ratingRange > 0) {
+            ratingRange = Random.nextInt(ratingRange)
 
-        if (ratingOffset > ratingRange / 2) {
-            ratingOffset = ratingRange / 2
-        } else if (-ratingOffset > ratingRange / 2) {
-            ratingOffset = -(ratingRange / 2)
+            if (ratingOffset > ratingRange / 2) {
+                ratingOffset = ratingRange / 2
+            } else if (-ratingOffset > ratingRange / 2) {
+                ratingOffset = -(ratingRange / 2)
+            }
         }
     }
 
