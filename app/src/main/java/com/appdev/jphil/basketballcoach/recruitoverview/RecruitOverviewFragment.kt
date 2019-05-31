@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -19,6 +21,10 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
     @Inject
     lateinit var presenter: RecruitOverviewContract.Presenter
+
+    @Inject
+    lateinit var teamManager: TeamManager
+
     var recruitId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +62,15 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
         view?.apply {
             findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[recruit.position - 1]
             findViewById<TextView>(R.id.player_name).text = recruit.fullName
-            findViewById<TextView>(R.id.rating).text = resources.getString(R.string.rating_colon, recruit.rating)
+
+            val ratingMin = recruit.getRatingMinForTeam(teamManager.getTeamId())
+            val ratingMax = recruit.getRatingMaxForTeam(teamManager.getTeamId())
+            findViewById<TextView>(R.id.rating).text = if (ratingMax != ratingMin) {
+                resources.getString(R.string.rating_range, ratingMin, ratingMax)
+            } else {
+                resources.getString(R.string.rating_colon, ratingMax)
+            }
+
             findViewById<TextView>(R.id.potential).text = resources.getString(R.string.potential_color, recruit.potential)
             findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[recruit.playerType.type]
 
@@ -80,6 +94,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
     companion object {
         private const val RECRUIT_ID = "id"
+        private const val TEAM_ID = "tId"
 
         fun newInstance(recruitId: Int): RecruitOverviewFragment {
             val fragment = RecruitOverviewFragment()
