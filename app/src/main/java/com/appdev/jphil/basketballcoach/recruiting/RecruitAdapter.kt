@@ -13,7 +13,6 @@ import com.appdev.jphil.basketballcoach.R
 class RecruitAdapter(
     private var recruits: List<Recruit>,
     private val teamId: Int,
-    private val team: Team,
     private val presenter: RecruitContract.Presenter,
     private val resources: Resources
 ): RecyclerView.Adapter<RecruitAdapter.ViewHolder>() {
@@ -53,7 +52,11 @@ class RecruitAdapter(
         // TODO: make sure to only show the range that the user knows about
         val ratingMin = recruit.getRatingMinForTeam(teamId)
         val ratingMax = recruit.getRatingMaxForTeam(teamId)
-        viewHolder.rating.text = resources.getString(R.string.rating_range, ratingMin, ratingMax)
+        viewHolder.rating.text = if (ratingMax != ratingMin) {
+            resources.getString(R.string.rating_range, ratingMin, ratingMax)
+        } else {
+            resources.getString(R.string.rating_colon, ratingMax)
+        }
 
         val interestInTeam = recruit.interestInTeams.filter { it.teamId == teamId }
         if (interestInTeam.isNotEmpty()) {

@@ -74,7 +74,13 @@ class Recruit(
 
     fun updateInterestAfterGame(game: Game) {
         interestInTeams.firstOrNull { it.teamId == game.homeTeam.teamId }?.let { homeInterest ->
-            if (game.homeTeam.hasNeedAtPosition(position)) {
+            if (isCommitted) {
+                if (teamCommittedTo == homeInterest.teamId) {
+                    homeInterest.interest = 100
+                } else {
+                    homeInterest.interest = 0
+                }
+            } else if (game.homeTeam.hasNeedAtPosition(position)) {
                 homeInterest.onTeamGameCompleted(game, getTeamMultiplier(game.homeTeam))
                 considerScholarship(game.homeTeam)
             } else {
@@ -83,7 +89,13 @@ class Recruit(
         }
 
         interestInTeams.firstOrNull { it.teamId == game.awayTeam.teamId }?.let { awayInterest ->
-            if (game.awayTeam.hasNeedAtPosition(position)) {
+            if (isCommitted) {
+                if (teamCommittedTo == awayInterest.teamId) {
+                    awayInterest.interest = 100
+                } else {
+                    awayInterest.interest = 0
+                }
+            } else if (game.awayTeam.hasNeedAtPosition(position)) {
                 awayInterest.onTeamGameCompleted(game, getTeamMultiplier(game.awayTeam))
                 considerScholarship(game.awayTeam)
             } else {

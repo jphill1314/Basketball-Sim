@@ -76,7 +76,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     }
 
     override fun displayRecruits(recruits: List<Recruit>, team: Team) {
-        adapter = RecruitAdapter(recruits, teamManager.getTeamId(), team, presenter, resources)
+        adapter = RecruitAdapter(recruits, teamManager.getTeamId(), presenter, resources)
         view?.apply {
             findViewById<RecyclerView>(R.id.recycler_view)?.let {
                 it.layoutManager = LinearLayoutManager(context)
