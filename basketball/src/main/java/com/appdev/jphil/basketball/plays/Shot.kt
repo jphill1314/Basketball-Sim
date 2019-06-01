@@ -11,8 +11,8 @@ import com.appdev.jphil.basketball.textcontracts.ShotTextContract
 
 class Shot(
     game: Game,
-    private val assisted: Boolean,
-    private val passer: Player,
+    val assisted: Boolean,
+    val passer: Player,
     private val rushed: Boolean
 ) : BasketballPlay(game) {
 
