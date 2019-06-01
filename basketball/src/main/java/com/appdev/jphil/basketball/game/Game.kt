@@ -383,6 +383,15 @@ class Game(
         else {
             plays.add(newPass())
             deadball = false
+
+            if (plays.last().timeRemaining == 0 && half != 1) {
+                if (homeTeamHasBall && homeScore < awayScore && homeScore + 3 >= awayScore) {
+                    // Buzzer beater for tie / win
+                    plays.add(newShot(buzzerBeater = true))
+                } else if (!homeTeamHasBall && awayScore < homeScore && awayScore + 3 >= homeScore) {
+                    plays.add(newShot(buzzerBeater = true))
+                }
+            }
         }
 
         return plays

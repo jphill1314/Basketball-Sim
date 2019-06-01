@@ -5,7 +5,7 @@ import com.appdev.jphil.basketball.plays.*
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import kotlin.random.Random
 
-fun Game.newShot(): Shot {
+fun Game.newShot(buzzerBeater: Boolean = false): Shot {
     val passer = if (homeTeamHasBall) homeTeam.getPlayerAtPosition(lastPlayerWithBall) else awayTeam.getPlayerAtPosition(lastPlayerWithBall)
     return Shot(
         homeTeamHasBall,
@@ -18,7 +18,7 @@ fun Game.newShot(): Shot {
         foulText,
         lastPassWasGreat,
         passer,
-        shotClock <= 5,
+        shotClock <= 5 || buzzerBeater,
         shotText
     )
 }
