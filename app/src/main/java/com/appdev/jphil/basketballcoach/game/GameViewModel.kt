@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
+import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
 import com.appdev.jphil.basketball.plays.TipOff
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
@@ -59,7 +60,7 @@ class GameViewModel(
 
                     while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
                         if (game.timeRemaining == 0) {
-                            game.startHalf()
+                            HalfTimeHelper.startHalf(game)
                             withContext(Dispatchers.Main) {
                                 notifyNewHalf(getNewPlayEvents(game))
                             }

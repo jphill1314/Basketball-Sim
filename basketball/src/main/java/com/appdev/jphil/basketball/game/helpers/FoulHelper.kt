@@ -13,7 +13,7 @@ object FoulHelper {
     }
 
     private fun updateGameAfterFoul(game: Game, foul: Foul) {
-        with (game) {
+        with(game) {
             deadball = true
             madeShot = false // allow media timeouts to be called
             timeInBackcourt = 0 // reset time for 10 second call

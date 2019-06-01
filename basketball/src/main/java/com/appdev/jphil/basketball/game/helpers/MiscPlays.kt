@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketball.game.helpers
 
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.game.extensions.makeSubs
 import com.appdev.jphil.basketball.plays.BasketballPlay
 import com.appdev.jphil.basketball.plays.FreeThrows
 import com.appdev.jphil.basketball.plays.IntentionalFoul
@@ -8,16 +9,29 @@ import com.appdev.jphil.basketball.plays.Rebound
 
 object MiscPlays {
 
+    fun canIntentionalFoul(game: Game): Boolean {
+        with (game) {
+            if (!deadball) {
+                return if (homeTeamHasBall) awayTeam.intentionallyFoul else homeTeam.intentionallyFoul
+            }
+            return false
+        }
+    }
+
     fun getIntentionalFoul(game: Game): MutableList<BasketballPlay> {
         with (game) {
             if (!deadball) {
                 if (homeTeamHasBall) {
                     if (awayTeam.intentionallyFoul) {
-                        return mutableListOf(IntentionalFoul(this))
+                        val foul = IntentionalFoul(game)
+                        FoulHelper.manageFoul(game, foul.foul)
+                        return mutableListOf(foul)
                     }
                 } else {
                     if (homeTeam.intentionallyFoul) {
-                        return mutableListOf(IntentionalFoul(this))
+                        val foul = IntentionalFoul(game)
+                        FoulHelper.manageFoul(game, foul.foul)
+                        return mutableListOf(foul)
                     }
                 }
             }
@@ -29,15 +43,29 @@ object MiscPlays {
         with (game) {
             shootFreeThrows = false
             val plays = mutableListOf<BasketballPlay>()
-            val freeThrows = FreeThrows(this, numberOfFreeThrows)
-            addPoints(freeThrows.points)
+            val freeThrows = FreeThrows(game, numberOfFreeThrows)
+            if (homeTeamHasBall) {
+                homeScore += freeThrows.points
+            } else {
+                awayScore += freeThrows.points
+            }
             plays.add(freeThrows)
 
             if(!freeThrows.madeLastShot){
-                plays.add(Rebound(this))
+                val rebound = Rebound(game)
+                if (rebound.homeTeamStartsWithBall != rebound.homeTeamHasBall) {
+                    changePossession()
+                }
                 deadball = false
+                plays.add(rebound)
+            } else {
+                deadball = true
+                madeShot = true
+                makeSubs()
+                changePossession()
             }
-
+            playerWithBall = plays.last().playerWithBall
+            resetShotClock()
             return plays
         }
     }

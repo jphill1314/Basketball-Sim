@@ -7,23 +7,7 @@ import com.appdev.jphil.basketball.plays.PostMove
 import com.appdev.jphil.basketball.plays.Shot
 import java.lang.Math.*
 
-fun main(){
-//    val homeTeam = Team(1, "Home", 70, true)
-//    val awayTeam = Team(2, "Away", 70, true)
-//    println("Home team: ${homeTeam.teamRating} vs. Away team: ${awayTeam.teamRating}")
-//
-//    val game = Game(homeTeam, awayTeam, true)
-//    game.simulateFullGame()
-//
-//    println(game.getAsString())
-//    println("Number of plays:${game.gamePlays.size}")
-//    println("Possessions: ${game.possessions/2}")
-//    println("\n${game.homeTeam.getStatsAsString()}")
-//    println("\n${game.awayTeam.getStatsAsString()}")
-//    for(player in homeTeam.roster){
-//        println(player.getStatsAsString()+"\n")
-//    }
-
+fun main() {
     val homeRating = 50
     val awayRating = 50
 
@@ -189,4 +173,8 @@ fun main(){
     println("shots: $shots -- ${shots / totalGames}")
     println("intentional fouls: $intentionalFouls -- $gamesWithIntentionalFoul -- ${intentionalFouls / gamesWithIntentionalFoul}")
     println("ft %: ${ftMakes / (1.0 * ftAttempts)}")
+}
+
+private fun Game.getAsString(): String{
+    return "Half:$half \t ${homeTeam.name}:$homeScore - ${awayTeam.name}:$awayScore"
 }

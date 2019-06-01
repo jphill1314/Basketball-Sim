@@ -26,6 +26,7 @@ class MainApplication @Inject constructor() : Application(), HasActivityInjector
 
         FlurryAgent.Builder()
             .withLogEnabled(true)
+            .withCaptureUncaughtExceptions(true)
             .build(this, resources.getString(R.string.flurry_key))
 
         component = DaggerAppComponent.builder()
