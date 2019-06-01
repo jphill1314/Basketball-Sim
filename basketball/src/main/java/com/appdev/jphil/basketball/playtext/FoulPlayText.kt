@@ -6,19 +6,19 @@ import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 class FoulPlayText : FoulTextContract {
 
     override fun offenseOffBallFoul(fouler: Player, fouled: Player): String {
-        return "${fouler.fullName} is called for an off-ball foul!"
+        return "${fouler.fullName} is called for an illegal screen!"
     }
 
     override fun defenseOffBallFoul(fouler: Player, fouled: Player): String {
-        return "${fouler.fullName} is called for an off-ball foul!"
+        return "${fouler.fullName} is called for a defensive foul away from the ball!"
     }
 
     override fun offenseOnBallFoul(fouler: Player, fouled: Player): String {
-        return "${fouler.fullName} is called for the offensive foul!"
+        return "${fouler.fullName} is called for the charge!"
     }
 
     override fun defenseOnBallFoul(fouler: Player, fouled: Player): String {
-        return "${fouler.fullName} is called for a foul!"
+        return "${fouler.fullName} is called for a foul on the ball handler!"
     }
 
     override fun offensiveReboundingFoul(fouler: Player, fouled: Player): String {

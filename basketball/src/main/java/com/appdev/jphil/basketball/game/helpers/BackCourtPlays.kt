@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.BasketballPlay
 import com.appdev.jphil.basketball.plays.Pass
 import com.appdev.jphil.basketball.plays.Press
+import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import kotlin.random.Random
 
@@ -22,19 +23,26 @@ object BackCourtPlays {
                 Random.nextInt(100) < homeTeam.pressFrequency - liveBallModifier
             }
 
-            val backcourtPlays: MutableList<BasketballPlay> = if (press) {
-                mutableListOf(Press(this, consecutivePresses++))
+            val play = if (press) {
+                homeTeam.addFatigueFromPress()
+                awayTeam.addFatigueFromPress()
+                Press(game, consecutivePresses++)
             } else {
-                mutableListOf(Pass(this))
+                Pass(game)
             }
 
-            if (backcourtPlays.last().type != Plays.FOUL) {
-                deadball = false
-            }
+            timeInBackcourt += timeRemaining - play.timeRemaining
+            updateTimeRemaining(play)
 
-            timeInBackcourt += timeRemaining - backcourtPlays[0].timeRemaining
+            playerWithBall = play.playerWithBall
+            location = play.location
+            deadball = false
 
-            return backcourtPlays
+            FoulHelper.manageFoul(game, play.foul)
+            ClockViolationHelper.getBackCourtViolation(game, play)
+            ClockViolationHelper.getShotClockViolation(game, play)
+
+            return mutableListOf(play)
         }
     }
 

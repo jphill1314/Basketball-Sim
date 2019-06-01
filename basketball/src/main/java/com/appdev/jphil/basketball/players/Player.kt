@@ -237,14 +237,4 @@ class Player(
     }
 
     fun isEligible(): Boolean = fouls < 5
-
-    fun getStatsAsString(): String {
-        return "$fullName\n" +
-                "Minutes: ${timePlayed / 60}\n" +
-                "2FG:$twoPointMakes/$twoPointAttempts - ${twoPointMakes / (twoPointAttempts * 1.0)}\n" +
-                "3FG:$threePointMakes/$threePointAttempts - ${threePointMakes / (threePointAttempts * 1.0)}\n" +
-                "Rebounds:$offensiveRebounds/$defensiveRebounds - ${offensiveRebounds + defensiveRebounds}\n" +
-                "TO:$turnovers\nFouls:$fouls\n" +
-                "FT:$freeThrowMakes/$freeThrowShots - ${freeThrowMakes / (freeThrowShots * 1.0)}"
-    }
 }

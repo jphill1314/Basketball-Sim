@@ -62,15 +62,11 @@ class Game(
     val gamePlays = mutableListOf<BasketballPlay>()
     val passingUtils = PassingUtils(homeTeam, awayTeam, 100)
 
-    fun getAsString(): String{
-        return "Half:$half \t ${homeTeam.name}:$homeScore - ${awayTeam.name}:$awayScore"
-    }
-
     fun simulateFullGame(){
         setupGame()
 
         while(half < 3 || homeScore == awayScore){
-            startHalf()
+            HalfTimeHelper.startHalf(this)
 
             while(timeRemaining > 0) {
                 simPlay()
@@ -92,92 +88,21 @@ class Game(
         awayTeam.resumeGame()
     }
 
-    fun startHalf() {
-        updateTimePlayed(false, false)
-
-        if (half != 2) {
-            // Tip off starts game and all overtime periods
-            val tipOff = TipOff(this)
-            homeTeamHasBall = tipOff.homeTeamHasBall
-            homeTeamHasPossessionArrow = !tipOff.homeTeamHasBall
-            playerWithBall = tipOff.playerWithBall
-            gamePlays.add(tipOff)
-            deadball = false
-            madeShot = false
-            if (half != 1) {
-                gamePlays.add(EndOfHalf(this,false))
-                homeTimeouts++
-                awayTimeouts++
-            }
-        } else {
-            homeTeamHasBall = homeTeamHasPossessionArrow
-            deadball = true
-            madeShot = false
-
-            gamePlays.add(EndOfHalf(this,false))
-
-            if (homeTimeouts == maxTimeouts) {
-                homeTimeouts--
-            }
-            if (awayTimeouts == maxTimeouts) {
-                awayTimeouts--
-            }
-        }
-
-        timeRemaining = if (half < 3) lengthOfHalf else lengthOfOvertime
-        lastTimeRemaining = timeRemaining
-        shotClock = lengthOfShotClock
-        location = 0
-
-        homeTeam.lastScoreDiff = homeScore - awayScore
-        awayTeam.lastScoreDiff = awayScore - homeScore
-
-        if(half < 3){
-            homeFouls = 0
-            awayFouls = 0
-        }
-
-        if(half == 2){
-            // half time
-            updateTimePlayed(false, true)
-        }
-        else{
-            // coach talk before game or between overtime periods
-            runTimeout()
-            deadball = false
-            madeShot = false
-        }
-    }
-
     fun simPlay() {
         if (deadball) {
             updateStrategy()
         }
 
-        gamePlays.addAll(getNextPlay())
+        gamePlays.addAll(when {
+            shootFreeThrows -> MiscPlays.getFreeThrows(this)
+            MiscPlays.canIntentionalFoul(this) -> MiscPlays.getIntentionalFoul(this)
+            gamePlays.lastOrNull()?.leadToFastBreak == true -> FastBreakPlays.getFastBreakPlay(this)
+            location == -1 -> BackCourtPlays.getBackCourtPlay(this)
+            else -> FrontCourtPlays.getFrontCourtPlay(this)
+        })
         val lastPlay = gamePlays.last()
         lastPlayerWithBall = if (lastPlay is Pass) lastPlay.playerStartsWithBall else playerWithBall
-        var mediaTimeoutCalled = false
-        if(deadball && !madeShot){
-            if(getMediaTimeout()) {
-                gamePlays.last().playAsString += miscText.mediaTimeOut()
-                runTimeout()
-                mediaTimeoutCalled = true
-            }
-
-            makeSubs()
-        }
-        if (!mediaTimeoutCalled) {
-            if ((homeTeamHasBall || deadball) && homeTeam.coachWantsTimeout(homeScore - awayScore) && homeTimeouts > 0) {
-                gamePlays.last().playAsString += miscText.timeOut(homeTeam, getCoachExtendsToMedia())
-                homeTimeouts--
-                runTimeout()
-            } else if ((!homeTeamHasBall || deadball) && awayTeam.coachWantsTimeout(awayScore - homeScore) && awayTimeouts > 0) {
-                gamePlays.last().playAsString += miscText.timeOut(awayTeam, getCoachExtendsToMedia())
-                awayTimeouts--
-                runTimeout()
-            }
-        }
+        TimeoutHelper.manageTimeout(this)
     }
 
     fun finishGame() {
@@ -190,116 +115,11 @@ class Game(
         gamePlays.add(EndOfHalf(this,true))
     }
 
-    private fun getNextPlay(): MutableList<BasketballPlay>{
-        val plays: MutableList<BasketballPlay> = if (shootFreeThrows) {
-            MiscPlays.getFreeThrows(this)
-        }
-        else {
-            MiscPlays.getIntentionalFoul(this)
-        }
-
-        if (plays.isEmpty()) {
-            plays.addAll(getGamePlay())
-        }
-
-        val play = plays.last()
-        plays.forEach { p -> if (p is Press) addFatigueFromPress() }
-
-        lastPassWasGreat = if (play is Pass) play.isGreatPass else false
-
-        if (play is Rebound) {
-            timeRemaining = plays[plays.size - 2].timeRemaining
-            shotClock = if(timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
-        }
-        else {
-            timeRemaining = play.timeRemaining
-            shotClock = play.shotClock
-        }
-
-        location = play.location
-        playerWithBall = play.playerWithBall
-
-        if(play.homeTeamHasBall != this.homeTeamHasBall){
-            changePossession()
-        }
-
-        FoulHelper.manageFoul(this, play.foul)
-        if (shootFreeThrows) {
-            location = 1
-        }
-
-        if(shotClock == 0 && timeRemaining > 0){
-            play.playAsString += if (homeTeamHasBall) {
-                miscText.shotClockViolation(homeTeam)
-            } else {
-                miscText.shotClockViolation(awayTeam)
-            }
-            handleTurnover()
-        } else if (timeInBackcourt >= 10 && location == -1) {
-            val overshoot = timeInBackcourt - 10
-            timeRemaining += overshoot
-            shotClock += overshoot
-            play.playAsString += if (homeTeamHasBall) {
-                miscText.tenSecondViolation(homeTeam)
-            } else {
-                miscText.tenSecondViolation(awayTeam)
-            }
-            handleTurnover()
-        }
-
-        return plays
-    }
-
-    private fun handleTurnover() {
-        if(homeTeamHasBall){
-            homeTeam.turnovers++
-        }
-        else{
-            awayTeam.turnovers++
-        }
-        changePossession()
-    }
-
-    private fun getGamePlay(): MutableList<BasketballPlay>{
-        return when {
-            gamePlays.size != 0 && gamePlays[gamePlays.size - 1].leadToFastBreak -> FastBreakPlays.getFastBreakPlay(this)
-            location == -1 -> BackCourtPlays.getBackCourtPlay(this)
-            else -> FrontCourtPlays.getFrontCourtPlay(this)
-        }
-    }
-
-    fun addPoints(points: Int) {
-        if (homeTeamHasBall) {
-            homeScore += points
-        }
-        else {
-            awayScore += points
-        }
-    }
-
-    private fun runTimeout() {
-        homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
-        awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
-
-        updateTimePlayed(true, false)
-
-        homeTeam.userWantsTimeout = false
-        awayTeam.userWantsTimeout = false
-
-        homeTeam.lastScoreDiff = homeScore - awayScore
-        awayTeam.lastScoreDiff = awayScore - homeScore
-
-        deadball = true
-        madeShot = false
-
-        makeSubs()
-    }
-
     fun changePossession() {
         updateTimePlayed(false, false)
         lastPassWasGreat = false
         timeInBackcourt = 0
-        shotClock = if (timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
+        resetShotClock()
         homeTeamHasBall = !homeTeamHasBall
         if (location != 0) {
             location = -location
@@ -307,6 +127,10 @@ class Game(
         possessions++
 
         updateStrategy()
+    }
+
+    fun resetShotClock() {
+        shotClock = if (timeRemaining >= lengthOfShotClock) lengthOfShotClock else timeRemaining
     }
 
     private fun updateStrategy() {
@@ -324,16 +148,16 @@ class Game(
         }
     }
 
-    private fun updateTimePlayed(isTimeout: Boolean, isHalftime: Boolean) {
+    fun updateTimePlayed(isTimeout: Boolean, isHalftime: Boolean) {
         val time = lastTimeRemaining - timeRemaining
         homeTeam.updateTimePlayed(time, isTimeout, isHalftime)
         awayTeam.updateTimePlayed(time, isTimeout, isHalftime)
         lastTimeRemaining = timeRemaining
     }
 
-    private fun addFatigueFromPress() {
-        homeTeam.addFatigueFromPress()
-        awayTeam.addFatigueFromPress()
+    fun updateTimeRemaining(play: BasketballPlay) {
+        timeRemaining = play.timeRemaining
+        shotClock = play.shotClock
     }
 
     fun pauseGame() {

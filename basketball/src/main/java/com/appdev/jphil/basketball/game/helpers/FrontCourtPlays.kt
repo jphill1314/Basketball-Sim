@@ -17,56 +17,96 @@ object FrontCourtPlays {
                 Game.lengthOfHalf / awayTeam.pace
             }
 
-            val plays = mutableListOf<BasketballPlay>()
-
             madeShot = false
-            if (((shotClock < (Game.lengthOfShotClock - shotUrgency) || Random.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && Random.nextDouble() > 0.05) || lastPassWasGreat) {
-                plays.add(getShotOrPostMove(this))
-                val shot = plays[0]
-                if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
-                    // missed shot need to get a rebound
-                    plays.add(Rebound(this))
-                    deadball = false
-                } else if (shot.foul.foulType != FoulType.CLEAN) {
-                    shootFreeThrows = true
-                    if (shot.points != 0) {
-                        addPoints(shot.points)
-                        numberOfFreeThrows = 1
-                    }
-                    else if (shot.foul.foulType == FoulType.SHOOTING_LONG) {
-                        numberOfFreeThrows = 3
-                    }
-                    else {
-                        numberOfFreeThrows = 2
-                    }
+            return when {
+                location == 1 && shotClock < (Game.lengthOfShotClock - shotUrgency) -> getShot(game)
+                location == 1 && Random.nextDouble() > 0.7 -> getShot(game)
+                shotClock <= 5 && Random.nextDouble() > 0.05 -> getShot(game)
+                lastPassWasGreat -> getShot(game)
+                else -> getPass(game)
+            }
+        }
+    }
 
-                    deadball = true
-                } else {
-                    // made shot
+    private fun getShot(game: Game): MutableList<BasketballPlay> {
+        with(game) {
+            val plays = mutableListOf<BasketballPlay>()
+            val shot = getShotOrPostMove(game).also { plays.add(it) }
+            location = 1
+            if (homeTeamHasBall) {
+                homeScore += shot.points
+            } else {
+                awayScore += shot.points
+            }
+            updateTimeRemaining(shot)
+            resetShotClock()
+            val rebound = getRebound(game, shot)
+            if (rebound == null) {
+                if (!getFreeThrows(game, shot)) {
+                    // made shot and no free throws
                     madeShot = true
                     deadball = true
-                    if (homeTeamHasBall) {
-                        homeScore += shot.points
-                    }
-                    else {
-                        awayScore += shot.points
-                    }
+                    changePossession()
+                } else {
+                    madeShot = false
+                    deadball = true
                 }
+            } else {
+                plays.add(rebound)
+                playerWithBall = rebound.playerWithBall
+                if (rebound.homeTeamStartsWithBall != rebound.homeTeamHasBall) {
+                    changePossession()
+                }
+                FoulHelper.manageFoul(game, rebound.foul)
             }
-            else {
-                plays.add(Pass(this))
-                deadball = false
+            return plays
+        }
+    }
 
-                if (plays.last().timeRemaining == 0 && half != 1) {
-                    if (homeTeamHasBall && homeScore < awayScore && homeScore + 3 >= awayScore) {
-                        // Buzzer beater for tie / win
-                        plays.add(Shot(this, lastPassWasGreat,
-                            getPasser(this), true))
-                    } else if (!homeTeamHasBall && awayScore < homeScore && awayScore + 3 >= homeScore) {
-                        plays.add(Shot(this, lastPassWasGreat,
-                            getPasser(this), true))
-                    }
+    private fun getRebound(game: Game, shot: BasketballPlay): Rebound? {
+        if (shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
+            return Rebound(game)
+        }
+        return null
+    }
+
+    private fun getFreeThrows(game: Game, shot: BasketballPlay): Boolean {
+        if (shot.foul.foulType != FoulType.CLEAN) {
+            when {
+                shot.points != 0 -> game.numberOfFreeThrows = 1
+                shot.foul.foulType == FoulType.SHOOTING_LONG -> game.numberOfFreeThrows = 3
+                else -> game.numberOfFreeThrows = 2
+            }
+            game.shootFreeThrows = true
+            return true
+        }
+        return false
+    }
+
+    private fun getPass(game: Game): MutableList<BasketballPlay> {
+        with(game) {
+            val pass = Pass(game)
+            updateTimeRemaining(pass)
+            playerWithBall = pass.playerWithBall
+            lastPassWasGreat = pass.isGreatPass
+            location = pass.location
+            deadball = false
+
+            if (pass.homeTeamHasBall != pass.homeTeamStartsWithBall) {
+                changePossession()
+            }
+
+            val plays = mutableListOf<BasketballPlay>(pass)
+            if (timeRemaining == 0 && half != 1 && plays.last().foul.foulType == FoulType.CLEAN) {
+                if (homeTeamHasBall && homeScore < awayScore && homeScore + 3 >= awayScore) {
+                    // Buzzer beater for tie / win
+                    plays.add(Shot(game, lastPassWasGreat, getPasser(game), true))
+                } else if (!homeTeamHasBall && awayScore < homeScore && awayScore + 3 >= homeScore) {
+                    plays.add(Shot(game, lastPassWasGreat, getPasser(game), true))
                 }
+            } else {
+                FoulHelper.manageFoul(game, pass.foul)
+                ClockViolationHelper.getShotClockViolation(this, pass)
             }
 
             return plays
@@ -97,12 +137,9 @@ object FrontCourtPlays {
                 else -> 65
             }
             return if (Random.nextInt(100) + positionChanceMod < shooter.postMove) {
-                PostMove(this, lastPassWasGreat,
-                    getPasser(this)
-                )
+                PostMove(game, lastPassWasGreat, getPasser(game))
             } else {
-                Shot(this, lastPassWasGreat,
-                    getPasser(this), shotClock <= 5)
+                Shot(game, lastPassWasGreat, getPasser(game), shotClock <= 5)
             }
         }
     }
