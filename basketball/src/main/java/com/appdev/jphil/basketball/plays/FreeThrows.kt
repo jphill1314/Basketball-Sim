@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
@@ -8,36 +9,15 @@ import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.FreeThrowTextContract
 import kotlin.math.max
 
-class FreeThrows(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    private val numberOfShots: Int,
-    private val ftText: FreeThrowTextContract
-) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+class FreeThrows(game: Game, private val numberOfShots: Int) : BasketballPlay(game) {
 
+    private val ftText = game.freeThrowText
     var madeLastShot = true
 
     init {
         type = Plays.FREE_THROW
         this.location = 1
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.CLEAN
-        )
+        foul = Foul(game, FoulType.CLEAN)
         points = generatePlay()
     }
 

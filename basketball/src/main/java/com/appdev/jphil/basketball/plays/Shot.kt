@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
@@ -9,36 +10,18 @@ import com.appdev.jphil.basketball.textcontracts.ShotTextContract
 
 
 class Shot(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    val assisted: Boolean,
-    val passer: Player,
-    val rushed: Boolean,
-    private val shotText: ShotTextContract
-) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+    game: Game,
+    private val assisted: Boolean,
+    private val passer: Player,
+    private val rushed: Boolean
+) : BasketballPlay(game) {
 
     private var wellDefended = false
+    private val shotText = game.shotText
 
     init {
         super.type = Plays.SHOT
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.CLEAN
-        )
+        foul = Foul(game, FoulType.CLEAN)
         points = generatePlay()
     }
 
@@ -68,17 +51,7 @@ class Shot(
             else -> FoulType.SHOOTING_LONG
         }
 
-        foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                foulType
-        )
+        foul = Foul(game, foulType)
 
         if (foul.foulType != FoulType.CLEAN) {
             type = Plays.FOUL

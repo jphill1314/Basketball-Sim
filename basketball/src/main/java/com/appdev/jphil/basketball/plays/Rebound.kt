@@ -1,23 +1,15 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.ReboundTextContract
 
-class Rebound(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    private val reboundText: ReboundTextContract
-) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+class Rebound(game: Game) : BasketballPlay(game) {
+
+    private val reboundText = game.reboundText
 
     init {
         type = Plays.REBOUND
@@ -62,17 +54,7 @@ class Rebound(
 
     private fun offensiveRebound(offHigh: Int) {
         playerWithBall = offHigh + 1 // convert index to basketball position
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.REBOUNDING
-        )
+        foul = Foul(game, FoulType.REBOUNDING)
         playAsString = if (foul.foulType == FoulType.CLEAN) {
             offense.offensiveRebounds++
             offense.getPlayerAtPosition(playerWithBall).offensiveRebounds++
@@ -88,17 +70,7 @@ class Rebound(
     private fun defensiveRebound(defHigh: Int) {
         playerWithBall = defHigh + 1 // convert index to basketball position
         homeTeamHasBall = !homeTeamHasBall
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.REBOUNDING
-        )
+        foul = Foul(game, FoulType.REBOUNDING)
         playAsString = if (foul.foulType == FoulType.CLEAN) {
             defense.defensiveRebounds++
             defense.getPlayerAtPosition(playerWithBall).defensiveRebounds++
