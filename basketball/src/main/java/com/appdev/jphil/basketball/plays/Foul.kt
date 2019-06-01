@@ -1,26 +1,17 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 
-class Foul(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    var foulType: FoulType
-) :
-    BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
 
     // TODO: simulate different games having different refs -> different chances for different foul calls
 
+    private val foulText = game.foulText
     var isOnDefense = false
     var positionOfPlayerFouled = 0
     var fouler: Player? = null

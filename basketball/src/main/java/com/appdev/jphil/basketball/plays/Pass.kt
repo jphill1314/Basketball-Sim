@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
@@ -9,19 +10,11 @@ import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.PassTextContract
 
 
-class Pass(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    private val deadBall: Boolean,
-    private val passingUtils: PassingUtils,
-    private val playText: PassTextContract
-) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+class Pass(game: Game) : BasketballPlay(game) {
+
+    private val deadBall = game.deadball
+    private val passingUtils = game.passingUtils
+    private val playText = game.passText
 
     var playerStartsWithBall = playerWithBall
     private lateinit var passer: Player
@@ -36,17 +29,7 @@ class Pass(
 
     init {
         super.type = Plays.PASS
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.CLEAN
-        )
+        foul = Foul(game, FoulType.CLEAN)
         points = generatePlay()
     }
 
@@ -69,17 +52,7 @@ class Pass(
         }
 
         if (foul.foulType == FoulType.CLEAN && defense.intentionallyFoul && timeChange < timeRemaining) {
-            foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                FoulType.INTENTIONAL
-            )
+            foul = Foul(game, FoulType.INTENTIONAL)
             type = Plays.FOUL
             playAsString += "\n${foul.playAsString}"
         }
@@ -162,17 +135,7 @@ class Pass(
                 playText.stolenPass(passer, target, targetDefender)
             }
             playerWithBall = targetPos
-            foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                FoulType.ON_BALL
-            )
+            foul = Foul(game, FoulType.ON_BALL)
             if (foul.foulType == FoulType.CLEAN) {
                 target.turnovers++
                 targetDefender.steals++
@@ -184,17 +147,7 @@ class Pass(
             } else {
                 playText.stolenPass(passer, target, passDefender)
             }
-            foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                FoulType.ON_BALL
-            )
+            foul = Foul(game, FoulType.ON_BALL)
             if (foul.foulType == FoulType.CLEAN) {
                 passer.turnovers++
                 passDefender.steals++
@@ -212,29 +165,9 @@ class Pass(
 
     private fun justDribbling() {
         foul = if (r.nextBoolean()) {
-            Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                FoulType.OFF_BALL
-            )
+            Foul(game, FoulType.OFF_BALL)
         } else {
-            Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                FoulType.ON_BALL
-            )
+            Foul(game, FoulType.ON_BALL)
         }
 
         if (foul.foulType != FoulType.CLEAN) {

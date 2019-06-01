@@ -1,26 +1,12 @@
 package com.appdev.jphil.basketball.plays
 
-import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import com.appdev.jphil.basketball.textcontracts.MiscTextContract
+import com.appdev.jphil.basketball.game.Game
 
-class EndOfHalf(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    miscText: MiscTextContract,
-    half: Int,
-    gameOver: Boolean
-) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+class EndOfHalf(game: Game, gameOver: Boolean) : BasketballPlay(game) {
 
     init {
-        val realHalf = if (gameOver) half else half - 1
-        playAsString = miscText.endOfHalf(realHalf, gameOver)
+        val realHalf = if (gameOver) game.half else game.half - 1
+        playAsString = game.miscText.endOfHalf(realHalf, gameOver)
     }
 
     override fun generatePlay(): Int {

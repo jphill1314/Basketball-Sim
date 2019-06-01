@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
@@ -8,32 +9,16 @@ import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 import com.appdev.jphil.basketball.textcontracts.PostMoveTextContract
 
 class PostMove(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    val assisted: Boolean,
-    val passer: Player,
-    private val postMoveText: PostMoveTextContract
-) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+    game: Game,
+    private val assisted: Boolean,
+    private val passer: Player
+) : BasketballPlay(game) {
+
+    private val postMoveText = game.postMoveText
 
     init {
         type = Plays.SHOT
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.CLEAN
-        )
+        foul = Foul(game, FoulType.CLEAN)
         points = generatePlay()
     }
 
@@ -46,17 +31,7 @@ class PostMove(
             shotSuccess += 30
         }
 
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.SHOOTING_CLOSE
-        )
+        foul = Foul(game, FoulType.SHOOTING_CLOSE)
 
         if (foul.foulType != FoulType.CLEAN) {
             type = Plays.FOUL

@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.plays
 
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
@@ -10,19 +11,13 @@ import com.appdev.jphil.basketball.textcontracts.PressTextContract
 
 
 class Press(
-    homeTeamHasBall: Boolean,
-    timeRemaining: Int,
-    shotClock: Int,
-    homeTeam: Team,
-    awayTeam: Team,
-    playerWithBall: Int,
-    location: Int,
-    foulText: FoulTextContract,
-    private val deadBall: Boolean,
-    private val passingUtils: PassingUtils,
-    private val consecutivePresses: Int, // must be at least 1
-    private val pressText: PressTextContract
-) : BasketballPlay(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText) {
+    game: Game,
+    private val consecutivePresses: Int // must be at least 1
+) : BasketballPlay(game) {
+
+    private val pressText = game.pressText
+    private val passingUtils = game.passingUtils
+    private val deadBall = game.deadball
 
     private var playerStartsWithBall = playerWithBall
     private lateinit var passer: Player
@@ -35,17 +30,7 @@ class Press(
 
     init {
         type = Plays.PRESS
-        foul = Foul(
-            homeTeamHasBall,
-            timeRemaining,
-            shotClock,
-            homeTeam,
-            awayTeam,
-            playerWithBall,
-            location,
-            foulText,
-            FoulType.CLEAN
-        )
+        foul = Foul(game, FoulType.CLEAN)
         points = generatePlay()
     }
 
@@ -71,17 +56,7 @@ class Press(
         }
 
         if (type != Plays.FOUL && !leadToFastBreak && defense.intentionallyFoul) {
-            foul = Foul(
-                homeTeamHasBall,
-                timeRemaining,
-                shotClock,
-                homeTeam,
-                awayTeam,
-                playerWithBall,
-                location,
-                foulText,
-                FoulType.INTENTIONAL
-            )
+            foul = Foul(game, FoulType.INTENTIONAL)
             type = Plays.FOUL
             playAsString += "\n${foul.playAsString}"
         }
@@ -166,7 +141,7 @@ class Press(
             }
         }
         timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
-        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText,FoulType.ON_BALL)
+        foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType == FoulType.CLEAN) {
             homeTeamHasBall = !homeTeamHasBall
             passer.turnovers++
@@ -197,7 +172,7 @@ class Press(
             }
         }
         timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
-        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText, FoulType.ON_BALL)
+        foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType == FoulType.CLEAN) {
             homeTeamHasBall = !homeTeamHasBall
             passer.turnovers++
@@ -214,7 +189,7 @@ class Press(
     private fun justDribbling() {
         playAsString = pressText.justDribbling(passer)
         timeChange = timeUtil.smartTimeChange(2 - ((offense.pace / 90.0) * r.nextInt(1)).toInt(), shotClock)
-        foul = Foul(homeTeamHasBall, timeRemaining, shotClock, homeTeam, awayTeam, playerWithBall, location, foulText, FoulType.ON_BALL)
+        foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType != FoulType.CLEAN) {
             playAsString += " And, ${foul.playAsString}"
         }

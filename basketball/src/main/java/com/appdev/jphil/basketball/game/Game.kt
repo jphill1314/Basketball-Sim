@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.game
 
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.game.extensions.*
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.*
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
@@ -96,7 +97,7 @@ class Game(
 
         if (half != 2) {
             // Tip off starts game and all overtime periods
-            val tipOff = newTipOff()
+            val tipOff = TipOff(this)
             homeTeamHasBall = tipOff.homeTeamHasBall
             homeTeamHasPossessionArrow = !tipOff.homeTeamHasBall
             playerWithBall = tipOff.playerWithBall
@@ -104,7 +105,7 @@ class Game(
             deadball = false
             madeShot = false
             if (half != 1) {
-                gamePlays.add(newEndOfHalf(false))
+                gamePlays.add(EndOfHalf(this,false))
                 homeTimeouts++
                 awayTimeouts++
             }
@@ -113,7 +114,7 @@ class Game(
             deadball = true
             madeShot = false
 
-            gamePlays.add(newEndOfHalf(false))
+            gamePlays.add(EndOfHalf(this,false))
 
             if (homeTimeouts == maxTimeouts) {
                 homeTimeouts--
@@ -186,7 +187,7 @@ class Game(
         isFinal = true
         inProgress = false
 
-        gamePlays.add(newEndOfHalf(true))
+        gamePlays.add(EndOfHalf(this,true))
     }
 
     private fun getNextPlay(): MutableList<BasketballPlay>{
@@ -262,12 +263,12 @@ class Game(
     private fun getFreeThrows(): MutableList<BasketballPlay>{
         shootFreeThrows = false
         val plays = mutableListOf<BasketballPlay>()
-        val freeThrows = newFreeThrow()
+        val freeThrows = FreeThrows(this, numberOfFreeThrows)
         addPoints(freeThrows.points)
         plays.add(freeThrows)
 
         if(!freeThrows.madeLastShot){
-            plays.add(newRebound(freeThrows))
+            plays.add(Rebound(this))
             deadball = false
         }
 
@@ -278,11 +279,11 @@ class Game(
         if (!deadball) {
             if (homeTeamHasBall) {
                 if (awayTeam.intentionallyFoul) {
-                    return mutableListOf(newIntentionalFoul())
+                    return mutableListOf(IntentionalFoul(this))
                 }
             } else {
                 if (homeTeam.intentionallyFoul) {
-                    return mutableListOf(newIntentionalFoul())
+                    return mutableListOf(IntentionalFoul(this))
                 }
             }
         }
@@ -298,9 +299,9 @@ class Game(
     }
 
     private fun getFastBreak(): MutableList<BasketballPlay> {
-        val play = newFastBreak()
+        val play = Pass(this)
         return if (play.points == 0) {
-            mutableListOf(play, newRebound(play))
+            mutableListOf(play, Rebound(this))
         } else {
             madeShot = true
             deadball = true
@@ -327,9 +328,9 @@ class Game(
         }
 
         val backcourtPlays: MutableList<BasketballPlay> = if (press) {
-            mutableListOf(newPress())
+            mutableListOf(Press(this, consecutivePresses++))
         } else {
-            mutableListOf(newPass())
+            mutableListOf(Pass(this))
         }
 
         if (backcourtPlays.last().type != Plays.FOUL) {
@@ -348,11 +349,11 @@ class Game(
 
         madeShot = false
         if (((shotClock < (lengthOfShotClock - shotUrgency) || Random.nextDouble() > 0.7) && location == 1) || (shotClock <= 5 && Random.nextDouble() > 0.05) || lastPassWasGreat) {
-            plays.add(newPostMoveOrShot())
+            plays.add(getShotOrPostMove())
             val shot = plays[0]
             if ( shot.points == 0 && shot.foul.foulType == FoulType.CLEAN) {
                 // missed shot need to get a rebound
-                plays.add(newRebound(shot))
+                plays.add(Rebound(this))
                 deadball = false
             } else if (shot.foul.foulType != FoulType.CLEAN) {
                 shootFreeThrows = true
@@ -381,15 +382,15 @@ class Game(
             }
         }
         else {
-            plays.add(newPass())
+            plays.add(Pass(this))
             deadball = false
 
             if (plays.last().timeRemaining == 0 && half != 1) {
                 if (homeTeamHasBall && homeScore < awayScore && homeScore + 3 >= awayScore) {
                     // Buzzer beater for tie / win
-                    plays.add(newShot(buzzerBeater = true))
+                    plays.add(Shot(this, lastPassWasGreat, getPasser(), true))
                 } else if (!homeTeamHasBall && awayScore < homeScore && awayScore + 3 >= homeScore) {
-                    plays.add(newShot(buzzerBeater = true))
+                    plays.add(Shot(this, lastPassWasGreat, getPasser(), true))
                 }
             }
         }
@@ -550,6 +551,33 @@ class Game(
     fun pauseGame() {
         homeTeam.pauseGame()
         awayTeam.pauseGame()
+    }
+
+    private fun getPasser(): Player {
+        return if (homeTeamHasBall) {
+            homeTeam.getPlayerAtPosition(lastPlayerWithBall)
+        } else {
+            awayTeam.getPlayerAtPosition(lastPlayerWithBall)
+        }
+    }
+
+    private fun getShotOrPostMove(): BasketballPlay {
+        val shooter = if (homeTeamHasBall) {
+            homeTeam.getPlayerAtPosition(playerWithBall)
+        } else {
+            awayTeam.getPlayerAtPosition(playerWithBall)
+        }
+        val positionChanceMod = when (shooter.courtIndex) {
+            4, 5 -> 15
+            3 -> 45
+            2 -> 55
+            else -> 65
+        }
+        return if (Random.nextInt(100) + positionChanceMod < shooter.postMove) {
+            PostMove(this, lastPassWasGreat, getPasser())
+        } else {
+            Shot(this, lastPassWasGreat, getPasser(), shotClock <= 5)
+        }
     }
 
     private companion object {
