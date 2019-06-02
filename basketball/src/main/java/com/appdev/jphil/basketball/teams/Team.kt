@@ -151,16 +151,6 @@ class Team(
         gamesPlayed++
     }
 
-    fun getStatsAsString(): String {
-        return "$name\n" +
-                "2FG:$twoPointMakes/$twoPointAttempts - ${twoPointMakes / (twoPointAttempts * 1.0)}\n" +
-                "3FG:$threePointMakes/$threePointAttempts - ${threePointMakes / (threePointAttempts * 1.0)}\n" +
-                "Rebounds:$offensiveRebounds/$defensiveRebounds - ${offensiveRebounds + defensiveRebounds}\n" +
-                "TO:$turnovers\nOFouls:$offensiveFouls\n" +
-                "DFouls:$defensiveFouls\n" +
-                "FT:$freeThrowMakes/$freeThrowShots - ${freeThrowMakes / (freeThrowShots * 1.0)}"
-    }
-
     fun coachTalk(homeTeam: Boolean, scoreDif: Int, talkType: CoachTalk) {
         val maxModifier = 30
         val gameVariability = 15

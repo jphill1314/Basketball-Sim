@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.FreeThrows
 import com.appdev.jphil.basketballcoach.R
@@ -43,7 +44,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var awayStatsAdapter: GameStatsAdapter? = null
     private val teamStatsAdapter = GameTeamStatsAdapter()
 
-    private val homeScore: TextView by lazy { view!!.findViewById<TextView>(R.id.home_score) }
+    private val homeScore: TextView by lazy { view!!.findViewById<TextView>(R.id.home_score) } // TODO: this might not work like I want it too
     private val awayScore: TextView by lazy { view!!.findViewById<TextView>(R.id.away_score) }
     private val homeFouls: TextView by lazy { view!!.findViewById<TextView>(R.id.home_fouls) }
     private val awayFouls: TextView by lazy { view!!.findViewById<TextView>(R.id.away_fouls) }
@@ -169,7 +170,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
-        if (game.deadball && !game.madeShot && game.gamePlays.isNotEmpty() && game.gamePlays.last() !is FreeThrows) {
+        if (game.deadball && !game.madeShot && game.gamePlays.isNotEmpty() && game.gamePlays.last() !is FreeThrows && newEvents.isNotEmpty()) {
             onDeadBall()
         }
 
@@ -211,7 +212,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private fun handleFoulOuts(nullGame: Game?): Boolean {
         nullGame?.let { game ->
             val team = if (game.homeTeam.isUser) game.homeTeam else game.awayTeam
-            team.makeUserSubs(if (game.shootFreeThrows) game.playerWithBall else -1)
+            game.makeUserSubsIfPossible()
             if (!team.allPlayersAreEligible()) {
                 Toast.makeText(context, "One of your players have fouled out!", Toast.LENGTH_LONG)
                     .show() // TODO: use resources + better message
