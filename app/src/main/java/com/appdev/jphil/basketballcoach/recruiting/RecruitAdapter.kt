@@ -81,7 +81,6 @@ class RecruitAdapter(
                     resources.getString(R.string.interest_colon, resources.getString(R.string.unknown))
                 viewHolder.interaction.text = ""
             }
-
             viewHolder.itemView.setOnClickListener { presenter.onRecruitPressed(recruit) }
         }
     }

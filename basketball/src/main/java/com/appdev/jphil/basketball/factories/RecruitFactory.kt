@@ -43,10 +43,12 @@ object RecruitFactory {
             desires.add(RecruitDesire.DEVELOP)
         }
 
-        if (Random.nextBoolean()) {
+        if (Random.nextDouble() > 0.33) {
             desires.add(RecruitDesire.COMPETE)
-        } else {
+        } else if (Random.nextDouble() > 0.33) {
             desires.add(RecruitDesire.STAR)
+        } else {
+            desires.add(RecruitDesire.GOOD_FIT)
         }
 
         return desires

@@ -125,17 +125,29 @@ class Player(
     }
 
     fun getRatingAtPosition(position: Int): Int {
-        val overallRating = closeRangeShot + midRangeShot + longRangeShot + freeThrowShot + postMove +
-                ballHandling + passing + offBallMovement + postDefense + perimeterDefense +
-                onBallDefense + offBallDefense + stealing + rebounding
+        val ratings = mutableListOf(
+            closeRangeShot,
+            midRangeShot,
+            longRangeShot,
+            freeThrowShot,
+            postMove,
+            ballHandling,
+            passing,
+            offBallMovement,
+            postDefense,
+            perimeterDefense,
+            onBallDefense,
+            offBallDefense,
+            stealing,
+            rebounding
+        )
 
-        val div = closeWeight[position - 1] + midWeight[position - 1] + longWeight[position - 1] +
-                ftWeight[position - 1] + postOffWeight[position - 1] + ballWeight[position - 1] +
-                passWeight[position - 1] + offMoveWeight[position - 1] +
-                postDefWeight[position - 1] + perimDefWeight[position - 1] + onBallWeight[position - 1] +
-                offBallWeight[position - 1] + stealWeight[position - 1] + reboundWeight[position - 1]
+        var ratingTotal = 0.0
+        ratings.sortedByDescending { it }.subList(0, ratings.size - 4).forEach { rating ->
+            ratingTotal += rating
+        }
 
-        return (overallRating / div).toInt() - getOutOfPositionMalus(position)
+        return (ratingTotal / (ratings.size - 4)).toInt() - getOutOfPositionMalus(position)
     }
 
     private fun getOutOfPositionMalus(currentPosition: Int): Int {

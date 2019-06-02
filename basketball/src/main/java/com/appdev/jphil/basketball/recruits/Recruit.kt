@@ -26,15 +26,15 @@ class Recruit(
     val fullName = "$firstName $lastName"
 
     fun generateInitialInterest(team: Team, coachRecruitingRating: Int) {
-        var interest = 100
+        var interest = 100.0
 
         if (desires.isNotEmpty()) {
-            val maxChange = 100 / desires.size
-            desires.forEach { if (!DesireHelper.teamMeetsDesire(it, team, this)) interest -= maxChange }
+            val maxChange = 100.0 / desires.size
+            desires.forEach { interest -= (1 - DesireHelper.teamMeetsDesire(it, team, this)) * maxChange }
         }
 
         if (!team.hasNeedAtPosition(position)) {
-            interest = 0
+            interest = 0.0
         }
 
         val range = Random.nextInt(100 - coachRecruitingRating)
@@ -45,7 +45,7 @@ class Recruit(
             id,
             team.teamId,
             team.name,
-            interest,
+            interest.toInt(),
             range,
             offset,
             false,

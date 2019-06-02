@@ -1,10 +1,14 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
 import com.appdev.jphil.basketball.Conference
+import com.appdev.jphil.basketball.TenTeamTournament
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
+import com.appdev.jphil.basketballcoach.util.RecordUtil
 
 object ConferenceDatabaseHelper {
 
@@ -35,7 +39,8 @@ object ConferenceDatabaseHelper {
         val conferences = mutableListOf<Conference>()
         conferenceEntities.forEach { conference ->
             val teamEntities = database.teamDao().getTeamsInConference(conference.id)
-            conferences.add(Conference(conference.id, conference.name, generateTeams(database, teamEntities)))
+            val conf = Conference(conference.id, conference.name, generateTeams(database, teamEntities))
+            conferences.add(conf)
         }
         return conferences
     }
@@ -51,5 +56,28 @@ object ConferenceDatabaseHelper {
             teams.add(team!!)
         }
         return teams
+    }
+
+    fun createTournament(conference: Conference, database: BasketballDatabase): TenTeamTournament? {
+        val games = GameDatabaseHelper.loadAllGameEntities(database)
+        val standings = mutableListOf<StandingsDataModel>()
+        conference.teams.forEach { team -> standings.add(RecordUtil.getRecordAsPair(games, team)) }
+
+        conference.generateTournament(standings.sortedWith(compareBy(
+            { -it.getConferenceWinPercentage() },
+            { -it.conferenceWins },
+            { -it.getWinPercentage() },
+            { -it.totalWins }
+        )))
+
+        conference.tournament?.let { tournament ->
+            tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conference.id, database))
+            if (tournament.numberOfGames() == 0) {
+                tournament.generateNextRound(2018) // TODO: inject
+                GameDatabaseHelper.saveOnlyGames(tournament.getAllGames(), database)
+                tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conference.id, database))
+            }
+        }
+        return conference.tournament
     }
 }
