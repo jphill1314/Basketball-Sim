@@ -45,15 +45,23 @@ class RecruitInterest(
                 otherRating - teamRating > 10 -> ((otherRating - teamRating) / 10.0) * teamMultiplier
                 else -> 1.0
             }
-            interest += (Random.nextInt(MAX_INCREASE) * multiplier * teamMultiplier).toInt()
+            interest += getInterestIncrease(multiplier, teamMultiplier)
         } else {
             val multiplier = when {
                 teamRating - otherRating > 10 -> ((teamRating - otherRating) / 10.0) / teamMultiplier
                 otherRating - teamRating > 10 -> -1.0 / ((otherRating - teamRating) / 10.0) * teamMultiplier
                 else -> 1.0
             }
-            interest -= (Random.nextInt(MAX_DECREASE) * multiplier / teamMultiplier).toInt()
+            interest -= getInterestDecrease(multiplier, teamMultiplier)
         }
+    }
+
+    private fun getInterestIncrease(multiplier: Double, teamMultiplier: Double): Int {
+        return max(5, min((Random.nextInt(MAX_INCREASE) * multiplier * teamMultiplier).toInt(), MAX_INCREASE))
+    }
+
+    private fun getInterestDecrease(multiplier: Double, teamMultiplier: Double): Int {
+        return max(5, min((Random.nextInt(MAX_DECREASE) * multiplier / teamMultiplier).toInt(), MAX_DECREASE))
     }
 
     fun updateInterest(multiplier: Double, event: RecruitingEvent, gameNumber: Int): Boolean {
@@ -107,7 +115,7 @@ class RecruitInterest(
 
     companion object {
         const val MAX_INCREASE = 40
-        const val MAX_DECREASE = 10
+        const val MAX_DECREASE = 20
         const val MAX_INTEREST = 100
     }
 }

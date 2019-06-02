@@ -73,8 +73,8 @@ class TenTeamTournament(
     }
 
     fun getWinnerOfTournament(): Team? {
-        return if (games.size == 9 && games[9].isFinal) {
-            getWinner(games[9])
+        return if (games.size == 9 && games.last().isFinal) {
+            getWinner(games.last())
         } else {
             null
         }

@@ -1,11 +1,14 @@
 package com.appdev.jphil.basketballcoach.simulation
 
+import com.appdev.jphil.basketball.TenTeamTournament
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.util.RecordUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
     override fun startNextGame() {
         GlobalScope.launch(Dispatchers.IO) {
             var gameId = GameDatabaseHelper.loadAllGameEntities(database)
-                .filter { !it.isFinal }.sortedBy { it.id }.first().id ?: 1
+                .filter { !it.isFinal }.sortedBy { it.id }.firstOrNull()?.id ?: 1
             var homeName = ""
             var awayName = ""
             var userIsHomeTeam = false
@@ -55,6 +58,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
                 var conferenceTournamentsAreComplete = true
                 conferences.forEach { conference ->
+                    conference.tournament = ConferenceDatabaseHelper.createTournament(conference, database)
                     if (conference.tournament?.getWinnerOfTournament() == null) {
                         conferenceTournamentsAreComplete = false
                     }
