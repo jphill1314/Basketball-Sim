@@ -17,7 +17,6 @@ import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.flurry.android.FlurryAgent
 import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
@@ -60,7 +59,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             R.id.recruiting -> RecruitFragment()
             R.id.strategy -> StrategyFragment()
             R.id.staff -> CoachesFragment()
-            R.id.training -> PracticeFragment()
+            R.id.practice -> PracticeFragment()
             else -> null
         }
 

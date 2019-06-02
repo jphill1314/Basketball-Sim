@@ -7,7 +7,7 @@
     <string name="recruiting">Recruiting</string>
     <string name="strategy">Strategy</string>
     <string name="staff">Staff</string>
-    <string name="training">Training</string>
+    <string name="practice">Practice</string>
 
     <string name="starting_lineup">Starting Lineup</string>
     <string name="bench">Bench</string>
@@ -165,4 +165,6 @@
 
     <string name="practice_focus">Practice focus:</string>
     <string name="practice_performance">Recent practice performance</string>
+
+    <string name="no_known_recruits">Recruits that your assistants discover will appear here. You can fine tune their scouting assignments on the Staff screen.</string>
 </resources>

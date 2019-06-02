@@ -41,44 +41,48 @@ class RecruitAdapter(
     }
 
     override fun getItemCount(): Int {
-        return recruits.size
+        return if (recruits.isNotEmpty()) recruits.size else 1
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val recruit = recruits[position]
-        viewHolder.position.text = positionNames[recruit.position - 1]
-        viewHolder.name.text = recruit.fullName
-        viewHolder.playerType.text = playerTypes[recruit.playerType.type]
-        // TODO: make sure to only show the range that the user knows about
-        val ratingMin = recruit.getRatingMinForTeam(teamId)
-        val ratingMax = recruit.getRatingMaxForTeam(teamId)
-        viewHolder.rating.text = if (ratingMax != ratingMin) {
-            resources.getString(R.string.rating_range, ratingMin, ratingMax)
+        if (recruits.isEmpty()) {
+            viewHolder.name.text = resources.getString(R.string.no_known_recruits)
         } else {
-            resources.getString(R.string.rating_colon, ratingMax)
-        }
-
-        val interestInTeam = recruit.interestInTeams.filter { it.teamId == teamId }
-        if (interestInTeam.isNotEmpty()) {
-            val interest = interestInTeam.first()
-            viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.interest.toString())
-            val interaction = when {
-                interest.isScholarshipRevoked -> 4
-                interest.isOfferedScholarship -> 2
-                else -> -1
-            }
-            if (recruit.isCommitted) {
-                viewHolder.interaction.text =
-                    if (recruit.teamCommittedTo == teamId) "Committed to you" else "Committed elsewhere"
+            val recruit = recruits[position]
+            viewHolder.position.text = positionNames[recruit.position - 1]
+            viewHolder.name.text = recruit.fullName
+            viewHolder.playerType.text = playerTypes[recruit.playerType.type]
+            // TODO: make sure to only show the range that the user knows about
+            val ratingMin = recruit.getRatingMinForTeam(teamId)
+            val ratingMax = recruit.getRatingMaxForTeam(teamId)
+            viewHolder.rating.text = if (ratingMax != ratingMin) {
+                resources.getString(R.string.rating_range, ratingMin, ratingMax)
             } else {
-                viewHolder.interaction.text = if (interaction == -1) "" else interactions[interaction]
+                resources.getString(R.string.rating_colon, ratingMax)
             }
-        } else {
-            viewHolder.interest.text =
-                resources.getString(R.string.interest_colon, resources.getString(R.string.unknown))
-            viewHolder.interaction.text = ""
-        }
 
-        viewHolder.itemView.setOnClickListener { presenter.onRecruitPressed(recruit) }
+            val interestInTeam = recruit.interestInTeams.filter { it.teamId == teamId }
+            if (interestInTeam.isNotEmpty()) {
+                val interest = interestInTeam.first()
+                viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.interest.toString())
+                val interaction = when {
+                    interest.isScholarshipRevoked -> 4
+                    interest.isOfferedScholarship -> 2
+                    else -> -1
+                }
+                if (recruit.isCommitted) {
+                    viewHolder.interaction.text =
+                        if (recruit.teamCommittedTo == teamId) "Committed to you" else "Committed elsewhere"
+                } else {
+                    viewHolder.interaction.text = if (interaction == -1) "" else interactions[interaction]
+                }
+            } else {
+                viewHolder.interest.text =
+                    resources.getString(R.string.interest_colon, resources.getString(R.string.unknown))
+                viewHolder.interaction.text = ""
+            }
+
+            viewHolder.itemView.setOnClickListener { presenter.onRecruitPressed(recruit) }
+        }
     }
 }
