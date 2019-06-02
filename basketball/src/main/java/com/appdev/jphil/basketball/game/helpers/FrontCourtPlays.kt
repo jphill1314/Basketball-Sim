@@ -19,6 +19,7 @@ object FrontCourtPlays {
 
             madeShot = false
             return when {
+                deadball -> getPass(game)
                 location == 1 && shotClock < (Game.lengthOfShotClock - shotUrgency) -> getShot(game)
                 location == 1 && Random.nextDouble() > 0.7 -> getShot(game)
                 shotClock <= 5 && Random.nextDouble() > 0.05 -> getShot(game)
