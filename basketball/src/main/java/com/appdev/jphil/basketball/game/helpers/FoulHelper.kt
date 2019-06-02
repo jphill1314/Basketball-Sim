@@ -18,78 +18,103 @@ object FoulHelper {
             madeShot = false // allow media timeouts to be called
             timeInBackcourt = 0 // reset time for 10 second call
             lastPassWasGreat = false
-            var isOnHomeTeam = false
+            val isOnHomeTeam = incrementFouls(game, foul)
+
+            when (foul.foulType) {
+                FoulType.SHOOTING_LONG, FoulType.SHOOTING_CLOSE, FoulType.SHOOTING_MID -> resetShotClock(game)
+                else -> handleNonShootingFoul(game, foul, isOnHomeTeam)
+            }
+
+            if (shootFreeThrows && timeRemaining == 0) {
+                timeRemaining = 1
+                shotClock = 1
+            }
+        }
+    }
+
+    private fun handleNonShootingFoul(game: Game, foul: Foul, isOnHomeTeam: Boolean) {
+        with(game) {
+            if (foul.isOnDefense || foul.foulType == FoulType.REBOUNDING) {
+                addBonusFreeThrows(game, isOnHomeTeam)
+                resetShotClock(game)
+            }
 
             if (foul.isOnDefense) {
-                if (foul.homeTeamHasBall) {
-                    awayFouls++
-                }
-                else {
-                    homeFouls++
-                    isOnHomeTeam = true
-                }
-            }
-            else {
-                if (foul.homeTeamHasBall) {
-                    homeFouls++
-                    isOnHomeTeam = true
-                }
-                else {
-                    awayFouls++
-                }
-            }
-
-            if (foul.isOnDefense || foul.foulType == FoulType.REBOUNDING) {
-                if (!shootFreeThrows) {
-                    if (isOnHomeTeam && awayFouls > 6) {
-                        shootFreeThrows = true
-                        numberOfFreeThrows = if (awayFouls >= 10) {
-                            2
-                        } else {
-                            -1
-                        }
-                    } else if (!isOnHomeTeam && homeFouls > 6) {
-                        shootFreeThrows = true
-                        numberOfFreeThrows = if (homeFouls >= 10) {
-                            2
-                        } else {
-                            -1
-                        }
-                    }
-                }
-
-                if (shotClock < Game.resetShotClockTime) {
-                    shotClock = if (timeRemaining > Game.resetShotClockTime) Game.resetShotClockTime else timeRemaining
-                }
-                if (shootFreeThrows) {
-                    shotClock = if (timeRemaining > Game.lengthOfShotClock) Game.lengthOfShotClock else timeRemaining
-                }
-            }
-
-            if (!foul.isOnDefense && foul.foulType != FoulType.REBOUNDING) {
-                changePossession()
-            } else if (foul.foulType == FoulType.REBOUNDING) {
-                if (foul.isOnDefense) {
-                    if (homeTeamHasBall) {
-                        if (foul.defense.teamId == homeTeam.teamId) {
-                            changePossession()
-                        }
-                    } else {
-                        if (foul.defense.teamId == awayTeam.teamId) {
-                            changePossession()
-                        }
+                if (homeTeamHasBall) {
+                    if (foul.defense.teamId == homeTeam.teamId) {
+                        changePossession()
                     }
                 } else {
-                    if (homeTeamHasBall) {
-                        if (foul.offense.teamId == homeTeam.teamId) {
-                            changePossession()
-                        }
-                    } else {
-                        if (foul.offense.teamId == awayTeam.teamId) {
-                            changePossession()
-                        }
+                    if (foul.defense.teamId == awayTeam.teamId) {
+                        changePossession()
                     }
                 }
+            } else {
+                if (homeTeamHasBall) {
+                    if (foul.offense.teamId == homeTeam.teamId) {
+                        changePossession()
+                    }
+                } else {
+                    if (foul.offense.teamId == awayTeam.teamId) {
+                        changePossession()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun incrementFouls(game: Game, foul: Foul): Boolean {
+        return if (foul.isOnDefense) {
+            if (foul.homeTeamHasBall) {
+                game.awayFouls++
+                false
+            }
+            else {
+                game.homeFouls++
+                true
+            }
+        }
+        else {
+            if (foul.homeTeamHasBall) {
+                game.homeFouls++
+                true
+            }
+            else {
+                game.awayFouls++
+                false
+            }
+        }
+    }
+
+    private fun addBonusFreeThrows(game: Game, isOnHomeTeam: Boolean) {
+        with(game) {
+            if (!shootFreeThrows) {
+                if (isOnHomeTeam && awayFouls > 6) {
+                    shootFreeThrows = true
+                    numberOfFreeThrows = if (awayFouls >= 10) {
+                        2
+                    } else {
+                        -1
+                    }
+                } else if (!isOnHomeTeam && homeFouls > 6) {
+                    shootFreeThrows = true
+                    numberOfFreeThrows = if (homeFouls >= 10) {
+                        2
+                    } else {
+                        -1
+                    }
+                }
+            }
+        }
+    }
+
+    private fun resetShotClock(game: Game) {
+        with(game) {
+            if (shotClock < Game.resetShotClockTime) {
+                shotClock = if (timeRemaining > Game.resetShotClockTime) Game.resetShotClockTime else timeRemaining
+            }
+            if (shootFreeThrows) {
+                shotClock = if (timeRemaining > Game.lengthOfShotClock) Game.lengthOfShotClock else timeRemaining
             }
         }
     }

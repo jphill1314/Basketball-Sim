@@ -48,8 +48,7 @@ object FrontCourtPlays {
                     deadball = true
                     changePossession()
                 } else {
-                    madeShot = false
-                    deadball = true
+                    FoulHelper.manageFoul(game, shot.foul)
                 }
             } else {
                 plays.add(rebound)

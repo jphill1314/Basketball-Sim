@@ -57,10 +57,11 @@ object MiscPlays {
                     changePossession()
                 }
                 deadball = false
+                madeShot = false
                 plays.add(rebound)
             } else {
                 deadball = true
-                madeShot = true
+                madeShot = false
                 makeSubs()
                 changePossession()
             }
