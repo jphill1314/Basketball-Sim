@@ -20,7 +20,7 @@
             android:id="@+id/staff"
             android:title="@string/staff" />
         <item
-            android:id="@+id/training"
-            android:title="@string/training" />
+            android:id="@+id/practice"
+            android:title="@string/practice" />
     </group>
 </menu>
