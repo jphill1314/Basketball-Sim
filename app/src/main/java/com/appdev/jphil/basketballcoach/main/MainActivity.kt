@@ -68,19 +68,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         if (fragment != null && !menuItem.isChecked) {
             FlurryAgent.logEvent(TrackingKeys.EVENT_VIEW_SCREEN, mutableMapOf(TrackingKeys.PAYLOAD_SCREEN_NAME to fragment::class.java.simpleName))
             menuItem.isChecked = true
-            if (!isStartup && supportFragmentManager.backStackEntryCount == 0) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            } else {
-                while (supportFragmentManager.backStackEntryCount > 1) {
-                    supportFragmentManager.popBackStackImmediate()
-                }
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, fragment)
-                    .commit()
+            while (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStackImmediate()
             }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .commit()
             return true
         }
         return false
@@ -106,7 +99,17 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         navigateToHomePage(false)
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount == 0 && !isOnHomepage()) {
+            navigateToHomePage()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     private fun navigateToHomePage(isStartup: Boolean) {
         handleFragmentNavigation(navView.menu.getItem(0), isStartup)
     }
+
+    private fun isOnHomepage(): Boolean = navView.menu.getItem(0).isChecked
 }
