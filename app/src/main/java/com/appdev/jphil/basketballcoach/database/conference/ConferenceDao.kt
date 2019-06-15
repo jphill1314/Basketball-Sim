@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
 interface ConferenceDao {

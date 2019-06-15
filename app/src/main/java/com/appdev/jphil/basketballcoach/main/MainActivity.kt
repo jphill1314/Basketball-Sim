@@ -1,11 +1,11 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import androidx.fragment.app.Fragment
+import androidx.core.view.GravityCompat
 import android.view.MenuItem
+import androidx.drawerlayout.widget.DrawerLayout
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.practice.PracticeFragment

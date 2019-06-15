@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.recruit
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
 interface RecruitDao {

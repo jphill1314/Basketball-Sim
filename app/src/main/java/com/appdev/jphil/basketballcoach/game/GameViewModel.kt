@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.game
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible

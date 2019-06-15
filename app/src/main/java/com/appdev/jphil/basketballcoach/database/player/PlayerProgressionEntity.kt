@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.database.player
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerProgression
 

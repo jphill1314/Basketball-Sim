@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.recruiting
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 
 class RecruitViewModel : ViewModel() {
 

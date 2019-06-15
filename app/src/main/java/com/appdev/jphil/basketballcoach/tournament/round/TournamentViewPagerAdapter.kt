@@ -1,8 +1,8 @@
 package com.appdev.jphil.basketballcoach.tournament.round
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.tournament.TournamentContract
 

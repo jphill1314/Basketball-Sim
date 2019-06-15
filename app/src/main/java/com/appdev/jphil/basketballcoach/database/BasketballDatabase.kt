@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.database
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDao
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.coach.ScoutingAssignmentEntity

@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.coach
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Dao
 abstract class CoachDao {

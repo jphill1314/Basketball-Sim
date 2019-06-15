@@ -1,8 +1,8 @@
 package com.appdev.jphil.basketballcoach.database.team
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.coaches.Coach
