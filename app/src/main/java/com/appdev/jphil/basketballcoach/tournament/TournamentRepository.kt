@@ -5,7 +5,6 @@ import com.appdev.jphil.basketball.TenTeamTournament
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
-import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +24,7 @@ class TournamentRepository @Inject constructor(
         GlobalScope.launch(Dispatchers.IO) {
             createTournament()?.let { tournament ->
                 if (GameDatabaseHelper.loadAllGameEntities(database).filter { !it.isFinal }.isEmpty()) {
-                    generateNextRound()
-                    tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(tournament.id, database))
+                    generateNextRound(tournament)
                 }
                 withContext(Dispatchers.Main) {
                     presenter.onTournamentLoaded(tournament.scheduleDataModels)
@@ -35,12 +33,10 @@ class TournamentRepository @Inject constructor(
         }
     }
 
-    private fun generateNextRound() {
-        createTournament()?.let {
-            it.generateNextRound(2018) // TODO: inject current season
-            GameDatabaseHelper.saveOnlyGames(it.getAllGames(), database)
-            it.replaceGames(GameDatabaseHelper.loadGamesForTournament(it.id, database))
-        }
+    private fun generateNextRound(tournament: TenTeamTournament) {
+        tournament.generateNextRound(2018) // TODO: inject current season
+        GameDatabaseHelper.saveOnlyGames(tournament.getAllGames(), database)
+        tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(tournament.id, database))
     }
 
     private fun createTournament(): TenTeamTournament? {
@@ -59,9 +55,7 @@ class TournamentRepository @Inject constructor(
         conference?.tournament?.let { tournament ->
             tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conferenceId, database))
             if (tournament.numberOfGames() == 0) {
-                tournament.generateNextRound(2018) // TODO: inject
-                GameDatabaseHelper.saveOnlyGames(tournament.getAllGames(), database)
-                tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conferenceId, database))
+                generateNextRound(tournament)
             }
         }
         return conference?.tournament

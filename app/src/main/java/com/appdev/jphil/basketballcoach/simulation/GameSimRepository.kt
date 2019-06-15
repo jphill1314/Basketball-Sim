@@ -41,6 +41,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
                             simGame(game)
+                            updatePresenter()
                         } else {
                             gameLoaded = true
                             homeName = game.homeTeam.name
@@ -77,6 +78,9 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
                         simGame(game)
+                        if (id <= gameId) {
+                            updatePresenter()
+                        }
                     }
                 }
             }
@@ -93,6 +97,9 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
                         simGame(game)
+                        if (id <= gameId) {
+                            updatePresenter()
+                        }
                     }
                 }
             }
@@ -129,7 +136,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
     }
 
-    private suspend fun simGame(game: Game) {
+    private fun simGame(game: Game) {
         game.simulateFullGame()
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
@@ -145,7 +152,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
         GameDatabaseHelper.saveGames(listOf(game), database)
         RecruitDatabaseHelper.saveRecruits(recruits, database)
-        updatePresenter()
     }
 
     private suspend fun onSeasonFinished(areTournamentsOver: Boolean) {

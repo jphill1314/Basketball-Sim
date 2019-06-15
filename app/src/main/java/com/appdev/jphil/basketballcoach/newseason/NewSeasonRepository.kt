@@ -71,6 +71,9 @@ class NewSeasonRepository @Inject constructor(
             team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
         }
 
+        // Remove list of known recruits
+        team.knownRecruits.clear()
+
 
         for (position in 1..5) {
             // Fill empty spots in roster
