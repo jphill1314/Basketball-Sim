@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.tournament.round
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Button

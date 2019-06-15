@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.database.recruit
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.appdev.jphil.basketball.recruits.RecruitInterest
 
 @Entity

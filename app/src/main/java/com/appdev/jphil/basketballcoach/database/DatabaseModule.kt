@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.database
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerApplication
 import dagger.Module
 import dagger.Provides

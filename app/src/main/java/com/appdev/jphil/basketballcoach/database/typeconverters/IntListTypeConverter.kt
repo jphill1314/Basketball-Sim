@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.typeconverters
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.google.gson.Gson
 
 class IntListTypeConverter {

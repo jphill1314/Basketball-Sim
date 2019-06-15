@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.tournament.round
 
 import android.content.res.Resources
 import android.os.Handler
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.appdev.jphil.basketballcoach.R
