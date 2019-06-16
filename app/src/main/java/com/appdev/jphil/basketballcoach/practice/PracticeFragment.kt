@@ -14,6 +14,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -39,6 +40,7 @@ class PracticeFragment : Fragment(), PracticeContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.practice))
         return inflater.inflate(R.layout.fragment_practice, container, false).also {
             val spinner = it.findViewById<Spinner>(R.id.practice_type)
             ArrayAdapter.createFromResource(

@@ -14,6 +14,7 @@ import android.widget.TextView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.util.StatsUtil
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -83,6 +84,7 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
             findViewById<TextView>(R.id.stl_stats).text = stats.getStealAvg()
             findViewById<TextView>(R.id.fouls_stats).text = stats.getFoulAvg()
         }
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.player_overview))
     }
 
     override fun addPlayerStats(stats: List<GameStatsEntity>) {

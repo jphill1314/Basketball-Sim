@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.TeamManager
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import dagger.android.support.AndroidSupportInjection
@@ -52,6 +53,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.recruit_overview))
         return inflater.inflate(R.layout.fragment_recruit_overview, container, false).apply {
             findViewById<Button>(R.id.button_scout).setOnClickListener { presenter.onScoutClicked() }
             findViewById<Button>(R.id.button_scholarship).setOnClickListener { presenter.onOfferScholarshipClicked() }

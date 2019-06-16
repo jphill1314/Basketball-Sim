@@ -45,6 +45,7 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.standings))
         return inflater.inflate(R.layout.fragment_standings, container, false)
     }
 

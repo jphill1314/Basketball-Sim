@@ -23,7 +23,7 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
     override fun onDataFetched(team: Team) {
         this.team = team
         view?.updateTeamAndConference(team.teamId, team.conferenceId)
-        displayData(team.roster, team.isUser)
+        displayData(team.roster, team)
     }
 
     override fun onPlayerSelected(player: Player) {
@@ -33,7 +33,7 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
             if (this.player?.id != player.id) {
                 team.swapPlayers(player.rosterIndex, this.player!!.rosterIndex)
                 repository.saveTeam(team)
-                displayData(team.roster, team.isUser)
+                displayData(team.roster, team)
                 FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SWAP_PLAYERS))
             }
             this.player = null
@@ -44,10 +44,10 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
         view?.gotoPlayerOverview(player.id!!)
     }
 
-    private fun displayData(roster: List<Player>, isUsersTeam: Boolean) {
+    private fun displayData(roster: List<Player>, team: Team) {
         val dataModels = mutableListOf<RosterDataModel>()
         roster.forEach { dataModels.add(RosterDataModel(it, false)) }
-        view?.displayData(dataModels, isUsersTeam)
+        view?.displayData(dataModels, team)
     }
 
     override fun onViewAttached(view: RosterContract.View) {

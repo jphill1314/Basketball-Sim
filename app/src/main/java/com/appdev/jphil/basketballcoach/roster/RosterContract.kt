@@ -7,7 +7,7 @@ import com.appdev.jphil.basketballcoach.MVPContract
 interface RosterContract {
 
     interface View : MVPContract.View {
-        fun displayData(players: MutableList<RosterDataModel>, isUsersTeam: Boolean)
+        fun displayData(players: MutableList<RosterDataModel>, team: Team)
         fun updateTeamAndConference(teamId: Int, conferenceId: Int)
         fun gotoPlayerOverview(playerId: Int)
     }
