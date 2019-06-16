@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.TeamManager
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import dagger.android.support.AndroidSupportInjection
@@ -44,12 +46,14 @@ class RosterFragment : Fragment(), RosterContract.View {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.roster))
         return view
     }
 
-    override fun displayData(players: MutableList<RosterDataModel>, isUsersTeam: Boolean) {
-        adapter.isUsersTeam = isUsersTeam
+    override fun displayData(players: MutableList<RosterDataModel>, team: Team) {
+        adapter.isUsersTeam = team.isUser
         adapter.updateRoster(players)
+        (activity as? NavigationManager)?.setTeamNameAndRating(team.name, team.teamRating)
     }
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {

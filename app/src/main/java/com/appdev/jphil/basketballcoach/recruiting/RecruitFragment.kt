@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.TeamManager
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
 import dagger.android.support.AndroidSupportInjection
@@ -72,6 +73,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.recruiting))
         return inflater.inflate(R.layout.fragment_recruiting, container, false)
     }
 

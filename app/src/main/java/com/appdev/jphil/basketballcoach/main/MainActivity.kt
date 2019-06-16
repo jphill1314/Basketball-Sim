@@ -5,6 +5,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.fragment.app.Fragment
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
@@ -22,6 +23,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     private var drawerLayout: DrawerLayout? = null
     private lateinit var navView: NavigationView
+    private lateinit var teamName: TextView
+    private lateinit var teamRating: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,17 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
-        navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem, false) }
+        navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
+        navView.getHeaderView(0)?.apply {
+            teamName = findViewById(R.id.nav_team_name)
+            teamRating = findViewById(R.id.nav_team_rating)
+        }
+
         if (savedInstanceState == null) {
-            navigateToHomePage(true)
+            navigateToHomePage()
+        } else {
+            teamName.text = savedInstanceState.getString(TEAM_NAME)
+            teamRating.text = savedInstanceState.getString(TEAM_RATING)
         }
     }
 
@@ -47,7 +58,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         }
     }
 
-    private fun handleFragmentNavigation(menuItem: MenuItem, isStartup: Boolean): Boolean {
+    private fun handleFragmentNavigation(menuItem: MenuItem): Boolean {
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -95,7 +106,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     }
 
     override fun navigateToHomePage() {
-        navigateToHomePage(false)
+        handleFragmentNavigation(navView.menu.getItem(0))
     }
 
     override fun onBackPressed() {
@@ -106,9 +117,26 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         }
     }
 
-    private fun navigateToHomePage(isStartup: Boolean) {
-        handleFragmentNavigation(navView.menu.getItem(0), isStartup)
+    override fun setToolbarTitle(title: String) {
+        supportActionBar?.title = title
     }
 
     private fun isOnHomepage(): Boolean = navView.menu.getItem(0).isChecked
+
+    override fun setTeamNameAndRating(name: String, rating: Int) {
+        teamName.text = name
+        teamRating.text = resources.getString(R.string.rating_colon, rating)
+        // TODO: change this so that the activity does its own db call -> this will allow more complex data in the header
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(TEAM_NAME, teamName.text.toString())
+        outState.putString(TEAM_RATING, teamRating.text.toString())
+        super.onSaveInstanceState(outState)
+    }
+
+    private companion object {
+        const val TEAM_NAME = "team name"
+        const val TEAM_RATING = "team rating"
+    }
 }

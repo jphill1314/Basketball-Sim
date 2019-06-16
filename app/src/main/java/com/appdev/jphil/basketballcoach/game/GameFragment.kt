@@ -153,6 +153,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             onPlayFabClicked()
         }
 
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.game))
+
         return view
     }
 

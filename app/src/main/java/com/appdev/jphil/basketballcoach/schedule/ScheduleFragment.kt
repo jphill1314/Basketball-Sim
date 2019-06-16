@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -55,6 +56,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = null
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.schedule))
         return view
     }
 

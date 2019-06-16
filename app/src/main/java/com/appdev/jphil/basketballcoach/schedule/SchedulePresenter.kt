@@ -46,7 +46,10 @@ class SchedulePresenter @Inject constructor(
         if (conferenceTournamentIsFinished) {
             // Season is over start new season
             view?.showProgressBar()
-            newSeasonRepository.startNewSeason { fetchSchedule() }
+            newSeasonRepository.startNewSeason {
+                fetchSchedule()
+                isSimming = false
+            }
             FlurryAgent.logEvent(
                 TrackingKeys.EVENT_TAP,
                 mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_START_NEW_SEASON)

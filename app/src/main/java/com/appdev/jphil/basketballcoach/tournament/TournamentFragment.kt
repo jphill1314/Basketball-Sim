@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
 import com.appdev.jphil.basketballcoach.tournament.round.TournamentViewPagerAdapter
 import dagger.android.support.AndroidSupportInjection
@@ -52,6 +53,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
         fab.setOnClickListener { presenter.onFABClicked() }
         fab.show()
         adapter = null
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.tournament))
         return view
     }
 

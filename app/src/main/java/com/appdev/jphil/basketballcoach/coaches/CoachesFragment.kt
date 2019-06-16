@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ class CoachesFragment : Fragment(), CoachesContract.View {
     lateinit var presenter: CoachesContract.Presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.staff))
         return inflater.inflate(R.layout.fragment_coaches, container, false)
     }
 

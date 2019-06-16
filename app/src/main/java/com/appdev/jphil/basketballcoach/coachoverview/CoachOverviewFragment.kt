@@ -15,6 +15,7 @@ import android.widget.TextView
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import java.lang.NumberFormatException
 import javax.inject.Inject
@@ -49,6 +50,7 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.coach_overview))
         return inflater.inflate(R.layout.fragment_coach_overview, container, false)
     }
 
