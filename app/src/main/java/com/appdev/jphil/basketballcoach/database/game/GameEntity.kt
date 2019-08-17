@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.typeconverters.BooleanListConverter
 
@@ -61,7 +62,7 @@ data class GameEntity(
         game.deadball = deadball
         game.madeShot = madeShot
         game.shootFreeThrows = shootFreeThrows
-        game.numberOfFreeThrows = numberOfFreeThrows
+        game.freeThrowType = FreeThrowTypes.numberToType(numberOfFreeThrows)
         game.playerWithBall = playerWithBall
         game.location = location
         game.possessions = possessions
@@ -99,7 +100,7 @@ data class GameEntity(
                 game.deadball,
                 game.madeShot,
                 game.shootFreeThrows,
-                game.numberOfFreeThrows,
+                FreeThrowTypes.typeToNumber(game.freeThrowType),
                 game.playerWithBall,
                 game.location,
                 game.possessions,
@@ -115,5 +116,7 @@ data class GameEntity(
                 game.lastPlayerWithBall
             )
         }
+
+
     }
 }

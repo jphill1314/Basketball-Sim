@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.*
 import com.appdev.jphil.basketball.plays.enums.FoulType
+import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import kotlin.random.Random
 
 object FrontCourtPlays {
@@ -73,9 +74,9 @@ object FrontCourtPlays {
     private fun getFreeThrows(game: Game, shot: BasketballPlay): Boolean {
         if (shot.foul.foulType != FoulType.CLEAN) {
             when {
-                shot.points != 0 -> game.numberOfFreeThrows = 1
-                shot.foul.foulType == FoulType.SHOOTING_LONG -> game.numberOfFreeThrows = 3
-                else -> game.numberOfFreeThrows = 2
+                shot.points != 0 -> game.freeThrowType = FreeThrowTypes.ONE_SHOT
+                shot.foul.foulType == FoulType.SHOOTING_LONG -> game.freeThrowType = FreeThrowTypes.THREE_SHOTS
+                else -> game.freeThrowType = FreeThrowTypes.TWO_SHOTS
             }
             game.shootFreeThrows = true
             return true

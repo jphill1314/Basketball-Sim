@@ -6,6 +6,7 @@ import com.appdev.jphil.basketball.game.helpers.*
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.*
 import com.appdev.jphil.basketball.plays.enums.FoulType
+import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
 import com.appdev.jphil.basketball.playtext.*
 import com.appdev.jphil.basketball.textcontracts.*
@@ -47,7 +48,7 @@ class Game(
     var deadball = false
     var madeShot = false
     var shootFreeThrows = false
-    var numberOfFreeThrows = 0
+    var freeThrowType = FreeThrowTypes.ONE_SHOT
     var playerWithBall = 1
     var location = 0
     var possessions = 0

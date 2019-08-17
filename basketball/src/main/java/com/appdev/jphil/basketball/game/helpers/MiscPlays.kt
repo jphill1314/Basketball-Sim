@@ -43,7 +43,7 @@ object MiscPlays {
         with (game) {
             shootFreeThrows = false
             val plays = mutableListOf<BasketballPlay>()
-            val freeThrows = FreeThrows(game, numberOfFreeThrows)
+            val freeThrows = FreeThrows(game, freeThrowType)
             if (homeTeamHasBall) {
                 homeScore += freeThrows.points
             } else {
