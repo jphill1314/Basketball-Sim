@@ -3,6 +3,7 @@ package com.appdev.jphil.basketball.game.helpers
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.Foul
 import com.appdev.jphil.basketball.plays.enums.FoulType
+import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 
 object FoulHelper {
 
@@ -89,19 +90,19 @@ object FoulHelper {
     private fun addBonusFreeThrows(game: Game, isOnHomeTeam: Boolean) {
         with(game) {
             if (!shootFreeThrows) {
-                if (isOnHomeTeam && awayFouls > 6) {
+                if (isOnHomeTeam && homeFouls > 6) {
                     shootFreeThrows = true
-                    numberOfFreeThrows = if (awayFouls >= 10) {
-                        2
+                    freeThrowType = if (homeFouls >= 10) {
+                        FreeThrowTypes.TWO_SHOTS
                     } else {
-                        -1
+                        FreeThrowTypes.ONE_AND_ONE
                     }
-                } else if (!isOnHomeTeam && homeFouls > 6) {
+                } else if (!isOnHomeTeam && awayFouls > 6) {
                     shootFreeThrows = true
-                    numberOfFreeThrows = if (homeFouls >= 10) {
-                        2
+                    freeThrowType = if (awayFouls >= 10) {
+                        FreeThrowTypes.TWO_SHOTS
                     } else {
-                        -1
+                        FreeThrowTypes.ONE_AND_ONE
                     }
                 }
             }

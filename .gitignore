@@ -70,5 +70,8 @@ out/
 /build
 /captures
 .externalNativeBuild
+/.gradle/5.1.1
+/.gradle/javaCompile
+/.gradle/buildOutputCleanup
 
 /app/src/main/res/values/scerets.xml
