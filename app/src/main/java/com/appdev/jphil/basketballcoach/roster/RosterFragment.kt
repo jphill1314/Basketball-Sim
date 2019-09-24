@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.FragmentRosterBinding
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.TeamManager
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
@@ -22,8 +23,8 @@ class RosterFragment : Fragment(), RosterContract.View {
     lateinit var presenter: RosterContract.Presenter
     @Inject
     lateinit var teamManager: TeamManager
-    private val adapter: RosterAdapter by lazy { RosterAdapter(presenter, mutableListOf(), resources) }
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: RosterAdapter
+    private lateinit var binding: FragmentRosterBinding
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -42,12 +43,14 @@ class RosterFragment : Fragment(), RosterContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_roster, container, false)
-        recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        binding = FragmentRosterBinding.inflate(inflater)
+        adapter = RosterAdapter(presenter, mutableListOf(), resources)
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@RosterFragment.adapter
+        }
         (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.roster))
-        return view
+        return binding.root
     }
 
     override fun displayData(players: MutableList<RosterDataModel>, team: Team) {
