@@ -7,21 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.ListItemGameTeamStatsBinding
 
 class GameTeamStatsAdapter : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolder>() {
 
     private val stats = mutableListOf<TeamStatLine>()
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val homeStats: TextView = view.findViewById(R.id.home_stats)
-        val awayStats: TextView = view.findViewById(R.id.away_stats)
-        val statType: TextView = view.findViewById(R.id.stat_type)
-    }
+    class ViewHolder(val binding: ListItemGameTeamStatsBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_game_team_stats, parent, false)
-        return ViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(ListItemGameTeamStatsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount(): Int {
         return stats.size
@@ -29,9 +24,11 @@ class GameTeamStatsAdapter : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolde
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val stat = stats[position]
-        viewHolder.homeStats.text = stat.homeTeamStat
-        viewHolder.awayStats.text = stat.awayTeamStat
-        viewHolder.statType.text = stat.statType
+        viewHolder.binding.apply {
+            homeStats.text = stat.homeTeamStat
+            awayStats.text = stat.awayTeamStat
+            statType.text = stat.statType
+        }
     }
 
     fun updateTeamStats(homeTeam: Team, awayTeam: Team) {

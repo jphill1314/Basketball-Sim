@@ -11,22 +11,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
+import com.appdev.jphil.basketballcoach.databinding.ListItemGameEventBinding
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 
 class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val gameTime: TextView = view.findViewById(R.id.game_time)
-        val gameEvent: TextView = view.findViewById(R.id.game_event)
-        val gameScore: TextView = view.findViewById(R.id.game_score)
-    }
+    class ViewHolder(val binding: ListItemGameEventBinding): RecyclerView.ViewHolder(binding.root)
 
     private val plays = mutableListOf<GameEventEntity>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_game_event, parent, false)
-        return ViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(ListItemGameEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount(): Int {
         return plays.size
@@ -35,8 +30,8 @@ class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAd
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val play = plays[position]
         val previousPlay = if (position < plays.size - 1) plays[position + 1] else null
-        viewHolder.gameTime.text = TimeUtil.getFormattedTime(play.timeRemaining, play.shotClock)
-        viewHolder.gameEvent.text = play.event
+        viewHolder.binding.gameTime.text = TimeUtil.getFormattedTime(play.timeRemaining, play.shotClock)
+        viewHolder.binding.gameEvent.text = play.event
 
         val score = SpannableStringBuilder(resources.getString(R.string.score_dash, play.homeTeam, play.homeScore, play.awayScore, play.awayTeam))
         val midPoint = score.indexOf("-")
@@ -46,7 +41,7 @@ class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAd
         if (previousPlay != null && play.awayScore != previousPlay.awayScore) {
             score.setSpan(android.text.style.StyleSpan(android.graphics.Typeface.BOLD), midPoint + 1, score.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
-        viewHolder.gameScore.text = score
+        viewHolder.binding.gameScore.text = score
 
         viewHolder.itemView.setBackgroundColor(if (play.homeTeamHasBall) {
             ResourcesCompat.getColor(resources, R.color.white, null)

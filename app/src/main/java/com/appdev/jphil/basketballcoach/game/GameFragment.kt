@@ -18,6 +18,7 @@ import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.FreeThrows
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
+import com.appdev.jphil.basketballcoach.databinding.FragmentGameBinding
 import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
@@ -44,18 +45,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var awayStatsAdapter: GameStatsAdapter? = null
     private val teamStatsAdapter = GameTeamStatsAdapter()
 
-    private val homeScore: TextView by lazy { view!!.findViewById<TextView>(R.id.home_score) } // TODO: this might not work like I want it too
-    private val awayScore: TextView by lazy { view!!.findViewById<TextView>(R.id.away_score) }
-    private val homeFouls: TextView by lazy { view!!.findViewById<TextView>(R.id.home_fouls) }
-    private val awayFouls: TextView by lazy { view!!.findViewById<TextView>(R.id.away_fouls) }
-    private val gameStatus: TextView by lazy { view!!.findViewById<TextView>(R.id.game_half) }
-    private val gameTime: TextView by lazy { view!!.findViewById<TextView>(R.id.game_time) }
-    private val homeTimeouts: TextView by lazy { view!!.findViewById<TextView>(R.id.home_timeouts) }
-    private val awayTimeouts: TextView by lazy { view!!.findViewById<TextView>(R.id.away_timeouts) }
-    private lateinit var playFab: FloatingActionButton
-    private lateinit var timeoutFab: FloatingActionButton
-    private lateinit var rosterSpinner: Spinner
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var binding: FragmentGameBinding
 
     private var nullGame: Game? = null
 
@@ -74,11 +64,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         super.onDetach()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_game, container, false)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentGameBinding.inflate(inflater)
 
         savedInstanceState?.let {
             homeTeamName = it.getString("homeTeam") ?: "error"
@@ -94,19 +82,17 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         }
 
         gameAdapter = GameAdapter(resources)
-        recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        val spinner = view.findViewById<Spinner>(R.id.spinner)
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.game_views,
             android.R.layout.simple_spinner_dropdown_item
         ).also { adapter->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
+            binding.spinner.adapter = adapter
         }
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -114,16 +100,15 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
         }
 
-        rosterSpinner = view.findViewById(R.id.roster_spinner)
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.game_roster_views,
             android.R.layout.simple_spinner_dropdown_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            rosterSpinner.adapter = adapter
+            binding.rosterSpinner.adapter = adapter
         }
-        rosterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.rosterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -131,19 +116,16 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
         }
 
-        view.findViewById<TextView>(R.id.home_name).text = homeTeamName
-        view.findViewById<TextView>(R.id.away_name).text = awayTeamName
+        binding.homeName.text = homeTeamName
+        binding.awayName.text = awayTeamName
 
-        view.findViewById<SeekBar>(R.id.seek_bar).apply {
+        binding.seekBar.apply {
             setOnSeekBarChangeListener(this@GameFragment)
             progress = simSpeed
         }
 
-        playFab = view.findViewById(R.id.play_fab)
-        playFab.setOnClickListener { onPlayFabClicked() }
-
-        timeoutFab = view.findViewById(R.id.timeout_fab)
-        timeoutFab.setOnClickListener { onTimeOutFabClicked() }
+        binding.playFab.setOnClickListener { onPlayFabClicked() }
+        binding.timeoutFab.setOnClickListener { onTimeOutFabClicked() }
 
         selectView(viewId)
 
@@ -155,9 +137,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
         (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.game))
 
-        return view
+        return binding.root
     }
-
     override fun onResume() {
         super.onResume()
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
@@ -176,18 +157,20 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             onDeadBall()
         }
 
-        gameStatus.text = if (game.isFinal) {
-            resources.getString(R.string.game_final)
-        } else {
-            resources.getString(R.string.half_placeholder, game.half)
+        with(binding) {
+            gameHalf.text = if (game.isFinal) {
+                resources.getString(R.string.game_final)
+            } else {
+                resources.getString(R.string.half_placeholder, game.half)
+            }
+            gameTime.text = TimeUtil.getFormattedTime(game.timeRemaining, game.shotClock)
+            homeScore.text = game.homeScore.toString()
+            awayScore.text = game.awayScore.toString()
+            homeFouls.text = resources.getString(R.string.fouls, game.homeFouls)
+            awayFouls.text = resources.getString(R.string.fouls, game.awayFouls)
+            homeTimeouts.text = resources.getString(R.string.timeouts, game.homeTimeouts)
+            awayTimeouts.text = resources.getString(R.string.timeouts, game.awayTimeouts)
         }
-        gameTime.text = TimeUtil.getFormattedTime(game.timeRemaining, game.shotClock)
-        homeScore.text = game.homeScore.toString()
-        awayScore.text = game.awayScore.toString()
-        homeFouls.text = resources.getString(R.string.fouls, game.homeFouls)
-        awayFouls.text = resources.getString(R.string.fouls, game.awayFouls)
-        homeTimeouts.text = resources.getString(R.string.timeouts, game.homeTimeouts)
-        awayTimeouts.text = resources.getString(R.string.timeouts, game.awayTimeouts)
 
         gameAdapter.addEvents(newEvents)
         gameAdapter.notifyDataSetChanged()
@@ -263,7 +246,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     private fun selectView(id: Int) {
         viewId = id
-        recyclerView.adapter = when (viewId) {
+        binding.recyclerView.adapter = when (viewId) {
             1 -> homeStatsAdapter
             2 -> awayStatsAdapter
             3 -> teamStatsAdapter
@@ -271,14 +254,14 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             else -> gameAdapter
         }
 
-        rosterSpinner.visibility = if (recyclerView.adapter is GameStatsAdapter) {
+        binding.rosterSpinner.visibility = if (binding.recyclerView.adapter is GameStatsAdapter) {
             View.VISIBLE
         } else {
             View.GONE
         }
 
         selectRosterView(0)
-        rosterSpinner.setSelection(rosterViewId)
+        binding.rosterSpinner.setSelection(rosterViewId)
     }
 
     private fun selectRosterView(viewId: Int) {
@@ -291,22 +274,26 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     private fun onPlayFabClicked() {
         if (handleFoulOuts(nullGame)) {
-            playFab.isEnabled = false
-            playFab.hide()
+            binding.playFab.apply {
+                isEnabled = false
+                hide()
+            }
             viewModel?.pauseGame = false
             deadBall = false
 
-            timeoutFab.show()
+            binding.timeoutFab.show()
         }
     }
 
     private fun onDeadBall() {
-        playFab.isEnabled = true
-        playFab.show()
+        binding.playFab.apply {
+            isEnabled = true
+            show()
+        }
         viewModel?.pauseGame = true
         deadBall = true
 
-        timeoutFab.hide()
+        binding.timeoutFab.hide()
     }
 
     private fun onTimeOutFabClicked() {

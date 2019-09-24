@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.ListItemGameStatsBinding
+import com.appdev.jphil.basketballcoach.databinding.ListItemHeaderBinding
 import com.appdev.jphil.basketballcoach.game.GameViewModel
 import java.util.*
 
@@ -25,15 +26,11 @@ class GameStatsAdapter(
 
     private var selectedPlayer: Player? = null
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val pos: TextView? = view.findViewById(R.id.player_position)
-        val name: TextView? = view.findViewById(R.id.player_name)
-        val stat1: TextView? = view.findViewById(R.id.result)
-        val stat2: TextView? = view.findViewById(R.id.stat2)
-        val stat3: TextView? = view.findViewById(R.id.stat3)
-        val stat4: TextView? = view.findViewById(R.id.stat4)
-        val header: TextView? = view.findViewById(R.id.title)
-    }
+    abstract class ViewHolder(view: View): RecyclerView.ViewHolder(view)
+
+    class HeaderViewHolder(val binding: ListItemHeaderBinding): ViewHolder(binding.root)
+
+    class GameStatsViewHolder(val bidning: ListItemGameStatsBinding): ViewHolder(bidning.root)
 
     fun updatePlayerStats(newPlayers: List<Player>) {
         if (isUsersTeam) {
@@ -57,11 +54,11 @@ class GameStatsAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = when (viewType) {
-            0 -> LayoutInflater.from(parent.context).inflate(R.layout.list_item_header, parent, false)
-            else -> LayoutInflater.from(parent.context).inflate(R.layout.list_item_game_stats, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            0 -> HeaderViewHolder(ListItemHeaderBinding.inflate(inflater, parent, false))
+            else -> GameStatsViewHolder(ListItemGameStatsBinding.inflate(inflater, parent, false))
         }
-        return ViewHolder(view)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -76,52 +73,60 @@ class GameStatsAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        when {
+            viewHolder is HeaderViewHolder -> bindHeader(viewHolder.binding, position)
+            viewHolder is GameStatsViewHolder -> bindStats(viewHolder.bidning, position)
+        }
+    }
+
+    private fun bindHeader(binding: ListItemHeaderBinding, position: Int) {
+        binding.title.text = when (position) {
+            0 -> resources.getString(R.string.on_the_floor)
+            else -> resources.getString(R.string.bench)
+        }
+    }
+
+    private fun bindStats(binding: ListItemGameStatsBinding, position: Int) {
         when (position) {
-            0 -> {
-                viewHolder.header?.text = resources.getString(R.string.on_the_floor)
-            }
-            7 -> {
-                viewHolder.header?.text = resources.getString(R.string.bench)
-            }
-            1, 8 -> statsHeader(viewHolder)
+            1, 8 -> statsHeader(binding)
             else -> {
                 val playerPos = when (position) {
                     in 2..6 -> position - 2
                     else -> position - 4
                 }
                 val player = players[playerPos]
-                setPlayerTextColor(viewHolder, player, playerPos)
-                viewHolder.pos?.text = positions[player.position - 1]
-                viewHolder.name?.text = player.lastName
+                setPlayerTextColor(binding, player, playerPos)
+                binding.playerPosition.text = positions[player.position - 1]
+                binding.playerName.text = player.lastName
                 when (rosterViewId) {
                     0 -> {
-                        viewHolder.stat1?.text = if (playerPos > 4 ) {
+                        binding.result.text = if (playerPos > 4 ) {
                             player.getRatingAtPositionNoFatigue(player.position).toString()
                         } else {
                             player.getRatingAtPositionNoFatigue(playerPos + 1).toString()
                         }
-                        viewHolder.stat2?.text = String.format("%.2f", player.fatigue)
-                        viewHolder.stat3?.text = (player.timePlayed / 60).toString()
-                        viewHolder.stat4?.text = player.fouls.toString()
+                        binding.stat2.text = String.format("%.2f", player.fatigue)
+                        binding.stat3.text = (player.timePlayed / 60).toString()
+                        binding.stat4.text = player.fouls.toString()
                     }
                     1 -> {
-                        viewHolder.stat1?.text = resources.getString(R.string.x_slash_y, player.twoPointMakes, player.twoPointAttempts)
-                        viewHolder.stat2?.text = resources.getString(R.string.x_slash_y, player.threePointMakes, player.threePointAttempts)
-                        viewHolder.stat3?.text = resources.getString(R.string.x_slash_y, player.freeThrowMakes, player.freeThrowShots)
-                        viewHolder.stat4?.text = player.assists.toString()
+                        binding.result.text = resources.getString(R.string.x_slash_y, player.twoPointMakes, player.twoPointAttempts)
+                        binding.stat2.text = resources.getString(R.string.x_slash_y, player.threePointMakes, player.threePointAttempts)
+                        binding.stat3.text = resources.getString(R.string.x_slash_y, player.freeThrowMakes, player.freeThrowShots)
+                        binding.stat4.text = player.assists.toString()
                     }
                     2 -> {
-                        viewHolder.stat1?.text = player.offensiveRebounds.toString()
-                        viewHolder.stat2?.text = player.defensiveRebounds.toString()
-                        viewHolder.stat3?.text = player.steals.toString()
-                        viewHolder.stat4?.text = player.turnovers.toString()
+                        binding.result.text = player.offensiveRebounds.toString()
+                        binding.stat2.text = player.defensiveRebounds.toString()
+                        binding.stat3.text = player.steals.toString()
+                        binding.stat4.text = player.turnovers.toString()
                     }
                 }
 
                 if (isUsersTeam) {
-                    viewHolder.itemView.setOnClickListener { onPlayerSelected(player) }
+                    binding.root.setOnClickListener { onPlayerSelected(player) }
                 }
-                viewHolder.itemView.setOnLongClickListener {
+                binding.root.setOnLongClickListener {
                     onLongPress(player)
                     true
                 }
@@ -129,57 +134,57 @@ class GameStatsAdapter(
         }
     }
 
-    private fun statsHeader(viewHolder: ViewHolder) {
-        viewHolder.pos?.text = resources.getString(R.string.pos)
-        viewHolder.name?.text = resources.getString(R.string.name)
+    private fun statsHeader(binding: ListItemGameStatsBinding) {
+        binding.playerPosition.text = resources.getString(R.string.pos)
+        binding.playerName.text = resources.getString(R.string.name)
         when (rosterViewId) {
             0 -> {
-                viewHolder.stat1?.text = resources.getString(R.string.rating)
-                viewHolder.stat2?.text = resources.getString(R.string.condition)
-                viewHolder.stat3?.text = resources.getString(R.string.minutes)
-                viewHolder.stat4?.text = resources.getString(R.string.player_fouls)
+                binding.result.text = resources.getString(R.string.rating)
+                binding.stat2.text = resources.getString(R.string.condition)
+                binding.stat3.text = resources.getString(R.string.minutes)
+                binding.stat4.text = resources.getString(R.string.player_fouls)
             }
             1 -> {
-                viewHolder.stat1?.text = resources.getString(R.string.two_fg)
-                viewHolder.stat2?.text = resources.getString(R.string.three_fg)
-                viewHolder.stat3?.text = resources.getString(R.string.ft_fg)
-                viewHolder.stat4?.text = resources.getString(R.string.assists)
+                binding.result.text = resources.getString(R.string.two_fg)
+                binding.stat2.text = resources.getString(R.string.three_fg)
+                binding.stat3.text = resources.getString(R.string.ft_fg)
+                binding.stat4.text = resources.getString(R.string.assists)
             }
             2 -> {
-                viewHolder.stat1?.text = resources.getString(R.string.ob)
-                viewHolder.stat2?.text = resources.getString(R.string.db)
-                viewHolder.stat3?.text = resources.getString(R.string.steals)
-                viewHolder.stat4?.text = resources.getString(R.string.to)
+                binding.result.text = resources.getString(R.string.ob)
+                binding.stat2.text = resources.getString(R.string.db)
+                binding.stat3.text = resources.getString(R.string.steals)
+                binding.stat4.text = resources.getString(R.string.to)
             }
         }
-        setHeaderTextColor(viewHolder)
+        setHeaderTextColor(binding)
     }
 
-    private fun setPlayerTextColor(viewHolder: ViewHolder, player: Player, position: Int) {
+    private fun setPlayerTextColor(binding: ListItemGameStatsBinding, player: Player, position: Int) {
         if (player.courtIndex == position && player.id != selectedPlayer?.id) {
-            viewHolder.pos?.setTextColor(Color.BLACK)
-            viewHolder.name?.setTextColor(Color.BLACK)
-            viewHolder.stat1?.setTextColor(Color.BLACK)
-            viewHolder.stat2?.setTextColor(Color.BLACK)
-            viewHolder.stat3?.setTextColor(Color.BLACK)
-            viewHolder.stat4?.setTextColor(Color.BLACK)
+            binding.playerPosition.setTextColor(Color.BLACK)
+            binding.playerName.setTextColor(Color.BLACK)
+            binding.result.setTextColor(Color.BLACK)
+            binding.stat2.setTextColor(Color.BLACK)
+            binding.stat3.setTextColor(Color.BLACK)
+            binding.stat4.setTextColor(Color.BLACK)
         } else {
-            viewHolder.pos?.setTextColor(Color.GRAY)
-            viewHolder.name?.setTextColor(Color.GRAY)
-            viewHolder.stat1?.setTextColor(Color.GRAY)
-            viewHolder.stat2?.setTextColor(Color.GRAY)
-            viewHolder.stat3?.setTextColor(Color.GRAY)
-            viewHolder.stat4?.setTextColor(Color.GRAY)
+            binding.playerPosition.setTextColor(Color.GRAY)
+            binding.playerName.setTextColor(Color.GRAY)
+            binding.result.setTextColor(Color.GRAY)
+            binding.stat2.setTextColor(Color.GRAY)
+            binding.stat3.setTextColor(Color.GRAY)
+            binding.stat4.setTextColor(Color.GRAY)
         }
     }
 
-    private fun setHeaderTextColor(viewHolder: ViewHolder) {
-        viewHolder.pos?.setTextColor(Color.BLACK)
-        viewHolder.name?.setTextColor(Color.BLACK)
-        viewHolder.stat1?.setTextColor(Color.BLACK)
-        viewHolder.stat2?.setTextColor(Color.BLACK)
-        viewHolder.stat3?.setTextColor(Color.BLACK)
-        viewHolder.stat4?.setTextColor(Color.BLACK)
+    private fun setHeaderTextColor(binding: ListItemGameStatsBinding) {
+        binding.playerPosition.setTextColor(Color.BLACK)
+        binding.playerName.setTextColor(Color.BLACK)
+        binding.result.setTextColor(Color.BLACK)
+        binding.stat2.setTextColor(Color.BLACK)
+        binding.stat3.setTextColor(Color.BLACK)
+        binding.stat4.setTextColor(Color.BLACK)
     }
 
     private fun onPlayerSelected(player: Player) {
