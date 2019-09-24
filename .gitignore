@@ -73,5 +73,6 @@ out/
 /.gradle/5.1.1
 /.gradle/javaCompile
 /.gradle/buildOutputCleanup
+/.gradle
 
 /app/src/main/res/values/scerets.xml
