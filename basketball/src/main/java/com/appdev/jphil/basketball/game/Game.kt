@@ -94,13 +94,7 @@ class Game(
             updateStrategy()
         }
 
-        gamePlays.addAll(when {
-            shootFreeThrows -> MiscPlays.getFreeThrows(this)
-            MiscPlays.canIntentionalFoul(this) -> MiscPlays.getIntentionalFoul(this)
-            gamePlays.lastOrNull()?.leadToFastBreak == true -> FastBreakPlays.getFastBreakPlay(this)
-            location == -1 -> BackCourtPlays.getBackCourtPlay(this)
-            else -> FrontCourtPlays.getFrontCourtPlay(this)
-        })
+        gamePlays.addAll(PlayGenerator.getNextPlay(this))
         val lastPlay = gamePlays.last()
         lastPlayerWithBall = if (lastPlay is Pass) lastPlay.playerStartsWithBall else playerWithBall
         TimeoutHelper.manageTimeout(this)

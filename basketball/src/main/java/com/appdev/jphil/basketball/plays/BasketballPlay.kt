@@ -3,9 +3,7 @@ package com.appdev.jphil.basketball.plays
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.plays.utils.TimeUtil
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import java.util.*
+import kotlin.random.Random
 
 abstract class BasketballPlay(val game: Game) {
     var homeTeamHasBall = game.homeTeamHasBall
@@ -19,8 +17,7 @@ abstract class BasketballPlay(val game: Game) {
     lateinit var type: Plays // what kind of play? Pass, turnover, shot, foul, etc
     var points = 0// were points scored on this play?
     var playAsString = ""
-    val r = Random()
-    val timeUtil = TimeUtil()
+    val r = Random
     val homeTeamStartsWithBall = homeTeamHasBall
 
     val offense: Team = if (homeTeamHasBall) homeTeam else awayTeam
@@ -31,6 +28,23 @@ abstract class BasketballPlay(val game: Game) {
     lateinit var foul: Foul
 
     abstract fun generatePlay(): Int
+
+    fun getTimeChangePaceDependent(maxChange: Int, minChange: Int): Int {
+        val timeChange = (maxChange + 1 - (offense.pace / 90.0) * r.nextInt(maxChange + 1 - minChange)).toInt()
+        return smartTimeChange(timeChange)
+    }
+
+    fun getTimeChangePaceIndependent(maxChange: Int, minChange: Int): Int {
+        return smartTimeChange(r.nextInt(minChange, maxChange + 1))
+    }
+
+    private fun smartTimeChange(timeChange: Int): Int {
+        return if (timeChange > shotClock) {
+            shotClock
+        } else {
+            timeChange
+        }
+    }
 
     companion object {
         const val randomBound = 30

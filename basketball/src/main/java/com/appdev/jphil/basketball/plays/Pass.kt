@@ -2,13 +2,8 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.plays.utils.PassingUtils
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import com.appdev.jphil.basketball.textcontracts.PassTextContract
-
 
 class Pass(game: Game) : BasketballPlay(game) {
 
@@ -87,7 +82,7 @@ class Pass(game: Game) : BasketballPlay(game) {
                 playText.successfulPassBackcourt(passer, target)
             }
             location = 1
-            timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
+            getTimeChangePaceDependent(9, 3)
         } else {
             //TODO: add pass leading to a shot / post move / etc
             isGreatPass = passSuccess > 25
@@ -96,7 +91,7 @@ class Pass(game: Game) : BasketballPlay(game) {
             } else {
                 playText.successfulPass(passer, target)
             }
-            timeUtil.smartTimeChange(8 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+            getTimeChangePaceDependent(8, 4)
         }
     }
 
@@ -122,7 +117,7 @@ class Pass(game: Game) : BasketballPlay(game) {
             }
         }
         offense.turnovers++
-        timeChange = timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        timeChange = getTimeChangePaceDependent(4, 1)
         homeTeamHasBall = !homeTeamHasBall
     }
 
@@ -153,7 +148,7 @@ class Pass(game: Game) : BasketballPlay(game) {
                 passDefender.steals++
             }
         }
-        timeChange = timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        timeChange = getTimeChangePaceDependent(4, 1)
 
         if (foul.foulType == FoulType.CLEAN) {
             offense.turnovers++
@@ -179,7 +174,7 @@ class Pass(game: Game) : BasketballPlay(game) {
             type = Plays.DRIBBLE
         }
 
-        timeChange = timeUtil.smartTimeChange(4 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+        timeChange = getTimeChangePaceDependent(4, 1)
         location = 1
     }
 }
