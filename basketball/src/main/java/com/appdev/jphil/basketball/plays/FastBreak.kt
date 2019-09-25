@@ -1,11 +1,8 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.textcontracts.FastBreakTextContract
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
 
 class FastBreak(game: Game): BasketballPlay(game) {
 
@@ -20,7 +17,7 @@ class FastBreak(game: Game): BasketballPlay(game) {
     // TODO: add chance for player to shoot a 3, or get fouled, or blocked, etc.
     override fun generatePlay(): Int {
         val shooter = offense.getPlayerAtPosition(playerWithBall)
-        val timeChange = timeUtil.smartTimeChange(r.nextInt(5), shotClock)
+        val timeChange = getTimeChangePaceIndependent(5, 1)
         timeRemaining -= timeChange
         shotClock -= timeChange
         return if (r.nextInt(shooter.closeRangeShot) > 3) {

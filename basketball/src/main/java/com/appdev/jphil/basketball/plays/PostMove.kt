@@ -4,9 +4,6 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import com.appdev.jphil.basketball.textcontracts.PostMoveTextContract
 
 class PostMove(
     game: Game,
@@ -38,7 +35,7 @@ class PostMove(
             shotSuccess -= 30
         }
 
-        val timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+        val timeChange = getTimeChangePaceDependent(6, 2)
         timeRemaining -= timeChange
         shotClock -= timeChange
 

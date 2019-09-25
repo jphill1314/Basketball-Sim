@@ -2,13 +2,8 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.plays.utils.PassingUtils
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import com.appdev.jphil.basketball.textcontracts.PressTextContract
-
 
 class Press(
     game: Game,
@@ -90,7 +85,7 @@ class Press(
                 }
                 location = 1
                 leadToFastBreak = true
-                timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(6)).toInt(), shotClock)
+                getTimeChangePaceDependent(9, 3)
             }
             (target.ballHandling + r.nextInt(randomBound) > defense.pressAggression + r.nextInt(randomBound / consecutivePresses)) -> {
                 // press broken -> walk ball up court
@@ -100,7 +95,7 @@ class Press(
                     pressText.passToWalkToFrontCourt(passer, target)
                 }
                 location = 1
-                timeUtil.smartTimeChange(9 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+                getTimeChangePaceDependent(9, 5)
             }
             (r.nextInt(10) > 6 - consecutivePresses) -> {
                 // ball passed into frontcourt
@@ -110,7 +105,7 @@ class Press(
                     pressText.passToFrontCourt(passer, target)
                 }
                 location = 1
-                timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
+                getTimeChangePaceDependent(9, 5)
             }
             else -> {
                 // ball still in backcourt
@@ -119,13 +114,12 @@ class Press(
                 } else {
                     pressText.passToBackCourt(passer, target)
                 }
-                timeUtil.smartTimeChange(3 - ((offense.pace / 90.0) * r.nextInt(2)).toInt(), shotClock)
+                getTimeChangePaceDependent(3, 1)
             }
         }
     }
 
     private fun stolenPass() {
-        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
         playAsString = if (r.nextBoolean()) {
             playerWithBall = targetPos
             if (deadBall) {
@@ -140,7 +134,7 @@ class Press(
                 pressText.stolenPass(passer, target, passDefender)
             }
         }
-        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+        timeChange = getTimeChangePaceDependent(6, 2)
         foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType == FoulType.CLEAN) {
             homeTeamHasBall = !homeTeamHasBall
@@ -156,7 +150,6 @@ class Press(
     }
 
     private fun badPass() {
-        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(3)).toInt(), shotClock)
         playAsString = if (r.nextBoolean()) {
             playerWithBall = targetPos
             if (deadBall) {
@@ -171,7 +164,7 @@ class Press(
                 pressText.badPass(passer, target, targetDefender)
             }
         }
-        timeChange = timeUtil.smartTimeChange(6 - ((offense.pace / 90.0) * r.nextInt(4)).toInt(), shotClock)
+        timeChange = getTimeChangePaceDependent(6, 2)
         foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType == FoulType.CLEAN) {
             homeTeamHasBall = !homeTeamHasBall
@@ -188,7 +181,7 @@ class Press(
 
     private fun justDribbling() {
         playAsString = pressText.justDribbling(passer)
-        timeChange = timeUtil.smartTimeChange(2 - ((offense.pace / 90.0) * r.nextInt(1)).toInt(), shotClock)
+        timeChange = getTimeChangePaceDependent(2, 1)
         foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType != FoulType.CLEAN) {
             playAsString += " And, ${foul.playAsString}"
