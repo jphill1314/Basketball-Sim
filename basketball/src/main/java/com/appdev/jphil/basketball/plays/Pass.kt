@@ -10,6 +10,7 @@ class Pass(game: Game) : BasketballPlay(game) {
     private val deadBall = game.deadball
     private val passingUtils = game.passingUtils
     private val playText = game.passText
+    private val miscText = game.miscText
 
     var playerStartsWithBall = playerWithBall
     private lateinit var passer: Player
@@ -174,7 +175,7 @@ class Pass(game: Game) : BasketballPlay(game) {
             offense.turnovers++
             homeTeamHasBall = !homeTeamHasBall
         } else {
-            playAsString += " But ${foul.playAsString}"
+            playAsString += " ${miscText.conjunction(true)}${foul.playAsString}"
         }
         return when {
             coach.shouldHurry -> Pair(3, 1)

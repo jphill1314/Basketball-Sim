@@ -182,7 +182,6 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
         return if (r.nextDouble() < foulChance) {
             isOnDefense = true
             fouler = defender
-            playAsString = "${defender.fullName} has fouled the shooter!" // Shooting fouls are handled by the shoot play class
             defender.fouls++
             1
         } else {
