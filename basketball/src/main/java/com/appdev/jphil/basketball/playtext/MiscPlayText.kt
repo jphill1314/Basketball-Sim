@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.playtext
 
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.textcontracts.MiscTextContract
+import kotlin.random.Random
 
 class MiscPlayText : MiscTextContract {
 
@@ -30,5 +31,13 @@ class MiscPlayText : MiscTextContract {
             half > 2 && gameOver -> "And that will finally bring this game to an end after ${half - 2} overtimes!"
             else -> "And that's the end of overtime number ${half -2}, but we're going to need another one to decide a winner tonight!"
         }
+    }
+
+    override fun conjunction(canBeNegative: Boolean): String {
+        val conjunctions = mutableListOf("And, ", "")
+        if (canBeNegative) {
+            conjunctions.add("But, ")
+        }
+        return conjunctions.random()
     }
 }

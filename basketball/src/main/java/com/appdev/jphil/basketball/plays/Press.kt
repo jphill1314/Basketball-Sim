@@ -11,6 +11,7 @@ class Press(
 ) : BasketballPlay(game) {
 
     private val pressText = game.pressText
+    private val miscText = game.miscText
     private val passingUtils = game.passingUtils
     private val deadBall = game.deadball
 
@@ -142,7 +143,7 @@ class Press(
                 targetDefender.steals++
             }
         } else {
-            playAsString += " But, ${foul.playAsString}"
+            playAsString += " ${miscText.conjunction(true)}${foul.playAsString}"
         }
     }
 
@@ -172,7 +173,7 @@ class Press(
                 targetDefender.steals++
             }
         } else {
-            playAsString += " But, ${foul.playAsString}"
+            playAsString += " ${miscText.conjunction(true)}${foul.playAsString}"
         }
     }
 
@@ -181,7 +182,7 @@ class Press(
         timeChange = getTimeChangePaceDependent(2, 1)
         foul = Foul(game, FoulType.ON_BALL)
         if (foul.foulType != FoulType.CLEAN) {
-            playAsString += " And, ${foul.playAsString}"
+            playAsString += " ${miscText.conjunction(true)}${foul.playAsString}"
         }
     }
 }
