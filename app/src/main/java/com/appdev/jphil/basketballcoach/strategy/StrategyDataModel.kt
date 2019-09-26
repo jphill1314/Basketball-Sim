@@ -75,6 +75,30 @@ data class StrategyDataModel(
                         coach.intentionallyFoul
                     )
                 )
+                dataModels.add(
+                    1,
+                    StrategyDataModel(
+                        StrategyType.MOVE_QUICKLY,
+                        resources.getString(R.string.move_quickly),
+                        "",
+                        "",
+                        0,
+                        0,
+                        coach.shouldHurry
+                    )
+                )
+                dataModels.add(
+                    2,
+                    StrategyDataModel(
+                        StrategyType.WASTE_TIME,
+                        resources.getString(R.string.waste_time),
+                        "",
+                        "",
+                        0,
+                        0,
+                        coach.shouldWasteTime
+                    )
+                )
             }
 
             return dataModels

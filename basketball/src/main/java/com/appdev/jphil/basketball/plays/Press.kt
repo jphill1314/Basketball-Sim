@@ -37,14 +37,11 @@ class Press(
         val defSuccess = ((passDefender.onBallDefense + targetDefender.onBallDefense) /
                 (r.nextInt(defense.pressAggression) + 1.0)).toInt() + r.nextInt(randomBound)
 
+        // TODO: when a team is hurrying there should be a greater chance for turnovers and fast breaks
         when {
             passSuccess > defSuccess -> successfulPass(passSuccess, defSuccess)
-            defSuccess > (passSuccess + 40) -> {
-                stolenPass()
-            }
-            defSuccess > (passSuccess + 25) -> {
-                badPass()
-            }
+            defSuccess > (passSuccess + 40) -> stolenPass()
+            defSuccess > (passSuccess + 25) -> badPass()
             !deadBall -> justDribbling()
             else -> successfulPass(passSuccess, defSuccess)
             // TODO: 5 second violation

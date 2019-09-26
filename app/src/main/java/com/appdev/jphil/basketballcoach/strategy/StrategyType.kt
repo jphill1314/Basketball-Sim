@@ -7,5 +7,7 @@ enum class StrategyType(val isToggle: Boolean) {
     DEFENSE_FAVORS_THREES(false),
     PRESS_FREQUENCY(false),
     PRESS_AGGRESSION(false),
-    INTENTIONAL_FOUL(true)
+    INTENTIONAL_FOUL(true),
+    MOVE_QUICKLY(true),
+    WASTE_TIME(true)
 }

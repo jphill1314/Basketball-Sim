@@ -19,6 +19,7 @@ class Pass(game: Game) : BasketballPlay(game) {
     private var targetPos = -1
 
     private var timeChange = 0
+    private val coach = offense.getHeadCoach()
 
     var isGreatPass = false
 
@@ -32,18 +33,12 @@ class Pass(game: Game) : BasketballPlay(game) {
         setPasserAndTarget()
 
         val passSuccess = (passer.passing + target.offBallMovement) / (r.nextInt(randomBound / 2) + 1)
-        val stealSuccess =
-            ((passDefender.onBallDefense + passDefender.stealing + targetDefender.offBallDefense + targetDefender.stealing) / 2) /
-                    (r.nextInt(randomBound) + 1)
 
-        if (passSuccess >= ((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15) || location == -1) {
-            successfulPass(passSuccess)
-        } else if (passSuccess < (((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15)) - 6) {
-            badPass()
-        } else if (stealSuccess > (100 - defense.aggression - ((passDefender.aggressiveness + targetDefender.aggressiveness) / 2))) {
-            stolenPass()
-        } else {
-            justDribbling()
+        val (maxChange, minChange) = when {
+            isSuccessfulPass(passSuccess) -> successfulPass(passSuccess)
+            isBadPass(passSuccess) -> badPass()
+            isStolenPass() -> stolenPass()
+            else -> justDribbling() // TODO: increase chance of this when wasting time
         }
 
         if (foul.foulType == FoulType.CLEAN && defense.intentionallyFoul && timeChange < timeRemaining) {
@@ -52,9 +47,23 @@ class Pass(game: Game) : BasketballPlay(game) {
             playAsString += "\n${foul.playAsString}"
         }
 
+        timeChange = getTimeChangePaceDependent(maxChange, minChange)
         timeRemaining -= timeChange
         shotClock -= timeChange
         return 0
+    }
+
+    private fun isSuccessfulPass(passSuccess: Int): Boolean {
+        return passSuccess >= ((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15) || location == -1
+    }
+
+    private fun isBadPass(passSuccess: Int): Boolean {
+        return passSuccess < (((defense.aggression + passDefender.aggressiveness + targetDefender.aggressiveness) / 15)) - 6
+    }
+
+    private fun isStolenPass(): Boolean {
+        val stealSuccess = ((passDefender.onBallDefense + passDefender.stealing + targetDefender.offBallDefense + targetDefender.stealing) / 2) / (r.nextInt(randomBound) + 1)
+        return stealSuccess > (100 - defense.aggression - ((passDefender.aggressiveness + targetDefender.aggressiveness) / 2))
     }
 
     private fun setPasserAndTarget() {
@@ -71,10 +80,10 @@ class Pass(game: Game) : BasketballPlay(game) {
         targetDefender = defense.getPlayerAtPosition(targetPos)
     }
 
-    private fun successfulPass(passSuccess: Int) {
+    private fun successfulPass(passSuccess: Int): Pair<Int, Int> {
         //TODO: add chance to have the ball knocked out of bounds
         playerWithBall = targetPos
-        timeChange = if (location < 1) {
+        if (location < 1) {
             // the ball was inbounded in the backcourt so more time needs to come off the clock
             playAsString = if (deadBall) {
                 playText.successfulInboundBackcourt(passer, target)
@@ -82,7 +91,11 @@ class Pass(game: Game) : BasketballPlay(game) {
                 playText.successfulPassBackcourt(passer, target)
             }
             location = 1
-            getTimeChangePaceDependent(9, 3)
+            return when {
+                coach.shouldHurry -> Pair(5, 1)
+                coach.shouldWasteTime -> Pair(10, 5)
+                else -> Pair(9, 3)
+            }
         } else {
             //TODO: add pass leading to a shot / post move / etc
             isGreatPass = passSuccess > 25
@@ -91,11 +104,15 @@ class Pass(game: Game) : BasketballPlay(game) {
             } else {
                 playText.successfulPass(passer, target)
             }
-            getTimeChangePaceDependent(8, 4)
+            return when {
+                coach.shouldHurry -> Pair(3, 1)
+                coach.shouldWasteTime -> Pair(20, 5)
+                else -> Pair(8, 4)
+            }
         }
     }
 
-    private fun badPass() {
+    private fun badPass(): Pair<Int, Int> {
         if (r.nextInt(100) > 60) {
             // target of pass is at fault
             playerWithBall = targetPos
@@ -117,11 +134,15 @@ class Pass(game: Game) : BasketballPlay(game) {
             }
         }
         offense.turnovers++
-        timeChange = getTimeChangePaceDependent(4, 1)
         homeTeamHasBall = !homeTeamHasBall
+        return when {
+            coach.shouldHurry -> Pair(3, 1)
+            coach.shouldWasteTime -> Pair(20, 5)
+            else -> Pair(8, 4)
+        }
     }
 
-    private fun stolenPass() {
+    private fun stolenPass(): Pair<Int, Int> {
         if (r.nextBoolean()) {
             // ball is stolen by defender of target
             playAsString = if (deadBall) {
@@ -148,7 +169,6 @@ class Pass(game: Game) : BasketballPlay(game) {
                 passDefender.steals++
             }
         }
-        timeChange = getTimeChangePaceDependent(4, 1)
 
         if (foul.foulType == FoulType.CLEAN) {
             offense.turnovers++
@@ -156,9 +176,14 @@ class Pass(game: Game) : BasketballPlay(game) {
         } else {
             playAsString += " But ${foul.playAsString}"
         }
+        return when {
+            coach.shouldHurry -> Pair(3, 1)
+            coach.shouldWasteTime -> Pair(20, 5)
+            else -> Pair(6, 2)
+        }
     }
 
-    private fun justDribbling() {
+    private fun justDribbling(): Pair<Int, Int> {
         foul = if (r.nextBoolean()) {
             Foul(game, FoulType.OFF_BALL)
         } else {
@@ -173,8 +198,10 @@ class Pass(game: Game) : BasketballPlay(game) {
             playAsString = playText.justDribbling(passer)
             type = Plays.DRIBBLE
         }
-
-        timeChange = getTimeChangePaceDependent(4, 1)
         location = 1
+        return when {
+            coach.shouldWasteTime -> Pair(20, 5)
+            else -> Pair(4, 1)
+        }
     }
 }

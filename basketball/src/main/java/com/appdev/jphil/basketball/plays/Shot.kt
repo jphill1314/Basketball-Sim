@@ -54,7 +54,24 @@ class Shot(
             shotSuccess -= 30
         }
 
-        val timeChange = getTimeChangePaceDependent(6, 2)
+        val coach = offense.getHeadCoach()
+        val maxChange: Int
+        val minChange: Int
+        when {
+            coach.shouldWasteTime -> {
+                maxChange = 10
+                minChange = 4
+            }
+            coach.shouldHurry -> {
+                maxChange = 4
+                minChange = 1
+            }
+            else -> {
+                maxChange = 6
+                minChange = 2
+            }
+        }
+        val timeChange = getTimeChangePaceDependent(maxChange, minChange)
         timeRemaining -= timeChange
         shotClock -= timeChange
         return getMadeShot(shotLocation, shotSuccess, shooter, defender)
