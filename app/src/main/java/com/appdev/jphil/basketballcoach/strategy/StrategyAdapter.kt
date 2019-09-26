@@ -71,8 +71,7 @@ class StrategyAdapter(
                             StrategyType.DEFENSE_FAVORS_THREES -> out.onDefenseFavorsThreesChanged(progress)
                             StrategyType.PRESS_FREQUENCY -> out.onPressFrequencyChanged(progress)
                             StrategyType.PRESS_AGGRESSION -> out.onPressAggressionChanged(progress)
-                            else -> {
-                            }
+                            else -> {}
                         }
                     }
 
@@ -84,11 +83,44 @@ class StrategyAdapter(
         } else if (viewHolder is ToggleViewHolder) {
             viewHolder.toggleButton.apply {
                 isChecked = data.isEnabled
-                setOnCheckedChangeListener { _, isChecked ->
-                    out.onIntentionallyFoulToggled(isChecked)
-                    data.isEnabled = isChecked
+                setOnCheckedChangeListener { button, isChecked ->
+                    when (data.type) {
+                        StrategyType.INTENTIONAL_FOUL -> {
+                            out.onIntentionallyFoulToggled(isChecked)
+                            data.isEnabled = isChecked
+                        }
+                        StrategyType.MOVE_QUICKLY -> {
+                            if (canToggleTimeManagement(isChecked)) {
+                                out.onMoveQuicklyToggled(isChecked)
+                                data.isEnabled = isChecked
+                            } else {
+                                button.isChecked = false
+                            }
+                        }
+                        StrategyType.WASTE_TIME -> {
+                            if (canToggleTimeManagement(isChecked)) {
+                                out.onWasteTimeToggled(isChecked)
+                                data.isEnabled = isChecked
+                            } else {
+                                button.isChecked = false
+                            }
+                        }
+                        else -> {}
+                    }
                 }
             }
         }
+    }
+
+    private fun canToggleTimeManagement(isChecked: Boolean): Boolean {
+        if (!isChecked) {
+            return true
+        }
+        dataModels.forEach { model ->
+            if ((model.type == StrategyType.MOVE_QUICKLY || model.type == StrategyType.WASTE_TIME) && model.isEnabled) {
+                return false
+            }
+        }
+        return true
     }
 }

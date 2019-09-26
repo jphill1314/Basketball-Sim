@@ -54,6 +54,14 @@ class StrategyPresenter @Inject constructor(
         // NO OP
     }
 
+    override fun onMoveQuicklyToggled(isChecked: Boolean) {
+        // NO OP
+    }
+
+    override fun onWasteTimeToggled(isChecked: Boolean) {
+        // NO OP
+    }
+
     override fun onViewAttached(view: StrategyContract.View) {
         this.view = view
     }

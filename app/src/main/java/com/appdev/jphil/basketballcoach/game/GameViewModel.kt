@@ -232,6 +232,14 @@ class GameViewModel(
         coach.pressAggressionGame = aggression
     }
 
+    override fun onMoveQuicklyToggled(isChecked: Boolean) {
+        coach.shouldHurry = isChecked
+    }
+
+    override fun onWasteTimeToggled(isChecked: Boolean) {
+        coach.shouldWasteTime = isChecked
+    }
+
     override fun onIntentionallyFoulToggled(isChecked: Boolean) {
         coach.intentionallyFoul = isChecked
         if (nullGame?.homeTeam?.isUser == true) {

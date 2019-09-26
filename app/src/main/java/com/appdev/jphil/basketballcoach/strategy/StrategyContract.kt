@@ -28,6 +28,8 @@ interface StrategyContract {
             fun onPressFrequencyChanged(frequency: Int)
             fun onPressAggressionChanged(aggression: Int)
             fun onIntentionallyFoulToggled(isChecked: Boolean)
+            fun onMoveQuicklyToggled(isChecked: Boolean)
+            fun onWasteTimeToggled(isChecked: Boolean)
         }
     }
 }

@@ -22,6 +22,8 @@ class Coach(
     var pressFrequencyGame: Int,
     var pressAggressionGame: Int,
     var intentionallyFoul: Boolean,
+    var shouldHurry: Boolean,
+    var shouldWasteTime: Boolean,
     var teachShooting: Int,
     var teachPostMoves: Int,
     var teachBallControl: Int,
@@ -44,6 +46,8 @@ class Coach(
         pressFrequencyGame = pressFrequency
         pressAggressionGame = pressAggression
         intentionallyFoul = false
+        shouldHurry = false
+        shouldWasteTime = false
     }
 
     fun getRating(): Int {
@@ -64,11 +68,13 @@ class Coach(
                 // Continue to intentionally foul?
                 if ((opponentScore - teamScore) / minLeft > 5) {
                     intentionallyFoul = false
+                    shouldHurry = false
                 }
             } else {
                 // Start to intentionally foul
                 if ((opponentScore - teamScore) / minLeft <= 5) {
                     intentionallyFoul = true
+                    shouldHurry = true
                 }
             }
         } else {

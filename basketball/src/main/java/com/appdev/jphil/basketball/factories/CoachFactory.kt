@@ -56,6 +56,8 @@ object CoachFactory {
             pressFrequency,
             pressAggression,
             false,
+            false,
+            false,
             teachShooting,
             teachPostMoves,
             teachBallControl,
