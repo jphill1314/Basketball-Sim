@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketball.coaches
 
 import com.appdev.jphil.basketball.recruits.Recruit
+import kotlin.random.Random
 
 class Coach(
     var id: Int?,
@@ -61,24 +62,10 @@ class Coach(
 
     fun updateStrategy(teamScore: Int, opponentScore: Int, half: Int, timeRemaining: Int) {
         // TODO: change more than intentionally foul and make coaches actually different as to when to call this
-        if (teamScore < opponentScore && half > 1 && timeRemaining < 2 * 60) {
-            // Losing with less than 2 min to go
-            val minLeft = timeRemaining / 60.0
-            if (intentionallyFoul) {
-                // Continue to intentionally foul?
-                if ((opponentScore - teamScore) / minLeft > 5) {
-                    intentionallyFoul = false
-                    shouldHurry = false
-                }
-            } else {
-                // Start to intentionally foul
-                if ((opponentScore - teamScore) / minLeft <= 5) {
-                    intentionallyFoul = true
-                    shouldHurry = true
-                }
-            }
+        if (timeRemaining < 2 * 60 && half > 1) {
+           StrategyHelper.updateStrategyLateGame(teamScore - opponentScore, timeRemaining, this)
         } else {
-            intentionallyFoul = false
+            StrategyHelper.updateStrategy(teamScore - opponentScore, this)
         }
     }
 
