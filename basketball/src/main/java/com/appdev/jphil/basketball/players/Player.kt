@@ -86,10 +86,11 @@ class Player(
     var stealing: Int by PlayerAttributeDelegate(stealing)
     var rebounding: Int by PlayerAttributeDelegate(rebounding)
 
-    fun addTimePlayed(time: Int, isHalftime: Boolean, isTimeout: Boolean) {
+    fun addTimePlayed(time: Int, isHurrying: Boolean, isHalftime: Boolean, isTimeout: Boolean) {
         timePlayed += time
+        val fatigueIncrease = if (isHurrying) 5.0 else 1.2
         if (time > 0) {
-            fatigue += 1.2 - (stamina / 100.0)
+            fatigue += fatigueIncrease - (stamina / 100.0)
             if (fatigue > 100) {
                 fatigue = 100.0
             }

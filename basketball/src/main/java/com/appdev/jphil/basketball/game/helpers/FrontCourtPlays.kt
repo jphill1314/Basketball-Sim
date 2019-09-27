@@ -22,7 +22,7 @@ object FrontCourtPlays {
             return when {
                 deadball -> getPass(game)
                 location == 1 && shotClock < (Game.lengthOfShotClock - shotUrgency) -> getShot(game)
-                location == 1 && Random.nextDouble() > 0.7 -> getShot(game)
+                location == 1 && Random.nextDouble() > getShotChance(game) -> getShot(game)
                 shotClock <= 5 && Random.nextDouble() > 0.05 -> getShot(game)
                 lastPassWasGreat -> getShot(game)
                 else -> getPass(game)
@@ -140,8 +140,31 @@ object FrontCourtPlays {
             return if (Random.nextInt(100) + positionChanceMod < shooter.postMove) {
                 PostMove(game, lastPassWasGreat, getPasser(game))
             } else {
-                Shot(game, lastPassWasGreat, getPasser(game), shotClock <= 5)
+                Shot(game, lastPassWasGreat, getPasser(game), isShotRushed(game))
             }
         }
+    }
+
+    private fun isShotRushed(game: Game): Boolean {
+        return when {
+            getOffenseCoach(game).shouldHurry -> Random.nextDouble() > 0.20
+            game.shotClock < 10 -> Random.nextInt(50) > game.shotClock
+            else -> Random.nextDouble() > 0.95
+        }
+    }
+
+    private fun getShotChance(game: Game): Double {
+        val coach = getOffenseCoach(game)
+        return when {
+            coach.shouldHurry -> 0.5
+            coach.shouldWasteTime -> 0.9
+            else -> 0.7
+        }
+    }
+
+    private fun getOffenseCoach(game: Game) = if (game.homeTeamHasBall) {
+        game.homeTeam.getHeadCoach()
+    } else {
+        game.awayTeam.getHeadCoach()
     }
 }

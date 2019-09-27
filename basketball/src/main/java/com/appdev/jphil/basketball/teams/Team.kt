@@ -128,11 +128,12 @@ class Team(
     }
 
     fun updateTimePlayed(time: Int, isTimeout: Boolean, isHalftime: Boolean) {
+        val isHurrying = getHeadCoach().shouldHurry
         for (index in players.indices) {
             if (index < 5) {
-                players[index].addTimePlayed(time, isTimeout, isHalftime)
+                players[index].addTimePlayed(time, isHurrying, isTimeout, isHalftime)
             } else {
-                players[index].addTimePlayed(0, isTimeout, isHalftime)
+                players[index].addTimePlayed(0, isHurrying, isTimeout, isHalftime)
             }
         }
     }
