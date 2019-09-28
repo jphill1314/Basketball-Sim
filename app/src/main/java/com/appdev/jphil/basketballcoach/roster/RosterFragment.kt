@@ -56,7 +56,7 @@ class RosterFragment : Fragment(), RosterContract.View {
     override fun displayData(players: MutableList<RosterDataModel>, team: Team) {
         adapter.isUsersTeam = team.isUser
         adapter.updateRoster(players)
-        (activity as? NavigationManager)?.setTeamNameAndRating(team.name, team.teamRating)
+        (activity as? NavigationManager)?.setTeamNameAndRating(team.name, team.teamRating, team.isUser)
     }
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {

@@ -7,5 +7,5 @@ interface NavigationManager {
     fun navigateToHomePage()
 
     fun setToolbarTitle(title: String)
-    fun setTeamNameAndRating(name: String, rating: Int)
+    fun setTeamNameAndRating(name: String, rating: Int, isUser: Boolean)
 }

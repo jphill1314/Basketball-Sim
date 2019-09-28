@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketball.coaches
 
 import com.appdev.jphil.basketball.recruits.Recruit
-import kotlin.random.Random
 
 class Coach(
     var id: Int?,
