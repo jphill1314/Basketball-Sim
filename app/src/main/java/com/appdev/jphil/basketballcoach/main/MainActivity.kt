@@ -123,10 +123,16 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     private fun isOnHomepage(): Boolean = navView.menu.getItem(0).isChecked
 
-    override fun setTeamNameAndRating(name: String, rating: Int) {
+    override fun setTeamNameAndRating(name: String, rating: Int, isUser: Boolean) {
         teamName.text = name
         teamRating.text = resources.getString(R.string.rating_colon, rating)
         // TODO: change this so that the activity does its own db call -> this will allow more complex data in the header
+
+        navView.menu.apply {
+            findItem(R.id.recruiting).isVisible = isUser
+            findItem(R.id.strategy).isVisible = isUser
+            findItem(R.id.practice).isVisible = isUser
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

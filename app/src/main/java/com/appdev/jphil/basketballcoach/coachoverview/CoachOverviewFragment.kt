@@ -15,6 +15,7 @@ import android.widget.TextView
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.FragmentCoachOverviewBinding
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import java.lang.NumberFormatException
@@ -25,6 +26,8 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
     @Inject
     lateinit var presenter: CoachOverviewContract.Presenter
     var coachId = -1
+
+    private lateinit var binding: FragmentCoachOverviewBinding
 
     // TODO: Make the layout not be awful in landscape
 
@@ -51,58 +54,60 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.coach_overview))
-        return inflater.inflate(R.layout.fragment_coach_overview, container, false)
+        binding = FragmentCoachOverviewBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun displayCoach(coach: Coach) {
-        view?.apply {
-            findViewById<TextView>(R.id.coach_name).text = coach.fullName
-            findViewById<TextView>(R.id.coach_rating).text = resources.getString(R.string.rating_colon, coach.getRating())
+        binding.apply {
+            coachName.text = coach.fullName
+            coachRating.text = resources.getString(R.string.rating_colon, coach.getRating())
 
-            findViewById<RecyclerView>(R.id.recycler_view).apply {
+            recyclerView.apply {
                 adapter = CoachAttributeAdapter(coach, resources)
                 layoutManager = LinearLayoutManager(context)
             }
 
+            // TODO: hide assignment if not the player's team
             if (coach.type == CoachType.HEAD_COACH) {
-                findViewById<View>(R.id.scouting_assignment).visibility = View.GONE
+                scoutingAssignment.visibility = View.GONE
             } else {
-                findViewById<View>(R.id.scouting_assignment).visibility = View.VISIBLE
+                scoutingAssignment.visibility = View.VISIBLE
 
-                findViewById<EditText>(R.id.min_rating).apply {
+                minRating.apply {
                     setText(coach.scoutingAssignment.minRating.toString())
                     addTextChangedListener(createTextListener { value -> presenter.setMinRating(value) })
                 }
-                findViewById<EditText>(R.id.max_rating).apply {
+                maxRating.apply {
                     setText(coach.scoutingAssignment.maxRating.toString())
                     addTextChangedListener(createTextListener { value -> presenter.setMaxRating(value) })
                 }
-                findViewById<EditText>(R.id.min_potential).apply {
+                minPotential.apply {
                     setText(coach.scoutingAssignment.minPotential.toString())
                     addTextChangedListener(createTextListener { value -> presenter.setMinPotential(value) })
                 }
-                findViewById<EditText>(R.id.max_potential).apply {
+                maxPotential.apply {
                     setText(coach.scoutingAssignment.maxPotential.toString())
                     addTextChangedListener(createTextListener { value -> presenter.setMaxPotential(value) })
                 }
 
-                findViewById<CheckBox>(R.id.pg).apply {
+                pg.apply {
                     isChecked = coach.scoutingAssignment.positions.contains(1)
                     setOnCheckedChangeListener { _, _ -> presenter.positionToggled(1) }
                 }
-                findViewById<CheckBox>(R.id.sg).apply {
+                sg.apply {
                     isChecked = coach.scoutingAssignment.positions.contains(2)
                     setOnCheckedChangeListener { _, _ -> presenter.positionToggled(2) }
                 }
-                findViewById<CheckBox>(R.id.sf).apply {
+                sf.apply {
                     isChecked = coach.scoutingAssignment.positions.contains(3)
                     setOnCheckedChangeListener { _, _ -> presenter.positionToggled(3) }
                 }
-                findViewById<CheckBox>(R.id.pf).apply {
+                pf.apply {
                     isChecked = coach.scoutingAssignment.positions.contains(4)
                     setOnCheckedChangeListener { _, _ -> presenter.positionToggled(4) }
                 }
-                findViewById<CheckBox>(R.id.center).apply {
+                center.apply {
                     isChecked = coach.scoutingAssignment.positions.contains(5)
                     setOnCheckedChangeListener { _, _ -> presenter.positionToggled(5) }
                 }
