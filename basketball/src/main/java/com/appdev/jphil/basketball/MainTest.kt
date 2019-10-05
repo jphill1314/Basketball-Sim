@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.IntentionalFoul
 import com.appdev.jphil.basketball.plays.PostMove
 import com.appdev.jphil.basketball.plays.Shot
+import com.appdev.jphil.basketball.teams.TeamColor
 import java.lang.Math.*
 
 fun main() {
@@ -28,8 +29,8 @@ fun main() {
     val totalGames = 500
 
     for(i in 1..totalGames) {
-        val homeTeam = TeamFactory.generateTeam(1, "home", "team","home", homeRating, 1, false, listOf("first"), listOf("last"))
-        val awayTeam = TeamFactory.generateTeam(2, "away", "team", "away", awayRating, 1, false, listOf("first"), listOf("last"))
+        val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red,"home", homeRating, 1, false, listOf("first"), listOf("last"))
+        val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, listOf("first"), listOf("last"))
         val game = Game(homeTeam, awayTeam, true, 1)
         if(highScore == null){
             highScore = game
@@ -109,8 +110,8 @@ fun main() {
     minMargin = null
 
     for(i in 1..totalGames) {
-        val homeTeam = TeamFactory.generateTeam(1, "home", "team","home", homeRating, 1, false, listOf("first"), listOf("last"))
-        val awayTeam = TeamFactory.generateTeam(2, "away", "team", "away", awayRating, 1, false, listOf("first"), listOf("last"))
+        val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red,"home", homeRating, 1, false, listOf("first"), listOf("last"))
+        val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, listOf("first"), listOf("last"))
         val game = Game(homeTeam, awayTeam, false, 1)
         if(highScore == null){
             highScore = game

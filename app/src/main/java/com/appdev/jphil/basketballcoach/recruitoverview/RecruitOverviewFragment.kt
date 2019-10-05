@@ -12,8 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
-import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.main.*
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -22,9 +21,9 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
     @Inject
     lateinit var presenter: RecruitOverviewContract.Presenter
-
     @Inject
-    lateinit var teamManager: TeamManager
+    lateinit var factory: ViewModelFactory
+    private var teamManager: TeamManagerViewModel? = null
 
     var recruitId = 0
 
@@ -34,6 +33,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
             recruitId = savedInstanceState?.getInt(RECRUIT_ID, 0) ?: 0
         }
         AndroidSupportInjection.inject(this)
+        teamManager = (activity as? MainActivity)?.getTeamViewModel(factory)
         presenter.onViewAttached(this)
     }
 
@@ -65,8 +65,9 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
             findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[recruit.position - 1]
             findViewById<TextView>(R.id.player_name).text = recruit.fullName
 
-            val ratingMin = recruit.getRatingMinForTeam(teamManager.getTeamId())
-            val ratingMax = recruit.getRatingMaxForTeam(teamManager.getTeamId())
+            val teamId = teamManager?.teamId ?: -1
+            val ratingMin = recruit.getRatingMinForTeam(teamId)
+            val ratingMax = recruit.getRatingMaxForTeam(teamId)
             findViewById<TextView>(R.id.rating).text = if (ratingMax != ratingMin) {
                 resources.getString(R.string.rating_range, ratingMin, ratingMax)
             } else {

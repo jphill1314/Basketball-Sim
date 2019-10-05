@@ -4,10 +4,8 @@ package com.appdev.jphil.basketballcoach.game
 import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +21,7 @@ import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
 import com.appdev.jphil.basketballcoach.strategy.StrategyDataModel
 import com.appdev.jphil.basketballcoach.util.TimeUtil
@@ -50,7 +49,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var nullGame: Game? = null
 
     @Inject
-    lateinit var viewModelFactory: GameViewModelFactory
+    lateinit var viewModelFactory: ViewModelFactory
     private var viewModel: GameViewModel? = null
 
     override fun onAttach(context: Context?) {
