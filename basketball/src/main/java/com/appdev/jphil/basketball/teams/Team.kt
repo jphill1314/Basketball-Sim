@@ -15,6 +15,7 @@ class Team(
     val schoolName: String,
     val mascot: String,
     val abbreviation: String,
+    val color: TeamColor,
     val players: MutableList<Player>,// for use in games
     val conferenceId: Int,
     val isUser: Boolean,

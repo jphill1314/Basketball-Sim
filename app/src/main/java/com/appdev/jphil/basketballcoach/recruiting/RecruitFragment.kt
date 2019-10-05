@@ -13,8 +13,7 @@ import android.widget.TextView
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
-import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.main.*
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -24,7 +23,8 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     @Inject
     lateinit var presenter: RecruitContract.Presenter
     @Inject
-    lateinit var teamManager: TeamManager
+    lateinit var factory: ViewModelFactory
+    private var teamManager: TeamManagerViewModel? = null
     private lateinit var adapter: RecruitAdapter
 
     override fun onAttach(context: Context?) {
@@ -36,6 +36,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
         } else {
             presenter = viewModel.presenter!!
         }
+        teamManager = (activity as? MainActivity)?.getTeamViewModel(factory)
         setHasOptionsMenu(true)
     }
 
@@ -49,12 +50,9 @@ class RecruitFragment : Fragment(), RecruitContract.View {
             R.id.filter_positions -> {
                 AlertDialog.Builder(context!!)
                     .setTitle(R.string.filter_positions)
-                    .setItems(resources.getStringArray(R.array.position_filters),
-                        object : DialogInterface.OnClickListener {
-                            override fun onClick(dialog: DialogInterface?, which: Int) {
-                                presenter.onPositionFilterSelected(which)
-                            }
-                        })
+                    .setItems(resources.getStringArray(R.array.position_filters)) { _, which ->
+                        presenter.onPositionFilterSelected(which)
+                    }
                     .show()
             }
         }
@@ -78,7 +76,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     }
 
     override fun displayRecruits(recruits: List<Recruit>, team: Team) {
-        adapter = RecruitAdapter(recruits, teamManager.getTeamId(), presenter, resources)
+        adapter = RecruitAdapter(recruits, teamManager?.teamId ?: -1, presenter, resources)
         view?.apply {
             findViewById<RecyclerView>(R.id.recycler_view)?.let {
                 it.layoutManager = LinearLayoutManager(context)

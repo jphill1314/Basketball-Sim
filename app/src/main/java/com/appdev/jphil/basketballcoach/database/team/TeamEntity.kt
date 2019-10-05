@@ -8,6 +8,7 @@ import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.database.typeconverters.IntListTypeConverter
 
 @Entity
@@ -18,6 +19,7 @@ data class TeamEntity(
     val schoolName: String,
     val mascot: String,
     val abbreviation: String,
+    val color: Int,
     val conferenceId: Int,
     val twoPointAttempts: Int,
     val twoPointMakes: Int,
@@ -43,6 +45,7 @@ data class TeamEntity(
             schoolName,
             mascot,
             abbreviation,
+            TeamColor.fromInt(color),
             players,
             conferenceId,
             isUser,
@@ -83,6 +86,7 @@ data class TeamEntity(
                 team.schoolName,
                 team.mascot,
                 team.abbreviation,
+                team.color.type,
                 team.conferenceId,
                 team.twoPointAttempts,
                 team.twoPointMakes,

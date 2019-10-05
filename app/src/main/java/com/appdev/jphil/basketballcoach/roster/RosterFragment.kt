@@ -11,8 +11,7 @@ import android.view.ViewGroup
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.FragmentRosterBinding
-import com.appdev.jphil.basketballcoach.main.NavigationManager
-import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.main.*
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -22,13 +21,15 @@ class RosterFragment : Fragment(), RosterContract.View {
     @Inject
     lateinit var presenter: RosterContract.Presenter
     @Inject
-    lateinit var teamManager: TeamManager
+    lateinit var viewModelFactory: ViewModelFactory
+    private var teamManager: TeamManagerViewModel? = null
     private lateinit var adapter: RosterAdapter
     private lateinit var binding: FragmentRosterBinding
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        teamManager = (activity as? MainActivity)?.getTeamViewModel(viewModelFactory)
     }
 
     override fun onResume() {
@@ -56,11 +57,10 @@ class RosterFragment : Fragment(), RosterContract.View {
     override fun displayData(players: MutableList<RosterDataModel>, team: Team) {
         adapter.isUsersTeam = team.isUser
         adapter.updateRoster(players)
-        (activity as? NavigationManager)?.setTeamNameAndRating(team.name, team.teamRating, team.isUser)
     }
 
     override fun updateTeamAndConference(teamId: Int, conferenceId: Int) {
-        teamManager.changeConference(conferenceId, teamId)
+        teamManager?.changeTeamAndConference(teamId, conferenceId)
     }
 
     override fun gotoPlayerOverview(playerId: Int) {

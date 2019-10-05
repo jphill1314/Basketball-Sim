@@ -13,8 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
-import com.appdev.jphil.basketballcoach.main.TeamManager
+import com.appdev.jphil.basketballcoach.main.*
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -23,14 +22,15 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     @Inject
     lateinit var presenter: StandingsContract.Presenter
     @Inject
-    lateinit var teamManager: TeamManager
-    private val teamId: Int by lazy { teamManager.getTeamId() }
+    lateinit var viewModelFactory: ViewModelFactory
+    private var teamManager: TeamManagerViewModel? = null
 
     private lateinit var adapter: StandingsAdapter
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        teamManager = (activity as? MainActivity)?.getTeamViewModel(viewModelFactory)
     }
 
     override fun onResume() {
@@ -50,7 +50,7 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     }
 
     override fun addTeams(standingsDataModels: List<StandingsDataModel>) {
-        adapter = StandingsAdapter(teamId, standingsDataModels, presenter, resources)
+        adapter = StandingsAdapter(teamManager?.teamId ?: -1, standingsDataModels, presenter, resources)
         view?.apply {
             findViewById<RecyclerView>(R.id.standings_recycler_view)?.apply {
                 adapter = this@StandingsFragment.adapter
@@ -76,7 +76,7 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     }
 
     override fun changeTeamAndConference(teamId: Int, conferenceId: Int) {
-        teamManager.changeConference(conferenceId, teamId)
+        teamManager?.changeTeamAndConference(teamId, conferenceId)
         (activity as? NavigationManager)?.navigateToHomePage()
     }
 }
