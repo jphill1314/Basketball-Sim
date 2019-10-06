@@ -1,6 +1,9 @@
 package com.appdev.jphil.basketballcoach.main
 
+import android.content.res.ColorStateList
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import com.google.android.material.navigation.NavigationView
 import androidx.fragment.app.Fragment
@@ -153,7 +156,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             findItem(R.id.practice).isVisible = team.isUser
         }
 
+        // TODO: this whole business needs a lot of work
         setTheme(getStyle(team.color))
+        val value = TypedValue()
+        theme.resolveAttribute(R.attr.colorPrimary, value, true)
+        binding.toolbar.background = ColorDrawable(value.data)
+
+        theme.resolveAttribute(R.attr.colorPrimaryDark, value, true)
+        window.statusBarColor = value.data
     }
 
     private fun getStyle(color: TeamColor) = when (color) {

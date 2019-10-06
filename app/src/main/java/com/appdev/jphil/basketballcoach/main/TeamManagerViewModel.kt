@@ -15,11 +15,6 @@ class TeamManagerViewModel(private val database: BasketballDatabase): ViewModel(
     var teamId = -1
     var conferenceId = 0
 
-    fun changeTeam(teamId: Int) {
-        this.teamId = teamId
-        loadTeam()
-    }
-
     fun changeTeamAndConference(teamId: Int, conferenceId: Int) {
         this.teamId = teamId
         this.conferenceId = conferenceId

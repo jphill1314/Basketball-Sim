@@ -34,7 +34,7 @@ class StandingsPresenter @Inject constructor(
         view?.addConferenceNames(names)
 
         teams.forEach { team ->
-            standings.add(RecordUtil.getRecordAsPair(games, team))
+            standings.add(RecordUtil.getRecord(games, team))
         }
 
         view?.addTeams(standings.sortedWith(compareBy(
