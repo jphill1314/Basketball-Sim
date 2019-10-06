@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.*
-import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -33,7 +32,6 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
             recruitId = savedInstanceState?.getInt(RECRUIT_ID, 0) ?: 0
         }
         AndroidSupportInjection.inject(this)
-        teamManager = (activity as? MainActivity)?.getTeamViewModel(factory)
         presenter.onViewAttached(this)
     }
 
@@ -97,7 +95,6 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
     companion object {
         private const val RECRUIT_ID = "id"
-        private const val TEAM_ID = "tId"
 
         fun newInstance(recruitId: Int): RecruitOverviewFragment {
             val fragment = RecruitOverviewFragment()

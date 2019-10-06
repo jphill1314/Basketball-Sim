@@ -32,7 +32,7 @@ object RecordUtil {
         return Pair(wins, loses)
     }
 
-    fun getRecordAsPair(games: List<GameEntity>, team: Team): StandingsDataModel {
+    fun getRecord(games: List<GameEntity>, team: Team): StandingsDataModel {
         var wins = 0
         var loses = 0 // TODO: handle conference games separately
         games.forEach { game ->

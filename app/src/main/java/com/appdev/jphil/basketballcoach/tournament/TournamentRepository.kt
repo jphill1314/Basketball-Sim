@@ -43,7 +43,7 @@ class TournamentRepository @Inject constructor(
         val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database)
         val games = GameDatabaseHelper.loadAllGameEntities(database)
         val standings = mutableListOf<StandingsDataModel>()
-        conference?.teams?.forEach { team -> standings.add(RecordUtil.getRecordAsPair(games, team)) }
+        conference?.teams?.forEach { team -> standings.add(RecordUtil.getRecord(games, team)) }
 
         conference?.generateTournament(standings.sortedWith(compareBy(
             { -it.getConferenceWinPercentage() },
