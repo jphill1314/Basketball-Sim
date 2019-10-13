@@ -1,14 +1,11 @@
 package com.appdev.jphil.basketballcoach.simulation
 
-import com.appdev.jphil.basketball.TenTeamTournament
-import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
-import com.appdev.jphil.basketballcoach.util.RecordUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

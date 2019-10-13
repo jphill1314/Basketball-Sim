@@ -15,7 +15,7 @@ class ScoutingAssignment(
     fun doScouting(recruitingRating: Int, unknownRecruits: List<Recruit>): List<Recruit> {
         val discoveredRecruits = mutableListOf<Recruit>()
         val disoverableRecruits = unknownRecruits.filter { isDisoverable(it) }.toMutableList()
-        while (Random.nextInt(100) < 70 && Random.nextInt(100) < recruitingRating && discoveredRecruits.isNotEmpty()) {
+        while (Random.nextInt(100) < 70 && Random.nextInt(100) < recruitingRating && disoverableRecruits.isNotEmpty()) {
             val index = Random.nextInt(disoverableRecruits.size)
             discoveredRecruits.add(disoverableRecruits[index])
             disoverableRecruits.removeAt(index)

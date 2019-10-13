@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.practice
 
+import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,16 @@ class PracticeAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val item = data[position]
         viewHolder.name.text = item.first
-        viewHolder.progress.text = String.format("%.2f", item.second)
+        viewHolder.progress.apply {
+            text = item.second.toString()
+            setTextColor(getProgressAsColor(item.second))
+        }
+    }
+
+    private fun getProgressAsColor(progress: Int): Int {
+        val progressAsPercent = progress / 100.0
+        val green: Int = (255 * progressAsPercent).toInt()
+        val red: Int = (255 * (1 - progressAsPercent)).toInt()
+        return Color.rgb(red, green, 0)
     }
 }
