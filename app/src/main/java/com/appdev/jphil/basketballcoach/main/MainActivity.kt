@@ -1,16 +1,12 @@
 package com.appdev.jphil.basketballcoach.main
 
-import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
-import com.google.android.material.navigation.NavigationView
 import androidx.fragment.app.Fragment
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
-import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import com.appdev.jphil.basketball.teams.Team
@@ -18,6 +14,7 @@ import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
+import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
 import com.appdev.jphil.basketballcoach.practice.PracticeFragment
 import com.appdev.jphil.basketballcoach.recruiting.RecruitFragment
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
@@ -33,8 +30,7 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var teamName: TextView
-    private lateinit var teamRating: TextView
+    private lateinit var navBinding: NavigationHeaderBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -48,21 +44,18 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         teamViewModel?.currentTeam?.observe(this, Observer<Team> { setTeamNameAndRating(it) })
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
+        navBinding = NavigationHeaderBinding.bind(binding.navView.getHeaderView(0))
         setContentView(binding.root)
-        setSupportActionBar(findViewById(R.id.toolbar))
+        setSupportActionBar(binding.toolbar)
         enableNavigation()
 
         binding.navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
-        binding.navView.getHeaderView(0)?.apply {
-            teamName = findViewById(R.id.nav_team_name)
-            teamRating = findViewById(R.id.nav_team_rating)
-        }
 
         if (savedInstanceState == null) {
             navigateToHomePage()
         } else {
-            teamName.text = savedInstanceState.getString(TEAM_NAME)
-            teamRating.text = savedInstanceState.getString(TEAM_RATING)
+            navBinding.navTeamName.text = savedInstanceState.getString(TEAM_NAME)
+            navBinding.navTeamRating.text = savedInstanceState.getString(TEAM_RATING)
 
             teamViewModel?.changeTeamAndConference(
                 savedInstanceState.getInt(TEAM_ID),
@@ -147,8 +140,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     private fun isOnHomepage(): Boolean = binding.navView.menu.getItem(0).isChecked
 
     private fun setTeamNameAndRating(team: Team) {
-        teamName.text = team.name
-        teamRating.text = resources.getString(R.string.rating_colon, team.teamRating)
+        navBinding.navTeamName.text = team.name
+        navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.teamRating)
 
         binding.navView.menu.apply {
             findItem(R.id.recruiting).isVisible = team.isUser
@@ -157,13 +150,13 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         }
 
         // TODO: this whole business needs a lot of work
-        setTheme(getStyle(team.color))
-        val value = TypedValue()
-        theme.resolveAttribute(R.attr.colorPrimary, value, true)
-        binding.toolbar.background = ColorDrawable(value.data)
-
-        theme.resolveAttribute(R.attr.colorPrimaryDark, value, true)
-        window.statusBarColor = value.data
+//        setTheme(getStyle(team.color))
+//        val value = TypedValue()
+//        theme.resolveAttribute(R.attr.colorPrimary, value, true)
+//        binding.toolbar.background = ColorDrawable(value.data)
+//
+//        theme.resolveAttribute(R.attr.colorPrimaryDark, value, true)
+//        window.statusBarColor = value.data
     }
 
     private fun getStyle(color: TeamColor) = when (color) {
@@ -186,8 +179,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(TEAM_NAME, teamName.text.toString())
-        outState.putString(TEAM_RATING, teamRating.text.toString())
+        outState.putString(TEAM_NAME, navBinding.navTeamName.text.toString())
+        outState.putString(TEAM_RATING, navBinding.navTeamRating.text.toString())
         outState.putInt(TEAM_ID, teamViewModel?.teamId ?: -1)
         outState.putInt(CONF_ID, teamViewModel?.conferenceId ?: 0)
         super.onSaveInstanceState(outState)
