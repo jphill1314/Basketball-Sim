@@ -45,10 +45,11 @@ class RecruitPresenter @Inject constructor(
     }
 
     private fun getSortedList(list: List<Recruit>): List<Recruit> {
+        val id = team.teamId
         return if (sortHighToLow) {
-            list.sortedBy { -it.rating }
+            list.sortedBy { -it.getRatingMaxForTeam(id) }
         } else {
-            list.sortedBy { it.rating }
+            list.sortedBy { it.getRatingMaxForTeam(id) }
         }
     }
 
