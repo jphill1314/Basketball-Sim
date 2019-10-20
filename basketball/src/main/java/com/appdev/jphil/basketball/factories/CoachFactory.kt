@@ -3,6 +3,7 @@ package com.appdev.jphil.basketball.factories
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.coaches.ScoutingAssignment
+import kotlin.math.min
 import kotlin.random.Random
 
 object CoachFactory {
@@ -71,6 +72,6 @@ object CoachFactory {
     }
 
     private fun getRating(rating: Int): Int {
-        return rating + Random.nextInt(2 * attributeVariance) - attributeVariance
+        return min(100, rating + Random.nextInt(2 * attributeVariance) - attributeVariance)
     }
 }

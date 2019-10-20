@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class StandingsRepository @Inject constructor(
-    @ConferenceId private val conferenceId: Int,
+    @ConferenceId private var conferenceId: Int,
     private val database: BasketballDatabase
 ) : StandingsContract.Repository {
 
@@ -28,6 +28,11 @@ class StandingsRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onConferenceIdChanged(confId: Int) {
+        conferenceId = confId
+        fetchData()
     }
 
     override fun attachPresenter(presenter: StandingsContract.Presenter) {

@@ -4,8 +4,10 @@ import android.content.res.Resources
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.smartShuffleList
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
@@ -32,13 +34,18 @@ class NewSeasonRepository @Inject constructor(
             GameDatabaseHelper.deleteAllGames(database)
             val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+            val games = mutableListOf<Game>()
+            var numberOfTeams = 0
             conferences.forEach { conference ->
                 conference.teams.forEach {
                     startNewSeasonForTeam(it, recruits)
                 }
-                GameDatabaseHelper.saveOnlyGames(conference.generateSchedule(2018), database)
+                games.addAll(conference.generateSchedule(2018))
+                numberOfTeams += conference.teams.size
                 ConferenceDatabaseHelper.saveConference(conference, database)
             }
+            games.smartShuffleList(numberOfTeams)
+            GameDatabaseHelper.saveOnlyGames(games, database)
             RecruitDatabaseHelper.deleteAllRecruits(database)
 
             val newRecruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)

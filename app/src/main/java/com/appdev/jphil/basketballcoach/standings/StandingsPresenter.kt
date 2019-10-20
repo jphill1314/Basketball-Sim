@@ -4,12 +4,14 @@ import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import com.flurry.android.FlurryAgent
 import javax.inject.Inject
 
 class StandingsPresenter @Inject constructor(
+    @ConferenceId private var conferenceId: Int,
     private val repository: StandingsContract.Repository
 ) : StandingsContract.Presenter {
 
@@ -32,6 +34,7 @@ class StandingsPresenter @Inject constructor(
         val names = mutableListOf<String>()
         conferences.forEach { names.add(it.name) }
         view?.addConferenceNames(names)
+        standings.clear()
 
         teams.forEach { team ->
             standings.add(RecordUtil.getRecord(games, team))
@@ -48,6 +51,13 @@ class StandingsPresenter @Inject constructor(
     override fun onTeamSelected(standingsDataModel: StandingsDataModel) {
         view?.changeTeamAndConference(standingsDataModel.teamId, standingsDataModel.conferenceId)
         FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SELECT_TEAM))
+    }
+
+    override fun onConferenceChanged(confId: Int) {
+        if (confId != conferenceId) {
+            conferenceId = confId
+            repository.onConferenceIdChanged(confId)
+        }
     }
 
     override fun onViewAttached(view: StandingsContract.View) {

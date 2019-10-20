@@ -37,7 +37,7 @@ class Recruit(
             interest = 0.0
         }
 
-        val range = Random.nextInt(100 - coachRecruitingRating)
+        val range = Random.nextInt(101 - coachRecruitingRating)
         val offset = if (range > 0 ) Random.nextInt(range) - range / 2 else 0
 
         interestInTeams.add(RecruitInterest(
