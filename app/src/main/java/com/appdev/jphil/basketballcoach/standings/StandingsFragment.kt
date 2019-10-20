@@ -2,17 +2,17 @@ package com.appdev.jphil.basketballcoach.standings
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.FragmentStandingsBinding
 import com.appdev.jphil.basketballcoach.main.*
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -23,6 +23,7 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     lateinit var presenter: StandingsContract.Presenter
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    lateinit var binding: FragmentStandingsBinding
     private var teamManager: TeamManagerViewModel? = null
 
     private lateinit var adapter: StandingsAdapter
@@ -46,32 +47,51 @@ class StandingsFragment : Fragment(), StandingsContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.standings))
-        return inflater.inflate(R.layout.fragment_standings, container, false)
+        binding = FragmentStandingsBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun addTeams(standingsDataModels: List<StandingsDataModel>) {
         adapter = StandingsAdapter(teamManager?.teamId ?: -1, standingsDataModels, presenter, resources)
-        view?.apply {
-            findViewById<RecyclerView>(R.id.standings_recycler_view)?.apply {
+        binding.run {
+            standingsRecyclerView.apply {
                 adapter = this@StandingsFragment.adapter
                 layoutManager = LinearLayoutManager(requireContext())
             }
-            findViewById<View>(R.id.header).visibility = View.VISIBLE
-            findViewById<TextView>(R.id.position).text = resources.getString(R.string.pos)
-            findViewById<TextView>(R.id.name).text = resources.getString(R.string.name)
-            findViewById<TextView>(R.id.conference_record).text = resources.getString(R.string.conf_w_l)
-            findViewById<TextView>(R.id.overall_record).text = resources.getString(R.string.overall_w_l)
+            header.apply {
+                root.visibility = View.VISIBLE
+                position.text = resources.getString(R.string.pos)
+                name.text = resources.getString(R.string.name)
+                conferenceRecord.text = resources.getString(R.string.conf_w_l)
+                overallRecord.text = resources.getString(R.string.overall_w_l)
+            }
+            binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    presenter.onConferenceChanged(position)
+                }
+            }
         }
     }
 
     override fun addConferenceNames(names: List<String>) {
-        ArrayAdapter<String>(
-            context!!,
-            R.layout.spinner_title,
-            names
-        ).also {
-            it.setDropDownViewResource(R.layout.spinner_list_item)
-            view?.findViewById<Spinner>(R.id.spinner)?.adapter = it
+        if (binding.spinner.adapter == null) {
+            ArrayAdapter<String>(
+                context!!,
+                R.layout.spinner_title,
+                names
+            ).also {
+                it.setDropDownViewResource(R.layout.spinner_list_item)
+                binding.spinner.adapter = it
+                binding.spinner.setSelection(teamManager?.conferenceId ?: 0, false)
+            }
         }
     }
 

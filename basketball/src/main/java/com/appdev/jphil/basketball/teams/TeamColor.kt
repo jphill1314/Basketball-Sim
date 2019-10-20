@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketball.teams
 
+import kotlin.random.Random
+
 enum class TeamColor(val type: Int) {
     Red(0),
     Pink(1),
@@ -36,5 +38,7 @@ enum class TeamColor(val type: Int) {
             14 -> BlueGrey
             else -> Red
         }
+
+        fun random() = fromInt(Random.nextInt(14))
     }
 }

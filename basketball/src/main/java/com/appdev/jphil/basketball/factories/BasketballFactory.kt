@@ -4,13 +4,35 @@ import com.appdev.jphil.basketball.BasketballWorld
 import com.appdev.jphil.basketball.Conference
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
+import kotlin.random.Random
 
 object BasketballFactory {
 
-    fun setupWholeBasketballWorld(firstNames: List<String>, lastNames: List<String>): BasketballWorld {
+    fun setupWholeBasketballWorld(
+        conferenceDataModels: List<ConferenceGeneratorDataModel>,
+        firstNames: List<String>,
+        lastNames: List<String>
+    ): BasketballWorld {
         val conferences = mutableListOf<Conference>()
-        conferences.add(createTestConference(firstNames, lastNames))
-        val recruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)
+        var teams = 0
+        conferenceDataModels.forEachIndexed { index, dataModel ->
+            conferences.add(createConference(
+                teams,
+                index,
+                dataModel.minRating,
+                dataModel.name,
+                dataModel.teams,
+                firstNames,
+                lastNames
+            ))
+            teams += dataModel.teams.size
+        }
+
+        val recruits = RecruitFactory.generateRecruits(
+            firstNames,
+            lastNames,
+            conferenceDataModels.size * 10
+        )
 
         return BasketballWorld(
             conferences,
@@ -18,18 +40,31 @@ object BasketballFactory {
         )
     }
 
-    private fun createTestConference(firstNames: List<String>, lastNames: List<String>): Conference {
+    private fun createConference(
+        startId: Int,
+        conferenceId: Int,
+        minRating: Int,
+        conferenceName: String,
+        teamDataModels: List<TeamGeneratorDataModel>,
+        firstNames: List<String>,
+        lastNames: List<String>
+    ): Conference {
         val teams = mutableListOf<Team>()
-        teams.add(TeamFactory.generateTeam(1, "Wofford", "Terriers", TeamColor.Yellow,"WOF", 70, 1, true, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(2, "UNCG", "Spartans", TeamColor.Blue, "UNCG", 65, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(3, "ETSU", "Bucs", TeamColor.DeepOrange, "ETSU", 65, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(4, "Furman", "Paladins", TeamColor.Purple, "FUR", 60, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(5, "Samford", "Bulldogs", TeamColor.BlueGrey, "SAM", 50, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(6, "Chattanooga", "Mocs", TeamColor.BlueGrey, "UTC", 45, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(7, "Mercer", "Bears", TeamColor.Orange, "MER", 45, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(8, "Citadel", "Bulldogs", TeamColor.LightBlue, "CIT", 40, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(9, "Western Carolina", "Catamounts", TeamColor.Purple, "WCU", 40, 1, false, firstNames, lastNames))
-        teams.add(TeamFactory.generateTeam(10, "VMI", "Keydets", TeamColor.Red, "VMI", 40, 1, false, firstNames, lastNames))
-        return Conference(1, "Test Conference", teams)
+        teamDataModels.forEachIndexed { index, dataModel ->
+            teams.add(TeamFactory.generateTeam(
+                startId + index,
+                dataModel.schoolName,
+                dataModel.mascot,
+                TeamColor.random(),
+                dataModel.abbreviation,
+                minRating + Random.nextInt(15) + dataModel.ratingVariance,
+                conferenceId,
+                index == 1,
+                firstNames,
+                lastNames
+            ))
+        }
+
+        return Conference(conferenceId, conferenceName, teams)
     }
 }
