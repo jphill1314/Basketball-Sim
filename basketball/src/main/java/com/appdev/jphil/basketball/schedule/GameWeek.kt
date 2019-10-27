@@ -1,8 +1,8 @@
-package com.appdev.jphil.basketball
+package com.appdev.jphil.basketball.schedule
 
 import com.appdev.jphil.basketball.game.Game
 
-class GameWeek(val week: Int, val maxSize: Int) {
+class GameWeek(private val maxSize: Int) {
     private val games = mutableListOf<Game>()
 
     fun addGame(game: Game): Boolean {

@@ -7,7 +7,8 @@ import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
-import com.appdev.jphil.basketball.smartShuffleList
+import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
+import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
@@ -44,6 +45,9 @@ class NewSeasonRepository @Inject constructor(
                 numberOfTeams += conference.teams.size
                 ConferenceDatabaseHelper.saveConference(conference, database)
             }
+            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(conferences, 5, 2018)
+            nonConGames.smartShuffleList(numberOfTeams)
+            GameDatabaseHelper.saveOnlyGames(nonConGames, database)
             games.smartShuffleList(numberOfTeams)
             GameDatabaseHelper.saveOnlyGames(games, database)
             RecruitDatabaseHelper.deleteAllRecruits(database)
