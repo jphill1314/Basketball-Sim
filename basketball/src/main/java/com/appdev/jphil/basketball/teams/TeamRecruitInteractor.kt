@@ -33,7 +33,11 @@ object TeamRecruitInteractor {
     }
 
     private fun interactWithRecruit(recruit: Recruit, team: Team) {
-        val interest = recruit.interestInTeams.first { it.teamId == team.teamId }
+        val interest = recruit.interestInTeams.firstOrNull { it.teamId == team.teamId }
+
+        if (interest == null) {
+            return
+        }
 
         if (interest.lastInteractionGame + GAMES_BETWEEN_INTERACTIONS <= team.gamesPlayed) {
             if (recruit.getRatingRangeForTeam(team.teamId) > 10) {

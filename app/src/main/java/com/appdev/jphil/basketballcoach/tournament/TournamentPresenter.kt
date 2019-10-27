@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.tournament
 
 import android.view.View
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class TournamentPresenter @Inject constructor(
         gameSimRepository.attachPresenter(this)
     }
 
-    override fun updateSchedule() {
+    override fun updateSchedule(finishedGame: Game) {
         repository.fetchData()
     }
 

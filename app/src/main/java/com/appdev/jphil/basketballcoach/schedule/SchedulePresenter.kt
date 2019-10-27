@@ -2,10 +2,12 @@ package com.appdev.jphil.basketballcoach.schedule
 
 import android.content.res.Resources
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
+import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.appdev.jphil.basketballcoach.util.RecordUtil
@@ -33,8 +35,14 @@ class SchedulePresenter @Inject constructor(
         repository.fetchSchedule()
     }
 
-    override fun updateSchedule() {
+    override fun updateSchedule(finishedGame: Game) {
         fetchSchedule()
+        view?.updateProgressBar(SimDialogDataModel(
+            finishedGame.homeTeam.schoolName,
+            finishedGame.awayTeam.schoolName,
+            finishedGame.homeScore,
+            finishedGame.awayScore
+        ))
     }
 
     override fun onSimCompleted() {

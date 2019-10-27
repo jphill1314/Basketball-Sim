@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketballcoach.simulation
 
+import com.appdev.jphil.basketball.game.Game
+
 interface SimulationContract {
 
     interface GameSimRepository {
@@ -11,7 +13,7 @@ interface SimulationContract {
     }
 
     interface GameSimPresenter {
-        fun updateSchedule()
+        fun updateSchedule(finishedGame: Game)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
         fun onSimCompleted()
         fun onSeasonCompleted(conferenceTournamentIsFinished: Boolean)
