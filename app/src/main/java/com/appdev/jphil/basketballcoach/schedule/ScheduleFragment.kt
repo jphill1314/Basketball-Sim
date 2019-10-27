@@ -14,6 +14,8 @@ import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.simdialog.SimDialog
+import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -26,7 +28,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     private var adapter: ScheduleAdapter? = null
 
     private lateinit var fab: FloatingActionButton
-    private lateinit var progressBar: ProgressBar
+    private var dialog: SimDialog? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -50,8 +52,6 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
         fab = view.findViewById(R.id.fab)
         fab.setOnClickListener { presenter.onFABClicked() }
-
-        progressBar = view.findViewById(R.id.progress_bar)
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -84,11 +84,16 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun showProgressBar() {
-        progressBar.visibility = View.VISIBLE
+        dialog = SimDialog() // TODO: cancel sim when dialog is cancelled
+        dialog?.show(fragmentManager, "TAG")
+    }
+
+    override fun updateProgressBar(dataModel: SimDialogDataModel) {
+        dialog?.addNewGame(dataModel)
     }
 
     override fun hideProgressBar() {
-        progressBar.visibility = View.GONE
+        dialog?.dismiss()
     }
 
     override fun disableFab() {

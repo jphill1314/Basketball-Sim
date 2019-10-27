@@ -22,8 +22,8 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun startNextGame() {
         GlobalScope.launch(Dispatchers.IO) {
-            var gameId = GameDatabaseHelper.loadAllGameEntities(database)
-                .filter { !it.isFinal }.sortedBy { it.id }.firstOrNull()?.id ?: 1
+            var gameId = GameDatabaseHelper.loadAllGamesEntitiesWithIsFinal(false, database)
+                .sortedBy { it.id }.firstOrNull()?.id ?: 1
             var homeName = ""
             var awayName = ""
             var userIsHomeTeam = false
@@ -38,7 +38,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
                             simGame(game)
-                            updatePresenter()
+                            updatePresenter(game)
                         } else {
                             gameLoaded = true
                             homeName = game.homeTeam.name
@@ -70,13 +70,13 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simToGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var id = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
+            var id = GameDatabaseHelper.loadAllGamesEntitiesWithIsFinal(false, database).sortedBy { it.id }.first().id ?: 1
             while (id < gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
                         simGame(game)
                         if (id <= gameId) {
-                            updatePresenter()
+                            updatePresenter(game)
                         }
                     }
                 }
@@ -89,13 +89,13 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var id = GameDatabaseHelper.loadAllGameEntities(database).sortedBy { it.id }.first().id ?: 1
+            var id = GameDatabaseHelper.loadAllGamesEntitiesWithIsFinal(false, database).sortedBy { it.id }.first().id ?: 1
             while (id <= gameId) {
                 GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
                     if (!game.isFinal) {
                         simGame(game)
                         if (id <= gameId) {
-                            updatePresenter()
+                            updatePresenter(game)
                         }
                     }
                 }
@@ -157,7 +157,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
     }
 
-    private suspend fun updatePresenter() {
-        withContext(Dispatchers.Main) { presenter.updateSchedule() }
+    private suspend fun updatePresenter(finishedGame: Game) {
+        withContext(Dispatchers.Main) { presenter.updateSchedule(finishedGame) }
     }
 }

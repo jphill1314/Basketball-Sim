@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.schedule
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 
 interface ScheduleContract {
@@ -12,6 +13,7 @@ interface ScheduleContract {
         fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
         fun goToConferenceTournament()
         fun showProgressBar()
+        fun updateProgressBar(dataModel: SimDialogDataModel)
         fun hideProgressBar()
         fun disableFab()
         fun enableFab()

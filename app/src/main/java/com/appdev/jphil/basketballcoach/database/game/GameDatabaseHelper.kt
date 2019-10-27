@@ -92,6 +92,10 @@ object GameDatabaseHelper {
         return database.gameDao().getAllGames()
     }
 
+    fun loadAllGamesEntitiesWithIsFinal(isFinal: Boolean, database: BasketballDatabase): List<GameEntity> {
+        return database.gameDao().getGamesWithIsFinal(isFinal)
+    }
+
     fun deleteAllGames(database: BasketballDatabase) {
         database.gameDao().deleteAllGames()
         database.gameDao().deleteAllGameEvents()
