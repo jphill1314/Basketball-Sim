@@ -59,7 +59,7 @@ object BasketballFactory {
                 dataModel.abbreviation,
                 minRating + Random.nextInt(15) + dataModel.ratingVariance,
                 conferenceId,
-                index == 1,
+                index == 1 && conferenceId == 1, // TODO: make this not bad
                 firstNames,
                 lastNames
             ))
