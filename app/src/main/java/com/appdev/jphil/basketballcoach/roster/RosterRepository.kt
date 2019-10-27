@@ -3,7 +3,8 @@ package com.appdev.jphil.basketballcoach.roster
 import android.content.res.Resources
 import com.appdev.jphil.basketball.factories.BasketballFactory
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.smartShuffleList
+import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
+import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.basketball.GreatLakesConference
@@ -66,6 +67,9 @@ class RosterRepository @Inject constructor(
             games.addAll(it.generateSchedule(2018))
             numberOfTeams += it.teams.size
         }
+        val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(world.conferences, 10, 2018)
+        nonConGames.smartShuffleList(numberOfTeams)
+        GameDatabaseHelper.saveOnlyGames(nonConGames, database)
         games.smartShuffleList(numberOfTeams)
         GameDatabaseHelper.saveOnlyGames(games, database)
         RecruitDatabaseHelper.saveRecruits(world.recruits, database)
