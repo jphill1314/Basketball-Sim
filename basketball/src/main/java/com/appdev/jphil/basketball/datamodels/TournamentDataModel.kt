@@ -10,13 +10,14 @@ data class TournamentDataModel(
     var awayTeamScore: Int,
     var isFinal: Boolean,
     var inProgress: Boolean,
-    val round: Int
+    val round: Int,
+    val isUnbalancedRound: Boolean
 ) {
 
     companion object {
         const val NO_GAME_ID = -1
 
-        fun emptyDataModel(round: Int): TournamentDataModel {
+        fun emptyDataModel(round: Int, isUnbalancedRound: Boolean): TournamentDataModel {
             return TournamentDataModel(
                 NO_GAME_ID,
                 "",
@@ -25,11 +26,12 @@ data class TournamentDataModel(
                 0,
                 false,
                 false,
-                round
+                round,
+                isUnbalancedRound
             )
         }
 
-        fun from(game: Game, round: Int): TournamentDataModel {
+        fun from(game: Game, round: Int, isUnbalancedRound: Boolean): TournamentDataModel {
             return TournamentDataModel(
                 game.id ?: NO_GAME_ID,
                 game.homeTeam.abbreviation,
@@ -38,7 +40,8 @@ data class TournamentDataModel(
                 game.awayScore,
                 game.isFinal,
                 game.inProgress,
-                round
+                round,
+                isUnbalancedRound
             )
         }
     }

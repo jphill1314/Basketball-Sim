@@ -1,7 +1,8 @@
 package com.appdev.jphil.basketballcoach.tournament
 
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
-import com.appdev.jphil.basketball.TenTeamTournament
+import com.appdev.jphil.basketball.tournament.TenTeamTournament
+import com.appdev.jphil.basketball.tournament.Tournament
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
@@ -27,19 +28,19 @@ class TournamentRepository @Inject constructor(
                     generateNextRound(tournament)
                 }
                 withContext(Dispatchers.Main) {
-                    presenter.onTournamentLoaded(tournament.scheduleDataModels)
+                    presenter.onTournamentLoaded(tournament.getScheduleDataModels())
                 }
             }
         }
     }
 
-    private fun generateNextRound(tournament: TenTeamTournament) {
+    private fun generateNextRound(tournament: Tournament) {
         tournament.generateNextRound(2018) // TODO: inject current season
         GameDatabaseHelper.saveOnlyGames(tournament.getAllGames(), database)
-        tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(tournament.id, database))
+        tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(tournament.getId(), database))
     }
 
-    private fun createTournament(): TenTeamTournament? {
+    private fun createTournament(): Tournament? {
         val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database)
         val games = GameDatabaseHelper.loadAllGameEntities(database)
         val standings = mutableListOf<StandingsDataModel>()

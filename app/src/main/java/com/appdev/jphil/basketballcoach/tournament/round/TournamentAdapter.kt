@@ -57,7 +57,7 @@ class TournamentAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (games[0].round == 1 && position == 0) {
+        return if (games[0].isUnbalancedRound && position == 0) {
             if (showButtons[position] && !games[position].isFinal) 1 else 0
         } else {
             if (showButtons[position] && !games[position].isFinal) 3 else 2
@@ -110,6 +110,7 @@ class TournamentAdapter(
     }
 
     private fun getScale(adapterRound: Int): Float {
+        // TODO: fix for 8 team tournament
         return when (adapterRound) {
             1 -> {
                 when (currentRound) {

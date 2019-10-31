@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketball
+package com.appdev.jphil.basketball.tournament
 
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
@@ -6,14 +6,17 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 
 class TenTeamTournament(
-    val id: Int,
+    private val id: Int,
     teams: List<Team>,
     val dataModels: List<StandingsDataModel>
-) {
+): Tournament {
 
     private val sortedTeams = mutableListOf<Team>()
     private val games = mutableListOf<Game>()
-    val scheduleDataModels = MutableList(9) { TournamentDataModel.emptyDataModel(getRoundForGameIndex(it)) }
+    private val scheduleDataModels = MutableList(9) {
+        val round = getRoundForGameIndex(it)
+        TournamentDataModel.emptyDataModel(round, round == 1)
+    }
 
     init {
         dataModels.sortedWith(compareBy(
@@ -24,7 +27,9 @@ class TenTeamTournament(
         )).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
     }
 
-    fun generateNextRound(season: Int) {
+    override fun getScheduleDataModels() = scheduleDataModels
+
+    override fun generateNextRound(season: Int) {
         if (games.filter { it.isFinal }.size == games.size) {
             when (games.size) {
                 0 -> {
@@ -49,9 +54,30 @@ class TenTeamTournament(
         }
     }
 
+    override fun getWinnerOfTournament(): Team? {
+        return if (games.size == 9 && games.last().isFinal) {
+            getWinner(games.last())
+        } else {
+            null
+        }
+    }
+
+    override fun replaceGames(newGames: List<Game>) {
+        games.clear()
+        games.addAll(newGames)
+        if (games.size == 2) makeInitialDataModels() else updateDataModels()
+    }
+
+    override fun getAllGames() = games
+
+    override fun numberOfGames() = games.size
+
+    override fun getId() = id
+
     private fun updateDataModels() {
         games.forEachIndexed { index, game ->
-            scheduleDataModels[index] = TournamentDataModel.from(game, getRoundForGameIndex(index))
+            val round = getRoundForGameIndex(index)
+            scheduleDataModels[index] = TournamentDataModel.from(game, round, round == 1)
         }
     }
 
@@ -72,14 +98,6 @@ class TenTeamTournament(
         }
     }
 
-    fun getWinnerOfTournament(): Team? {
-        return if (games.size == 9 && games.last().isFinal) {
-            getWinner(games.last())
-        } else {
-            null
-        }
-    }
-
     private fun newGame(homeTeam: Team, awayTeam: Team, season: Int): Game {
         return Game(
             homeTeam,
@@ -95,14 +113,4 @@ class TenTeamTournament(
     private fun getWinner(game: Game): Team {
         return if (game.homeScore > game.awayScore) game.homeTeam else game.awayTeam
     }
-
-    fun replaceGames(newGames: List<Game>) {
-        games.clear()
-        games.addAll(newGames)
-        if (games.size == 2) makeInitialDataModels() else updateDataModels()
-    }
-
-    fun getAllGames() = games
-
-    fun numberOfGames() = games.size
 }

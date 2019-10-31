@@ -1,6 +1,6 @@
 package com.appdev.jphil.basketball.schedule
 
-import com.appdev.jphil.basketball.Conference
+import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 
