@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.BasketballWorld
-import com.appdev.jphil.basketball.Conference
+import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import kotlin.random.Random
@@ -59,12 +59,16 @@ object BasketballFactory {
                 dataModel.abbreviation,
                 minRating + Random.nextInt(15) + dataModel.ratingVariance,
                 conferenceId,
-                index == 1 && conferenceId == 1, // TODO: make this not bad
+                index == 1 && conferenceId == 0, // TODO: make this not bad
                 firstNames,
                 lastNames
             ))
         }
 
-        return Conference(conferenceId, conferenceName, teams)
+        return Conference(
+            conferenceId,
+            conferenceName,
+            teams
+        )
     }
 }

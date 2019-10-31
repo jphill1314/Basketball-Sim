@@ -1,9 +1,10 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
-import com.appdev.jphil.basketball.Conference
-import com.appdev.jphil.basketball.TenTeamTournament
+import com.appdev.jphil.basketball.conference.Conference
+import com.appdev.jphil.basketball.tournament.TenTeamTournament
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.teams.Team
+import com.appdev.jphil.basketball.tournament.Tournament
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
@@ -16,7 +17,11 @@ object ConferenceDatabaseHelper {
         val conferenceEntity = database.conferenceDao().getConferenceWithId(conferenceId)
         return conferenceEntity?.let { conference ->
             val teamEntities = database.teamDao().getTeamsInConference(conferenceId)
-            Conference(conference.id, conference.name, generateTeams(database, teamEntities))
+            Conference(
+                conference.id,
+                conference.name,
+                generateTeams(database, teamEntities)
+            )
         }
     }
 
@@ -39,7 +44,11 @@ object ConferenceDatabaseHelper {
         val conferences = mutableListOf<Conference>()
         conferenceEntities.forEach { conference ->
             val teamEntities = database.teamDao().getTeamsInConference(conference.id)
-            val conf = Conference(conference.id, conference.name, generateTeams(database, teamEntities))
+            val conf = Conference(
+                conference.id,
+                conference.name,
+                generateTeams(database, teamEntities)
+            )
             conferences.add(conf)
         }
         return conferences
@@ -58,7 +67,7 @@ object ConferenceDatabaseHelper {
         return teams
     }
 
-    fun createTournament(conference: Conference, database: BasketballDatabase): TenTeamTournament? {
+    fun createTournament(conference: Conference, database: BasketballDatabase): Tournament? {
         val games = GameDatabaseHelper.loadAllGameEntities(database)
         val standings = mutableListOf<StandingsDataModel>()
         conference.teams.forEach { team -> standings.add(RecordUtil.getRecord(games, team)) }

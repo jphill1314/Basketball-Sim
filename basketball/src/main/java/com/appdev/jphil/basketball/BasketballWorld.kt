@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball
 
+import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.recruits.Recruit
 
 class BasketballWorld(
