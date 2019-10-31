@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.database.game
 
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
@@ -13,40 +14,23 @@ object GameDatabaseHelper {
             database.gameDao().insertGame(GameEntity.from(game))
             TeamDatabaseHelper.saveTeam(game.homeTeam, database)
             TeamDatabaseHelper.saveTeam(game.awayTeam, database)
-            if (game.isFinal) {
-                game.homeTeam.players.forEach { player ->
-                    database.playerDao()
-                        .insertGameStats(GameStatsEntity.generate(
-                            player,
-                            game.season,
-                            game.awayTeam.schoolName,
-                            true,
-                            game.homeScore,
-                            game.awayScore,
-                            game.id!!
-                        ))
-                }
-                game.awayTeam.players.forEach { player ->
-                    database.playerDao()
-                        .insertGameStats(GameStatsEntity.generate(
-                            player,
-                            game.season,
-                            game.homeTeam.schoolName,
-                            false,
-                            game.homeScore,
-                            game.awayScore,
-                            game.id!!
-                        ))
-                }
-            }
+            saveStats(game, database)
         }
     }
 
-    fun loadGamesForTeam(teamId: Int, database: BasketballDatabase): List<Game> {
-        val gameEntities = database.gameDao().getAllGamesWithTeamId(teamId)
-        val games = mutableListOf<Game>()
-        gameEntities.forEach { entity -> games.add(createGame(entity, database)) }
-        return games
+    fun saveGameAndStats(game: Game, database: BasketballDatabase) {
+        database.gameDao().insertGame(GameEntity.from(game))
+        saveStats(game, database)
+    }
+
+    fun loadGameByIdWithTeams(gameId: Int, teams: Map<Int, Team>, database: BasketballDatabase): Game? {
+        database.gameDao().getGameWithId(gameId)?.let { game ->
+            val homeTeam = teams[game.homeTeamId] ?: TeamDatabaseHelper.loadTeamById(game.homeTeamId, database)!!
+            val awayTeam = teams[game.awayTeamId] ?: TeamDatabaseHelper.loadTeamById(game.awayTeamId, database)!!
+            return game.createGame(homeTeam, awayTeam)
+        }
+
+        return null
     }
 
     fun loadGameById(gameId: Int, database: BasketballDatabase): Game? {
@@ -62,10 +46,6 @@ object GameDatabaseHelper {
         return games
     }
 
-    fun loadGameEntitiesForTournament(tournamentId: Int, database: BasketballDatabase): List<GameEntity> {
-        return database.gameDao().getGamesWithTournamentId(tournamentId)
-    }
-
     private fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
         val homeTeam = TeamDatabaseHelper.loadTeamById(entity.homeTeamId, database)!!
         val awayTeam = TeamDatabaseHelper.loadTeamById(entity.awayTeamId, database)!!
@@ -73,7 +53,7 @@ object GameDatabaseHelper {
     }
 
     fun saveOnlyGames(games: List<Game>, database: BasketballDatabase) {
-        games.forEach {game -> database.gameDao().insertGame(GameEntity.from(game)) }
+        games.forEach { game -> database.gameDao().insertGame(GameEntity.from(game)) }
     }
 
     fun saveGameEvents(events: List<GameEventEntity>, database: BasketballDatabase) {
@@ -92,12 +72,41 @@ object GameDatabaseHelper {
         return database.gameDao().getAllGames()
     }
 
-    fun loadAllGamesEntitiesWithIsFinal(isFinal: Boolean, database: BasketballDatabase): List<GameEntity> {
-        return database.gameDao().getGamesWithIsFinal(isFinal)
+    fun getFirstGameWithIsFinal(isFinal: Boolean, database: BasketballDatabase): Int {
+        return database.gameDao().getFirstGameWithIsFinal(isFinal)
     }
 
     fun deleteAllGames(database: BasketballDatabase) {
         database.gameDao().deleteAllGames()
         database.gameDao().deleteAllGameEvents()
+    }
+
+    private fun saveStats(game: Game, database: BasketballDatabase) {
+        if (game.isFinal) {
+            game.homeTeam.players.forEach { player ->
+                database.playerDao()
+                    .insertGameStats(GameStatsEntity.generate(
+                        player,
+                        game.season,
+                        game.awayTeam.schoolName,
+                        true,
+                        game.homeScore,
+                        game.awayScore,
+                        game.id!!
+                    ))
+            }
+            game.awayTeam.players.forEach { player ->
+                database.playerDao()
+                    .insertGameStats(GameStatsEntity.generate(
+                        player,
+                        game.season,
+                        game.homeTeam.schoolName,
+                        false,
+                        game.homeScore,
+                        game.awayScore,
+                        game.id!!
+                    ))
+            }
+        }
     }
 }

@@ -16,6 +16,9 @@ interface GameDao {
     @Query("SELECT * FROM GameEntity where isFinal in (:isFinal)")
     fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
 
+    @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal)")
+    fun getFirstGameWithIsFinal(isFinal: Boolean): Int
+
     @Query("SELECT * FROM GameEntity where tournamentId in (:tournamentId)")
     fun getGamesWithTournamentId(tournamentId: Int): List<GameEntity>
 

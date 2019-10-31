@@ -1,11 +1,13 @@
 package com.appdev.jphil.basketballcoach.simulation
 
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,18 +24,20 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun startNextGame() {
         GlobalScope.launch(Dispatchers.IO) {
-            var gameId = GameDatabaseHelper.loadAllGamesEntitiesWithIsFinal(false, database)
-                .sortedBy { it.id }.firstOrNull()?.id ?: 1
+            var gameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             var homeName = ""
             var awayName = ""
             var userIsHomeTeam = false
             var continueSim = true
             var gameLoaded = false
+            val teams = mutableMapOf<Int, Team>()
             while(continueSim) {
-                val game = GameDatabaseHelper.loadGameById(gameId++, database)
+                val game = GameDatabaseHelper.loadGameByIdWithTeams(gameId++, teams, database)
                 if (game == null) {
                     continueSim = false
                 } else {
+                    teams[game.homeTeam.teamId] = game.homeTeam
+                    teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
@@ -48,6 +52,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
+            teams.forEach { (_, team) -> TeamDatabaseHelper.saveTeam(team, database) }
             if (gameLoaded) {
                 withContext(Dispatchers.Main) {
                     presenter.startGameFragment(gameId - 1, homeName, awayName, userIsHomeTeam)
@@ -70,9 +75,12 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simToGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var id = GameDatabaseHelper.loadAllGamesEntitiesWithIsFinal(false, database).sortedBy { it.id }.first().id ?: 1
+            var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            val teams = mutableMapOf<Int, Team>()
             while (id < gameId) {
-                GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
+                GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)?.let { game ->
+                    teams[game.homeTeam.teamId] = game.homeTeam
+                    teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
                         simGame(game)
                         if (id <= gameId) {
@@ -81,6 +89,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
+            teams.forEach { (_, team) -> TeamDatabaseHelper.saveTeam(team, database) }
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -89,9 +98,12 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var id = GameDatabaseHelper.loadAllGamesEntitiesWithIsFinal(false, database).sortedBy { it.id }.first().id ?: 1
+            var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            val teams = mutableMapOf<Int, Team>()
             while (id <= gameId) {
-                GameDatabaseHelper.loadGameById(id++, database)?.let { game ->
+                GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)?.let { game ->
+                    teams[game.homeTeam.teamId] = game.homeTeam
+                    teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
                         simGame(game)
                         if (id <= gameId) {
@@ -100,6 +112,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
+            teams.forEach { (_, team) -> TeamDatabaseHelper.saveTeam(team, database) }
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -147,7 +160,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         if (!game.awayTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
         }
-        GameDatabaseHelper.saveGames(listOf(game), database)
+        GameDatabaseHelper.saveGameAndStats(game, database)
         RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
 
