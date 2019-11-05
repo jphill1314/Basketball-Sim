@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 import android.content.res.Resources
+import androidx.lifecycle.MutableLiveData
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R
@@ -8,6 +9,7 @@ import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
+import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.appdev.jphil.basketballcoach.util.RecordUtil
@@ -30,22 +32,49 @@ class SchedulePresenter @Inject constructor(
     private var view: ScheduleContract.View? = null
     private var teamGames = listOf<GameEntity>()
     private var isSimming = false
+    private var state: SimDialogState? = null
+    private val simGames = mutableListOf<SimDialogDataModel>()
+    private var totalGames = 0
+    private var teamsSaved = 0
 
     override fun fetchSchedule() {
         repository.fetchSchedule()
     }
 
+    override fun onSimulationStarted(totalGames: Int) {
+        simGames.clear()
+        teamsSaved = 1
+        this.totalGames = totalGames + 1
+        state = SimDialogState()
+        state?.let {
+            it.games.postValue(simGames)
+            it.text.postValue(resources.getString(R.string.sim_game_x_of_y, 1, this.totalGames))
+            it.canCancel.postValue(true)
+            view?.setDialogState(it)
+        }
+    }
+
     override fun updateSchedule(finishedGame: Game) {
         fetchSchedule()
-        view?.updateProgressBar(SimDialogDataModel(
+        simGames.add(0, SimDialogDataModel(
             finishedGame.homeTeam.schoolName,
             finishedGame.awayTeam.schoolName,
             finishedGame.homeScore,
             finishedGame.awayScore
         ))
+        state?.games?.postValue(simGames)
+        state?.text?.postValue(resources.getString(R.string.sim_game_x_of_y, simGames.size + 1, totalGames))
+    }
+
+    override fun updateSaving(totalTeams: Int) {
+        if (state?.canCancel?.value == true) {
+            state?.canCancel?.postValue(false)
+        }
+        state?.text?.postValue(resources.getString(R.string.saving_sim_results, teamsSaved++, totalTeams))
     }
 
     override fun onSimCompleted() {
+        state = null
         isSimming = false
         fetchSchedule()
     }
@@ -64,6 +93,7 @@ class SchedulePresenter @Inject constructor(
             )
         } else {
             // Season is not over, open tournament view
+            view?.hideProgressBar()
             view?.goToConferenceTournament()
         }
     }
@@ -137,9 +167,14 @@ class SchedulePresenter @Inject constructor(
         }
     }
 
+    override fun cancelSim() {
+        gameSimRepository.cancelSim()
+    }
+
     override fun onViewAttached(view: ScheduleContract.View) {
         this.view = view
         fetchSchedule()
+        state?.let { view.setDialogState(it) }
     }
 
     override fun onViewDetached() {

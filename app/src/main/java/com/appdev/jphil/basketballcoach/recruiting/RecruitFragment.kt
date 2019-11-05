@@ -36,7 +36,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
         } else {
             presenter = viewModel.presenter!!
         }
-        teamManager = (activity as? MainActivity)?.getTeamViewModel(factory)
+        teamManager = activity?.getTeamViewModel(factory)
         setHasOptionsMenu(true)
     }
 

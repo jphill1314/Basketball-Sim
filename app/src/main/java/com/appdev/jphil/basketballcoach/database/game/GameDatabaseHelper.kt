@@ -76,6 +76,10 @@ object GameDatabaseHelper {
         return database.gameDao().getFirstGameWithIsFinal(isFinal)
     }
 
+    fun getFirstGameOfTeam(teamId: Int, isFinal: Boolean, database: BasketballDatabase): Int {
+        return database.gameDao().getFistGameOfTeam(isFinal, teamId)
+    }
+
     fun deleteAllGames(database: BasketballDatabase) {
         database.gameDao().deleteAllGames()
         database.gameDao().deleteAllGameEvents()

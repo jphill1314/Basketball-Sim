@@ -9,8 +9,9 @@ class SimDialogAdapter : RecyclerView.Adapter<SimDialogAdapter.ViewHolder>() {
 
     private val items = mutableListOf<SimDialogDataModel>()
 
-    fun addItem(dataModel: SimDialogDataModel) {
-        items.add(0, dataModel)
+    fun updateItems(newItems: List<SimDialogDataModel>) {
+        items.clear()
+        items.addAll(newItems)
         notifyDataSetChanged()
     }
 

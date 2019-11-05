@@ -8,6 +8,7 @@ import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHe
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class GameSimRepository @Inject constructor(private val database: BasketballDatabase) : SimulationContract.GameSimRepository {
 
     private lateinit var presenter: SimulationContract.GameSimPresenter
+    private var simIsCancelled = false
 
     override fun attachPresenter(presenter: SimulationContract.GameSimPresenter) {
         this.presenter = presenter
@@ -24,6 +26,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun startNextGame() {
         GlobalScope.launch(Dispatchers.IO) {
+            simIsCancelled = false
             var gameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             var homeName = ""
             var awayName = ""
@@ -31,7 +34,9 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
             var continueSim = true
             var gameLoaded = false
             val teams = mutableMapOf<Int, Team>()
-            while(continueSim) {
+            val playerTeam = TeamDatabaseHelper.loadUserTeam(database)
+            onSimStarted(GameDatabaseHelper.getFirstGameOfTeam(playerTeam!!.teamId, false, database) - gameId)
+            while(continueSim && !simIsCancelled) {
                 val game = GameDatabaseHelper.loadGameByIdWithTeams(gameId++, teams, database)
                 if (game == null) {
                     continueSim = false
@@ -42,7 +47,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                         continueSim = !(game.homeTeam.isUser || game.awayTeam.isUser)
                         if (continueSim) {
                             simGame(game)
-                            updatePresenter(game)
+                            updatePresenter(game) // TODO: get real value
                         } else {
                             gameLoaded = true
                             homeName = game.homeTeam.name
@@ -52,10 +57,17 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
-            teams.forEach { (_, team) -> TeamDatabaseHelper.saveTeam(team, database) }
-            if (gameLoaded) {
+            teams.forEach { (_, team) ->
+                updateSaving(teams.size)
+                TeamDatabaseHelper.saveTeam(team, database)
+            }
+            if (gameLoaded || simIsCancelled) {
                 withContext(Dispatchers.Main) {
-                    presenter.startGameFragment(gameId - 1, homeName, awayName, userIsHomeTeam)
+                    if (simIsCancelled) {
+                        presenter.onSimCompleted()
+                    } else {
+                        presenter.startGameFragment(gameId - 1, homeName, awayName, userIsHomeTeam)
+                    }
                 }
             } else {
                 val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
@@ -75,21 +87,24 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simToGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
+            simIsCancelled = false
             var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            onSimStarted(gameId - id)
             val teams = mutableMapOf<Int, Team>()
-            while (id < gameId) {
+            while (id < gameId && !simIsCancelled) {
                 GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)?.let { game ->
                     teams[game.homeTeam.teamId] = game.homeTeam
                     teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
                         simGame(game)
-                        if (id <= gameId) {
-                            updatePresenter(game)
-                        }
+                        updatePresenter(game)
                     }
                 }
             }
-            teams.forEach { (_, team) -> TeamDatabaseHelper.saveTeam(team, database) }
+            teams.forEach { (_, team) ->
+                updateSaving(teams.size)
+                TeamDatabaseHelper.saveTeam(team, database)
+            }
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -98,21 +113,24 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     override fun simGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
+            simIsCancelled = false
             var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            onSimStarted(gameId - id)
             val teams = mutableMapOf<Int, Team>()
-            while (id <= gameId) {
+            while (id <= gameId && !simIsCancelled) {
                 GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)?.let { game ->
                     teams[game.homeTeam.teamId] = game.homeTeam
                     teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
                         simGame(game)
-                        if (id <= gameId) {
-                            updatePresenter(game)
-                        }
+                        updatePresenter(game)
                     }
                 }
             }
-            teams.forEach { (_, team) -> TeamDatabaseHelper.saveTeam(team, database) }
+            teams.forEach { (_, team) ->
+                updateSaving(teams.size)
+                TeamDatabaseHelper.saveTeam(team, database)
+            }
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -146,6 +164,10 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         }
     }
 
+    override fun cancelSim() {
+        simIsCancelled = true
+    }
+
     private fun simGame(game: Game) {
         game.simulateFullGame()
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
@@ -172,5 +194,13 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     private suspend fun updatePresenter(finishedGame: Game) {
         withContext(Dispatchers.Main) { presenter.updateSchedule(finishedGame) }
+    }
+
+    private suspend fun onSimStarted(totalGames: Int) {
+        withContext(Dispatchers.Main) { presenter.onSimulationStarted(totalGames) }
+    }
+
+    private suspend fun updateSaving(totalTeams: Int) {
+        withContext(Dispatchers.Main) { presenter.updateSaving(totalTeams) }
     }
 }
