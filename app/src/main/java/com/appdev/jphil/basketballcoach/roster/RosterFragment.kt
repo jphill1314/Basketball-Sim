@@ -29,7 +29,7 @@ class RosterFragment : Fragment(), RosterContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
-        teamManager = (activity as? MainActivity)?.getTeamViewModel(viewModelFactory)
+        teamManager = activity?.getTeamViewModel(viewModelFactory)
     }
 
     override fun onResume() {

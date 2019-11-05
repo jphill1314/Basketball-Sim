@@ -174,4 +174,8 @@
     <string name="player_overview">Player Overview</string>
     <string name="recruit_overview">Recruit Overview</string>
     <string name="tournament">Tournament</string>
+
+    <string name="sim_game_x_of_y">Simulating game %d of %d</string>
+    <string name="saving_sim_results">Saving team %d of %d</string>
+    <string name="cancel">Cancel</string>
 </resources>

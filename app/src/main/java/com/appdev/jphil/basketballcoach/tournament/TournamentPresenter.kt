@@ -19,8 +19,14 @@ class TournamentPresenter @Inject constructor(
         gameSimRepository.attachPresenter(this)
     }
 
+    override fun onSimulationStarted(totalGames: Int) {
+    }
+
     override fun updateSchedule(finishedGame: Game) {
         repository.fetchData()
+    }
+
+    override fun updateSaving(totalTeams: Int) {
     }
 
     override fun onTournamentLoaded(games: MutableList<TournamentDataModel>) {

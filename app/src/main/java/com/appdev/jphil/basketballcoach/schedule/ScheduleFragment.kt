@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.schedule
 
-import android.content.Context
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
@@ -9,13 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import androidx.lifecycle.ViewModelProviders
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.simdialog.SimDialog
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
+import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -30,14 +30,21 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     private lateinit var fab: FloatingActionButton
     private var dialog: SimDialog? = null
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        val vm = ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
+        vm.presenter?.let { presenter = it } ?: run { vm.presenter = presenter }
     }
 
     override fun onResume() {
         super.onResume()
         presenter.onViewAttached(this)
+    }
+
+    override fun onPause() {
+        dialog?.dismiss()
+        super.onPause()
     }
 
     override fun onStop() {
@@ -84,12 +91,18 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun showProgressBar() {
-        dialog = SimDialog() // TODO: cancel sim when dialog is cancelled
+        dialog = SimDialog().apply {
+            onDialogDismissed = { presenter.cancelSim() }
+            isCancelable = false
+        }
         dialog?.show(fragmentManager, "TAG")
     }
 
-    override fun updateProgressBar(dataModel: SimDialogDataModel) {
-        dialog?.addNewGame(dataModel)
+    override fun setDialogState(state: SimDialogState) {
+        if (dialog == null) {
+            showProgressBar()
+        }
+        dialog?.setState(state)
     }
 
     override fun hideProgressBar() {
