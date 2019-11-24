@@ -4,10 +4,7 @@ import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDatabaseHelper
-import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
-import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
-import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 
 object TeamDatabaseHelper {

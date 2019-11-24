@@ -87,9 +87,9 @@ object GameDatabaseHelper {
 
     private fun saveStats(game: Game, database: BasketballDatabase) {
         if (game.isFinal) {
+            val stats = mutableListOf<GameStatsEntity>()
             game.homeTeam.players.forEach { player ->
-                database.playerDao()
-                    .insertGameStats(GameStatsEntity.generate(
+                stats.add(GameStatsEntity.generate(
                         player,
                         game.season,
                         game.awayTeam.schoolName,
@@ -100,8 +100,7 @@ object GameDatabaseHelper {
                     ))
             }
             game.awayTeam.players.forEach { player ->
-                database.playerDao()
-                    .insertGameStats(GameStatsEntity.generate(
+                stats.add(GameStatsEntity.generate(
                         player,
                         game.season,
                         game.homeTeam.schoolName,
@@ -111,6 +110,7 @@ object GameDatabaseHelper {
                         game.id!!
                     ))
             }
+            database.playerDao().insertGameStats(stats)
         }
     }
 }
