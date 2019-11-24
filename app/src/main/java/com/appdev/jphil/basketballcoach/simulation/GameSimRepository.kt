@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.BatchInsertHelper
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
@@ -57,10 +58,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
-            teams.forEach { (_, team) ->
-                updateSaving(teams.size)
-                TeamDatabaseHelper.saveTeam(team, database)
-            }
+            BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
             if (gameLoaded || simIsCancelled) {
                 withContext(Dispatchers.Main) {
                     if (simIsCancelled) {
@@ -101,10 +99,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
-            teams.forEach { (_, team) ->
-                updateSaving(teams.size)
-                TeamDatabaseHelper.saveTeam(team, database)
-            }
+            BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }
@@ -127,10 +122,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
             }
-            teams.forEach { (_, team) ->
-                updateSaving(teams.size)
-                TeamDatabaseHelper.saveTeam(team, database)
-            }
+            BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
             withContext(Dispatchers.Main) {
                 presenter.onSimCompleted()
             }

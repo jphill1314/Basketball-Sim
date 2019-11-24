@@ -31,6 +31,9 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGameStats(stats: GameStatsEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertGameStats(stats: List<GameStatsEntity>)
+
     @Query("DELETE FROM GameStatsEntity where playerId in (:playerId)")
     fun deleteGameStatsForPlayer(playerId: Int)
 
@@ -43,6 +46,9 @@ interface PlayerDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPlayerProgression(playerProgressionEntity: PlayerProgressionEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPlayerProgressions(playerProgressionEntity: List<PlayerProgressionEntity>)
 
     @Query("DELETE FROM PlayerProgressionEntity where playerId in (:playerId)")
     fun deleteProgressionForPlayer(playerId: Int)
