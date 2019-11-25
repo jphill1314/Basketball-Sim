@@ -1,12 +1,11 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
 import com.appdev.jphil.basketball.conference.Conference
-import com.appdev.jphil.basketball.tournament.TenTeamTournament
-import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.tournament.Tournament
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import com.appdev.jphil.basketballcoach.util.RecordUtil
@@ -20,7 +19,7 @@ object ConferenceDatabaseHelper {
             Conference(
                 conference.id,
                 conference.name,
-                generateTeams(database, teamEntities)
+                generateTeams(database, teamEntities).map { (_, team) -> team }
             )
         }
     }
@@ -41,16 +40,20 @@ object ConferenceDatabaseHelper {
 
     fun loadAllConferences(database: BasketballDatabase): List<Conference> {
         val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
+        val teams = database.teamDao().getAllTeams()
         val conferences = mutableListOf<Conference>()
+        val games = GameDatabaseHelper.loadAllGameEntities(database).toMutableList()
         conferenceEntities.forEach { conference ->
-            val teamEntities = database.teamDao().getTeamsInConference(conference.id)
+            val confTeams = generateTeams(database, teams.filter { it.conferenceId == conference.id })
             val conf = Conference(
                 conference.id,
                 conference.name,
-                generateTeams(database, teamEntities)
+                confTeams.map { (_, team) -> team }
             )
+            conf.tournament = createTournament(conf, games, confTeams, database)
             conferences.add(conf)
         }
+        database.gameDao().insertGames(games)
         return conferences
     }
 
@@ -58,35 +61,32 @@ object ConferenceDatabaseHelper {
         conferences.forEach { conference -> saveConference(conference, database) }
     }
 
-    private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): List<Team> {
-        val teams = mutableListOf<Team>()
+    private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): Map<Int, Team> {
+        val teams = mutableMapOf<Int, Team>()
         teamEntities.forEach { entity ->
-            val team = TeamDatabaseHelper.createTeam(entity, database)
-            teams.add(team!!)
+            TeamDatabaseHelper.createTeam(entity, database)?.let {
+                teams[it.teamId] = it
+            }
         }
         return teams
     }
 
-    fun createTournament(conference: Conference, database: BasketballDatabase): Tournament? {
-        val games = GameDatabaseHelper.loadAllGameEntities(database)
-        val standings = mutableListOf<StandingsDataModel>()
-        conference.teams.forEach { team -> standings.add(RecordUtil.getRecord(games, team)) }
-
-        conference.generateTournament(standings.sortedWith(compareBy(
-            { -it.getConferenceWinPercentage() },
-            { -it.conferenceWins },
-            { -it.getWinPercentage() },
-            { -it.totalWins }
-        )))
-
+    fun createTournament(conference: Conference, games: List<GameEntity>, teams: Map<Int, Team>, database: BasketballDatabase): Tournament? {
+        if (!games.none { it.tournamentId == null && !it.isFinal }) {
+            return null
+        }
+        conference.generateTournament(conference.teams.map { team -> RecordUtil.getRecord(games, team) })
         conference.tournament?.let { tournament ->
-            tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conference.id, database))
-            if (tournament.numberOfGames() == 0) {
-                tournament.generateNextRound(2018) // TODO: inject
-                GameDatabaseHelper.saveOnlyGames(tournament.getAllGames(), database)
-                tournament.replaceGames(GameDatabaseHelper.loadGamesForTournament(conference.id, database))
-            }
+            updateTournament(tournament, games, teams, database)
         }
         return conference.tournament
+    }
+
+    private fun updateTournament(tournament: Tournament, games: List<GameEntity>, teams: Map<Int, Team>, database: BasketballDatabase) {
+        tournament.replaceGames(games.filter { it.tournamentId == tournament.getId() }
+            .map { it.createGame(teams[it.homeTeamId]!!, teams[it.awayTeamId]!!) })
+        tournament.generateNextRound(2018).forEach { // TODO: inject
+            it.id = database.gameDao().insertGame(GameEntity.from(it)).toInt()
+        }
     }
 }

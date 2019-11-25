@@ -71,7 +71,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
                 var conferenceTournamentsAreComplete = true
                 conferences.forEach { conference ->
-                    conference.tournament = ConferenceDatabaseHelper.createTournament(conference, database)
                     if (conference.tournament?.getWinnerOfTournament() == null) {
                         conferenceTournamentsAreComplete = false
                     }
@@ -130,29 +129,32 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
     }
 
     override fun finishSeason() {
+        // TODO: update to use dialog + load quicker when possible
         GlobalScope.launch(Dispatchers.IO) {
-            var areTournamentsOver = false
-            ConferenceDatabaseHelper.loadAllConferences(database).forEach { conference ->
-                if (conference.tournament != null) {
-                    areTournamentsOver = true
+            if (!GameDatabaseHelper.hasTournamentGames(database)) {
+                val teams = mutableMapOf<Int, Team>()
+                val games = GameDatabaseHelper.loadAllGameEntities(database)
+                    .filter { !it.isFinal && it.tournamentId == null }
+                    .sortedBy { it.id }
+                onSimStarted(games.size)
+                games.forEach { gameEntity ->
+                    val game = GameDatabaseHelper.loadGameByIdWithTeams(gameEntity.id!!, teams, database)!!
+                    teams[game.homeTeam.teamId] = game.homeTeam
+                    teams[game.awayTeam.teamId] = game.awayTeam
+                    simGame(game)
+                    updatePresenter(game)
+                }
+                BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
+                onSeasonFinished(false)
+            } else {
+                ConferenceDatabaseHelper.loadAllConferences(database).forEach { conference ->
                     if (conference.tournament?.getWinnerOfTournament() == null) {
                         onSeasonFinished(false)
                         return@launch
                     }
                 }
-            }
-            if (areTournamentsOver) {
                 onSeasonFinished(true)
-                return@launch
             }
-
-            GameDatabaseHelper.loadAllGameEntities(database).filter { !it.isFinal && it.tournamentId == null }
-                .sortedBy { it.id }
-                .forEach { gameEntity ->
-                    val game = GameDatabaseHelper.loadGameById(gameEntity.id!!, database)!!
-                    simGame(game)
-            }
-            onSeasonFinished(false)
         }
     }
 
@@ -190,9 +192,5 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
 
     private suspend fun onSimStarted(totalGames: Int) {
         withContext(Dispatchers.Main) { presenter.onSimulationStarted(totalGames) }
-    }
-
-    private suspend fun updateSaving(totalTeams: Int) {
-        withContext(Dispatchers.Main) { presenter.updateSaving(totalTeams) }
     }
 }

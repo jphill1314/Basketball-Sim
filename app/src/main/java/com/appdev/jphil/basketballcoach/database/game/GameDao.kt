@@ -25,6 +25,9 @@ interface GameDao {
     @Query("SELECT * FROM GameEntity where tournamentId in (:tournamentId)")
     fun getGamesWithTournamentId(tournamentId: Int): List<GameEntity>
 
+    @Query("SELECT * FROM GameEntity where tournamentId not null")
+    fun getTournamentGames(): List<GameEntity>
+
     @Query("DELETE FROM GameEntity")
     fun deleteAllGames()
 
@@ -32,7 +35,7 @@ interface GameDao {
     fun insertGames(games: List<GameEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGame(game: GameEntity)
+    fun insertGame(game: GameEntity): Long
 
     @Delete
     fun deleteGame(game: GameEntity)

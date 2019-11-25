@@ -11,10 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.lifecycle.ViewModelProviders
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.simdialog.SimDialog
+import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
 import com.appdev.jphil.basketballcoach.tournament.round.TournamentViewPagerAdapter
 import dagger.android.support.AndroidSupportInjection
@@ -27,11 +30,13 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
 
     private lateinit var fab: FloatingActionButton
     private var adapter: TournamentViewPagerAdapter? = null
-    private val progressBar: ProgressBar by lazy { view!!.findViewById<ProgressBar>(R.id.progress_bar) }
+    private var dialog: SimDialog? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        val vm = ViewModelProviders.of(this).get(TournamentViewModel::class.java)
+        vm.presenter?.let { presenter = it } ?: run { vm.presenter = presenter }
     }
 
     override fun onResume() {
@@ -84,8 +89,27 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
             ?.commit()
     }
 
-    override fun setProgressBarVisibility(visibility: Int) {
-        progressBar.visibility = visibility
+    override fun showDialog() {
+        adapter?.notifyDataSetChanged()
+        SimDialog().let {
+            dialog = it
+            it.onDialogDismissed = { presenter.onCancelSim() }
+            it.isCancelable = false
+            it.show(fragmentManager, "sim")
+        }
+    }
+
+    override fun hideDialog() {
+        adapter?.notifyDataSetChanged()
+        dialog?.dismiss()
+        dialog = null
+    }
+
+    override fun setDialogState(state: SimDialogState) {
+        if (dialog == null) {
+            showDialog()
+        }
+        dialog?.setState(state)
     }
 
     private fun getScreenWidth(): Int {
