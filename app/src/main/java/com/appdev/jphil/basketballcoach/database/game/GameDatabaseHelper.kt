@@ -46,6 +46,10 @@ object GameDatabaseHelper {
         return games
     }
 
+    fun hasTournamentGames(database: BasketballDatabase): Boolean {
+        return database.gameDao().getTournamentGames().isNotEmpty()
+    }
+
     private fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
         val homeTeam = TeamDatabaseHelper.loadTeamById(entity.homeTeamId, database)!!
         val awayTeam = TeamDatabaseHelper.loadTeamById(entity.awayTeamId, database)!!

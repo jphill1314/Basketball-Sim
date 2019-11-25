@@ -16,7 +16,6 @@ interface SimulationContract {
     interface GameSimPresenter {
         fun onSimulationStarted(totalGames: Int)
         fun updateSchedule(finishedGame: Game)
-        fun updateSaving(totalTeams: Int)
         fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean)
         fun onSimCompleted()
         fun onSeasonCompleted(conferenceTournamentIsFinished: Boolean)

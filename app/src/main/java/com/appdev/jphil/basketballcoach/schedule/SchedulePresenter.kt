@@ -63,14 +63,11 @@ class SchedulePresenter @Inject constructor(
             finishedGame.awayScore
         ))
         state?.games?.postValue(simGames)
-        state?.text?.postValue(resources.getString(R.string.sim_game_x_of_y, simGames.size + 1, totalGames))
-    }
-
-    override fun updateSaving(totalTeams: Int) {
-        if (state?.canCancel?.value == true) {
-            state?.canCancel?.postValue(false)
-        }
-        state?.text?.postValue(resources.getString(R.string.saving_sim_results, teamsSaved++, totalTeams))
+        state?.text?.postValue(if (simGames.size == totalGames) {
+            resources.getString(R.string.saving_sim_results)
+        } else {
+            resources.getString(R.string.sim_game_x_of_y, simGames.size + 1, totalGames)
+        })
     }
 
     override fun onSimCompleted() {

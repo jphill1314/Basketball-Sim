@@ -6,10 +6,8 @@ import com.appdev.jphil.basketball.teams.Team
 
 interface Tournament {
     fun getScheduleDataModels(): MutableList<TournamentDataModel>
-    fun generateNextRound(season: Int)
+    fun generateNextRound(season: Int): List<Game>
     fun getWinnerOfTournament(): Team?
     fun replaceGames(newGames: List<Game>)
-    fun getAllGames(): List<Game>
-    fun numberOfGames(): Int
     fun getId(): Int
 }

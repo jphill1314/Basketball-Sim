@@ -17,7 +17,7 @@ class Game(
     val awayTeam: Team,
     val isNeutralCourt: Boolean,
     val season: Int,
-    val id: Int? = null,
+    var id: Int? = null,
     val tournamentId: Int? = null,
     var isFinal: Boolean = false
 ) {

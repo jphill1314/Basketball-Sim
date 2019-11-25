@@ -27,23 +27,26 @@ class EightTeamTournament(
 
     override fun getScheduleDataModels() = scheduleDataModels
 
-    override fun generateNextRound(season: Int) {
+    override fun generateNextRound(season: Int): List<Game> {
+        val newGames = mutableListOf<Game>()
         if (games.filter { it.isFinal }.size == games.size) {
             when (games.size) {
                 0 -> {
-                    games.add(newGame(sortedTeams[0], sortedTeams[7], season))
-                    games.add(newGame(sortedTeams[1], sortedTeams[6], season))
-                    games.add(newGame(sortedTeams[2], sortedTeams[5], season))
-                    games.add(newGame(sortedTeams[3], sortedTeams[4], season))
+                    newGames.add(NewGameHelper.newGame(sortedTeams[0], sortedTeams[7], season, id))
+                    newGames.add(NewGameHelper.newGame(sortedTeams[1], sortedTeams[6], season, id))
+                    newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
+                    newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
                 }
                 4 -> {
-                    games.add(newGame(getWinner(games[0]), getWinner(games[1]), season))
-                    games.add(newGame(getWinner(games[3]), getWinner(games[2]), season))
+                    newGames.add(NewGameHelper.newGame(getWinner(games[0]), getWinner(games[1]), season, id))
+                    newGames.add(NewGameHelper.newGame(getWinner(games[3]), getWinner(games[2]), season, id))
                 }
-                6 -> games.add(newGame(getWinner(games[4]), getWinner(games[5]), season))
+                6 -> newGames.add(NewGameHelper.newGame(getWinner(games[4]), getWinner(games[5]), season, id))
             }
+            games.addAll(newGames)
             updateDataModels()
         }
+        return newGames
     }
 
     override fun getWinnerOfTournament(): Team? {
@@ -57,12 +60,9 @@ class EightTeamTournament(
     override fun replaceGames(newGames: List<Game>) {
         games.clear()
         games.addAll(newGames)
+        check(games.size <= 7) { "More than 7 games in 8 team tournament! Total games: ${games.size}" }
         updateDataModels()
     }
-
-    override fun getAllGames() = games
-
-    override fun numberOfGames() = games.size
 
     override fun getId() = id
 
@@ -78,18 +78,6 @@ class EightTeamTournament(
             4, 5 -> 2
             else -> 3
         }
-    }
-
-    private fun newGame(homeTeam: Team, awayTeam: Team, season: Int): Game {
-        return Game(
-            homeTeam,
-            awayTeam,
-            true,
-            season,
-            null,
-            id,
-            false
-        )
     }
 
     private fun getWinner(game: Game): Team {
