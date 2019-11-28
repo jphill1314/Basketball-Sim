@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 import android.content.res.Resources
-import androidx.lifecycle.MutableLiveData
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R
@@ -80,6 +79,11 @@ class SchedulePresenter @Inject constructor(
         if (conferenceTournamentIsFinished) {
             // Season is over start new season
             view?.showProgressBar()
+            state = SimDialogState()
+            state?.let {
+                it.text.postValue(resources.getString(R.string.starting_new_season))
+                view?.setDialogState(it)
+            }
             newSeasonRepository.startNewSeason {
                 fetchSchedule()
                 isSimming = false

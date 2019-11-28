@@ -91,6 +91,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun showProgressBar() {
+        dialog?.dismiss()
         dialog = SimDialog().apply {
             onDialogDismissed = { presenter.cancelSim() }
             isCancelable = false
