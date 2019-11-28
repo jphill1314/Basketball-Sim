@@ -23,6 +23,9 @@ class TournamentRepository @Inject constructor(
                     withContext(Dispatchers.Main) {
                         presenter.onTournamentLoaded(tournament.getScheduleDataModels())
                     }
+                    if (tournament.getWinnerOfTournament() != null) {
+                        ConferenceDatabaseHelper.saveOnlyConferences(listOf(it), database)
+                    }
                 }
             }
             ConferenceDatabaseHelper.loadAllConferencesExcept(conferenceId, database).forEach {

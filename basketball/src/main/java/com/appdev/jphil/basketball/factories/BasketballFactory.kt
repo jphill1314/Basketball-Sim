@@ -11,7 +11,8 @@ object BasketballFactory {
     fun setupWholeBasketballWorld(
         conferenceDataModels: List<ConferenceGeneratorDataModel>,
         firstNames: List<String>,
-        lastNames: List<String>
+        lastNames: List<String>,
+        numberOfRecruits: Int
     ): BasketballWorld {
         val conferences = mutableListOf<Conference>()
         var teams = 0
@@ -31,7 +32,7 @@ object BasketballFactory {
         val recruits = RecruitFactory.generateRecruits(
             firstNames,
             lastNames,
-            conferenceDataModels.size * 10
+            numberOfRecruits
         )
 
         return BasketballWorld(

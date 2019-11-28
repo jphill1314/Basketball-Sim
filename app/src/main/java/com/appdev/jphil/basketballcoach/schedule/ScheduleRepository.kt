@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
@@ -25,6 +26,15 @@ class ScheduleRepository @Inject constructor(
                 presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId)
             }
         }
+    }
+
+    override suspend fun tournamentIsOver(confId: Int): Boolean {
+        var isOver = false
+        GlobalScope.launch(Dispatchers.IO) {
+            val conferences = ConferenceDatabaseHelper.loadAllConferenceEntities(database)
+            isOver = conferences.first { it.id == confId }.tournamentIsFinished
+        }.join()
+        return isOver
     }
 
     override fun attachPresenter(presenter: ScheduleContract.Presenter) {

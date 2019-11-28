@@ -17,6 +17,9 @@ import kotlinx.coroutines.launch
 
 object NewGameGenerator {
 
+    const val NON_CON_GAMES = 10
+    const val NUM_RECRUITS = 600
+
     suspend fun generateNewGame(resources: Resources, database: BasketballDatabase) {
         GlobalScope.launch {
             val world = BasketballFactory.setupWholeBasketballWorld(
@@ -34,7 +37,8 @@ object NewGameGenerator {
                     CanadianAthleticConference(50)
                 ),
                 resources.getStringArray(R.array.first_names).asList(),
-                resources.getStringArray(R.array.last_names).asList()
+                resources.getStringArray(R.array.last_names).asList(),
+                NUM_RECRUITS
             )
             val games = mutableListOf<Game>()
             var numberOfTeams = 0
@@ -43,7 +47,7 @@ object NewGameGenerator {
                 games.addAll(it.generateSchedule(2018))
                 numberOfTeams += it.teams.size
             }
-//            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(world.conferences, 10, 2018)
+//            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(world.conferences, NON_CON_GAMES, 2018)
 //            nonConGames.smartShuffleList(numberOfTeams)
 //            GameDatabaseHelper.saveOnlyGames(nonConGames, database)
 //            Log.d("NonCon", "NonConGames: ${nonConGames.size}")

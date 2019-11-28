@@ -11,6 +11,7 @@ import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
 import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.BatchInsertHelper
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
@@ -36,6 +37,7 @@ class NewSeasonRepository @Inject constructor(
             val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             val games = mutableListOf<Game>()
+            val teams = mutableListOf<Team>()
             var numberOfTeams = 0
             conferences.forEach { conference ->
                 conference.teams.forEach {
@@ -43,16 +45,25 @@ class NewSeasonRepository @Inject constructor(
                 }
                 games.addAll(conference.generateSchedule(2018))
                 numberOfTeams += conference.teams.size
-                ConferenceDatabaseHelper.saveConference(conference, database)
+                teams.addAll(conference.teams)
             }
-            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(conferences, 5, 2018)
+            BatchInsertHelper.saveConferences(conferences, database)
+            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(
+                conferences,
+                NewGameGenerator.NON_CON_GAMES,
+                2018
+            )
             nonConGames.smartShuffleList(numberOfTeams)
             GameDatabaseHelper.saveOnlyGames(nonConGames, database)
             games.smartShuffleList(numberOfTeams)
             GameDatabaseHelper.saveOnlyGames(games, database)
             RecruitDatabaseHelper.deleteAllRecruits(database)
 
-            val newRecruits = RecruitFactory.generateRecruits(firstNames, lastNames, 100)
+            val newRecruits = RecruitFactory.generateRecruits(
+                firstNames,
+                lastNames,
+                NewGameGenerator.NUM_RECRUITS
+            )
             RecruitDatabaseHelper.saveRecruits(newRecruits, database)
 
             withContext(Dispatchers.Main) { callback() }

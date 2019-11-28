@@ -122,15 +122,14 @@ object ConferenceDatabaseHelper {
         }
         conference.generateTournament(conference.teams.map { team -> RecordUtil.getRecord(games, team) })
         conference.tournament?.let { tournament ->
-            updateTournament(tournament, games, teams, database)
+            updateTournament(tournament, teams, database)
         }
         return conference.tournament
     }
 
-    private fun updateTournament(tournament: Tournament, games: List<GameEntity>, teams: Map<Int, Team>, database: BasketballDatabase) {
+    private fun updateTournament(tournament: Tournament, teams: Map<Int, Team>, database: BasketballDatabase) {
         Log.d("Tournament", "Update tournament for: ${tournament.getId()}")
-        val currentGames = games.filter { it.tournamentId == tournament.getId() }
-            .map { it.createGame(teams[it.homeTeamId]!!, teams[it.awayTeamId]!!) }.toMutableList()
+        val currentGames = GameDatabaseHelper.loadGamesForTournament(tournament.getId(), teams, database).toMutableList()
         tournament.replaceGames(currentGames)
 
         currentGames.addAll(tournament.generateNextRound(2018).map { // TODO: inject

@@ -11,7 +11,8 @@ data class TournamentDataModel(
     var isFinal: Boolean,
     var inProgress: Boolean,
     val round: Int,
-    val isUnbalancedRound: Boolean
+    val isUnbalancedRound: Boolean,
+    val isUsersTeam: Boolean
 ) {
 
     companion object {
@@ -27,7 +28,8 @@ data class TournamentDataModel(
                 false,
                 false,
                 round,
-                isUnbalancedRound
+                isUnbalancedRound,
+                false
             )
         }
 
@@ -41,7 +43,8 @@ data class TournamentDataModel(
                 game.isFinal,
                 game.inProgress,
                 round,
-                isUnbalancedRound
+                isUnbalancedRound,
+                game.homeTeam.isUser || game.awayTeam.isUser
             )
         }
     }

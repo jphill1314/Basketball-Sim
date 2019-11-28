@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.os.Handler
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
@@ -98,7 +99,13 @@ class TournamentAdapter(
                 else -> viewHolder.gameStatus.text = ""
             }
         } else if (viewHolder is TournamentViewHolder.ButtonViewHolder) {
-            viewHolder.simToGame.setOnClickListener { presenter.simToGame(game.gameId) }
+            if (game.isUsersTeam) {
+                viewHolder.playGame.visibility = View.VISIBLE
+                viewHolder.playGame.setOnClickListener { presenter.playGame(game.gameId) }
+            } else {
+                viewHolder.playGame.visibility = View.INVISIBLE
+                viewHolder.playGame.setOnClickListener { }
+            }
             viewHolder.simGame.setOnClickListener { presenter.simGame(game.gameId) }
         }
 

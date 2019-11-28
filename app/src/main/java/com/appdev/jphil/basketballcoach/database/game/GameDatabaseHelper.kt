@@ -25,9 +25,7 @@ object GameDatabaseHelper {
 
     fun loadGameByIdWithTeams(gameId: Int, teams: Map<Int, Team>, database: BasketballDatabase): Game? {
         database.gameDao().getGameWithId(gameId)?.let { game ->
-            val homeTeam = teams[game.homeTeamId] ?: TeamDatabaseHelper.loadTeamById(game.homeTeamId, database)!!
-            val awayTeam = teams[game.awayTeamId] ?: TeamDatabaseHelper.loadTeamById(game.awayTeamId, database)!!
-            return game.createGame(homeTeam, awayTeam)
+            return createGameWithTeams(game, teams, database)
         }
 
         return null
@@ -38,10 +36,10 @@ object GameDatabaseHelper {
         return game?.let { createGame(it, database) }
     }
 
-    fun loadGamesForTournament(tournamentId: Int, database: BasketballDatabase): List<Game> {
+    fun loadGamesForTournament(tournamentId: Int, teams: Map<Int, Team>, database: BasketballDatabase): List<Game> {
         val games = mutableListOf<Game>()
         database.gameDao().getGamesWithTournamentId(tournamentId).forEach { entity ->
-            games.add(createGame(entity, database))
+            games.add(createGameWithTeams(entity, teams, database))
         }
         return games
     }
@@ -54,6 +52,12 @@ object GameDatabaseHelper {
         val homeTeam = TeamDatabaseHelper.loadTeamById(entity.homeTeamId, database)!!
         val awayTeam = TeamDatabaseHelper.loadTeamById(entity.awayTeamId, database)!!
         return entity.createGame(homeTeam, awayTeam)
+    }
+
+    private fun createGameWithTeams(game: GameEntity, teams: Map<Int, Team>, database: BasketballDatabase): Game {
+        val homeTeam = teams[game.homeTeamId] ?: TeamDatabaseHelper.loadTeamById(game.homeTeamId, database)!!
+        val awayTeam = teams[game.awayTeamId] ?: TeamDatabaseHelper.loadTeamById(game.awayTeamId, database)!!
+        return game.createGame(homeTeam, awayTeam)
     }
 
     fun saveOnlyGames(games: List<Game>, database: BasketballDatabase) {

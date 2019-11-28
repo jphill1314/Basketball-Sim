@@ -6,10 +6,10 @@ interface SimulationContract {
 
     interface GameSimRepository {
         fun attachPresenter(presenter: GameSimPresenter)
-        fun startNextGame()
-        fun simToGame(gameId: Int)
+        fun playGame(gameId: Int)
         fun simGame(gameId: Int)
-        fun finishSeason()
+        fun finishRegularSeason()
+        fun finishTournaments()
         fun cancelSim()
     }
 

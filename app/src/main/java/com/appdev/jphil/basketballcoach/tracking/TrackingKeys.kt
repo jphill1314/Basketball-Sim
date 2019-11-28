@@ -12,9 +12,9 @@ object TrackingKeys {
 
     // Payload Values
     const val VALUE_SWAP_PLAYERS = "swap_players"
-    const val VALUE_SIM_TO_GAME = "sim_to_game"
     const val VALUE_SIM_GAME = "sim_game"
     const val VALUE_PLAY_GAME = "play_game"
     const val VALUE_START_NEW_SEASON = "start_new_season"
     const val VALUE_SELECT_TEAM = "select_team"
+    const val VALUE_CANCEL_SIM = "cancel_sim"
 }
