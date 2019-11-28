@@ -83,10 +83,10 @@ class TenTeamTournament(
 
     private fun makeInitialDataModels() {
         updateDataModels()
-        scheduleDataModels[2].homeTeamName = sortedTeams[0].name
-        scheduleDataModels[3].homeTeamName = sortedTeams[3].name
-        scheduleDataModels[4].homeTeamName = sortedTeams[2].name
-        scheduleDataModels[5].homeTeamName = sortedTeams[1].name
+        scheduleDataModels[2].homeTeamName = sortedTeams[0].abbreviation
+        scheduleDataModels[3].homeTeamName = sortedTeams[3].abbreviation
+        scheduleDataModels[4].homeTeamName = sortedTeams[2].abbreviation
+        scheduleDataModels[5].homeTeamName = sortedTeams[1].abbreviation
     }
 
     private fun getRoundForGameIndex(index: Int): Int {

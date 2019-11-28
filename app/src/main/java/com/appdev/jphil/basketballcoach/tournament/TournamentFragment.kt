@@ -91,6 +91,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
 
     override fun showDialog() {
         adapter?.notifyDataSetChanged()
+        dialog?.dismiss()
         SimDialog().let {
             dialog = it
             it.onDialogDismissed = { presenter.onCancelSim() }

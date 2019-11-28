@@ -147,8 +147,8 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
                 onSeasonFinished(false)
             } else {
-                ConferenceDatabaseHelper.loadAllConferences(database).forEach { conference ->
-                    if (conference.tournament?.getWinnerOfTournament() == null) {
+                ConferenceDatabaseHelper.loadAllConferenceEntities(database).forEach { conference ->
+                    if (!conference.tournamentIsFinished) {
                         onSeasonFinished(false)
                         return@launch
                     }

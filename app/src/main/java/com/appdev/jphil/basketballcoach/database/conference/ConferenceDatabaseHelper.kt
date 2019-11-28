@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
+import android.util.Log
 import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.tournament.Tournament
@@ -29,7 +30,8 @@ object ConferenceDatabaseHelper {
         database.conferenceDao().insertConference(
             ConferenceEntity(
                 conference.id,
-                conference.name
+                conference.name,
+                conference.tournament?.getWinnerOfTournament() != null
             )
         )
     }
@@ -57,8 +59,35 @@ object ConferenceDatabaseHelper {
         return conferences
     }
 
-    fun saveAllConferences(conferences: List<Conference>, database: BasketballDatabase) {
-        conferences.forEach { conference -> saveConference(conference, database) }
+    fun loadAllConferencesExcept(ignoreId: Int, database: BasketballDatabase): List<Conference> {
+        val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
+        val teams = database.teamDao().getAllTeams()
+        val conferences = mutableListOf<Conference>()
+        val games = GameDatabaseHelper.loadAllGameEntities(database).toMutableList()
+        conferenceEntities.forEach { conference ->
+            if (conference.id != ignoreId) {
+                val confTeams =
+                    generateTeams(database, teams.filter { it.conferenceId == conference.id })
+                val conf = Conference(
+                    conference.id,
+                    conference.name,
+                    confTeams.map { (_, team) -> team }
+                )
+                conf.tournament = createTournament(conf, games, confTeams, database)
+                conferences.add(conf)
+            }
+        }
+        database.gameDao().insertGames(games)
+        return conferences
+    }
+
+    fun saveOnlyConferences(conferences: List<Conference>, database: BasketballDatabase) {
+        database.conferenceDao().insertConferences(conferences.map {
+            ConferenceEntity(
+                it.id,
+                it.name,
+                it.tournament?.getWinnerOfTournament() != null)
+        })
     }
 
     private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): Map<Int, Team> {
@@ -71,7 +100,23 @@ object ConferenceDatabaseHelper {
         return teams
     }
 
-    fun createTournament(conference: Conference, games: List<GameEntity>, teams: Map<Int, Team>, database: BasketballDatabase): Tournament? {
+    fun createTournament(conference: Conference, database: BasketballDatabase): Tournament? {
+        val teams = mutableMapOf<Int, Team>()
+        conference.teams.forEach { teams[it.teamId] = it }
+        return createTournament(
+            conference,
+            GameDatabaseHelper.loadAllGameEntities(database),
+            teams,
+            database
+        )
+    }
+
+    private fun createTournament(
+        conference: Conference,
+        games: List<GameEntity>,
+        teams: Map<Int, Team>,
+        database: BasketballDatabase
+    ): Tournament? {
         if (!games.none { it.tournamentId == null && !it.isFinal }) {
             return null
         }
@@ -83,10 +128,16 @@ object ConferenceDatabaseHelper {
     }
 
     private fun updateTournament(tournament: Tournament, games: List<GameEntity>, teams: Map<Int, Team>, database: BasketballDatabase) {
-        tournament.replaceGames(games.filter { it.tournamentId == tournament.getId() }
-            .map { it.createGame(teams[it.homeTeamId]!!, teams[it.awayTeamId]!!) })
-        tournament.generateNextRound(2018).forEach { // TODO: inject
-            it.id = database.gameDao().insertGame(GameEntity.from(it)).toInt()
-        }
+        Log.d("Tournament", "Update tournament for: ${tournament.getId()}")
+        val currentGames = games.filter { it.tournamentId == tournament.getId() }
+            .map { it.createGame(teams[it.homeTeamId]!!, teams[it.awayTeamId]!!) }.toMutableList()
+        tournament.replaceGames(currentGames)
+
+        currentGames.addAll(tournament.generateNextRound(2018).map { // TODO: inject
+            it.apply {
+                it.id = database.gameDao().insertGame(GameEntity.from(it)).toInt()
+            }
+        })
+        tournament.replaceGames(currentGames)
     }
 }

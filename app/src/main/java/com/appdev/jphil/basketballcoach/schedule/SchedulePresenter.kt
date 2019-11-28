@@ -160,6 +160,7 @@ class SchedulePresenter @Inject constructor(
     override fun goToConferenceTournament() {
         if (teamGames.filter { it.isFinal }.size == teamGames.size) {
             view?.showProgressBar()
+            isSimming = true
             gameSimRepository.finishSeason()
         }
     }
