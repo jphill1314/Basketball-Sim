@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
@@ -13,10 +14,13 @@ import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import com.flurry.android.FlurryAgent
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SchedulePresenter @Inject constructor(
     @TeamId private val teamId: Int,
+    @ConferenceId private val confId: Int,
     private val resources: Resources,
     private val repository: ScheduleContract.Repository,
     private val gameSimRepository: SimulationContract.GameSimRepository,
@@ -122,11 +126,6 @@ class SchedulePresenter @Inject constructor(
                 )
             )
         }
-        if (!isUsersSchedule) {
-            view?.disableFab()
-        } else if(!isSimming) {
-            view?.enableFab()
-        }
 
         if (!isSimming) {
             view?.hideProgressBar()
@@ -135,23 +134,15 @@ class SchedulePresenter @Inject constructor(
 
     }
 
-    override fun onFABClicked() {
-        view?.disableFab()
-        view?.showProgressBar()
-        isSimming = true
-        gameSimRepository.startNextGame()
-    }
-
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_PLAY_GAME))
         view?.startGameFragment(gameId, homeName, awayName, userIsHomeTeam)
     }
 
-    override fun simulateToGame(gameId: Int) {
+    override fun playGame(gameId: Int) {
         view?.showProgressBar()
         isSimming = true
-        gameSimRepository.simToGame(gameId)
-        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SIM_TO_GAME))
+        gameSimRepository.playGame(gameId)
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_PLAY_GAME))
     }
 
     override fun simulateGame(gameId: Int) {
@@ -165,12 +156,23 @@ class SchedulePresenter @Inject constructor(
         if (teamGames.filter { it.isFinal }.size == teamGames.size) {
             view?.showProgressBar()
             isSimming = true
-            gameSimRepository.finishSeason()
+            gameSimRepository.finishRegularSeason()
+        }
+    }
+
+    override fun finishSeason() {
+        GlobalScope.launch {
+            if (repository.tournamentIsOver(confId)) {
+                view?.showProgressBar()
+                state = SimDialogState().apply { text.postValue("Finish Season") }
+                gameSimRepository.finishTournaments()
+            }
         }
     }
 
     override fun cancelSim() {
         gameSimRepository.cancelSim()
+        FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_CANCEL_SIM))
     }
 
     override fun onViewAttached(view: ScheduleContract.View) {

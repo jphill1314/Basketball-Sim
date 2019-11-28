@@ -28,7 +28,6 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     @Inject
     lateinit var presenter: TournamentContract.Presenter
 
-    private lateinit var fab: FloatingActionButton
     private var adapter: TournamentViewPagerAdapter? = null
     private var dialog: SimDialog? = null
 
@@ -54,9 +53,6 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tournament, container, false)
-        fab = view.findViewById(R.id.fab)
-        fab.setOnClickListener { presenter.onFABClicked() }
-        fab.show()
         adapter = null
         (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.tournament))
         return view

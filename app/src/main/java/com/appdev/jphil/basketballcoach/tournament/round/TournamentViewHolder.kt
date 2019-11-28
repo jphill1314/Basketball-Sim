@@ -38,7 +38,7 @@ abstract class TournamentViewHolder(view: View, private val tvSize: Int) : Recyc
     }
 
     class ButtonViewHolder(view: View, tvSize: Int): TournamentViewHolder(view, tvSize) {
-        val simToGame: Button = view.findViewById(R.id.sim_to_game)
+        val playGame: Button = view.findViewById(R.id.play_game)
         val simGame: Button = view.findViewById(R.id.sim_game)
         override val views = listOf(itemView, homeName, awayName, homeScore, awayScore)
     }

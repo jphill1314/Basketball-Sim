@@ -16,21 +16,20 @@ interface ScheduleContract {
         fun showProgressBar()
         fun setDialogState(state: SimDialogState)
         fun hideProgressBar()
-        fun disableFab()
-        fun enableFab()
     }
 
     interface Presenter : MVPContract.Presenter<View>, SimulationContract.GameSimPresenter {
         fun fetchSchedule()
         fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean)
-        fun onFABClicked()
-        fun simulateToGame(gameId: Int)
+        fun playGame(gameId: Int)
         fun simulateGame(gameId: Int)
         fun goToConferenceTournament()
+        fun finishSeason()
         fun cancelSim()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
         fun fetchSchedule()
+        suspend fun tournamentIsOver(confId: Int): Boolean
     }
 }

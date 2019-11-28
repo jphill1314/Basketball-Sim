@@ -62,12 +62,12 @@ class TournamentPresenter @Inject constructor(
         view?.onTournamentLoaded(games)
     }
 
-    override fun simToGame(gameId: Int) {
+    override fun playGame(gameId: Int) {
         view?.showDialog()
         if (tournamentsAreSetup) {
-            gameSimRepository.simToGame(gameId)
+            gameSimRepository.playGame(gameId)
         } else {
-            startGameSim = { gameSimRepository.simToGame(gameId) }
+            startGameSim = { gameSimRepository.playGame(gameId) }
             showWaitingDialog()
         }
     }
@@ -99,16 +99,6 @@ class TournamentPresenter @Inject constructor(
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
         view?.hideDialog()
         view?.startGameFragment(gameId, homeName, awayName, userIsHomeTeam)
-    }
-
-    override fun onFABClicked() {
-        view?.showDialog()
-        if (tournamentsAreSetup) {
-            gameSimRepository.startNextGame()
-        } else {
-            startGameSim = { gameSimRepository.startNextGame() }
-            showWaitingDialog()
-        }
     }
 
     override fun onCancelSim() {

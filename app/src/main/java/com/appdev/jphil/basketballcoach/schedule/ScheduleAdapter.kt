@@ -24,20 +24,31 @@ class ScheduleAdapter(
     }
 
     override fun getItemCount(): Int {
-        return (games?.size ?: 0) + 1
+        return (games?.size ?: 0) + 2
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if (position < games?.size ?: 0) {
             games?.let { handleGame(it[position], position, viewHolder.binding) }
         } else {
-            viewHolder.binding.apply {
-                homeName.text = "Conference tournament!"
-                awayName.text = ""
-                homeScore.text = ""
-                awayScore.text = ""
-                gameStatus.text = ""
-                root.setOnClickListener { presenter.goToConferenceTournament() }
+            if (position == itemCount - 1) {
+                viewHolder.binding.apply {
+                    homeName.text = "Finish Season"
+                    awayName.text = ""
+                    homeScore.text = ""
+                    awayScore.text = ""
+                    gameStatus.text = ""
+                    root.setOnClickListener { presenter.finishSeason() }
+                }
+            } else {
+                viewHolder.binding.apply {
+                    homeName.text = "Conference tournament!"
+                    awayName.text = ""
+                    homeScore.text = ""
+                    awayScore.text = ""
+                    gameStatus.text = ""
+                    root.setOnClickListener { presenter.goToConferenceTournament() }
+                }
             }
         }
     }
@@ -64,22 +75,22 @@ class ScheduleAdapter(
         }
 
         if (isUsersSchedule) {
-            binding.simToGame.setOnClickListener { presenter.simulateToGame(game.gameId) }
+            binding.playGame.setOnClickListener { presenter.playGame(game.gameId) }
             binding.simGame.setOnClickListener { presenter.simulateGame(game.gameId) }
             if (!game.isFinal) {
                 binding.root.setOnClickListener {
                     val vis = binding.simGame.visibility
                     if (vis == View.VISIBLE) {
                         binding.simGame.visibility = View.GONE
-                        binding.simToGame.visibility = View.GONE
+                        binding.playGame.visibility = View.GONE
                     } else {
                         binding.simGame.visibility = View.VISIBLE
-                        binding.simToGame.visibility = View.VISIBLE
+                        binding.playGame.visibility = View.VISIBLE
                     }
                 }
             } else {
                 binding.simGame.visibility = View.GONE
-                binding.simToGame.visibility = View.GONE
+                binding.playGame.visibility = View.GONE
             }
         }
     }

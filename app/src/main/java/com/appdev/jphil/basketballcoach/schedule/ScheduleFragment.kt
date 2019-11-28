@@ -27,7 +27,6 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     private lateinit var recyclerView: RecyclerView
     private var adapter: ScheduleAdapter? = null
 
-    private lateinit var fab: FloatingActionButton
     private var dialog: SimDialog? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,8 +56,6 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
-        fab = view.findViewById(R.id.fab)
-        fab.setOnClickListener { presenter.onFABClicked() }
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -108,13 +105,5 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
 
     override fun hideProgressBar() {
         dialog?.dismiss()
-    }
-
-    override fun disableFab() {
-        fab.hide()
-    }
-
-    override fun enableFab() {
-        fab.show()
     }
 }

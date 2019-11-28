@@ -17,8 +17,7 @@ interface TournamentContract {
 
     interface Presenter : MVPContract.Presenter<View>, SimulationContract.GameSimPresenter {
         fun onTournamentLoaded(games: MutableList<TournamentDataModel>)
-        fun onFABClicked()
-        fun simToGame(gameId: Int)
+        fun playGame(gameId: Int)
         fun simGame(gameId: Int)
         fun onCancelSim()
         fun onTournamentSetupComplete()
