@@ -17,7 +17,8 @@ class TournamentPresenter @Inject constructor(
 ) : TournamentContract.Presenter {
 
     private var view: TournamentContract.View? = null
-    private var isSimming = false
+    private var tournamentsAreSetup = true
+    private var startGameSim: (() -> Unit)? = null
     private var state: SimDialogState? = null
     private val simGames = mutableListOf<SimDialogDataModel>()
     private var totalGames = 0
@@ -57,31 +58,38 @@ class TournamentPresenter @Inject constructor(
     }
 
     override fun onTournamentLoaded(games: MutableList<TournamentDataModel>) {
-        if (!isSimming) {
-            view?.hideDialog()
-        }
+        view?.hideDialog()
         view?.onTournamentLoaded(games)
     }
 
     override fun simToGame(gameId: Int) {
-        isSimming = true
         view?.showDialog()
-        gameSimRepository.simToGame(gameId)
+        if (tournamentsAreSetup) {
+            gameSimRepository.simToGame(gameId)
+        } else {
+            startGameSim = { gameSimRepository.simToGame(gameId) }
+            showWaitingDialog()
+        }
     }
 
     override fun simGame(gameId: Int) {
-        isSimming = true
         view?.showDialog()
-        gameSimRepository.simGame(gameId)
+        if (tournamentsAreSetup) {
+            gameSimRepository.simGame(gameId)
+        } else {
+            startGameSim = { gameSimRepository.simGame(gameId) }
+            showWaitingDialog()
+        }
     }
 
     override fun onSimCompleted() {
-        isSimming = false
+        tournamentsAreSetup = false
         repository.fetchData()
     }
 
     override fun onSeasonCompleted(conferenceTournamentIsFinished: Boolean) {
         if (!conferenceTournamentIsFinished) {
+            tournamentsAreSetup = false
             repository.fetchData()
         } else {
             view?.hideDialog()
@@ -94,22 +102,42 @@ class TournamentPresenter @Inject constructor(
     }
 
     override fun onFABClicked() {
-        isSimming = true
         view?.showDialog()
-        gameSimRepository.startNextGame()
+        if (tournamentsAreSetup) {
+            gameSimRepository.startNextGame()
+        } else {
+            startGameSim = { gameSimRepository.startNextGame() }
+            showWaitingDialog()
+        }
     }
 
     override fun onCancelSim() {
         gameSimRepository.cancelSim()
     }
 
+    override fun onTournamentSetupComplete() {
+        tournamentsAreSetup = true
+        startGameSim?.invoke()
+        startGameSim = null
+    }
+
     override fun onViewAttached(view: TournamentContract.View) {
         this.view = view
+        tournamentsAreSetup = false
         repository.fetchData()
         state?.let { view.setDialogState(it) }
     }
 
     override fun onViewDetached() {
         view = null
+    }
+
+    private fun showWaitingDialog() {
+        view?.showDialog()
+        state = SimDialogState()
+        state?.let {
+            it.text.postValue(resources.getString(R.string.updating_tournaments))
+            view?.setDialogState(it)
+        }
     }
 }

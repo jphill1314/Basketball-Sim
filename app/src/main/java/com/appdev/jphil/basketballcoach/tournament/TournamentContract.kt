@@ -21,6 +21,7 @@ interface TournamentContract {
         fun simToGame(gameId: Int)
         fun simGame(gameId: Int)
         fun onCancelSim()
+        fun onTournamentSetupComplete()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {

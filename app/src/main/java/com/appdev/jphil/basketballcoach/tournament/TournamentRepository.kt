@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.tournament
 
-import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
@@ -19,10 +18,20 @@ class TournamentRepository @Inject constructor(
 
     override fun fetchData() {
         GlobalScope.launch(Dispatchers.IO) {
-            ConferenceDatabaseHelper.loadAllConferences(database).firstOrNull { it.id == conferenceId }?.tournament?.let {
-                withContext(Dispatchers.Main) {
-                    presenter.onTournamentLoaded(it.getScheduleDataModels())
+            ConferenceDatabaseHelper.loadConferenceById(conferenceId, database)?.let {
+                ConferenceDatabaseHelper.createTournament(it, database)?.let { tournament ->
+                    withContext(Dispatchers.Main) {
+                        presenter.onTournamentLoaded(tournament.getScheduleDataModels())
+                    }
                 }
+            }
+            ConferenceDatabaseHelper.loadAllConferencesExcept(conferenceId, database).forEach {
+                if (it.tournament?.getWinnerOfTournament() != null) {
+                    ConferenceDatabaseHelper.saveOnlyConferences(listOf(it), database)
+                }
+            }
+            withContext(Dispatchers.Main) {
+                presenter.onTournamentSetupComplete()
             }
         }
     }

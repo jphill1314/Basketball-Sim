@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class ConferenceEntity(
     @PrimaryKey
     val id: Int,
-    val name: String
+    val name: String,
+    val tournamentIsFinished: Boolean
 )
