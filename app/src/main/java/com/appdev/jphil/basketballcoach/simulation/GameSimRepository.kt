@@ -129,7 +129,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
     }
 
     override fun finishSeason() {
-        // TODO: update to use dialog + load quicker when possible
         GlobalScope.launch(Dispatchers.IO) {
             if (!GameDatabaseHelper.hasTournamentGames(database)) {
                 val teams = mutableMapOf<Int, Team>()
@@ -152,6 +151,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                         onSeasonFinished(false)
                         return@launch
                     }
+                    // TODO: if user's tournament is over, simulate the rest of the season
                 }
                 onSeasonFinished(true)
             }
