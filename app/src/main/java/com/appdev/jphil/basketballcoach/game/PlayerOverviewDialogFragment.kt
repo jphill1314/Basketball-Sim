@@ -18,7 +18,7 @@ class PlayerOverviewDialogFragment : DialogFragment() {
 
     var player: Player? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (player == null) {
             dismiss()

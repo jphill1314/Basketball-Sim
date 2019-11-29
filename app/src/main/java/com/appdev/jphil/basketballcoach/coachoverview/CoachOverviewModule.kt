@@ -23,6 +23,6 @@ abstract class CoachOverviewModule {
         @Provides
         @PerFragment
         @CoachId
-        fun providesCoachId(fragment: CoachOverviewFragment) = fragment.coachId
+        fun providesCoachId(fragment: CoachOverviewFragment) = fragment.args.coachId
     }
 }

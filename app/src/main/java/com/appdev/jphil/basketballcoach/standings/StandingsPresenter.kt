@@ -49,7 +49,7 @@ class StandingsPresenter @Inject constructor(
     }
 
     override fun onTeamSelected(standingsDataModel: StandingsDataModel) {
-        view?.changeTeamAndConference(standingsDataModel.teamId, standingsDataModel.conferenceId)
+        view?.changeTeamAndConference(standingsDataModel)
         FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SELECT_TEAM))
     }
 

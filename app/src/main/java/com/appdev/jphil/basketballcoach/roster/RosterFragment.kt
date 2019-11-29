@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.FragmentRosterBinding
@@ -26,7 +27,7 @@ class RosterFragment : Fragment(), RosterContract.View {
     private lateinit var adapter: RosterAdapter
     private lateinit var binding: FragmentRosterBinding
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         teamManager = activity?.getTeamViewModel(viewModelFactory)
@@ -64,9 +65,8 @@ class RosterFragment : Fragment(), RosterContract.View {
     }
 
     override fun gotoPlayerOverview(playerId: Int) {
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, PlayerOverviewFragment.newInstance(playerId))
-            ?.addToBackStack(null)
-            ?.commit()
+        findNavController().navigate(
+            RosterFragmentDirections.actionRosterFragmentToPlayerOverviewFragment(playerId)
+        )
     }
 }

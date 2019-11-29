@@ -2,7 +2,6 @@ package com.appdev.jphil.basketballcoach.tournament
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
@@ -10,11 +9,10 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.simdialog.SimDialog
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
@@ -31,7 +29,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     private var adapter: TournamentViewPagerAdapter? = null
     private var dialog: SimDialog? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         val vm = ViewModelProviders.of(this).get(TournamentViewModel::class.java)
@@ -79,10 +77,12 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName, userIsHomeTeam))
-            ?.addToBackStack(null)
-            ?.commit()
+        findNavController().navigate(TournamentFragmentDirections.actionTournamentFragmentToGameFragment(
+            gameId,
+            homeName,
+            awayName,
+            userIsHomeTeam
+        ))
     }
 
     override fun showDialog() {
@@ -92,7 +92,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
             dialog = it
             it.onDialogDismissed = { presenter.onCancelSim() }
             it.isCancelable = false
-            it.show(fragmentManager, "sim")
+            it.show(fragmentManager!!, "sim")
         }
     }
 

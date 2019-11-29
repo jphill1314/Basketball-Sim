@@ -23,7 +23,7 @@ class PracticeFragment : Fragment(), PracticeContract.View {
     @Inject
     lateinit var presenter: PracticeContract.Presenter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
     }

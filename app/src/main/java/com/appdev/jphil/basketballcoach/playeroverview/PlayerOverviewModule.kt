@@ -23,6 +23,6 @@ abstract class PlayerOverviewModule {
         @PerFragment
         @JvmStatic
         @PlayerId
-        fun providesPlayerId(fragment: PlayerOverviewFragment): Int = fragment.playerId
+        fun providesPlayerId(fragment: PlayerOverviewFragment): Int = fragment.args.playerId
     }
 }

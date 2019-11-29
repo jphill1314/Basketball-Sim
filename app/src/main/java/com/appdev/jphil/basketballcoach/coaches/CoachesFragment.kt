@@ -25,7 +25,7 @@ class CoachesFragment : Fragment(), CoachesContract.View {
         return inflater.inflate(R.layout.fragment_coaches, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
     }

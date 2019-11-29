@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/roster">
+
+    <fragment
+        android:id="@+id/practice"
+        android:name="com.appdev.jphil.basketballcoach.practice.PracticeFragment"
+        android:label="PracticeFragment" />
+    <fragment
+        android:id="@+id/standings"
+        android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"
+        android:label="StandingsFragment" />
+    <fragment
+        android:id="@+id/strategy"
+        android:name="com.appdev.jphil.basketballcoach.strategy.StrategyFragment"
+        android:label="StrategyFragment" />
+    <fragment
+        android:id="@+id/schedule"
+        android:name="com.appdev.jphil.basketballcoach.schedule.ScheduleFragment"
+        android:label="fragment_schedule"
+        tools:layout="@layout/fragment_schedule" >
+        <action
+            android:id="@+id/action_scheduleFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_scheduleFragment_to_tournamentFragment"
+            app:destination="@id/tournamentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roster"
+        android:name="com.appdev.jphil.basketballcoach.roster.RosterFragment"
+        android:label="fragment_roster"
+        tools:layout="@layout/fragment_roster" >
+        <action
+            android:id="@+id/action_rosterFragment_to_playerOverviewFragment"
+            app:destination="@id/playerOverviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/staff"
+        android:name="com.appdev.jphil.basketballcoach.coaches.CoachesFragment"
+        android:label="CoachesFragment" >
+        <action
+            android:id="@+id/action_coachesFragment_to_coachOverviewFragment3"
+            app:destination="@id/coachOverviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recruiting"
+        android:name="com.appdev.jphil.basketballcoach.recruiting.RecruitFragment"
+        android:label="RecruitFragment" >
+        <action
+            android:id="@+id/action_recruitFragment_to_recruitOverviewFragment"
+            app:destination="@id/recruitOverviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerOverviewFragment"
+        android:name="com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment"
+        android:label="PlayerOverviewFragment" >
+        <argument
+            android:name="playerId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.appdev.jphil.basketballcoach.game.GameFragment"
+        android:label="fragment_game"
+        tools:layout="@layout/fragment_game" >
+        <argument
+            android:name="gameId"
+            app:argType="integer" />
+        <argument
+            android:name="homeTeamName"
+            app:argType="string" />
+        <argument
+            android:name="awayTeamName"
+            app:argType="string" />
+        <argument
+            android:name="isUserHomeTeam"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/recruitOverviewFragment"
+        android:name="com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment"
+        android:label="RecruitOverviewFragment" >
+        <argument
+            android:name="recruitId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/coachOverviewFragment"
+        android:name="com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment"
+        android:label="CoachOverviewFragment" >
+        <argument
+            android:name="coachId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/tournamentFragment"
+        android:name="com.appdev.jphil.basketballcoach.tournament.TournamentFragment"
+        android:label="TournamentFragment" >
+        <action
+            android:id="@+id/action_tournamentFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+</navigation>

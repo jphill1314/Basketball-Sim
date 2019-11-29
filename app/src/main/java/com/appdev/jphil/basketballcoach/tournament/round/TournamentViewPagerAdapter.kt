@@ -9,7 +9,7 @@ import com.appdev.jphil.basketballcoach.tournament.TournamentContract
 class TournamentViewPagerAdapter(
     private val dataModels: MutableList<TournamentDataModel>,
     private val presenter: TournamentContract.Presenter,
-    fm: FragmentManager?
+    fm: FragmentManager
 ) : FragmentStatePagerAdapter(fm) {
 
     // TODO: replace with resources

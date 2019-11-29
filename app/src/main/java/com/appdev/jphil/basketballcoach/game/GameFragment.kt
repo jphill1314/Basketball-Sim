@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.navigation.NavArgs
+import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.players.Player
@@ -30,20 +32,17 @@ import javax.inject.Inject
 
 class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
-    private var gameId: Int = 0
     private var viewId = 0
     private var rosterViewId = 0
     private var simSpeed = 50
-    private var userIsHomeTeam = false
     private var deadBall = true
-    private var homeTeamName = "error"
-    private var awayTeamName = "error"
     private lateinit var gameAdapter: GameAdapter
     private var strategyAdapter: StrategyAdapter? = null
     private var homeStatsAdapter: GameStatsAdapter? = null
     private var awayStatsAdapter: GameStatsAdapter? = null
     private val teamStatsAdapter = GameTeamStatsAdapter()
 
+    private val args: GameFragmentArgs by navArgs()
     private lateinit var binding: FragmentGameBinding
 
     private var nullGame: Game? = null
@@ -52,7 +51,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     lateinit var viewModelFactory: ViewModelFactory
     private var viewModel: GameViewModel? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         (activity as? NavigationManager)?.disableNavigation()
@@ -68,16 +67,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         binding = FragmentGameBinding.inflate(inflater)
 
         savedInstanceState?.let {
-            homeTeamName = it.getString("homeTeam") ?: "error"
-            awayTeamName = it.getString("awayTeam") ?: "error"
             viewId = it.getInt("viewId", 0)
             rosterViewId = it.getInt("rosterViewId", 0)
-            userIsHomeTeam = it.getBoolean("userIsHome", false)
             deadBall = it.getBoolean("deadBall", true)
             simSpeed = it.getInt("simSpeed", 50)
-            if (gameId == 0) {
-                gameId = it.getInt("gameId", 0)
-            }
         }
 
         gameAdapter = GameAdapter(resources)
@@ -115,8 +108,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
         }
 
-        binding.homeName.text = homeTeamName
-        binding.awayName.text = awayTeamName
+        binding.homeName.text = args.homeTeamName
+        binding.awayName.text = args.awayTeamName
 
         binding.seekBar.apply {
             setOnSeekBarChangeListener(this@GameFragment)
@@ -141,12 +134,13 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onResume() {
         super.onResume()
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
-        viewModel?.gameId = gameId
+        viewModel?.gameId = args.gameId
         viewModel?.simulateGame(
             { game, newEvents -> updateGame(game, newEvents) },
             { newEvents ->  notifyNewHalf(newEvents) }
         )
 
+        val userIsHomeTeam = args.isUserHomeTeam
         homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
         awayStatsAdapter = GameStatsAdapter(!userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
     }
@@ -215,13 +209,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("homeTeam", homeTeamName)
-        outState.putString("awayTeam", awayTeamName)
-        outState.putInt("gameId", gameId)
         outState.putInt("viewId", viewId)
         outState.putInt("rosterViewId", rosterViewId)
         outState.putInt("simSpeed", simSpeed)
-        outState.putBoolean("userIsHome", userIsHomeTeam)
         outState.putBoolean("deadBall", deadBall)
 
         super.onSaveInstanceState(outState)
@@ -302,19 +292,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private fun showPlayerAttributeDialog(player: Player) {
         val dialog = PlayerOverviewDialogFragment()
         dialog.player = player
-        dialog.show(fragmentManager, DIALOG)
+        dialog.show(fragmentManager!!, DIALOG)
     }
 
     companion object {
-        fun newInstance(gameId: Int, homeTeamName: String, awayTeamName: String, userIsHomeTeam: Boolean): GameFragment {
-            return GameFragment().apply {
-                this.gameId = gameId
-                this.homeTeamName = homeTeamName
-                this.awayTeamName = awayTeamName
-                this.userIsHomeTeam = userIsHomeTeam
-            }
-        }
-
         private const val DIALOG = "dialog"
     }
 }

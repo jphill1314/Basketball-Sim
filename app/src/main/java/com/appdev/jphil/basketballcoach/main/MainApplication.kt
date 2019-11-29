@@ -8,17 +8,15 @@ import com.appdev.jphil.basketballcoach.main.injection.AppComponent
 import com.appdev.jphil.basketballcoach.main.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 import com.flurry.android.FlurryAgent
+import dagger.android.DaggerApplication
+import dagger.android.HasAndroidInjector
 
-class MainApplication @Inject constructor() : Application(), HasActivityInjector, HasSupportFragmentInjector {
+class MainApplication @Inject constructor() : Application(), HasAndroidInjector {
 
     @Inject
-    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
-    @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var injector: DispatchingAndroidInjector<Any>
     lateinit var component: AppComponent
 
     override fun onCreate() {
@@ -35,7 +33,5 @@ class MainApplication @Inject constructor() : Application(), HasActivityInjector
         component.inject(this)
     }
 
-    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
+    override fun androidInjector(): AndroidInjector<Any> = injector
 }

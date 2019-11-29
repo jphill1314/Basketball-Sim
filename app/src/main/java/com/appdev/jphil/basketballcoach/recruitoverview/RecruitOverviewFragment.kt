@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.*
@@ -23,14 +24,10 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     @Inject
     lateinit var factory: ViewModelFactory
     private var teamManager: TeamManagerViewModel? = null
-
-    var recruitId = 0
+    val args: RecruitOverviewFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (recruitId == 0) {
-            recruitId = savedInstanceState?.getInt(RECRUIT_ID, 0) ?: 0
-        }
         AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
     }
@@ -43,11 +40,6 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     override fun onStop() {
         presenter.onViewDetached()
         super.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(RECRUIT_ID, recruitId)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -91,15 +83,5 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
     override fun showToast(message: String) {
         Toast.makeText(context!!, message, Toast.LENGTH_LONG).show()
-    }
-
-    companion object {
-        private const val RECRUIT_ID = "id"
-
-        fun newInstance(recruitId: Int): RecruitOverviewFragment {
-            val fragment = RecruitOverviewFragment()
-            fragment.recruitId = recruitId
-            return fragment
-        }
     }
 }

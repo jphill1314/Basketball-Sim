@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
@@ -21,19 +22,15 @@ import javax.inject.Inject
 
 class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
 
-    var playerId = 0
     @Inject
     lateinit var presenter: PlayerOverviewContract.Presenter
     private lateinit var recyclerView: RecyclerView
     private var attributeAdapter: PlayerAttributeAdapter? = null
     private var statsAdapter: PlayerStatsAdapter? = null
+    val args: PlayerOverviewFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        savedInstanceState?.let {
-            playerId = it.getInt(PLAYER, 0)
-        }
         AndroidSupportInjection.inject(this)
     }
 
@@ -59,11 +56,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
         }
 
         return view
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(PLAYER, playerId)
-        super.onSaveInstanceState(outState)
     }
 
     override fun addPlayerInfo(player: Player, stats: StatsUtil) {
@@ -100,12 +92,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
     }
 
     companion object {
-        fun newInstance(playerId: Int): PlayerOverviewFragment {
-            return PlayerOverviewFragment().apply {
-                this.playerId = playerId
-            }
-        }
-
         private const val PLAYER = "playerId"
     }
 }
