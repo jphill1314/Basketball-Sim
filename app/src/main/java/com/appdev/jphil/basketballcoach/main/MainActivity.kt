@@ -1,29 +1,20 @@
 package com.appdev.jphil.basketballcoach.main
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
 import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
-import com.appdev.jphil.basketballcoach.practice.PracticeFragment
-import com.appdev.jphil.basketballcoach.recruiting.RecruitFragment
-import com.appdev.jphil.basketballcoach.roster.RosterFragment
-import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
-import com.appdev.jphil.basketballcoach.standings.StandingsFragment
-import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
-import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
-import com.flurry.android.FlurryAgent
-import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -31,29 +22,38 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navBinding: NavigationHeaderBinding
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     var teamViewModel: TeamManagerViewModel? = null
 
+    private var teamTheme = TeamColor.Red
+    private var navToRoster = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        AndroidInjection.inject(this)
         teamViewModel = getTeamViewModel(viewModelFactory)
         teamViewModel?.currentTeam?.observe(this, Observer<Team> { setTeamNameAndRating(it) })
 
+        savedInstanceState?.let {
+            teamTheme = TeamColor.fromInt(savedInstanceState.getInt(TEAM_COLOR))
+            setTheme(getStyle(teamTheme))
+        }
+
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         navBinding = NavigationHeaderBinding.bind(binding.navView.getHeaderView(0))
+
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         enableNavigation()
 
-        binding.navView.setNavigationItemSelectedListener { menuItem -> handleFragmentNavigation(menuItem) }
+        val navController = findNavController(R.id.frame_layout)
+        appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.navView.setupWithNavController(navController)
 
-        if (savedInstanceState == null) {
-            navigateToHomePage()
-        } else {
+        if (savedInstanceState != null) {
             navBinding.navTeamName.text = savedInstanceState.getString(TEAM_NAME)
             navBinding.navTeamRating.text = savedInstanceState.getString(TEAM_RATING)
 
@@ -61,7 +61,17 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 savedInstanceState.getInt(TEAM_ID),
                 savedInstanceState.getInt(CONF_ID)
             )
+
+            if (savedInstanceState.getBoolean(NAV_TO_ROSTER, false)) {
+                navigateToHomePage()
+            }
+            navToRoster = false
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.frame_layout)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -72,37 +82,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun handleFragmentNavigation(menuItem: MenuItem): Boolean {
-        while (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStackImmediate()
-        }
-
-        val fragment: Fragment? = when (menuItem.itemId) {
-            R.id.roster -> RosterFragment()
-            R.id.schedule -> ScheduleFragment()
-            R.id.standings -> StandingsFragment()
-            R.id.recruiting -> RecruitFragment()
-            R.id.strategy -> StrategyFragment()
-            R.id.staff -> CoachesFragment()
-            R.id.practice -> PracticeFragment()
-            else -> null
-        }
-
-        binding.drawerLayout.closeDrawers()
-        if (fragment != null && !menuItem.isChecked) {
-            FlurryAgent.logEvent(TrackingKeys.EVENT_VIEW_SCREEN, mutableMapOf(TrackingKeys.PAYLOAD_SCREEN_NAME to fragment::class.java.simpleName))
-            menuItem.isChecked = true
-            while (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStackImmediate()
-            }
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, fragment)
-                .commit()
-            return true
-        }
-        return false
     }
 
     override fun disableNavigation() {
@@ -122,22 +101,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     }
 
     override fun navigateToHomePage() {
-        handleFragmentNavigation(binding.navView.menu.getItem(0))
-    }
-
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0 && !isOnHomepage()) {
-            navigateToHomePage()
-        } else {
-            super.onBackPressed()
-        }
+        onOptionsItemSelected(binding.navView.menu.getItem(0))
     }
 
     override fun setToolbarTitle(title: String) {
         supportActionBar?.title = title
     }
-
-    private fun isOnHomepage(): Boolean = binding.navView.menu.getItem(0).isChecked
 
     private fun setTeamNameAndRating(team: Team) {
         navBinding.navTeamName.text = team.name
@@ -149,14 +118,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             findItem(R.id.practice).isVisible = team.isUser
         }
 
-        // TODO: this whole business needs a lot of work
-//        setTheme(getStyle(team.color))
-//        val value = TypedValue()
-//        theme.resolveAttribute(R.attr.colorPrimary, value, true)
-//        binding.toolbar.background = ColorDrawable(value.data)
-//
-//        theme.resolveAttribute(R.attr.colorPrimaryDark, value, true)
-//        window.statusBarColor = value.data
+        if (teamTheme != team.color) {
+            teamTheme = team.color
+            navToRoster = true
+            recreate()
+        }
     }
 
     private fun getStyle(color: TeamColor) = when (color) {
@@ -183,13 +149,17 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         outState.putString(TEAM_RATING, navBinding.navTeamRating.text.toString())
         outState.putInt(TEAM_ID, teamViewModel?.teamId ?: -1)
         outState.putInt(CONF_ID, teamViewModel?.conferenceId ?: 0)
+        outState.putInt(TEAM_COLOR, teamTheme.type)
+        outState.putBoolean(NAV_TO_ROSTER, navToRoster)
         super.onSaveInstanceState(outState)
     }
 
     private companion object {
         const val TEAM_NAME = "team name"
         const val TEAM_RATING = "team rating"
+        const val TEAM_COLOR = "team color"
         const val TEAM_ID = "team id"
         const val CONF_ID = "conf id"
+        const val NAV_TO_ROSTER = "nav to roster"
     }
 }

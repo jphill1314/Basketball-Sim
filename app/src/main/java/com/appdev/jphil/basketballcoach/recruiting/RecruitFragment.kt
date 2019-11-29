@@ -27,7 +27,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     private var teamManager: TeamManagerViewModel? = null
     private lateinit var adapter: RecruitAdapter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         val viewModel = ViewModelProviders.of(this).get(RecruitViewModel::class.java)
@@ -40,12 +40,12 @@ class RecruitFragment : Fragment(), RecruitContract.View {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.sort_menu, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.sort_menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.sort_high_to_low -> presenter.onSortSelected()
             R.id.filter_positions -> {
                 AlertDialog.Builder(context!!)

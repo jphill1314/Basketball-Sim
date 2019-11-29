@@ -28,7 +28,7 @@ class StandingsFragment : Fragment(), StandingsContract.View {
 
     private lateinit var adapter: StandingsAdapter
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         teamManager = activity?.getTeamViewModel(viewModelFactory)
@@ -95,8 +95,9 @@ class StandingsFragment : Fragment(), StandingsContract.View {
         }
     }
 
-    override fun changeTeamAndConference(teamId: Int, conferenceId: Int) {
-        teamManager?.changeTeamAndConference(teamId, conferenceId)
-        (activity as? NavigationManager)?.navigateToHomePage()
+    override fun changeTeamAndConference(standingsDataModel: StandingsDataModel) {
+        with (standingsDataModel) {
+            teamManager?.changeTeamAndConference(teamId, conferenceId)
+        }
     }
 }

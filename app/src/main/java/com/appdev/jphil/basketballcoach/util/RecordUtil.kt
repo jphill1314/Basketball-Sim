@@ -62,7 +62,8 @@ object RecordUtil {
             wins,
             loses,
             wins,
-            loses
+            loses,
+            team.color
         )
     }
 }

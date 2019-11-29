@@ -11,7 +11,7 @@ interface StandingsContract {
     interface View : MVPContract.View {
         fun addConferenceNames(names: List<String>)
         fun addTeams(standingsDataModels: List<StandingsDataModel>)
-        fun changeTeamAndConference(teamId: Int, conferenceId: Int)
+        fun changeTeamAndConference(standingsDataModel: StandingsDataModel)
     }
 
     interface Presenter : MVPContract.Presenter<View> {

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketballcoach.R
@@ -25,7 +26,7 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
 
     @Inject
     lateinit var presenter: CoachOverviewContract.Presenter
-    var coachId = -1
+    val args: CoachOverviewFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentCoachOverviewBinding
 
@@ -33,11 +34,6 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.let {
-            if (coachId == -1) {
-                coachId = it.getInt(COACH_ID, 0)
-            }
-        }
         AndroidSupportInjection.inject(this)
     }
 
@@ -127,20 +123,5 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(COACH_ID, coachId)
-        super.onSaveInstanceState(outState)
-    }
-
-    companion object {
-        fun newInstance(coachId: Int): CoachOverviewFragment {
-            val fragment = CoachOverviewFragment()
-            fragment.coachId = coachId
-            return fragment
-        }
-
-        private const val COACH_ID = "coachid"
     }
 }

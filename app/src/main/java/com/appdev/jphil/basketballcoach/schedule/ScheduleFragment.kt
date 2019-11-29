@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,14 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.game.GameFragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.simdialog.SimDialog
-import com.appdev.jphil.basketballcoach.simdialog.SimDialogDataModel
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
-import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -74,17 +71,16 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, GameFragment.newInstance(gameId, homeName, awayName, userIsHomeTeam))
-            ?.addToBackStack(null)
-            ?.commit()
+        findNavController().navigate(ScheduleFragmentDirections.actionScheduleFragmentToGameFragment(
+            gameId,
+            homeName,
+            awayName,
+            userIsHomeTeam
+        ))
     }
 
     override fun goToConferenceTournament() {
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, TournamentFragment())
-            ?.addToBackStack(null)
-            ?.commit()
+        findNavController().navigate(ScheduleFragmentDirections.actionScheduleFragmentToTournamentFragment())
     }
 
     override fun showProgressBar() {
@@ -93,7 +89,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
             onDialogDismissed = { presenter.cancelSim() }
             isCancelable = false
         }
-        dialog?.show(fragmentManager, "TAG")
+        dialog?.show(fragmentManager!!, "TAG")
     }
 
     override fun setDialogState(state: SimDialogState) {

@@ -23,6 +23,6 @@ abstract class RecruitOverviewModule {
         @RecruitId
         @JvmStatic
         @Provides
-        fun providesRecruitId(fragment: RecruitOverviewFragment) = fragment.recruitId
+        fun providesRecruitId(fragment: RecruitOverviewFragment) = fragment.args.recruitId
     }
 }
