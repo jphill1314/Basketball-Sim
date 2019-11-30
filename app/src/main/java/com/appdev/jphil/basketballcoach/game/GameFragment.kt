@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.Observer
 import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.game.Game
@@ -131,12 +132,18 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
     override fun onResume() {
         super.onResume()
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
-        viewModel?.gameId = args.gameId
-        viewModel?.simulateGame(
-            { game, newEvents -> updateGame(game, newEvents) },
-            { newEvents ->  notifyNewHalf(newEvents) }
-        )
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(GameViewModel::class.java).apply {
+                gameId = args.gameId
+                gameState.observe(this@GameFragment, Observer { gameState ->
+                    if (gameState.isNewHalf) {
+                        notifyNewHalf(gameState.newEvents)
+                    } else {
+                        updateGame(gameState.game, gameState.newEvents)
+                    }
+                })
+                simulateGame()
+            }
 
         val userIsHomeTeam = args.isUserHomeTeam
         homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
