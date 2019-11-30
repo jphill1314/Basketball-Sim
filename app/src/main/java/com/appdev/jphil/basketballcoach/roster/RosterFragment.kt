@@ -51,7 +51,6 @@ class RosterFragment : Fragment(), RosterContract.View {
             layoutManager = LinearLayoutManager(context)
             adapter = this@RosterFragment.adapter
         }
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.roster))
         return binding.root
     }
 

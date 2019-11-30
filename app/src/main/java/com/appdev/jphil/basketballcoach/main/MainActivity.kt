@@ -7,9 +7,7 @@ import android.view.MenuItem
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
@@ -49,7 +47,18 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         enableNavigation()
 
         val navController = findNavController(R.id.frame_layout)
-        appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.roster,
+                R.id.schedule,
+                R.id.standings,
+                R.id.recruiting,
+                R.id.strategy,
+                R.id.staff,
+                R.id.practice
+            ),
+            binding.drawerLayout
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
 
@@ -71,13 +80,18 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.frame_layout)
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                binding.drawerLayout.openDrawer(GravityCompat.START)
+                val nav = findNavController(R.id.frame_layout)
+                if (appBarConfiguration.topLevelDestinations.contains(nav.currentDestination?.id)) {
+                    binding.drawerLayout.openDrawer(GravityCompat.START)
+                } else {
+                    nav.popBackStack()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -101,11 +115,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     }
 
     override fun navigateToHomePage() {
-        onOptionsItemSelected(binding.navView.menu.getItem(0))
-    }
-
-    override fun setToolbarTitle(title: String) {
-        supportActionBar?.title = title
+        findNavController(R.id.frame_layout).popBackStack(R.id.roster, false)
+        binding.navView.post { binding.navView.setCheckedItem(R.id.roster) }
     }
 
     private fun setTeamNameAndRating(team: Team) {

@@ -43,7 +43,6 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.recruit_overview))
         return inflater.inflate(R.layout.fragment_recruit_overview, container, false).apply {
             findViewById<Button>(R.id.button_scout).setOnClickListener { presenter.onScoutClicked() }
             findViewById<Button>(R.id.button_scholarship).setOnClickListener { presenter.onOfferScholarshipClicked() }

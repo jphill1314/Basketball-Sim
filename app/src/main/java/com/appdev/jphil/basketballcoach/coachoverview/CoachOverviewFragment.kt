@@ -49,7 +49,6 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.coach_overview))
         binding = FragmentCoachOverviewBinding.inflate(inflater)
         return binding.root
     }

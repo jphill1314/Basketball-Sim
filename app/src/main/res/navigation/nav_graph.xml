@@ -8,20 +8,20 @@
     <fragment
         android:id="@+id/practice"
         android:name="com.appdev.jphil.basketballcoach.practice.PracticeFragment"
-        android:label="PracticeFragment" />
+        android:label="@string/practice" />
     <fragment
         android:id="@+id/standings"
         android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"
-        android:label="StandingsFragment" />
+        android:label="@string/standings" />
     <fragment
         android:id="@+id/strategy"
         android:name="com.appdev.jphil.basketballcoach.strategy.StrategyFragment"
-        android:label="StrategyFragment" />
+        android:label="@string/strategy" />
     <fragment
         android:id="@+id/schedule"
         android:name="com.appdev.jphil.basketballcoach.schedule.ScheduleFragment"
-        android:label="fragment_schedule"
-        tools:layout="@layout/fragment_schedule" >
+        android:label="@string/schedule"
+        tools:layout="@layout/fragment_schedule">
         <action
             android:id="@+id/action_scheduleFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
@@ -32,8 +32,8 @@
     <fragment
         android:id="@+id/roster"
         android:name="com.appdev.jphil.basketballcoach.roster.RosterFragment"
-        android:label="fragment_roster"
-        tools:layout="@layout/fragment_roster" >
+        android:label="@string/roster"
+        tools:layout="@layout/fragment_roster">
         <action
             android:id="@+id/action_rosterFragment_to_playerOverviewFragment"
             app:destination="@id/playerOverviewFragment" />
@@ -41,15 +41,15 @@
     <fragment
         android:id="@+id/staff"
         android:name="com.appdev.jphil.basketballcoach.coaches.CoachesFragment"
-        android:label="CoachesFragment" >
+        android:label="@string/staff">
         <action
-            android:id="@+id/action_coachesFragment_to_coachOverviewFragment3"
+            android:id="@+id/action_coachesFragment_to_coachOverviewFragment"
             app:destination="@id/coachOverviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/recruiting"
         android:name="com.appdev.jphil.basketballcoach.recruiting.RecruitFragment"
-        android:label="RecruitFragment" >
+        android:label="@string/recruiting">
         <action
             android:id="@+id/action_recruitFragment_to_recruitOverviewFragment"
             app:destination="@id/recruitOverviewFragment" />
@@ -57,7 +57,7 @@
     <fragment
         android:id="@+id/playerOverviewFragment"
         android:name="com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment"
-        android:label="PlayerOverviewFragment" >
+        android:label="@string/player_overview">
         <argument
             android:name="playerId"
             app:argType="integer" />
@@ -65,8 +65,8 @@
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.appdev.jphil.basketballcoach.game.GameFragment"
-        android:label="fragment_game"
-        tools:layout="@layout/fragment_game" >
+        android:label="@string/game"
+        tools:layout="@layout/fragment_game">
         <argument
             android:name="gameId"
             app:argType="integer" />
@@ -83,7 +83,7 @@
     <fragment
         android:id="@+id/recruitOverviewFragment"
         android:name="com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment"
-        android:label="RecruitOverviewFragment" >
+        android:label="@string/recruit_overview">
         <argument
             android:name="recruitId"
             app:argType="integer" />
@@ -91,7 +91,7 @@
     <fragment
         android:id="@+id/coachOverviewFragment"
         android:name="com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment"
-        android:label="CoachOverviewFragment" >
+        android:label="@string/coach_overview">
         <argument
             android:name="coachId"
             app:argType="integer" />
@@ -99,7 +99,7 @@
     <fragment
         android:id="@+id/tournamentFragment"
         android:name="com.appdev.jphil.basketballcoach.tournament.TournamentFragment"
-        android:label="TournamentFragment" >
+        android:label="@string/tournament">
         <action
             android:id="@+id/action_tournamentFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
