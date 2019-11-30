@@ -8,7 +8,7 @@ object RecordUtil {
 
     fun getRecordAsPair(games: List<GameEntity>, teamId: Int): Pair<Int, Int> {
         var wins = 0
-        var loses = 0 // TODO: handle conference games separately
+        var loses = 0
         games.forEach { game ->
             if (game.isFinal) {
                 when (teamId) {
@@ -34,22 +34,36 @@ object RecordUtil {
 
     fun getRecord(games: List<GameEntity>, team: Team): StandingsDataModel {
         var wins = 0
-        var loses = 0 // TODO: handle conference games separately
+        var loses = 0
+        var confWins = 0
+        var confLoses = 0
         games.forEach { game ->
             if (game.isFinal) {
                 when (team.teamId) {
                     game.homeTeamId -> {
                         if (game.homeScore > game.awayScore) {
                             wins++
+                            if (game.isConferenceGame) {
+                                confWins++
+                            }
                         } else {
                             loses++
+                            if (game.isConferenceGame) {
+                                confLoses++
+                            }
                         }
                     }
                     game.awayTeamId -> {
                         if (game.awayScore > game.homeScore) {
                             wins++
+                            if (game.isConferenceGame) {
+                                confWins++
+                            }
                         } else {
                             loses++
+                            if (game.isConferenceGame) {
+                                confLoses++
+                            }
                         }
                     }
                 }
@@ -59,8 +73,8 @@ object RecordUtil {
             team.teamId,
             team.conferenceId,
             team.schoolName,
-            wins,
-            loses,
+            confWins,
+            confLoses,
             wins,
             loses,
             team.color

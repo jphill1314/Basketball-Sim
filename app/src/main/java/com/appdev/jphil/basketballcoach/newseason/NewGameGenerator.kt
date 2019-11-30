@@ -47,10 +47,10 @@ object NewGameGenerator {
                 games.addAll(it.generateSchedule(2018))
                 numberOfTeams += it.teams.size
             }
-//            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(world.conferences, NON_CON_GAMES, 2018)
-//            nonConGames.smartShuffleList(numberOfTeams)
-//            GameDatabaseHelper.saveOnlyGames(nonConGames, database)
-//            Log.d("NonCon", "NonConGames: ${nonConGames.size}")
+            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(world.conferences, NON_CON_GAMES, 2018)
+            nonConGames.smartShuffleList(numberOfTeams)
+            GameDatabaseHelper.saveOnlyGames(nonConGames, database)
+            Log.d("NonCon", "NonConGames: ${nonConGames.size}")
 
             games.smartShuffleList(numberOfTeams)
             GameDatabaseHelper.saveOnlyGames(games, database)

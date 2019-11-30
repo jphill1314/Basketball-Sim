@@ -10,6 +10,7 @@ object NewGameHelper {
             awayTeam,
             true,
             season,
+            false,
             null,
             id,
             false

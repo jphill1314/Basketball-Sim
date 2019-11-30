@@ -45,10 +45,11 @@ data class GameEntity(
     val consecutivePresses: Int,
     val timeInBackcourt: Int,
     val lastPassWasGreat: Boolean,
-    val lastPlayerWithBall: Int
+    val lastPlayerWithBall: Int,
+    val isConferenceGame: Boolean
 ) {
     fun createGame(homeTeam: Team, awayTeam: Team): Game {
-        val game = Game(homeTeam, awayTeam, isNeutralCourt, season, id, tournamentId, isFinal)
+        val game = Game(homeTeam, awayTeam, isNeutralCourt, season, isConferenceGame, id, tournamentId, isFinal)
         game.inProgress = inProgress
         game.shotClock = shotClock
         game.timeRemaining = timeRemaining
@@ -113,10 +114,10 @@ data class GameEntity(
                 game.consecutivePresses,
                 game.timeInBackcourt,
                 game.lastPassWasGreat,
-                game.lastPlayerWithBall
+                game.lastPlayerWithBall,
+                game.isConferenceGame
             )
         }
-
 
     }
 }
