@@ -31,7 +31,7 @@ fun main() {
     for(i in 1..totalGames) {
         val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red,"home", homeRating, 1, false, listOf("first"), listOf("last"))
         val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, listOf("first"), listOf("last"))
-        val game = Game(homeTeam, awayTeam, true, 1)
+        val game = Game(homeTeam, awayTeam, true, 1, false)
         if(highScore == null){
             highScore = game
             lowScore = game
@@ -112,7 +112,7 @@ fun main() {
     for(i in 1..totalGames) {
         val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red,"home", homeRating, 1, false, listOf("first"), listOf("last"))
         val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, listOf("first"), listOf("last"))
-        val game = Game(homeTeam, awayTeam, false, 1)
+        val game = Game(homeTeam, awayTeam, false, 1, false)
         if(highScore == null){
             highScore = game
             lowScore = game

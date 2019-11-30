@@ -21,20 +21,22 @@ class StatsUtil {
 
     fun calculateTotals(gamesStats: List<GameStatsEntity>) {
         gamesStats.forEach {
-            gamesPlayed++
-            totalTimePlayed += it.timePlayed
-            totalTwoPointAttempts += it.twoPointAttempts
-            totalTwoPointMakes += it.twoPointMakes
-            totalThreePointAttempts += it.threePointAttempts
-            totalThreePointMakes += it.threePointMakes
-            totalAssists += it.assists
-            totalOffensiveRebounds += it.offensiveRebounds
-            totalDefensiveRebounds += it.defensiveRebounds
-            totalTurnovers += it.turnovers
-            totalSteals += it.steals
-            totalFouls += it.fouls
-            totalFreeThrowShots += it.freeThrowShots
-            totalFreeThrowMakes += it.freeThrowMakes
+            if (it.timePlayed > 0) {
+                gamesPlayed++
+                totalTimePlayed += it.timePlayed
+                totalTwoPointAttempts += it.twoPointAttempts
+                totalTwoPointMakes += it.twoPointMakes
+                totalThreePointAttempts += it.threePointAttempts
+                totalThreePointMakes += it.threePointMakes
+                totalAssists += it.assists
+                totalOffensiveRebounds += it.offensiveRebounds
+                totalDefensiveRebounds += it.defensiveRebounds
+                totalTurnovers += it.turnovers
+                totalSteals += it.steals
+                totalFouls += it.fouls
+                totalFreeThrowShots += it.freeThrowShots
+                totalFreeThrowMakes += it.freeThrowMakes
+            }
         }
     }
 

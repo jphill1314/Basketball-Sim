@@ -22,7 +22,7 @@ class Conference(
         for (x in teams.indices) {
             for (y in teams.indices) {
                 if (x != y) {
-                    games.add(Game(teams[x], teams[y], false, season))
+                    games.add(Game(teams[x], teams[y], false, season, true))
                 }
             }
         }

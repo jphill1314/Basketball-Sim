@@ -23,7 +23,7 @@ object NonConferenceScheduleGen {
             val awayTeam = teams.random()
 
             if (homeTeam.hasValidOpponent(awayTeam)) {
-                games.add(Game(homeTeam.team, awayTeam.team, false, season))
+                games.add(Game(homeTeam.team, awayTeam.team, false, season, false))
                 homeTeam.opponents.add(awayTeam)
                 awayTeam.opponents.add(homeTeam)
 
