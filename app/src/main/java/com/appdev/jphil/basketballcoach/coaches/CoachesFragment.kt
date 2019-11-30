@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
@@ -21,7 +22,6 @@ class CoachesFragment : Fragment(), CoachesContract.View {
     lateinit var presenter: CoachesContract.Presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.staff))
         return inflater.inflate(R.layout.fragment_coaches, container, false)
     }
 
@@ -42,10 +42,9 @@ class CoachesFragment : Fragment(), CoachesContract.View {
     }
 
     private fun openCoachOverview(coachId: Int) {
-        fragmentManager?.beginTransaction()
-            ?.addToBackStack(null)
-            ?.replace(R.id.frame_layout, CoachOverviewFragment.newInstance(coachId))
-            ?.commit()
+        findNavController().navigate(
+            CoachesFragmentDirections.actionCoachesFragmentToCoachOverviewFragment(coachId)
+        )
     }
 
     override fun displayCoaches(coaches: List<Coach>) {

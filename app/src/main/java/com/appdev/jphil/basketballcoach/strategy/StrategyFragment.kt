@@ -35,7 +35,6 @@ class StrategyFragment : Fragment(), StrategyContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.strategy))
         return inflater.inflate(R.layout.fragment_strategy, container, false)
     }
 

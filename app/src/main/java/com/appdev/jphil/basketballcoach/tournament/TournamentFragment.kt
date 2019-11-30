@@ -52,7 +52,6 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tournament, container, false)
         adapter = null
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.tournament))
         return view
     }
 

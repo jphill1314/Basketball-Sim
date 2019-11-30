@@ -76,7 +76,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
             findViewById<TextView>(R.id.stl_stats).text = stats.getStealAvg()
             findViewById<TextView>(R.id.fouls_stats).text = stats.getFoulAvg()
         }
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.player_overview))
     }
 
     override fun addPlayerStats(stats: List<GameStatsEntity>) {

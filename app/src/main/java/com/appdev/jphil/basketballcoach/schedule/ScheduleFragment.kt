@@ -57,7 +57,6 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = null
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.schedule))
         return view
     }
 

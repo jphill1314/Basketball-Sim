@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
@@ -71,7 +72,6 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.recruiting))
         return inflater.inflate(R.layout.fragment_recruiting, container, false)
     }
 
@@ -120,10 +120,9 @@ class RecruitFragment : Fragment(), RecruitContract.View {
     }
 
     override fun goToRecruitOverview(recruitId: Int) {
-        fragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_layout, RecruitOverviewFragment.newInstance(recruitId))
-            ?.addToBackStack(null)
-            ?.commit()
+        findNavController().navigate(
+            RecruitFragmentDirections.actionRecruitFragmentToRecruitOverviewFragment(recruitId)
+        )
     }
 
     override fun updateRecruits(recruits: List<Recruit>) {

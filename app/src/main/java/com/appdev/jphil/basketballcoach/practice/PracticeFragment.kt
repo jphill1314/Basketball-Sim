@@ -40,7 +40,6 @@ class PracticeFragment : Fragment(), PracticeContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as? NavigationManager)?.setToolbarTitle(resources.getString(R.string.practice))
         return inflater.inflate(R.layout.fragment_practice, container, false).also {
             val spinner = it.findViewById<Spinner>(R.id.practice_type)
             ArrayAdapter.createFromResource(
