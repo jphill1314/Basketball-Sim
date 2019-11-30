@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketballcoach.game
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
@@ -11,6 +13,7 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.game.GameEventsHelper.getNewPlayEvents
 import com.appdev.jphil.basketballcoach.strategy.StrategyContract
 import kotlinx.coroutines.*
 
@@ -27,7 +30,10 @@ class GameViewModel(
     private val gameEvents = mutableListOf<GameEventEntity>()
     val gameStrategyOut = GameStrategyOut()
 
-    fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: (newEvents: List<GameEventEntity>) -> Unit) {
+    private val _gameState = MutableLiveData<GameState>()
+    val gameState: LiveData<GameState> = _gameState
+
+    fun simulateGame() {
         GlobalScope.launch(Dispatchers.IO) {
             if (nullGame == null) {
                 if (saveGame?.isCompleted == false) {
@@ -60,15 +66,14 @@ class GameViewModel(
                         game.resumeGame()
                     }
 
-                    withContext(Dispatchers.Main) {
-                        updateGame(game, gameEvents)
-                    }
+                    _gameState.postValue(GameState(game, gameEvents))
 
                     while (isActive && (game.half < 3 || game.homeScore == game.awayScore)) {
                         if (game.timeRemaining == 0) {
                             HalfTimeHelper.startHalf(game)
                             withContext(Dispatchers.Main) {
-                                notifyNewHalf(getNewPlayEvents(game))
+                                _gameState.value = GameState(game, getNewPlayEvents(game), true)
+                                // Post value doesn't happen fast enough so we have to switch to main thread manually
                             }
                         }
 
@@ -77,19 +82,15 @@ class GameViewModel(
                             // Happens between each half and when the sim is first opened
                             Thread.sleep(100)
                         }
-                        withContext(Dispatchers.Main) {
-                            if (isActive) {
-                                updateGame(game, getNewPlayEvents(game))
-                            }
+                        if (isActive) {
+                            _gameState.postValue(GameState(game, getNewPlayEvents(game)))
                         }
                         Thread.sleep(simSpeed)
 
                         while (isActive && game.timeRemaining > 0) {
                             game.simPlay()
                             game.makeUserSubsIfPossible()
-                            withContext(Dispatchers.Main) {
-                                updateGame(game, getNewPlayEvents(game))
-                            }
+                            _gameState.postValue(GameState(game, getNewPlayEvents(game)))
                             Thread.sleep(simSpeed)
                             while (pauseGame) {
                                 Thread.sleep(100)
@@ -103,10 +104,7 @@ class GameViewModel(
                     if (isActive) {
                         game.half--
                         game.finishGame()
-                        withContext(Dispatchers.Main) {
-                            // Game is over, update the view
-                            updateGame(game, getNewPlayEvents(game))
-                        }
+                        _gameState.postValue(GameState(game, getNewPlayEvents(game)))
                         updateRecruitsAfterGame(game)
                     }
                     // save game to db
