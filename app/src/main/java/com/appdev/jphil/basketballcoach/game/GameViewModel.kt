@@ -16,17 +16,16 @@ import kotlinx.coroutines.*
 
 class GameViewModel(
     private val database: BasketballDatabase
-): ViewModel(), StrategyContract.Adapter.Out {
+): ViewModel() {
     var gameId = -1
     var simSpeed = 1000L
     var pauseGame = true
     var lastPlay = 0
-    var totalEvents = 0
-    lateinit var coach: Coach
     private var nullGame: Game? = null
     private var gameSim: Job? = null
     private var saveGame: Job? = null
     private val gameEvents = mutableListOf<GameEventEntity>()
+    val gameStrategyOut = GameStrategyOut()
 
     fun simulateGame(updateGame: (game: Game, newEvents: List<GameEventEntity>) -> Unit, notifyNewHalf: (newEvents: List<GameEventEntity>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -40,10 +39,17 @@ class GameViewModel(
 
             nullGame?.let { game ->
                 game.userIsCoaching = true // allow the user to make their own subs
-                coach = if (game.homeTeam.isUser) game.homeTeam.getHeadCoach() else game.awayTeam.getHeadCoach()
+                gameStrategyOut.apply {
+                    if (game.homeTeam.isUser) {
+                        coach = game.homeTeam.getHeadCoach()
+                        userTeam = game.homeTeam
+                    } else {
+                        coach = game.awayTeam.getHeadCoach()
+                        userTeam = game.awayTeam
+                    }
+                }
                 if (gameEvents.isEmpty()) {
                     gameEvents.addAll(GameDatabaseHelper.loadGameEvents(gameId, database))
-                    totalEvents = gameEvents.size
                 }
 
                 // Simulate the game play-by-play updating the view each time
@@ -144,50 +150,8 @@ class GameViewModel(
     }
 
     private fun getNewPlayEvents(game: Game): List<GameEventEntity> {
-        val newEvents = mutableListOf<GameEventEntity>()
-        val plays = game.gamePlays
-
-        if (plays.size > lastPlay) {
-            val newPlays = plays.subList(lastPlay, plays.size)
-
-            for (index in newPlays.indices) {
-                val play = newPlays[index]
-                if (index == 0) {
-                    newEvents.add(GameEventEntity(
-                        totalEvents++,
-                        gameId,
-                        play.timeRemaining,
-                        play.shotClock,
-                        play.playAsString,
-                        game.homeTeam.abbreviation,
-                        game.awayTeam.abbreviation,
-                        game.homeScore,
-                        game.awayScore,
-                        if (play is TipOff) play.homeTeamHasBall else play.homeTeamStartsWithBall
-                    ))
-                } else {
-                    val lastPlay = newPlays[index - 1]
-                    if (lastPlay.timeRemaining == play.timeRemaining) {
-                        newEvents.last().event += "\n${play.playAsString}"
-                    } else {
-                        newEvents.add(GameEventEntity(
-                            totalEvents++,
-                            gameId,
-                            play.timeRemaining,
-                            play.shotClock,
-                            play.playAsString,
-                            game.homeTeam.abbreviation,
-                            game.awayTeam.abbreviation,
-                            game.homeScore,
-                            game.awayScore,
-                            if (play is TipOff) play.homeTeamHasBall else play.homeTeamStartsWithBall
-                        ))
-                    }
-                }
-            }
-        }
-
-        lastPlay = plays.size
+        val newEvents = GameEventsHelper.getNewPlayEvents(game, lastPlay, gameEvents.size)
+        lastPlay = game.gamePlays.size
         gameEvents.addAll(newEvents)
         return newEvents
     }
@@ -206,46 +170,5 @@ class GameViewModel(
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
         }
         RecruitDatabaseHelper.saveRecruits(recruits, database)
-    }
-
-    override fun onPaceChanged(pace: Int) {
-        coach.paceGame = pace + Coach.minimumPace
-    }
-
-    override fun onOffenseFavorsThreesChanged(favorsThrees: Int) {
-        coach.offenseFavorsThreesGame = favorsThrees
-    }
-
-    override fun onAggressionChanged(aggression: Int) {
-        coach.aggressionGame = aggression
-    }
-
-    override fun onDefenseFavorsThreesChanged(favorsThrees: Int) {
-        coach.defenseFavorsThreesGame = favorsThrees
-    }
-
-    override fun onPressFrequencyChanged(frequency: Int) {
-        coach.pressFrequencyGame = frequency
-    }
-
-    override fun onPressAggressionChanged(aggression: Int) {
-        coach.pressAggressionGame = aggression
-    }
-
-    override fun onMoveQuicklyToggled(isChecked: Boolean) {
-        coach.shouldHurry = isChecked
-    }
-
-    override fun onWasteTimeToggled(isChecked: Boolean) {
-        coach.shouldWasteTime = isChecked
-    }
-
-    override fun onIntentionallyFoulToggled(isChecked: Boolean) {
-        coach.intentionallyFoul = isChecked
-        if (nullGame?.homeTeam?.isUser == true) {
-            nullGame?.homeTeam?.intentionallyFoul = isChecked
-        } else if (nullGame?.awayTeam?.isUser == true) {
-            nullGame?.awayTeam?.intentionallyFoul = isChecked
-        }
     }
 }

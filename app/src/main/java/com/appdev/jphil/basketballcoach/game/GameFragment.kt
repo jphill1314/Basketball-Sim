@@ -173,7 +173,11 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         teamStatsAdapter.notifyDataSetChanged()
 
         if (strategyAdapter == null && viewModel != null) {
-            strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(viewModel!!.coach, resources, true), viewModel!!)
+            strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(
+                viewModel!!.gameStrategyOut.coach,
+                resources,
+                true
+            ), viewModel!!.gameStrategyOut)
         }
 
         handleFoulOuts(game)
