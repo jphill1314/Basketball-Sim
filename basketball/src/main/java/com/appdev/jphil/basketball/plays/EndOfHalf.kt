@@ -2,7 +2,11 @@ package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
 
-class EndOfHalf(game: Game, gameOver: Boolean) : BasketballPlay(game) {
+class EndOfHalf(
+    game: Game,
+    gameOver: Boolean,
+    val homeTeamHadBall: Boolean
+) : BasketballPlay(game) {
 
     init {
         val realHalf = if (gameOver) game.half else game.half - 1
