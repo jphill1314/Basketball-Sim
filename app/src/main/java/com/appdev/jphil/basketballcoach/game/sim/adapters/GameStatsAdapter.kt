@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.game.adapters
+package com.appdev.jphil.basketballcoach.game.sim.adapters
 
 import android.content.res.Resources
 import android.graphics.Color
@@ -56,8 +56,12 @@ class GameStatsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            0 -> HeaderViewHolder(ListItemHeaderBinding.inflate(inflater, parent, false))
-            else -> GameStatsViewHolder(ListItemGameStatsBinding.inflate(inflater, parent, false))
+            0 -> HeaderViewHolder(
+                ListItemHeaderBinding.inflate(inflater, parent, false)
+            )
+            else -> GameStatsViewHolder(
+                ListItemGameStatsBinding.inflate(inflater, parent, false)
+            )
         }
     }
 

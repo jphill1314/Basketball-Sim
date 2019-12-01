@@ -14,7 +14,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

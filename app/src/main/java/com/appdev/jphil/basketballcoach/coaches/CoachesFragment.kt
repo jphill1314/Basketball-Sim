@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

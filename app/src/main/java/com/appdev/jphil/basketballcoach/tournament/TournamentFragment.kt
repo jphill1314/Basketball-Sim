@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.simdialog.SimDialog
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
@@ -76,7 +75,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        findNavController().navigate(TournamentFragmentDirections.actionTournamentFragmentToGameFragment(
+        findNavController().navigate(TournamentFragmentDirections.actionTournamentFragmentToGamePreviewFragment(
             gameId,
             homeName,
             awayName,

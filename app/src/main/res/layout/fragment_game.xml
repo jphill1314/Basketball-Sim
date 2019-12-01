@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.appdev.jphil.basketballcoach.game.GameFragment">
+    tools:context="com.appdev.jphil.basketballcoach.game.sim.GameFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/game_overview_card"

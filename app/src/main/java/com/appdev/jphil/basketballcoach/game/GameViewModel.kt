@@ -3,18 +3,17 @@ package com.appdev.jphil.basketballcoach.game
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
-import com.appdev.jphil.basketball.plays.TipOff
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
-import com.appdev.jphil.basketballcoach.game.GameEventsHelper.getNewPlayEvents
-import com.appdev.jphil.basketballcoach.strategy.StrategyContract
+import com.appdev.jphil.basketballcoach.game.sim.GameEventsHelper
+import com.appdev.jphil.basketballcoach.game.sim.GameState
+import com.appdev.jphil.basketballcoach.game.sim.GameStrategyOut
 import kotlinx.coroutines.*
 
 class GameViewModel(
@@ -32,6 +31,16 @@ class GameViewModel(
 
     private val _gameState = MutableLiveData<GameState>()
     val gameState: LiveData<GameState> = _gameState
+
+    suspend fun getGame(): Game {
+        if (nullGame != null) {
+            return nullGame!!
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            nullGame = GameDatabaseHelper.loadGameById(gameId, database)
+        }.join()
+        return nullGame!!
+    }
 
     fun simulateGame() {
         GlobalScope.launch(Dispatchers.IO) {

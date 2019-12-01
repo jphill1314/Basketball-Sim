@@ -23,11 +23,11 @@
         android:label="@string/schedule"
         tools:layout="@layout/fragment_schedule">
         <action
-            android:id="@+id/action_scheduleFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
-        <action
             android:id="@+id/action_scheduleFragment_to_tournamentFragment"
             app:destination="@id/tournamentFragment" />
+        <action
+            android:id="@+id/action_schedule_to_gamePreviewFragment"
+            app:destination="@id/gamePreviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/roster"
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.appdev.jphil.basketballcoach.game.GameFragment"
+        android:name="com.appdev.jphil.basketballcoach.game.sim.GameFragment"
         android:label="@string/game"
         tools:layout="@layout/fragment_game">
         <argument
@@ -101,7 +101,27 @@
         android:name="com.appdev.jphil.basketballcoach.tournament.TournamentFragment"
         android:label="@string/tournament">
         <action
-            android:id="@+id/action_tournamentFragment_to_gameFragment"
+            android:id="@+id/action_tournamentFragment_to_gamePreviewFragment"
+            app:destination="@id/gamePreviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gamePreviewFragment"
+        android:name="com.appdev.jphil.basketballcoach.game.preview.GamePreviewFragment"
+        android:label="@string/preview">
+        <argument
+            android:name="gameId"
+            app:argType="integer" />
+        <argument
+            android:name="homeTeamName"
+            app:argType="string" />
+        <argument
+            android:name="awayTeamName"
+            app:argType="string" />
+        <argument
+            android:name="isUserHomeTeam"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_gamePreviewFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
     </fragment>
 </navigation>

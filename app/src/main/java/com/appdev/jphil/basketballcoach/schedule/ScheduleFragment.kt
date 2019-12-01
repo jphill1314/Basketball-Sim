@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.simdialog.SimDialog
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import dagger.android.support.AndroidSupportInjection
@@ -70,7 +69,7 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        findNavController().navigate(ScheduleFragmentDirections.actionScheduleFragmentToGameFragment(
+        findNavController().navigate(ScheduleFragmentDirections.actionScheduleToGamePreviewFragment(
             gameId,
             homeName,
             awayName,
