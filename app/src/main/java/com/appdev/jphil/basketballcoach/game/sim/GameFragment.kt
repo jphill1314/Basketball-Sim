@@ -19,7 +19,8 @@ import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.databinding.FragmentGameBinding
 import com.appdev.jphil.basketballcoach.game.GameViewModel
-import com.appdev.jphil.basketballcoach.game.PlayerOverviewDialogFragment
+import com.appdev.jphil.basketballcoach.game.dialogs.PlayerOverviewDialogFragment
+import com.appdev.jphil.basketballcoach.game.dialogs.teamtalk.TeamTalkDialog
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameTeamStatsAdapter
@@ -36,6 +37,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var rosterViewId = 0
     private var simSpeed = 50
     private var deadBall = true
+    private var isInTimeout = false
     private lateinit var gameAdapter: GameAdapter
     private var strategyAdapter: StrategyAdapter? = null
     private var homeStatsAdapter: GameStatsAdapter? = null
@@ -128,6 +130,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             .get(GameViewModel::class.java).apply {
                 gameId = args.gameId
                 gameState.observe(this@GameFragment, Observer { gameState ->
+                    isInTimeout = gameState.isTimeout
                     if (gameState.isNewHalf) {
                         notifyNewHalf(gameState.newEvents)
                     } else {
@@ -273,7 +276,20 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     private fun onPlayFabClicked() {
-        if (handleFoulOuts(nullGame)) {
+        if (isInTimeout) {
+            val dialog = TeamTalkDialog().apply {
+                coach = if (nullGame?.homeTeam?.isUser == true) {
+                    nullGame?.homeTeam?.getHeadCoach()
+                } else {
+                    nullGame?.awayTeam?.getHeadCoach()
+                }
+                onSelectCallback = {
+                    isInTimeout = false
+                    onPlayFabClicked()
+                }
+            }
+            fragmentManager?.let { dialog.show(it, "TAG") }
+        } else if (handleFoulOuts(nullGame)) {
             binding.playFab.apply {
                 isEnabled = false
                 hide()

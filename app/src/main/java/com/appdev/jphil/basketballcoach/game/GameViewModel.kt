@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.game.extensions.makeSubs
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
+import com.appdev.jphil.basketball.game.helpers.TimeoutHelper
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
@@ -81,7 +83,7 @@ class GameViewModel(
                         if (game.timeRemaining == 0) {
                             HalfTimeHelper.startHalf(game)
                             withContext(Dispatchers.Main) {
-                                _gameState.value = GameState(game, getNewPlayEvents(game), true)
+                                _gameState.value = GameState(game, getNewPlayEvents(game), isNewHalf = true, isTimeout = true)
                                 // Post value doesn't happen fast enough so we have to switch to main thread manually
                             }
                         }
@@ -98,10 +100,19 @@ class GameViewModel(
 
                         while (isActive && game.timeRemaining > 0) {
                             game.simPlay()
+                            if (TimeoutHelper.isTimeoutCalled(game)) {
+                                game.makeUserSubsIfPossible()
+                                _gameState.postValue(GameState(game, getNewPlayEvents(game), isTimeout = true))
+                                pauseGame = true
+                                while(pauseGame && isActive) {
+                                    Thread.sleep(100)
+                                }
+                                TimeoutHelper.runTimeout(game)
+                            }
                             game.makeUserSubsIfPossible()
                             _gameState.postValue(GameState(game, getNewPlayEvents(game)))
                             Thread.sleep(simSpeed)
-                            while (pauseGame) {
+                            while (pauseGame && isActive) {
                                 Thread.sleep(100)
                             }
                             game.makeUserSubsIfPossible()

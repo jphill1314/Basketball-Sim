@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.coaches
 
+import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.recruits.Recruit
 
 class Coach(
@@ -38,6 +39,8 @@ class Coach(
     // TODO: add functions to change a team's strategy based on who is on the court and the score
     val fullName = "$firstName $lastName"
 
+    var teamTalkType = CoachTalk.NEUTRAL
+
     fun startGame() {
         paceGame = pace
         aggressionGame = aggression
@@ -66,6 +69,13 @@ class Coach(
         } else {
             StrategyHelper.updateStrategy(teamScore - opponentScore, this)
         }
+    }
+
+    fun getTeamTalk(useUserTalk: Boolean) = if (useUserTalk) {
+        teamTalkType
+    } else {
+        // TODO: have AI pick talks
+        CoachTalk.NEUTRAL
     }
 
     companion object {

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
@@ -30,6 +31,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
+        teamManager = activity?.getTeamViewModel(factory)
     }
 
     override fun onResume() {

@@ -154,11 +154,13 @@ class Team(
         gamesPlayed++
     }
 
-    fun coachTalk(homeTeam: Boolean, scoreDif: Int, talkType: CoachTalk) {
+    fun coachTalk(homeTeam: Boolean, scoreDif: Int, isUserCoaching: Boolean): Int {
         val maxModifier = 30
         val gameVariability = 15
         val focusMod = 5
         val homeCourtAdvantage = 4
+        val talkType = getHeadCoach().getTeamTalk(isUserCoaching && isUser)
+        var netReaction = 0
 
         for (p in players) {
             var gameMod = (Random.nextDouble() * 2 * gameVariability) - gameVariability
@@ -209,7 +211,9 @@ class Team(
             } else {
                 p.defensiveStatMod
             }
+            netReaction += ((p.offensiveStatMod + p.defensiveStatMod) / 2.0).toInt()
         }
+        return netReaction
     }
 
     fun allPlayersAreEligible(): Boolean {

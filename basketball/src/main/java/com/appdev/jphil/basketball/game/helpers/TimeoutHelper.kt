@@ -6,36 +6,31 @@ import com.appdev.jphil.basketball.game.extensions.makeSubs
 
 object TimeoutHelper {
 
-    fun manageTimeout(game: Game) {
+    fun isTimeoutCalled(game: Game): Boolean {
         with (game) {
-            var mediaTimeoutCalled = false
-            if(deadball && !madeShot){
+            if(deadball && !madeShot) {
                 if(callMediaTimeout(this)) {
                     gamePlays.last().playAsString += miscText.mediaTimeOut()
-                    runTimeout(this)
-                    mediaTimeoutCalled = true
+                    return true
                 }
-
-                makeSubs()
             }
-            if (!mediaTimeoutCalled) {
-                if ((homeTeamHasBall || deadball) && homeTeam.coachWantsTimeout(homeScore - awayScore) && homeTimeouts > 0) {
-                    gamePlays.last().playAsString += miscText.timeOut(homeTeam, coachTimeoutExtends(this))
-                    homeTimeouts--
-                    runTimeout(this)
-                } else if ((!homeTeamHasBall || deadball) && awayTeam.coachWantsTimeout(awayScore - homeScore) && awayTimeouts > 0) {
-                    gamePlays.last().playAsString += miscText.timeOut(awayTeam, coachTimeoutExtends(this))
-                    awayTimeouts--
-                    runTimeout(this)
-                }
+            if ((homeTeamHasBall || deadball) && homeTeam.coachWantsTimeout(homeScore - awayScore) && homeTimeouts > 0) {
+                gamePlays.last().playAsString += miscText.timeOut(homeTeam, coachTimeoutExtends(this))
+                homeTimeouts--
+                return true
+            } else if ((!homeTeamHasBall || deadball) && awayTeam.coachWantsTimeout(awayScore - homeScore) && awayTimeouts > 0) {
+                gamePlays.last().playAsString += miscText.timeOut(awayTeam, coachTimeoutExtends(this))
+                awayTimeouts--
+                return true
             }
         }
+        return false
     }
 
     fun runTimeout(game: Game) {
         with (game) {
-            homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, CoachTalk.NEUTRAL)
-            awayTeam.coachTalk(false, awayScore - homeScore, CoachTalk.NEUTRAL)
+            homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, userIsCoaching)
+            awayTeam.coachTalk(false, awayScore - homeScore, userIsCoaching)
 
             updateTimePlayed(true, false)
 
