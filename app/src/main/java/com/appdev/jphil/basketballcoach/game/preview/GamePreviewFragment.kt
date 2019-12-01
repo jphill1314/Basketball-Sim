@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.FragmentGamePreviewBinding
 import com.appdev.jphil.basketballcoach.game.GameViewModel
-import com.appdev.jphil.basketballcoach.game.PlayerOverviewDialogFragment
+import com.appdev.jphil.basketballcoach.game.dialogs.PlayerOverviewDialogFragment
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.runBlocking
@@ -67,7 +67,8 @@ class GamePreviewFragment : Fragment() {
                 recyclerView.apply {
                     layoutManager = GridLayoutManager(context, 2)
                     adapter = GamePreviewAdapter(resources) {
-                        val dialog = PlayerOverviewDialogFragment()
+                        val dialog =
+                            PlayerOverviewDialogFragment()
                         dialog.player = it
                         fragmentManager?.let { fm ->
                             dialog.show(fm, "tag")

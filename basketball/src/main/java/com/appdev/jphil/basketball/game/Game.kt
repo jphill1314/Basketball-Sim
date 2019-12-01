@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.game
 
+import com.appdev.jphil.basketball.game.extensions.makeSubs
 import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
 import com.appdev.jphil.basketball.game.helpers.PlayGenerator
 import com.appdev.jphil.basketball.game.helpers.TimeoutHelper
@@ -72,6 +73,9 @@ class Game(
 
             while(timeRemaining > 0) {
                 simPlay()
+                if (TimeoutHelper.isTimeoutCalled(this)) {
+                    TimeoutHelper.runTimeout(this)
+                }
             }
             half++
         }
@@ -93,12 +97,14 @@ class Game(
     fun simPlay() {
         if (deadball) {
             updateStrategy()
+            if (!madeShot) {
+                makeSubs()
+            }
         }
 
         gamePlays.addAll(PlayGenerator.getNextPlay(this))
         val lastPlay = gamePlays.last()
         lastPlayerWithBall = if (lastPlay is Pass) lastPlay.playerStartsWithBall else playerWithBall
-        TimeoutHelper.manageTimeout(this)
     }
 
     fun finishGame() {

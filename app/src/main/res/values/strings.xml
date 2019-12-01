@@ -182,4 +182,11 @@
     <string name="starting_new_season">Starting new season</string>
 
     <string name="preview">Preview</string>
+
+    <string name="give_team_talk">Address your team</string>
+    <string name="neutral_talk">There nothing to address right now.</string>
+    <string name="calm_talk">You\'re doing good! Keep it up!</string>
+    <string name="aggressive_talk">You guys need to start playing much better!</string>
+    <string name="offensive_talk">Let\'s focus on offense for the time being.</string>
+    <string name="defensive_talk">We need to clamp down on defense if we want to win.</string>
 </resources>

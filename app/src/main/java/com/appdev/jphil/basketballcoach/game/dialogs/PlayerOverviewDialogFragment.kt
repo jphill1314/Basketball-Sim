@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.game
+package com.appdev.jphil.basketballcoach.game.dialogs
 
 import android.content.Context
 import android.os.Bundle

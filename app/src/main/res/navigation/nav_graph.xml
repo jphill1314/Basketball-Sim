@@ -122,6 +122,8 @@
             app:argType="boolean" />
         <action
             android:id="@+id/action_gamePreviewFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            app:destination="@id/gameFragment"
+            app:popUpTo="@id/gamePreviewFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

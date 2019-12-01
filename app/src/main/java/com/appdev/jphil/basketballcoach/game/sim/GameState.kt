@@ -6,5 +6,6 @@ import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 class GameState(
     val game: Game,
     val newEvents: List<GameEventEntity>,
-    val isNewHalf: Boolean = false
+    val isNewHalf: Boolean = false,
+    val isTimeout: Boolean = false
 )
