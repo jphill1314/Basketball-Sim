@@ -20,16 +20,17 @@ object HalfTimeHelper {
                 deadball = false
                 madeShot = false
                 if (half != 1) {
-                    gamePlays.add(EndOfHalf(this,false))
+                    gamePlays.add(EndOfHalf(this,false, homeTeamHasBall))
                     homeTimeouts++
                     awayTimeouts++
                 }
             } else {
+                val homeTeamHadBall = homeTeamHasBall
                 homeTeamHasBall = homeTeamHasPossessionArrow
                 deadball = true
                 madeShot = false
 
-                gamePlays.add(EndOfHalf(this,false))
+                gamePlays.add(EndOfHalf(this,false, homeTeamHadBall))
 
                 if (homeTimeouts == Game.maxTimeouts) {
                     homeTimeouts--

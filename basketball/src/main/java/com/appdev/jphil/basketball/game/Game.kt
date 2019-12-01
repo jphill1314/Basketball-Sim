@@ -108,7 +108,7 @@ class Game(
         isFinal = true
         inProgress = false
 
-        gamePlays.add(EndOfHalf(this,true))
+        gamePlays.add(EndOfHalf(this,true, homeTeamHasBall))
     }
 
     fun changePossession() {
