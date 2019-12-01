@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.game.adapters
+package com.appdev.jphil.basketballcoach.game.sim.adapters
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,7 +16,9 @@ class GameTeamStatsAdapter : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolde
     class ViewHolder(val binding: ListItemGameTeamStatsBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(ListItemGameTeamStatsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ViewHolder(
+            ListItemGameTeamStatsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
 
     override fun getItemCount(): Int {
         return stats.size
@@ -33,7 +35,13 @@ class GameTeamStatsAdapter : RecyclerView.Adapter<GameTeamStatsAdapter.ViewHolde
 
     fun updateTeamStats(homeTeam: Team, awayTeam: Team) {
         stats.clear()
-        stats.add(TeamStatLine(homeTeam.name, awayTeam.name, ""))
+        stats.add(
+            TeamStatLine(
+                homeTeam.name,
+                awayTeam.name,
+                ""
+            )
+        )
         stats.add(
             TeamStatLine(
                 "${homeTeam.twoPointMakes}/${homeTeam.twoPointAttempts}",

@@ -1,5 +1,4 @@
-package com.appdev.jphil.basketballcoach.game
-
+package com.appdev.jphil.basketballcoach.game.sim
 
 import androidx.lifecycle.ViewModelProviders
 import android.content.Context
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
@@ -20,10 +18,11 @@ import com.appdev.jphil.basketball.plays.FreeThrows
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.databinding.FragmentGameBinding
-import com.appdev.jphil.basketballcoach.game.adapters.GameAdapter
-import com.appdev.jphil.basketballcoach.game.adapters.GameStatsAdapter
-import com.appdev.jphil.basketballcoach.game.adapters.GameTeamStatsAdapter
-import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.game.GameViewModel
+import com.appdev.jphil.basketballcoach.game.PlayerOverviewDialogFragment
+import com.appdev.jphil.basketballcoach.game.sim.adapters.GameAdapter
+import com.appdev.jphil.basketballcoach.game.sim.adapters.GameStatsAdapter
+import com.appdev.jphil.basketballcoach.game.sim.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
 import com.appdev.jphil.basketballcoach.strategy.StrategyDataModel
@@ -55,14 +54,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
-        (activity as? NavigationManager)?.disableNavigation()
     }
-
-    override fun onDetach() {
-        (activity as? NavigationManager)?.enableNavigation()
-        super.onDetach()
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGameBinding.inflate(inflater)
@@ -132,7 +124,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
     override fun onResume() {
         super.onResume()
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
             .get(GameViewModel::class.java).apply {
                 gameId = args.gameId
                 gameState.observe(this@GameFragment, Observer { gameState ->
@@ -146,8 +138,18 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
 
         val userIsHomeTeam = args.isUserHomeTeam
-        homeStatsAdapter = GameStatsAdapter(userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
-        awayStatsAdapter = GameStatsAdapter(!userIsHomeTeam, mutableListOf(), resources, viewModel!!) { player -> showPlayerAttributeDialog(player)}
+        homeStatsAdapter = GameStatsAdapter(
+            userIsHomeTeam,
+            mutableListOf(),
+            resources,
+            viewModel!!
+        ) { player -> showPlayerAttributeDialog(player) }
+        awayStatsAdapter = GameStatsAdapter(
+            !userIsHomeTeam,
+            mutableListOf(),
+            resources,
+            viewModel!!
+        ) { player -> showPlayerAttributeDialog(player) }
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
@@ -301,7 +303,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private fun showPlayerAttributeDialog(player: Player) {
         val dialog = PlayerOverviewDialogFragment()
         dialog.player = player
-        dialog.show(fragmentManager!!, DIALOG)
+        dialog.show(fragmentManager!!,
+            DIALOG
+        )
     }
 
     companion object {

@@ -180,4 +180,6 @@
     <string name="cancel">Cancel</string>
     <string name="updating_tournaments">Updating tournaments</string>
     <string name="starting_new_season">Starting new season</string>
+
+    <string name="preview">Preview</string>
 </resources>

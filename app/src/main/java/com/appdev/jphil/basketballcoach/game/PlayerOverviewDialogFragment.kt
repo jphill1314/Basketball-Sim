@@ -12,11 +12,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.DialogPlayerOverviewBinding
+import com.appdev.jphil.basketballcoach.databinding.FragmentPlayerOverviewBinding
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerAttributeAdapter
 
 class PlayerOverviewDialogFragment : DialogFragment() {
 
     var player: Player? = null
+    private lateinit var binding: DialogPlayerOverviewBinding
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -26,33 +29,34 @@ class PlayerOverviewDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.dialog_player_overview, container, false)
+        binding = DialogPlayerOverviewBinding.inflate(inflater, container, false)
+        player?.let { setupView(it) }
 
-        player?.let { setupView(view, it) }
-
-        return view
+        return binding.root
     }
 
-    private fun setupView(view: View, player: Player) {
-        view.apply {
-            findViewById<RecyclerView>(R.id.recycler_view).apply {
+    private fun setupView(player: Player) {
+        binding.apply {
+            recyclerView.apply {
                 adapter = PlayerAttributeAdapter(player, resources)
                 layoutManager = LinearLayoutManager(context)
             }
 
-            findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[player.position - 1]
-            findViewById<TextView>(R.id.player_name).text = player.fullName
-            findViewById<TextView>(R.id.rating).text = resources.getString(R.string.rating_colon, player.getOverallRating())
-            findViewById<TextView>(R.id.potential).text = resources.getString(R.string.potential_color, player.potential)
-            findViewById<TextView>(R.id.year).text = resources.getStringArray(R.array.years)[player.year]
-            findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[player.type.type]
+            header.apply {
+                position.text = resources.getStringArray(R.array.position_abbreviation)[player.position - 1]
+                playerName.text = player.fullName
+                rating.text = resources.getString(R.string.rating_colon, player.getOverallRating())
+                potential.text = resources.getString(R.string.potential_color, player.potential)
+                year.text = resources.getStringArray(R.array.years)[player.year]
+                type.text = resources.getStringArray(R.array.player_types)[player.type.type]
 
-            findViewById<TextView>(R.id.min_stats).text = String.format("%.2f", player.timePlayed / 60.0)
-            findViewById<TextView>(R.id.pts_stat).text = getPoints(player).toString()
-            findViewById<TextView>(R.id.ast_stat).text = player.assists.toString()
-            findViewById<TextView>(R.id.reb_stats).text = (player.offensiveRebounds + player.defensiveRebounds).toString()
-            findViewById<TextView>(R.id.stl_stats).text = player.steals.toString()
-            findViewById<TextView>(R.id.fouls_stats).text = player.fouls.toString()
+                minStats.text = String.format("%.2f", player.timePlayed / 60.0)
+                ptsStat.text = getPoints(player).toString()
+                astStat.text = player.assists.toString()
+                rebStats.text = (player.offensiveRebounds + player.defensiveRebounds).toString()
+                stlStats.text = player.steals.toString()
+                foulsStats.text = player.fouls.toString()
+            }
         }
     }
 

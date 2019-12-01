@@ -4,8 +4,9 @@ import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewModule
-import com.appdev.jphil.basketballcoach.game.GameFragment
-import com.appdev.jphil.basketballcoach.game.GameModule
+import com.appdev.jphil.basketballcoach.game.preview.GamePreviewFragment
+import com.appdev.jphil.basketballcoach.game.sim.GameFragment
+import com.appdev.jphil.basketballcoach.game.sim.GameModule
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
@@ -78,5 +79,9 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [CoachOverviewModule::class])
     abstract fun coachOverviewFragment(): CoachOverviewFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun gamePreviewFragment(): GamePreviewFragment
 
 }

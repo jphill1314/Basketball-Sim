@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.game
+package com.appdev.jphil.basketballcoach.game.sim
 
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.TipOff

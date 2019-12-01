@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
@@ -16,7 +15,7 @@ import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), NavigationManager {
+class MainActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navBinding: NavigationHeaderBinding
@@ -44,7 +43,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        enableNavigation()
+//        enableNavigation()
 
         val navController = findNavController(R.id.frame_layout)
         appBarConfiguration = AppBarConfiguration(
@@ -98,23 +97,23 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         }
     }
 
-    override fun disableNavigation() {
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(false)
-            it.setHomeAsUpIndicator(null)
-        }
-    }
+//    override fun disableNavigation() {
+//        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+//        supportActionBar?.let {
+//            it.setDisplayHomeAsUpEnabled(false)
+//            it.setHomeAsUpIndicator(null)
+//        }
+//    }
+//
+//    override fun enableNavigation() {
+//        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+//        supportActionBar?.let {
+//            it.setDisplayHomeAsUpEnabled(true)
+//            it.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+//        }
+//    }
 
-    override fun enableNavigation() {
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
-        }
-    }
-
-    override fun navigateToHomePage() {
+    private fun navigateToHomePage() {
         findNavController(R.id.frame_layout).popBackStack(R.id.roster, false)
         binding.navView.post { binding.navView.setCheckedItem(R.id.roster) }
     }

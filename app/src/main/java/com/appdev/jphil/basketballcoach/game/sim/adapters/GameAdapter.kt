@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.game.adapters
+package com.appdev.jphil.basketballcoach.game.sim.adapters
 
 import android.content.res.Resources
 import androidx.core.content.res.ResourcesCompat
@@ -21,7 +21,9 @@ class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAd
     private val plays = mutableListOf<GameEventEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(ListItemGameEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ViewHolder(
+            ListItemGameEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
 
     override fun getItemCount(): Int {
         return plays.size
