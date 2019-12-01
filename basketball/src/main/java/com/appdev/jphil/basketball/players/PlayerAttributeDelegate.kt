@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.players
 
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.ReadWriteProperty
@@ -24,7 +25,7 @@ class PlayerAttributeDelegate(private var value: Int) : ReadWriteProperty<Player
 
     private fun getFatigueFactor(player: Player): Double {
         return if (player.fatigue > 0.1) {
-            Math.max(1 - (Math.exp(player.fatigue / 25.0) / 100.0), .5)
+            max(1 - (exp(player.fatigue / 25.0) / 100.0), .5)
         } else {
             1.0
         }

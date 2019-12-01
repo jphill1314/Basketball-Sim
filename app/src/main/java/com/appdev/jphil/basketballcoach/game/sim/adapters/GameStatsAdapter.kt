@@ -77,9 +77,9 @@ class GameStatsAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        when {
-            viewHolder is HeaderViewHolder -> bindHeader(viewHolder.binding, position)
-            viewHolder is GameStatsViewHolder -> bindStats(viewHolder.bidning, position)
+        when (viewHolder) {
+            is HeaderViewHolder -> bindHeader(viewHolder.binding, position)
+            is GameStatsViewHolder -> bindStats(viewHolder.bidning, position)
         }
     }
 

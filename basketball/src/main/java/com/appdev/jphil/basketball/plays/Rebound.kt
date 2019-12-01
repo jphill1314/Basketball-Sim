@@ -1,11 +1,9 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import com.appdev.jphil.basketball.textcontracts.ReboundTextContract
+import com.appdev.jphil.basketball.teams.Team
 
 class Rebound(game: Game) : BasketballPlay(game) {
 

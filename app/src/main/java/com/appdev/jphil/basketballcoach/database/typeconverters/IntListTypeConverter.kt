@@ -11,7 +11,7 @@ class IntListTypeConverter {
     }
 
     @TypeConverter
-    fun JsonToList(json: String): MutableList<Int> {
+    fun jsonToList(json: String): MutableList<Int> {
         return Gson().fromJson(json, Array<Int>::class.java).toMutableList()
     }
 }

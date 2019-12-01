@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.DialogSimulatingBinding
 
 class SimDialog : DialogFragment() {

@@ -1,21 +1,21 @@
 package com.appdev.jphil.basketballcoach.recruiting
 
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.main.*
-import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
+import com.appdev.jphil.basketballcoach.main.TeamManagerViewModel
+import com.appdev.jphil.basketballcoach.main.ViewModelFactory
+import com.appdev.jphil.basketballcoach.main.getTeamViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

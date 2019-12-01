@@ -1,12 +1,10 @@
 package com.appdev.jphil.basketball.recruits
 
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerType
-import kotlin.math.max
-import kotlin.math.min
+import com.appdev.jphil.basketball.teams.Team
 import kotlin.random.Random
 
 class Recruit(

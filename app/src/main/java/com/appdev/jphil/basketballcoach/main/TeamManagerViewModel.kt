@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import kotlinx.coroutines.Dispatchers

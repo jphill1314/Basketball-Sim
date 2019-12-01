@@ -5,7 +5,6 @@ import com.appdev.jphil.basketballcoach.simulation.GameSimRepository
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Module
 abstract class TournamentModule {

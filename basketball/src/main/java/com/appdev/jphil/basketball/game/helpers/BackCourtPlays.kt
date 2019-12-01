@@ -4,8 +4,6 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.BasketballPlay
 import com.appdev.jphil.basketball.plays.Pass
 import com.appdev.jphil.basketball.plays.Press
-import com.appdev.jphil.basketball.plays.enums.FoulType
-import com.appdev.jphil.basketball.plays.enums.Plays
 import kotlin.random.Random
 
 object BackCourtPlays {
