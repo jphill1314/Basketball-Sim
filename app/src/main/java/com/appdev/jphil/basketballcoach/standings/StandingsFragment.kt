@@ -2,18 +2,19 @@ package com.appdev.jphil.basketballcoach.standings
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.FragmentStandingsBinding
-import com.appdev.jphil.basketballcoach.main.*
+import com.appdev.jphil.basketballcoach.main.TeamManagerViewModel
+import com.appdev.jphil.basketballcoach.main.ViewModelFactory
+import com.appdev.jphil.basketballcoach.main.getTeamViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

@@ -2,18 +2,17 @@ package com.appdev.jphil.basketballcoach.roster
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.FragmentRosterBinding
-import com.appdev.jphil.basketballcoach.main.*
-import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
+import com.appdev.jphil.basketballcoach.main.TeamManagerViewModel
+import com.appdev.jphil.basketballcoach.main.ViewModelFactory
+import com.appdev.jphil.basketballcoach.main.getTeamViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

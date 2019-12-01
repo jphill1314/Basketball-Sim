@@ -1,16 +1,16 @@
 package com.appdev.jphil.basketball.game
 
-import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.game.extensions.*
-import com.appdev.jphil.basketball.game.helpers.*
-import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.plays.*
-import com.appdev.jphil.basketball.plays.enums.FoulType
+import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
+import com.appdev.jphil.basketball.game.helpers.PlayGenerator
+import com.appdev.jphil.basketball.game.helpers.TimeoutHelper
+import com.appdev.jphil.basketball.plays.BasketballPlay
+import com.appdev.jphil.basketball.plays.EndOfHalf
+import com.appdev.jphil.basketball.plays.Pass
 import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
 import com.appdev.jphil.basketball.playtext.*
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.textcontracts.*
-import kotlin.random.Random
 
 class Game(
     val homeTeam: Team,

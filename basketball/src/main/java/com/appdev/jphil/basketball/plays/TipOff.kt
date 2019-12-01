@@ -1,10 +1,7 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.Plays
-import com.appdev.jphil.basketball.textcontracts.FoulTextContract
-import com.appdev.jphil.basketball.textcontracts.TipOffTextContract
 
 class TipOff(game: Game) : BasketballPlay(game) {
 

@@ -1,14 +1,12 @@
 package com.appdev.jphil.basketballcoach.game.sim.adapters
 
 import android.content.res.Resources
-import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.databinding.ListItemGameEventBinding

@@ -3,7 +3,6 @@ package com.appdev.jphil.basketballcoach.standings
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Module
 abstract class StandingsModule {

@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.player
 
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.players.PlayerProgression
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 
 object PlayerDatabaseHelper {

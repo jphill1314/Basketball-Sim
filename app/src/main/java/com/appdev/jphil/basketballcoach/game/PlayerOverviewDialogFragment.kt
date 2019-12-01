@@ -2,18 +2,15 @@ package com.appdev.jphil.basketballcoach.game
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.DialogPlayerOverviewBinding
-import com.appdev.jphil.basketballcoach.databinding.FragmentPlayerOverviewBinding
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerAttributeAdapter
 
 class PlayerOverviewDialogFragment : DialogFragment() {

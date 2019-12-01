@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketball.teams
 
 import com.appdev.jphil.basketball.recruits.Recruit
-import com.appdev.jphil.basketball.recruits.RecruitInterest
 import com.appdev.jphil.basketball.recruits.RecruitingEvent
 import kotlin.math.max
 import kotlin.math.min

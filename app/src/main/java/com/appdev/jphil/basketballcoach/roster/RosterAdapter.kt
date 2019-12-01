@@ -62,10 +62,10 @@ class RosterAdapter(
 
     private fun bindPlayer(binding: ListItemRosterBinding, position: Int) {
         if (position == 1 || position == 8) {
-            binding.position?.text = resources.getString(R.string.pos)
-            binding.name?.text = resources.getString(R.string.name)
-            binding.rating?.text = resources.getString(R.string.rating)
-            binding.year?.text = resources.getString(R.string.year)
+            binding.position.text = resources.getString(R.string.pos)
+            binding.name.text = resources.getString(R.string.name)
+            binding.rating.text = resources.getString(R.string.rating)
+            binding.year.text = resources.getString(R.string.year)
 
             val params = binding.root.layoutParams as ViewGroup.MarginLayoutParams
             params.bottomMargin = resources.getDimensionPixelSize(R.dimen.card_margin_bottom)
@@ -75,10 +75,10 @@ class RosterAdapter(
             val player = dataModel.player
             setTextColor(binding, dataModel.isSelected)
 
-            binding.position?.text = if (position < 7) positions[position - 2] else positions[player.position - 1]
-            binding.name?.text = player.fullName
-            binding.rating?.text = player.getOverallRating().toString()
-            binding.year?.text = classes[player.year]
+            binding.position.text = if (position < 7) positions[position - 2] else positions[player.position - 1]
+            binding.name.text = player.fullName
+            binding.rating.text = player.getOverallRating().toString()
+            binding.year.text = classes[player.year]
 
             if (position == 6) {
                 val params = binding.root.layoutParams as ViewGroup.MarginLayoutParams

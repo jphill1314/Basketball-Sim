@@ -1,20 +1,6 @@
 package com.appdev.jphil.basketball.players
 
 import com.appdev.jphil.basketball.coaches.Coach
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.ballWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.closeWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.ftWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.longWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.midWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.offBallWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.offMoveWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.onBallWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.passWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.perimDefWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.postDefWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.postOffWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.reboundWeight
-import com.appdev.jphil.basketball.players.PlayerPositionWeights.stealWeight
 
 class Player(
     val id: Int?,

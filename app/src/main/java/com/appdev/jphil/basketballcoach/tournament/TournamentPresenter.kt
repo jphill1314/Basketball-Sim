@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.tournament
 
 import android.content.res.Resources
-import android.view.View
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R

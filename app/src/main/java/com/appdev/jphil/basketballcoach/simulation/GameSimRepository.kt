@@ -8,8 +8,6 @@ import com.appdev.jphil.basketballcoach.database.BatchInsertHelper
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

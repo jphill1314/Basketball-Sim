@@ -8,6 +8,7 @@ import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
 import java.util.*
+import kotlin.math.abs
 import kotlin.random.Random
 
 class Team(
@@ -268,7 +269,7 @@ class Team(
         return if (isUser) {
             userWantsTimeout
         } else {
-            (Math.abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && Random.nextBoolean())
+            (abs(scoreDif) < 25 && scoreDif - lastScoreDiff < -7 && Random.nextBoolean())
         }
     }
 
