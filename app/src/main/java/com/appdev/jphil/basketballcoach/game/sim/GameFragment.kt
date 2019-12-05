@@ -21,8 +21,8 @@ import com.appdev.jphil.basketballcoach.databinding.FragmentGameBinding
 import com.appdev.jphil.basketballcoach.game.GameViewModel
 import com.appdev.jphil.basketballcoach.game.dialogs.PlayerOverviewDialogFragment
 import com.appdev.jphil.basketballcoach.game.dialogs.teamtalk.TeamTalkDialog
+import com.appdev.jphil.basketballcoach.game.sim.boxscore.BoxScoreAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameAdapter
-import com.appdev.jphil.basketballcoach.game.sim.adapters.GameStatsAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
@@ -40,8 +40,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var isInTimeout = false
     private lateinit var gameAdapter: GameAdapter
     private var strategyAdapter: StrategyAdapter? = null
-    private var homeStatsAdapter: GameStatsAdapter? = null
-    private var awayStatsAdapter: GameStatsAdapter? = null
+    private lateinit var homeBoxScoreAdapter: BoxScoreAdapter
+    private lateinit var awayBoxScoreAdapter: BoxScoreAdapter
     private val teamStatsAdapter = GameTeamStatsAdapter()
 
     private val args: GameFragmentArgs by navArgs()
@@ -87,22 +87,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
         }
 
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.game_roster_views,
-            android.R.layout.simple_spinner_dropdown_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.rosterSpinner.adapter = adapter
-        }
-        binding.rosterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) { }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectRosterView(position)
-            }
-        }
-
         binding.homeName.text = args.homeTeamName
         binding.awayName.text = args.awayTeamName
 
@@ -128,6 +112,8 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         super.onResume()
         viewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
             .get(GameViewModel::class.java).apply {
+                homeBoxScoreAdapter = BoxScoreAdapter(resources, args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
+                awayBoxScoreAdapter = BoxScoreAdapter(resources, !args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
                 gameId = args.gameId
                 gameState.observe(this@GameFragment, Observer { gameState ->
                     isInTimeout = gameState.isTimeout
@@ -139,20 +125,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
                 })
                 simulateGame()
             }
-
-        val userIsHomeTeam = args.isUserHomeTeam
-        homeStatsAdapter = GameStatsAdapter(
-            userIsHomeTeam,
-            mutableListOf(),
-            resources,
-            viewModel!!
-        ) { player -> showPlayerAttributeDialog(player) }
-        awayStatsAdapter = GameStatsAdapter(
-            !userIsHomeTeam,
-            mutableListOf(),
-            resources,
-            viewModel!!
-        ) { player -> showPlayerAttributeDialog(player) }
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
@@ -178,11 +150,11 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         gameAdapter.addEvents(newEvents)
         gameAdapter.notifyDataSetChanged()
 
-        homeStatsAdapter?.updatePlayerStats(game.homeTeam.players)
-        awayStatsAdapter?.updatePlayerStats(game.awayTeam.players)
-
         teamStatsAdapter.updateTeamStats(game.homeTeam, game.awayTeam)
         teamStatsAdapter.notifyDataSetChanged()
+
+        homeBoxScoreAdapter.updatePlayers(game.homeTeam.players)
+        awayBoxScoreAdapter.updatePlayers(game.awayTeam.players)
 
         if (strategyAdapter == null && viewModel != null) {
             strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(
@@ -209,7 +181,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
                 Toast.makeText(context, "One of your players have fouled out!", Toast.LENGTH_LONG)
                     .show() // TODO: use resources + better message
                 onDeadBall()
-                selectRosterView(if (game.homeTeam.isUser) 1 else 2)
+                selectView(if (game.homeTeam.isUser) 1 else 2)
                 this@GameFragment.nullGame = game
                 return false
             }
@@ -250,29 +222,12 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private fun selectView(id: Int) {
         viewId = id
         binding.recyclerView.adapter = when (viewId) {
-            1 -> homeStatsAdapter
-            2 -> awayStatsAdapter
+            1 -> homeBoxScoreAdapter
+            2 -> awayBoxScoreAdapter
             3 -> teamStatsAdapter
             4 -> strategyAdapter
             else -> gameAdapter
         }
-
-        binding.rosterSpinner.visibility = if (binding.recyclerView.adapter is GameStatsAdapter) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-
-        selectRosterView(0)
-        binding.rosterSpinner.setSelection(rosterViewId)
-    }
-
-    private fun selectRosterView(viewId: Int) {
-        rosterViewId = viewId
-        homeStatsAdapter?.rosterViewId = rosterViewId
-        homeStatsAdapter?.notifyDataSetChanged()
-        awayStatsAdapter?.rosterViewId = rosterViewId
-        awayStatsAdapter?.notifyDataSetChanged()
     }
 
     private fun onPlayFabClicked() {

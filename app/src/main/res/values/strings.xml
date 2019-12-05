@@ -182,6 +182,7 @@
     <string name="starting_new_season">Starting new season</string>
 
     <string name="preview">Preview</string>
+    <string name="two_strings">%1$s %2$s</string>
 
     <string name="give_team_talk">Address your team</string>
     <string name="neutral_talk">There nothing to address right now.</string>
