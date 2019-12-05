@@ -38,6 +38,7 @@ class Player(
     var inGame = false
     var subPosition = courtIndex
     val fullName = "$firstName $lastName"
+    val firstInitialLastName = "${firstName[0]}. $lastName"
 
     val progression = mutableListOf<PlayerProgression>()
 
@@ -100,7 +101,7 @@ class Player(
     }
 
     fun getOverallRating(): Int {
-        return getRatingAtPosition(position)
+        return getRatingAtPositionNoFatigue(position)
     }
 
     fun getRatingAtPositionNoFatigue(position: Int): Int {
