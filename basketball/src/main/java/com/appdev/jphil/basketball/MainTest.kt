@@ -77,6 +77,17 @@ fun main() {
 
         ftAttempts = game.homeTeam.freeThrowShots + game.awayTeam.freeThrowShots
         ftMakes = game.homeTeam.freeThrowMakes + game.awayTeam.freeThrowMakes
+
+        if (i == 10) {
+            var homeText = ""
+            game.scoreline.homeScores.forEach { homeText += " $it |" }
+            homeText += " ${game.homeScore}"
+            var awayText = ""
+            game.scoreline.awayScores.forEach { awayText += " $it |" }
+            awayText += " ${game.awayScore}"
+            println("Home: $homeText")
+            println("Away: $awayText")
+        }
     }
 
     println("Neutral Court")

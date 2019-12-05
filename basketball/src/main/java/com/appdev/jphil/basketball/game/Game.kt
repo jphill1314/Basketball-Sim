@@ -21,7 +21,8 @@ class Game(
     val isConferenceGame: Boolean,
     var id: Int? = null,
     val tournamentId: Int? = null,
-    var isFinal: Boolean = false
+    var isFinal: Boolean = false,
+    val scoreline: Scoreline = Scoreline()
 ) {
     var miscText: MiscTextContract = MiscPlayText()
     var fastBreakText: FastBreakTextContract = FastBreakPlayText()
@@ -77,6 +78,7 @@ class Game(
                     TimeoutHelper.runTimeout(this)
                 }
             }
+            scoreline.addScores(homeScore, awayScore)
             half++
         }
         half--
