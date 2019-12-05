@@ -4,12 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.game.Scoreline
 import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.typeconverters.BooleanListConverter
+import com.appdev.jphil.basketballcoach.database.typeconverters.IntListTypeConverter
 
 @Entity
-@TypeConverters(BooleanListConverter::class)
+@TypeConverters(value =  [BooleanListConverter::class, IntListTypeConverter::class])
 data class GameEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
@@ -46,10 +48,22 @@ data class GameEntity(
     val timeInBackcourt: Int,
     val lastPassWasGreat: Boolean,
     val lastPlayerWithBall: Int,
-    val isConferenceGame: Boolean
+    val isConferenceGame: Boolean,
+    val homeScores: MutableList<Int>,
+    val awayScores: MutableList<Int>
 ) {
     fun createGame(homeTeam: Team, awayTeam: Team): Game {
-        val game = Game(homeTeam, awayTeam, isNeutralCourt, season, isConferenceGame, id, tournamentId, isFinal)
+        val game = Game(
+            homeTeam,
+            awayTeam,
+            isNeutralCourt,
+            season,
+            isConferenceGame,
+            id,
+            tournamentId,
+            isFinal,
+            Scoreline(homeScores, awayScores)
+        )
         game.inProgress = inProgress
         game.shotClock = shotClock
         game.timeRemaining = timeRemaining
@@ -115,7 +129,9 @@ data class GameEntity(
                 game.timeInBackcourt,
                 game.lastPassWasGreat,
                 game.lastPlayerWithBall,
-                game.isConferenceGame
+                game.isConferenceGame,
+                game.scoreline.homeScores,
+                game.scoreline.awayScores
             )
         }
 
