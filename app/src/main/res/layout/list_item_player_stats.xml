@@ -1,150 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/card_margin_bottom"
-    app:cardCornerRadius="0dp"
-    android:id="@+id/cardView2">
+    app:cardCornerRadius="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/stl_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="3"
-            app:layout_constraintTop_toTopOf="@+id/reb_stat"
+            app:layout_constraintEnd_toEndOf="@+id/ft_label"
             app:layout_constraintStart_toStartOf="@+id/ft_label"
-            app:layout_constraintEnd_toEndOf="@+id/ft_label"/>
+            app:layout_constraintTop_toTopOf="@+id/reb_stat"
+            tools:text="3" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/to_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="5"
-            app:layout_constraintTop_toTopOf="@+id/fouls_stat"
+            app:layout_constraintEnd_toEndOf="@+id/ast_label"
             app:layout_constraintStart_toStartOf="@+id/ast_label"
-            app:layout_constraintEnd_toEndOf="@+id/ast_label"/>
+            app:layout_constraintTop_toTopOf="@+id/fouls_stat"
+            tools:text="5" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/ob_stat"
-            android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/min_label"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            app:layout_constraintEnd_toEndOf="@+id/min_label"
             app:layout_constraintStart_toStartOf="@+id/min_label"
-            app:layout_constraintEnd_toEndOf="@+id/min_label"/>
+            app:layout_constraintTop_toBottomOf="@+id/min_label"
+            tools:text="23" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/fouls_stat"
-            android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="2"
-            app:layout_constraintTop_toTopOf="@+id/stl_stat"
-            app:layout_constraintStart_toStartOf="@+id/pts_label"
-            app:layout_constraintEnd_toEndOf="@+id/pts_label"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/reb_stat"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="16"
+            app:layout_constraintEnd_toEndOf="@+id/pts_label"
+            app:layout_constraintStart_toStartOf="@+id/pts_label"
+            app:layout_constraintTop_toTopOf="@+id/stl_stat"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/reb_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            app:layout_constraintEnd_toEndOf="@+id/threefg_label"
             app:layout_constraintStart_toStartOf="@+id/threefg_label"
             app:layout_constraintTop_toTopOf="@+id/db_stat"
-            app:layout_constraintEnd_toEndOf="@+id/threefg_label"/>
+            tools:text="16" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/db_stat"
-            android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="2/6"
-            app:layout_constraintTop_toTopOf="@+id/ob_stat"
-            app:layout_constraintStart_toStartOf="@+id/twofg_label"
-            app:layout_constraintEnd_toEndOf="@+id/twofg_label"/>
-
-        <TextView
-            android:text="@string/ob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            app:layout_constraintEnd_toEndOf="@+id/twofg_label"
+            app:layout_constraintStart_toStartOf="@+id/twofg_label"
+            app:layout_constraintTop_toTopOf="@+id/ob_stat"
+            tools:text="2/6" />
+
+        <TextView
             android:id="@+id/ob_label"
-            android:textAppearance="@style/NormalTextBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/ob_stat"
+            android:layout_marginBottom="8dp"
+            android:text="@string/ob"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/ob_stat"
             app:layout_constraintStart_toStartOf="@+id/ob_stat"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/ob_stat" />
 
         <TextView
-            android:text="@string/fouls_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/db_label"
-            android:textAppearance="@style/NormalTextBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/fouls_stat"
-            app:layout_constraintStart_toStartOf="@+id/fouls_stat"
-            app:layout_constraintEnd_toEndOf="@+id/fouls_stat"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:text="@string/fouls_label"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/fouls_stat"
+            app:layout_constraintStart_toStartOf="@+id/fouls_stat"
+            app:layout_constraintTop_toBottomOf="@+id/fouls_stat" />
 
         <TextView
-            android:text="@string/db"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/reb_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/db"
             android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/db_stat"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/db_stat"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
+            app:layout_constraintStart_toStartOf="@+id/db_stat" />
 
         <TextView
-            android:text="@string/to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/stl_label"
-            android:textAppearance="@style/NormalTextBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/to_stat"
-            app:layout_constraintStart_toStartOf="@+id/to_stat"
+            android:layout_marginBottom="8dp"
+            android:text="@string/to"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/to_stat"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
+            app:layout_constraintStart_toStartOf="@+id/to_stat"
+            app:layout_constraintTop_toBottomOf="@+id/to_stat" />
 
         <TextView
-            android:text="@string/reb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/fouls_label"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/reb_stat"
-            app:layout_constraintEnd_toEndOf="@+id/reb_stat"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:text="@string/stl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/to_label"
+            android:layout_marginBottom="8dp"
+            android:text="@string/reb"
             android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/stl_stat"
-            app:layout_constraintEnd_toEndOf="@+id/stl_stat"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
+            app:layout_constraintEnd_toEndOf="@+id/reb_stat"
+            app:layout_constraintStart_toStartOf="@+id/reb_stat" />
+
+        <TextView
+            android:id="@+id/to_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/stl"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/stl_stat"
+            app:layout_constraintStart_toStartOf="@+id/stl_stat" />
 
         <TextView
             android:id="@+id/opponent"
@@ -152,165 +151,163 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:lines="1"
-            android:textAppearance="@style/HeaderTextBlack"
+            android:textAppearance="@style/NormalTextBlack.Bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="vs. WCU"
-            />
+            tools:text="vs. WCU" />
 
         <TextView
             android:id="@+id/result"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:textAppearance="@style/HeaderTextBlack"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="W 86 - 65"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:gravity="center"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="W 86 - 65" />
 
         <TextView
+            android:id="@+id/ast_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ast_stat"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="3"
             app:layout_constraintEnd_toEndOf="@+id/ast_label"
             app:layout_constraintStart_toStartOf="@+id/ast_label"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/opponent"/>
+            app:layout_constraintTop_toBottomOf="@+id/opponent"
+            tools:text="3" />
 
         <TextView
+            android:id="@+id/ft_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ft_stat"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="4/4"
             app:layout_constraintEnd_toEndOf="@+id/ft_label"
             app:layout_constraintStart_toStartOf="@+id/ft_label"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/opponent"/>
+            app:layout_constraintTop_toBottomOf="@+id/opponent"
+            tools:text="4/4" />
 
         <TextView
+            android:id="@+id/min_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/min_stat"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="23"
             app:layout_constraintEnd_toEndOf="@+id/min_label"
             app:layout_constraintStart_toStartOf="@+id/min_label"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/opponent"/>
+            app:layout_constraintTop_toBottomOf="@+id/opponent"
+            tools:text="23" />
 
         <TextView
+            android:id="@+id/twofg_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/twofg_stat"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="3/5"
             app:layout_constraintEnd_toEndOf="@+id/twofg_label"
             app:layout_constraintStart_toStartOf="@+id/twofg_label"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/opponent"/>
+            app:layout_constraintTop_toBottomOf="@+id/opponent"
+            tools:text="3/5" />
 
         <TextView
+            android:id="@+id/pts_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pts_stat"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="16"
             app:layout_constraintEnd_toEndOf="@+id/pts_label"
             app:layout_constraintStart_toStartOf="@+id/pts_label"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/opponent"/>
+            app:layout_constraintTop_toBottomOf="@+id/opponent"
+            tools:text="16" />
 
         <TextView
+            android:id="@+id/threefg_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/threefg_stat"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="2/6"
             app:layout_constraintEnd_toEndOf="@+id/threefg_label"
             app:layout_constraintStart_toStartOf="@+id/threefg_label"
-            android:layout_marginTop="24dp"
             app:layout_constraintTop_toBottomOf="@+id/opponent"
-            />
+            tools:text="2/6" />
 
         <TextView
-            android:text="@string/min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/min_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/min"
             android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/twofg_label"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/min_stat"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            android:layout_marginStart="16dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/min_stat" />
 
         <TextView
-            android:text="@string/two_fg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/twofg_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/two_fg"
             android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toEndOf="@+id/min_label"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/threefg_label"
-            app:layout_constraintTop_toBottomOf="@+id/twofg_stat"
-            android:layout_marginTop="8dp"/>
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/min_label"
+            app:layout_constraintTop_toBottomOf="@+id/twofg_stat" />
 
         <TextView
-            android:text="@string/three_fg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/threefg_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/three_fg"
             android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toEndOf="@+id/twofg_label"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/ft_label"
-            app:layout_constraintTop_toBottomOf="@+id/threefg_stat"
-            android:layout_marginTop="8dp"/>
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/twofg_label"
+            app:layout_constraintTop_toBottomOf="@+id/threefg_stat" />
 
         <TextView
-            android:text="@string/ft_fg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/ft_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/ft_fg"
             android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toEndOf="@+id/threefg_label"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/pts_label"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/ft_stat"/>
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/threefg_label"
+            app:layout_constraintTop_toBottomOf="@+id/ft_stat" />
 
         <TextView
-            android:text="@string/pts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/pts_label"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toEndOf="@+id/ft_label"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/ast_label"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/pts_stat"/>
-
-        <TextView
-            android:text="@string/ast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ast_label"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toEndOf="@+id/pts_label"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/ast_stat"
-            android:layout_marginEnd="16dp"/>
+            android:text="@string/pts"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintEnd_toStartOf="@+id/ast_label"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ft_label"
+            app:layout_constraintTop_toBottomOf="@+id/pts_stat" />
+
+        <TextView
+            android:id="@+id/ast_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/ast"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pts_label"
+            app:layout_constraintTop_toBottomOf="@+id/ast_stat" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

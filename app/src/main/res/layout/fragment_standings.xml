@@ -1,28 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp">
 
         <Spinner
             android:id="@+id/spinner"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
-            android:paddingTop="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/name"/>
 
-    </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            android:gravity="start|center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/conference_record"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner"
+            app:layout_constraintHorizontal_weight="3"
+            tools:text="Team"/>
 
-    <include
-        android:id="@+id/header"
-        layout="@layout/list_item_standing_entry"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/conference_record"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/overall_record"
+            app:layout_constraintStart_toEndOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@id/spinner"
+            app:layout_constraintHorizontal_weight="1"
+            tools:text="Conf. W-L"/>
+
+        <TextView
+            android:id="@+id/overall_record"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/conference_record"
+            app:layout_constraintTop_toBottomOf="@id/spinner"
+            app:layout_constraintHorizontal_weight="1"
+            tools:text="W-L"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/standings_recycler_view"

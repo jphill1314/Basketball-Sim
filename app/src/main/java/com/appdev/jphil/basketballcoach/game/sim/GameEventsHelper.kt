@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.plays.BasketballPlay
 import com.appdev.jphil.basketball.plays.EndOfHalf
 import com.appdev.jphil.basketball.plays.TipOff
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
+import com.appdev.jphil.basketballcoach.util.getColor
 
 object GameEventsHelper {
 
