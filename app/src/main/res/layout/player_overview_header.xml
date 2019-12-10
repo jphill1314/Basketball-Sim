@@ -12,6 +12,79 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/player_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/HeaderTextBlack.Bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/position"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            tools:text="Steve Person" />
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/HeaderTextBlack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="PG"/>
+
+        <TextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/HeaderTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/position"
+            app:layout_constraintEnd_toEndOf="@+id/position"
+            app:layout_constraintStart_toStartOf="@+id/position"
+            tools:text="Jr"
+            />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/HeaderTextBlack"
+            app:layout_constraintStart_toStartOf="@+id/player_name"
+            app:layout_constraintTop_toBottomOf="@+id/player_name"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            tools:text="Shooter"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/potential"
+            android:gravity="end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAppearance="@style/HeaderTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/rating"
+            app:layout_constraintStart_toStartOf="@+id/guideline12"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Potential: 100"/>
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAppearance="@style/HeaderTextBlack"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline12"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Rating: 69"/>
+
+
+        <TextView
             android:id="@+id/min_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,65 +149,6 @@
             app:layout_constraintEnd_toEndOf="@+id/fouls_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
             tools:text="2.4"/>
-
-        <TextView
-            android:id="@+id/player_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/NormalTextBlack.Bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/position"
-            app:layout_constraintEnd_toStartOf="@+id/guideline12"
-            tools:text="Steve Person" />
-
-        <TextView
-            android:id="@+id/position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="PG"/>
-
-        <TextView
-            android:id="@+id/year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintTop_toBottomOf="@+id/position"
-            app:layout_constraintEnd_toEndOf="@+id/position"
-            app:layout_constraintStart_toStartOf="@+id/position"
-            tools:text="Jr"
-            />
-
-        <TextView
-            android:id="@+id/type"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/player_name"
-            app:layout_constraintTop_toBottomOf="@+id/player_name"
-            app:layout_constraintEnd_toStartOf="@+id/guideline12"
-            tools:text="Shooter"/>
-
-        <TextView
-            android:id="@+id/rating"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline12"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Rating: 69"/>
 
         <TextView
             android:id="@+id/min_label"
@@ -219,19 +233,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fouls_stats"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/potential"
-            android:gravity="end"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAppearance="@style/NormalTextBlack"
-            app:layout_constraintTop_toBottomOf="@+id/rating"
-            app:layout_constraintStart_toStartOf="@+id/guideline12"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Potential: 100"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"

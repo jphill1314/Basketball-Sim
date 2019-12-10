@@ -11,7 +11,19 @@
 
     <style name="HeaderTextBlack" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="HeaderTextBlack.Bold" parent="HeaderTextBlack">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SmallHeaderTextBlack" parent="HeaderTextBlack">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="SmallHeaderTextGrey" parent="SmallHeaderTextBlack">
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="SmallTextBlack" parent="TextAppearance.AppCompat">
@@ -19,9 +31,8 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="SmallTextGray" parent="TextAppearance.AppCompat">
+    <style name="SmallTextGray" parent="SmallTextBlack">
         <item name="android:textColor">@color/gray</item>
-        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="SpinnerText" parent="NormalTextBlack.Bold">
