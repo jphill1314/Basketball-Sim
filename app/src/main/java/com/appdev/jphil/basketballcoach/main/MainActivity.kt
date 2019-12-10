@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
@@ -12,10 +13,11 @@ import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
 import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
+import com.appdev.jphil.basketballcoach.util.getStyle
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navBinding: NavigationHeaderBinding
@@ -35,7 +37,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         savedInstanceState?.let {
             teamTheme = TeamColor.fromInt(savedInstanceState.getInt(TEAM_COLOR))
-            setTheme(getStyle(teamTheme))
+            setTheme(teamTheme.getStyle())
         }
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
@@ -43,7 +45,6 @@ class MainActivity : DaggerAppCompatActivity() {
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-//        enableNavigation()
 
         val navController = findNavController(R.id.frame_layout)
         appBarConfiguration = AppBarConfiguration(
@@ -97,21 +98,13 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
-//    override fun disableNavigation() {
-//        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-//        supportActionBar?.let {
-//            it.setDisplayHomeAsUpEnabled(false)
-//            it.setHomeAsUpIndicator(null)
-//        }
-//    }
-//
-//    override fun enableNavigation() {
-//        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//        supportActionBar?.let {
-//            it.setDisplayHomeAsUpEnabled(true)
-//            it.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
-//        }
-//    }
+    override fun enableDrawer() {
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+    }
+
+    override fun disableDrawer() {
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
 
     private fun navigateToHomePage() {
         findNavController(R.id.frame_layout).popBackStack(R.id.roster, false)
@@ -133,25 +126,6 @@ class MainActivity : DaggerAppCompatActivity() {
             navToRoster = true
             recreate()
         }
-    }
-
-    private fun getStyle(color: TeamColor) = when (color) {
-        TeamColor.Red -> R.style.AppTheme_Red
-        TeamColor.Pink -> R.style.AppTheme_Pink
-        TeamColor.Purple -> R.style.AppTheme_Purple
-        TeamColor.DeepPurple -> R.style.AppTheme_DeepPurple
-        TeamColor.Indigo -> R.style.AppTheme_Indigo
-        TeamColor.Blue -> R.style.AppTheme_Blue
-        TeamColor.LightBlue -> R.style.AppTheme_LightBlue
-        TeamColor.Cyan -> R.style.AppTheme_Cyan
-        TeamColor.Teal -> R.style.AppTheme_Teal
-        TeamColor.Green -> R.style.AppTheme_Green
-        TeamColor.LightGreen -> R.style.AppTheme_LightGreen
-        TeamColor.Yellow -> R.style.AppTheme_Yellow
-        TeamColor.Orange -> R.style.AppTheme_Orange
-        TeamColor.DeepOrange -> R.style.AppTheme_DeepOrange
-        TeamColor.BlueGrey -> R.style.AppTheme_BlueGrey
-        else -> R.style.AppTheme_Red
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

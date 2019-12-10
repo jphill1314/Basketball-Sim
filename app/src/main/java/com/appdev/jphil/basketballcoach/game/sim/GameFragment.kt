@@ -24,11 +24,14 @@ import com.appdev.jphil.basketballcoach.game.dialogs.teamtalk.TeamTalkDialog
 import com.appdev.jphil.basketballcoach.game.sim.boxscore.BoxScoreAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameTeamStatsAdapter
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
 import com.appdev.jphil.basketballcoach.strategy.StrategyDataModel
 import com.appdev.jphil.basketballcoach.util.TimeUtil
+import com.appdev.jphil.basketballcoach.util.getColor
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
@@ -50,12 +53,30 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private var nullGame: Game? = null
 
     @Inject
+    lateinit var navManager: NavigationManager
+
+    @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private var viewModel: GameViewModel? = null
+    private lateinit var viewModel: GameViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        viewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+            .get(GameViewModel::class.java).apply {
+                homeBoxScoreAdapter = BoxScoreAdapter(resources, args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
+                awayBoxScoreAdapter = BoxScoreAdapter(resources, !args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
+                gameId = args.gameId
+                gameState.observe(this@GameFragment, Observer { gameState ->
+                    isInTimeout = gameState.isTimeout
+                    if (gameState.isNewHalf) {
+                        notifyNewHalf(gameState.newEvents)
+                    } else {
+                        updateGame(gameState.game, gameState.newEvents)
+                    }
+                })
+                simulateGame()
+            }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,7 +89,10 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             simSpeed = it.getInt("simSpeed", 50)
         }
 
-        gameAdapter = GameAdapter(resources)
+        runBlocking {
+            val game = viewModel.getGame()
+            gameAdapter = GameAdapter(resources, game.homeTeam.color.getColor(), game.awayTeam.color.getColor())
+        }
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         ArrayAdapter.createFromResource(
@@ -95,8 +119,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             progress = simSpeed
         }
 
-        binding.playFab.setOnClickListener { onPlayFabClicked() }
-        binding.timeoutFab.setOnClickListener { onTimeOutFabClicked() }
+        binding.resumeGame.setOnClickListener { onPlayFabClicked() }
+        binding.callTimeout.setOnClickListener { onTimeOutFabClicked() }
+        setTimeoutButtonText()
 
         selectView(viewId)
 
@@ -110,25 +135,18 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
     override fun onResume() {
         super.onResume()
-        viewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
-            .get(GameViewModel::class.java).apply {
-                homeBoxScoreAdapter = BoxScoreAdapter(resources, args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
-                awayBoxScoreAdapter = BoxScoreAdapter(resources, !args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
-                gameId = args.gameId
-                gameState.observe(this@GameFragment, Observer { gameState ->
-                    isInTimeout = gameState.isTimeout
-                    if (gameState.isNewHalf) {
-                        notifyNewHalf(gameState.newEvents)
-                    } else {
-                        updateGame(gameState.game, gameState.newEvents)
-                    }
-                })
-                simulateGame()
-            }
+        navManager.disableDrawer()
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
-        if (game.deadball && !game.madeShot && game.gamePlays.isNotEmpty() && game.gamePlays.last() !is FreeThrows && newEvents.isNotEmpty()) {
+        if (
+            game.deadball &&
+            !game.madeShot &&
+            game.gamePlays.isNotEmpty() &&
+            game.gamePlays.last() !is FreeThrows &&
+            newEvents.isNotEmpty() ||
+            isInTimeout
+        ) {
             onDeadBall()
         }
 
@@ -192,6 +210,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onPause() {
         super.onPause()
         viewModel?.pauseSim()
+        navManager.enableDrawer()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -212,11 +231,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        // no op
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
     }
 
     private fun selectView(id: Int) {
@@ -245,38 +262,42 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             }
             fragmentManager?.let { dialog.show(it, "TAG") }
         } else if (handleFoulOuts(nullGame)) {
-            binding.playFab.apply {
-                isEnabled = false
-                hide()
-            }
+            binding.resumeGame.isEnabled = false
             viewModel?.pauseGame = false
             deadBall = false
-
-            binding.timeoutFab.show()
+            binding.callTimeout.isEnabled = true
+            setTimeoutButtonText()
         }
     }
 
     private fun onDeadBall() {
-        binding.playFab.apply {
+        binding.resumeGame.apply {
             isEnabled = true
-            show()
+            text = resources.getString(R.string.resume)
         }
         viewModel?.pauseGame = true
         deadBall = true
-
-        binding.timeoutFab.hide()
+        binding.callTimeout.isEnabled = false
+        setTimeoutButtonText()
     }
 
     private fun onTimeOutFabClicked() {
         viewModel?.callTimeout()
+        setTimeoutButtonText()
+    }
+
+    private fun setTimeoutButtonText() {
+        binding.callTimeout.text = if (viewModel?.userWantsTimeout() == true) {
+            resources.getString(R.string.cancel_timeout)
+        } else {
+            resources.getString(R.string.call_timeout)
+        }
     }
 
     private fun showPlayerAttributeDialog(player: Player) {
         val dialog = PlayerOverviewDialogFragment()
         dialog.player = player
-        dialog.show(fragmentManager!!,
-            DIALOG
-        )
+        dialog.show(fragmentManager!!, DIALOG)
     }
 
     companion object {

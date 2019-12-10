@@ -38,6 +38,7 @@
     </string-array>
 
     <string name="name">Name</string>
+    <string name="team">Team</string>
     <string name="pos">Pos</string>
     <string name="position">Position</string>
     <string name="minutes">Minutes</string>
@@ -80,7 +81,7 @@
 
     <string name="standings_dash">%1$d-%2$d</string>
     <string name="conf_w_l">Conf. W-L</string>
-    <string name="overall_w_l">Overall W-L</string>
+    <string name="w_l">W-L</string>
     <string name="score_dash">%1$s %2$d - %3$d %4$s</string>
 
     <string-array name="player_overview">
@@ -190,4 +191,9 @@
     <string name="aggressive_talk">You guys need to start playing much better!</string>
     <string name="offensive_talk">Let\'s focus on offense for the time being.</string>
     <string name="defensive_talk">We need to clamp down on defense if we want to win.</string>
+
+    <string name="call_timeout">Call Timeout!</string>
+    <string name="cancel_timeout">Cancel Timeout</string>
+    <string name="resume">Resume</string>
+    <string name="pause">Pause</string>
 </resources>

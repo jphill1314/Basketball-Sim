@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.util.StatsUtil
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -22,6 +23,8 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
 
     @Inject
     lateinit var presenter: PlayerOverviewContract.Presenter
+    @Inject
+    lateinit var navManager: NavigationManager
     private lateinit var recyclerView: RecyclerView
     private var attributeAdapter: PlayerAttributeAdapter? = null
     private var statsAdapter: PlayerStatsAdapter? = null
@@ -30,12 +33,19 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        navManager.disableDrawer()
     }
 
     override fun onResume() {
         super.onResume()
         view?.findViewById<Spinner>(R.id.top_spinner)?.onItemSelectedListener = presenter
         presenter.onViewAttached(this)
+    }
+
+    override fun onStop() {
+        navManager.enableDrawer()
+        presenter.onViewDetached()
+        super.onStop()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,7 +62,6 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
             adapter.setDropDownViewResource(R.layout.spinner_list_item)
             topSpinner.adapter = adapter
         }
-
         return view
     }
 
@@ -86,9 +95,5 @@ class PlayerOverviewFragment : Fragment(), PlayerOverviewContract.View {
 
     override fun displayPlayerStats() {
         recyclerView.adapter = statsAdapter
-    }
-
-    companion object {
-        private const val PLAYER = "playerId"
     }
 }

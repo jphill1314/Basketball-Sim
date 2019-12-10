@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.schedule
 
 import android.content.res.Resources
+import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ListItemScheduleBinding
+import com.appdev.jphil.basketballcoach.util.getColorCompat
 
 class ScheduleAdapter(
     private val resources: Resources,
@@ -39,6 +41,7 @@ class ScheduleAdapter(
                     awayScore.text = ""
                     gameStatus.text = ""
                     root.setOnClickListener { presenter.finishSeason() }
+                    color.setBackgroundColor(Color.WHITE)
                 }
             } else {
                 viewHolder.binding.apply {
@@ -48,6 +51,7 @@ class ScheduleAdapter(
                     awayScore.text = ""
                     gameStatus.text = ""
                     root.setOnClickListener { presenter.goToConferenceTournament() }
+                    color.setBackgroundColor(Color.WHITE)
                 }
             }
         }
@@ -61,16 +65,23 @@ class ScheduleAdapter(
                 binding.homeScore.text = game.homeTeamScore.toString()
                 binding.awayScore.text = game.awayTeamScore.toString()
                 binding.gameStatus.text = resources.getString(R.string.game_final)
+                if (game.isVictory) {
+                    binding.color.setBackgroundColor(resources.getColorCompat(R.color.win))
+                } else {
+                    binding.color.setBackgroundColor(resources.getColorCompat(R.color.loss))
+                }
             }
             game.inProgress -> {
                 binding.homeScore.text = game.homeTeamScore.toString()
                 binding.awayScore.text = game.awayTeamScore.toString()
                 binding.gameStatus.text = resources.getString(R.string.in_progress)
+                binding.color.setBackgroundColor(Color.GRAY)
             }
             else -> {
                 binding.homeScore.text = game.homeTeamRecord
                 binding.awayScore.text = game.awayTeamRecord
                 binding.gameStatus.text = resources.getString(R.string.game_number, position + 1)
+                binding.color.setBackgroundColor(Color.DKGRAY)
             }
         }
 
@@ -91,6 +102,7 @@ class ScheduleAdapter(
             } else {
                 binding.simGame.visibility = View.GONE
                 binding.playGame.visibility = View.GONE
+                binding.root.setOnClickListener(null)
             }
         }
     }

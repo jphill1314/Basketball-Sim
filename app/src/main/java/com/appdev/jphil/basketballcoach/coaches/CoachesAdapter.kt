@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.coaches
 
 import android.content.res.Resources
+import android.graphics.Typeface
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -35,11 +36,18 @@ class CoachesAdapter(
             viewHolder.position.text = resources.getString(R.string.position)
             viewHolder.name.text = resources.getString(R.string.name)
             viewHolder.rating.text = resources.getString(R.string.rating)
+            viewHolder.position.setTypeface(null, Typeface.BOLD)
+            viewHolder.name.setTypeface(null, Typeface.BOLD)
+            viewHolder.rating.setTypeface(null, Typeface.BOLD)
+            viewHolder.itemView.setOnClickListener(null)
         } else {
             val coach = coaches[position - 1]
             viewHolder.name.text = coach.fullName
             viewHolder.position.text = resources.getStringArray(R.array.coach_positions)[coach.type.type]
             viewHolder.rating.text = coach.getRating().toString()
+            viewHolder.position.setTypeface(null, Typeface.NORMAL)
+            viewHolder.name.setTypeface(null, Typeface.NORMAL)
+            viewHolder.rating.setTypeface(null, Typeface.NORMAL)
             viewHolder.itemView.setOnClickListener { onClick(coach.id ?: 0) }
         }
     }

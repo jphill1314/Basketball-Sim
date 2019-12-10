@@ -122,6 +122,7 @@ class SchedulePresenter @Inject constructor(
                     awayRecord,
                     game.awayScore,
                     game.isFinal,
+                    isVictory(game),
                     game.inProgress
                 )
             )
@@ -132,6 +133,18 @@ class SchedulePresenter @Inject constructor(
         }
         view?.displaySchedule(dataModels, isUsersSchedule)
 
+    }
+
+    private fun isVictory(game: GameEntity): Boolean {
+        return if (game.isFinal) {
+            if (game.homeTeamId == teamId) {
+                game.homeScore > game.awayScore
+            } else {
+                game.awayScore > game.homeScore
+            }
+        } else {
+            false
+        }
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {

@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
+import android.graphics.Typeface
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -66,13 +67,18 @@ class RosterAdapter(
             binding.name.text = resources.getString(R.string.name)
             binding.rating.text = resources.getString(R.string.rating)
             binding.year.text = resources.getString(R.string.year)
-
-            val params = binding.root.layoutParams as ViewGroup.MarginLayoutParams
-            params.bottomMargin = resources.getDimensionPixelSize(R.dimen.card_margin_bottom)
+            binding.position.setTypeface(null, Typeface.BOLD)
+            binding.name.setTypeface(null, Typeface.BOLD)
+            binding.rating.setTypeface(null, Typeface.BOLD)
+            binding.year.setTypeface(null, Typeface.BOLD)
             setTextColor(binding, false)
         } else {
             val dataModel = if (position < 7) roster[position - 2] else roster[position - 4]
             val player = dataModel.player
+            binding.position.setTypeface(null, Typeface.NORMAL)
+            binding.name.setTypeface(null, Typeface.NORMAL)
+            binding.rating.setTypeface(null, Typeface.NORMAL)
+            binding.year.setTypeface(null, Typeface.NORMAL)
             setTextColor(binding, dataModel.isSelected)
 
             binding.position.text = if (position < 7) positions[position - 2] else positions[player.position - 1]

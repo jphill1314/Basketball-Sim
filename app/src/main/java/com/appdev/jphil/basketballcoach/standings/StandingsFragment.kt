@@ -58,13 +58,9 @@ class StandingsFragment : Fragment(), StandingsContract.View {
                 adapter = this@StandingsFragment.adapter
                 layoutManager = LinearLayoutManager(requireContext())
             }
-            header.apply {
-                root.visibility = View.VISIBLE
-                position.text = resources.getString(R.string.pos)
-                name.text = resources.getString(R.string.name)
-                conferenceRecord.text = resources.getString(R.string.conf_w_l)
-                overallRecord.text = resources.getString(R.string.overall_w_l)
-            }
+            name.text = resources.getString(R.string.team)
+            conferenceRecord.text = resources.getString(R.string.conf_w_l)
+            overallRecord.text = resources.getString(R.string.w_l)
             binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }

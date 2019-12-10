@@ -8,91 +8,91 @@
     </style>
 
     <style name="AppTheme.Red" parent="AppTheme">
-        <item name="colorPrimary">#e53935</item>
+        <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryDark">#ab000d</item>
         <item name="colorAccent">#ff6f60</item>
     </style>
 
     <style name="AppTheme.Pink" parent="AppTheme">
-        <item name="colorPrimary">#f06292</item>
+        <item name="colorPrimary">@color/pink</item>
         <item name="colorPrimaryDark">#ba2d65</item>
         <item name="colorAccent">#ff94c2</item>
     </style>
 
     <style name="AppTheme.Purple" parent="AppTheme">
-        <item name="colorPrimary">#ba68c8</item>
+        <item name="colorPrimary">@color/purple</item>
         <item name="colorPrimaryDark">#883997</item>
         <item name="colorAccent">#ee98fb</item>
     </style>
 
     <style name="AppTheme.DeepPurple" parent="AppTheme">
-        <item name="colorPrimary">#9575cd</item>
+        <item name="colorPrimary">@color/deepPurple</item>
         <item name="colorPrimaryDark">#65499c</item>
         <item name="colorAccent">#c7a4ff</item>
     </style>
 
     <style name="AppTheme.Indigo" parent="AppTheme">
-        <item name="colorPrimary">#7986cb</item>
+        <item name="colorPrimary">@color/indigo</item>
         <item name="colorPrimaryDark">#49599a</item>
         <item name="colorAccent">#aab6fe</item>
     </style>
 
     <style name="AppTheme.Blue" parent="AppTheme">
-        <item name="colorPrimary">#1e88e5</item>
+        <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">#005cb2</item>
         <item name="colorAccent">#6ab7ff</item>
     </style>
 
     <style name="AppTheme.LightBlue" parent="AppTheme">
-        <item name="colorPrimary">#4fc3f7</item>
+        <item name="colorPrimary">@color/lightBlue</item>
         <item name="colorPrimaryDark">#0093c4</item>
         <item name="colorAccent">#8bf6ff</item>
     </style>
 
     <style name="AppTheme.Cyan" parent="AppTheme">
-        <item name="colorPrimary">#4dd0e1</item>
+        <item name="colorPrimary">@color/cyan</item>
         <item name="colorPrimaryDark">#009faf</item>
         <item name="colorAccent">#88ffff</item>
     </style>
 
     <style name="AppTheme.Teal" parent="AppTheme">
-        <item name="colorPrimary">#4db6ac</item>
+        <item name="colorPrimary">@color/teal</item>
         <item name="colorPrimaryDark">#00867d</item>
         <item name="colorAccent">#82e9de</item>
     </style>
 
     <style name="AppTheme.Green" parent="AppTheme">
-        <item name="colorPrimary">#43a047</item>
+        <item name="colorPrimary">@color/green</item>
         <item name="colorPrimaryDark">#00701a</item>
         <item name="colorAccent">#76d275</item>
     </style>
 
     <style name="AppTheme.LightGreen" parent="AppTheme">
-        <item name="colorPrimary">#aed581</item>
+        <item name="colorPrimary">@color/lightGreen</item>
         <item name="colorPrimaryDark">#7da453</item>
         <item name="colorAccent">#e1ffb1</item>
     </style>
 
     <style name="AppTheme.Yellow" parent="AppTheme">
-        <item name="colorPrimary">#ffeb3b</item>
+        <item name="colorPrimary">@color/yellow</item>
         <item name="colorPrimaryDark">#c8b900</item>
         <item name="colorAccent">#ffff72</item>
     </style>
 
     <style name="AppTheme.Orange" parent="AppTheme">
-        <item name="colorPrimary">#fb8c00</item>
+        <item name="colorPrimary">@color/orange</item>
         <item name="colorPrimaryDark">#c25e00</item>
         <item name="colorAccent">#ffbd45</item>
     </style>
 
     <style name="AppTheme.DeepOrange" parent="AppTheme">
-        <item name="colorPrimary">#f4511e</item>
+        <item name="colorPrimary">@color/deepOrange</item>
         <item name="colorPrimaryDark">#b91400</item>
         <item name="colorAccent">#ff844c</item>
     </style>
 
     <style name="AppTheme.BlueGrey" parent="AppTheme">
-        <item name="colorPrimary">#607d8b</item>
+        <item name="colorPrimary">@color/blueGrey</item>
         <item name="colorPrimaryDark">#34515e</item>
         <item name="colorAccent">#8eacbb</item>
     </style>

@@ -8,4 +8,24 @@
     <color name="white">#FFFFFF</color>
 
     <color name="gray">#999999</color>
+
+    <color name="bottomLine">@color/gray</color>
+    <color name="win">#19d119</color>
+    <color name="loss">#d11919</color>
+
+    <color name="red">#e53935</color>
+    <color name="pink">#f06292</color>
+    <color name="purple">#ba68c8</color>
+    <color name="deepPurple">#9575cd</color>
+    <color name="indigo">#7986cb</color>
+    <color name="blue">#1e88e5</color>
+    <color name="lightBlue">#4fc3f7</color>
+    <color name="cyan">#4dd0e1</color>
+    <color name="teal">#4db6ac</color>
+    <color name="green">#43a047</color>
+    <color name="lightGreen">#aed581</color>
+    <color name="yellow">#ffeb3b</color>
+    <color name="orange">#fb8c00</color>
+    <color name="deepOrange">#f4511e</color>
+    <color name="blueGrey">#607d8b</color>
 </resources>

@@ -24,6 +24,8 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     lateinit var presenter: RecruitOverviewContract.Presenter
     @Inject
     lateinit var factory: ViewModelFactory
+    @Inject
+    lateinit var navManager: NavigationManager
     private var teamManager: TeamManagerViewModel? = null
     val args: RecruitOverviewFragmentArgs by navArgs()
 
@@ -32,6 +34,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
         AndroidSupportInjection.inject(this)
         presenter.onViewAttached(this)
         teamManager = activity?.getTeamViewModel(factory)
+        navManager.disableDrawer()
     }
 
     override fun onResume() {
@@ -41,6 +44,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
     override fun onStop() {
         presenter.onViewDetached()
+        navManager.enableDrawer()
         super.onStop()
     }
 

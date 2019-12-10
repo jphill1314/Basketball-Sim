@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.simdialog.SimDialog
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
@@ -24,6 +25,8 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
 
     @Inject
     lateinit var presenter: TournamentContract.Presenter
+    @Inject
+    lateinit var navManager: NavigationManager
 
     private var adapter: TournamentViewPagerAdapter? = null
     private var dialog: SimDialog? = null
@@ -31,6 +34,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        navManager.disableDrawer()
         val vm = ViewModelProviders.of(this).get(TournamentViewModel::class.java)
         vm.presenter?.let { presenter = it } ?: run { vm.presenter = presenter }
     }
@@ -42,6 +46,7 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
 
     override fun onStop() {
         presenter.onViewDetached()
+        navManager.enableDrawer()
         super.onStop()
     }
 

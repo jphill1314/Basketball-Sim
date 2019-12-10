@@ -4,11 +4,12 @@ import android.content.res.Resources
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.databinding.ListItemStandingEntryBinding
+import com.appdev.jphil.basketballcoach.util.getColor
+import com.appdev.jphil.basketballcoach.util.getColorCompat
 
 class StandingsAdapter(
     private var teamId: Int,
@@ -17,16 +18,11 @@ class StandingsAdapter(
     private val resources: Resources
 ): RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val position: TextView = view.findViewById(R.id.position)
-        val name: TextView = view.findViewById(R.id.name)
-        val conference: TextView = view.findViewById(R.id.conference_record)
-        val overall: TextView = view.findViewById(R.id.overall_record)
-    }
+    class ViewHolder(val binding: ListItemStandingEntryBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_standing_entry, parent, false)
-        return ViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        return ViewHolder(ListItemStandingEntryBinding.inflate(inflater, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -35,16 +31,13 @@ class StandingsAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val data = standings[position]
-        viewHolder.position.text = (position + 1).toString()
-        viewHolder.name.text = data.teamName
-        viewHolder.conference.text = resources.getString(R.string.standings_dash, data.conferenceWins, data.conferenceLoses)
-        viewHolder.overall.text = resources.getString(R.string.standings_dash, data.totalWins, data.totalLoses)
-        viewHolder.itemView.setBackgroundColor(if (data.teamId == teamId) {
-            Color.GRAY
-        } else {
-            Color.WHITE
-        })
-
-        viewHolder.itemView.setOnClickListener { presenter.onTeamSelected(data) }
+        viewHolder.binding.apply {
+            this.position.text = (position + 1).toString()
+            name.text = data.teamName
+            conferenceRecord.text = resources.getString(R.string.standings_dash, data.conferenceWins, data.conferenceLoses)
+            overallRecord.text = resources.getString(R.string.standings_dash, data.totalWins, data.totalLoses)
+            root.setOnClickListener { presenter.onTeamSelected(data) }
+            teamColor.setBackgroundColor(if (data.teamId == teamId) resources.getColorCompat(data.teamColor.getColor()) else Color.WHITE)
+        }
     }
 }

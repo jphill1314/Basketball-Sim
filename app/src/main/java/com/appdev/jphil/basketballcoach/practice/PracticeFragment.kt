@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.practice
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,8 +59,14 @@ class PracticeFragment : Fragment(), PracticeContract.View {
                 }
             }
 
-            it.findViewById<TextView>(R.id.player_name).text = resources.getString(R.string.name)
-            it.findViewById<TextView>(R.id.practice_result).text = resources.getString(R.string.practice_performance)
+            it.findViewById<TextView>(R.id.player_name).apply {
+                text = resources.getString(R.string.name)
+                setTypeface(null, Typeface.BOLD)
+            }
+            it.findViewById<TextView>(R.id.practice_result).apply {
+                text = resources.getString(R.string.practice_performance)
+                setTypeface(null, Typeface.BOLD)
+            }
         }
     }
 

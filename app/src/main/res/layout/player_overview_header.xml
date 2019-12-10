@@ -12,157 +12,156 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/min_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/min_stats"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="32"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="@+id/min_label"
             app:layout_constraintStart_toStartOf="@+id/min_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
-            android:layout_marginTop="24dp"/>
+            tools:text="32"/>
 
         <TextView
+            android:id="@+id/pts_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pts_stat"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="15.2"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="@+id/ft_label"
             app:layout_constraintStart_toStartOf="@+id/ft_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
-            android:layout_marginTop="24dp"/>
+            tools:text="15.2"/>
 
         <TextView
+            android:id="@+id/ast_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ast_stat"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="3.2"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="@+id/ast_label"
             app:layout_constraintStart_toStartOf="@+id/ast_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
-            android:layout_marginTop="24dp"/>
+            tools:text="3.2"/>
 
         <TextView
+            android:id="@+id/reb_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/reb_stats"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="1.4"
             app:layout_constraintEnd_toEndOf="@+id/reb_label"
             app:layout_constraintStart_toStartOf="@+id/reb_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
-            android:layout_marginTop="24dp"/>
+            tools:text="1.4"/>
 
         <TextView
+            android:id="@+id/stl_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/stl_stats"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="0.5"
             app:layout_constraintEnd_toEndOf="@+id/stl_label"
             app:layout_constraintStart_toStartOf="@+id/stl_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
-            android:layout_marginTop="24dp"/>
+            tools:text="0.5"/>
 
         <TextView
+            android:id="@+id/fouls_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/fouls_stats"
+            android:layout_marginTop="24dp"
             android:textAppearance="@style/NormalTextBlack.Bold"
-            tools:text="2.4"
             app:layout_constraintStart_toStartOf="@+id/fouls_label"
             app:layout_constraintEnd_toEndOf="@+id/fouls_label"
             app:layout_constraintTop_toBottomOf="@+id/type"
-            android:layout_marginTop="24dp"/>
+            tools:text="2.4"/>
 
         <TextView
             android:id="@+id/player_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/HeaderTextBlack"
-            tools:text="Steve Person"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/position"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/NormalTextBlack.Bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/position"
             app:layout_constraintEnd_toStartOf="@+id/guideline12"
-            />
+            tools:text="Steve Person" />
 
         <TextView
+            android:id="@+id/position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/position"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="PG"
-            android:textAppearance="@style/HeaderTextBlack"/>
+            tools:text="PG"/>
 
         <TextView
+            android:id="@+id/year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/year"
-            tools:text="Jr"
-            android:textAppearance="@style/HeaderTextBlack"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/NormalTextBlack"
             app:layout_constraintTop_toBottomOf="@+id/position"
             app:layout_constraintEnd_toEndOf="@+id/position"
             app:layout_constraintStart_toStartOf="@+id/position"
+            tools:text="Jr"
             />
 
         <TextView
+            android:id="@+id/type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/type"
-            tools:text="Shooter"
-            android:textAppearance="@style/HeaderTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/player_name"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintStart_toStartOf="@+id/player_name"
             app:layout_constraintTop_toBottomOf="@+id/player_name"
-            app:layout_constraintEnd_toStartOf="@+id/guideline12"/>
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            tools:text="Shooter"/>
 
         <TextView
+            android:id="@+id/rating"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/rating"
             android:gravity="end"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Rating: 69"
-            android:textAppearance="@style/HeaderTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/guideline12"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline12"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Rating: 69"/>
 
         <TextView
+            android:id="@+id/min_label"
             android:text="@string/min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/min_label"
             android:textAppearance="@style/NormalTextBlack"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/ft_label"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/min_stats"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
+            android:id="@+id/ft_label"
             android:text="@string/pts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ft_label"
             android:textAppearance="@style/NormalTextBlack"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/min_label"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/ast_label"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/pts_stat"/>
 
         <TextView
@@ -171,12 +170,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/ast_label"
             android:textAppearance="@style/NormalTextBlack"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/ft_label"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/reb_label"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/ast_stat"/>
 
         <TextView
@@ -184,13 +183,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/reb_label"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:textAppearance="@style/NormalTextBlack"
             app:layout_constraintStart_toEndOf="@+id/ast_label"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/stl_label"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/reb_stats"/>
 
         <TextView
@@ -199,12 +198,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/stl_label"
             android:textAppearance="@style/NormalTextBlack"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/reb_label"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/fouls_label"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/stl_stats"/>
 
         <TextView
@@ -213,12 +212,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/fouls_label"
             android:textAppearance="@style/NormalTextBlack"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/stl_label"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/fouls_stats"/>
 
         <TextView
@@ -227,12 +226,12 @@
             android:id="@+id/potential"
             android:gravity="end"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/rating"
-            tools:text="Potential: 100"
-            android:textAppearance="@style/HeaderTextBlack"
-            app:layout_constraintStart_toStartOf="@+id/guideline12"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:textAppearance="@style/NormalTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/rating"
+            app:layout_constraintStart_toStartOf="@+id/guideline12"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Potential: 100"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"

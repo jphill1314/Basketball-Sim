@@ -12,7 +12,11 @@ import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
 import com.appdev.jphil.basketballcoach.databinding.ListItemGameEventBinding
 import com.appdev.jphil.basketballcoach.util.TimeUtil
 
-class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAdapter.ViewHolder>() {
+class GameAdapter(
+    private val resources: Resources,
+    private val homeColor: Int,
+    private val awayColor: Int
+): RecyclerView.Adapter<GameAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ListItemGameEventBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -43,10 +47,10 @@ class GameAdapter(private val resources: Resources): RecyclerView.Adapter<GameAd
         }
         viewHolder.binding.gameScore.text = score
 
-        viewHolder.itemView.setBackgroundColor(if (play.homeTeamHasBall) {
-            ResourcesCompat.getColor(resources, R.color.white, null)
+        viewHolder.binding.teamColor.setBackgroundColor(if (play.homeTeamHasBall) {
+            ResourcesCompat.getColor(resources, homeColor, null)
         } else {
-            ResourcesCompat.getColor(resources, R.color.gray, null)
+            ResourcesCompat.getColor(resources, awayColor, null)
         })
     }
 

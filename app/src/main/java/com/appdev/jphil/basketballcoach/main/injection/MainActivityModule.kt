@@ -2,9 +2,12 @@ package com.appdev.jphil.basketballcoach.main.injection
 
 import com.appdev.jphil.basketballcoach.main.DaggerNavHost
 import com.appdev.jphil.basketballcoach.main.MainActivity
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
+import com.appdev.jphil.basketballcoach.main.injection.scopes.PerActivity
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerNavHost
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
@@ -15,6 +18,10 @@ abstract class MainActivityModule {
     @PerNavHost
     @ContributesAndroidInjector(modules = [FragmentBindingModule::class])
     abstract fun bindsNavHost(): DaggerNavHost
+
+    @Binds
+    @PerActivity
+    abstract fun bindsNavigationManager(activity: MainActivity): NavigationManager
 
     @Module
     companion object {

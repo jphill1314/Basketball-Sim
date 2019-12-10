@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.game.sim.boxscore
 
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,44 +10,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ListItemBoxScoreBinding
-import com.appdev.jphil.basketballcoach.databinding.ListItemBoxScoreHeaderBinding
 
 class BoxScoreStatsAdapter(
     private val resources: Resources,
     private val helper: BoxScoreContract
-) : RecyclerView.Adapter<BoxScoreViewHolder>() {
+) : RecyclerView.Adapter<BoxScorePlayerViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoxScoreViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoxScorePlayerViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            0 -> HeaderViewHolder(
-                ListItemBoxScoreHeaderBinding.inflate(inflater, parent, false)
-            )
-            else -> BoxScorePlayerViewHolder(
+        return BoxScorePlayerViewHolder(
                 ListItemBoxScoreBinding.inflate(inflater, parent, false)
             )
-        }
-    }
-
-    override fun getItemViewType(position: Int) = when (position % (helper.getPlayers().size + NUM_OF_NON_PLAYERS)) {
-        0, 7 -> 0
-        else -> 1
     }
 
     override fun getItemCount(): Int = (helper.getPlayers().size + NUM_OF_NON_PLAYERS) * NUM_OF_STATS
 
-    override fun onBindViewHolder(holder: BoxScoreViewHolder, position: Int) {
-        when (holder) {
-            is BoxScorePlayerViewHolder -> {
-                val players = helper.getPlayers()
-                val column = position / (players.size + NUM_OF_NON_PLAYERS)
-                when (val row = position % (players.size + NUM_OF_NON_PLAYERS)) {
-                    1, 8 -> bindHeader(holder.binding, column)
-                    in 2..6 -> bindPlayer(holder.binding, players[row - 2], column, row - 2)
-                    else -> bindPlayer(holder.binding, players[row - 4], column, row - 4)
-                }
-            }
-            is HeaderViewHolder -> holder.binding.root.visibility = View.INVISIBLE
+    override fun onBindViewHolder(holder: BoxScorePlayerViewHolder, position: Int) {
+        val players = helper.getPlayers()
+        val column = position / (players.size + NUM_OF_NON_PLAYERS)
+        when (val row = position % (players.size + NUM_OF_NON_PLAYERS)) {
+            0, 6 -> bindHeader(holder.binding, column)
+            in 1..5 -> bindPlayer(holder.binding, players[row - 1], column, row - 1)
+            else -> bindPlayer(holder.binding, players[row - 2], column, row - 2)
         }
     }
 
@@ -69,6 +54,7 @@ class BoxScoreStatsAdapter(
             else -> ""
         }
         binding.text.setTextColor(Color.BLACK)
+        binding.text.setTypeface(null, Typeface.BOLD)
     }
 
     private fun bindPlayer(binding: ListItemBoxScoreBinding, player: Player, column: Int, position: Int) {
@@ -89,6 +75,7 @@ class BoxScoreStatsAdapter(
             12 -> player.turnovers.toString()
             else -> ""
         }
+        binding.text.setTypeface(null, Typeface.NORMAL)
         binding.text.setTextColor(helper.getTextColor(player, position))
         binding.root.setOnClickListener { helper.onPlayerSelected(player) }
         binding.root.setOnLongClickListener { helper.onPlayerLongPressed(player); true }
@@ -104,6 +91,6 @@ class BoxScoreStatsAdapter(
 
     private companion object {
         const val NUM_OF_STATS = 13
-        const val NUM_OF_NON_PLAYERS = 4
+        const val NUM_OF_NON_PLAYERS = 2
     }
 }
