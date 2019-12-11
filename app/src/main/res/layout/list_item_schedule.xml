@@ -9,11 +9,14 @@
 
     <View
         android:id="@+id/color"
-        android:layout_width="8dp"
-        android:layout_height="0dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/game_status"/>
+        app:layout_constraintEnd_toStartOf="@id/home_name"
+        app:layout_constraintTop_toTopOf="@id/home_name"
+        app:layout_constraintBottom_toBottomOf="@id/away_name"/>
 
     <TextView
         android:id="@+id/game_status"

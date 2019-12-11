@@ -66,22 +66,22 @@ class ScheduleAdapter(
                 binding.awayScore.text = game.awayTeamScore.toString()
                 binding.gameStatus.text = resources.getString(R.string.game_final)
                 if (game.isVictory) {
-                    binding.color.setBackgroundColor(resources.getColorCompat(R.color.win))
+                    binding.color.background = resources.getDrawable(R.drawable.circle_green, null)
                 } else {
-                    binding.color.setBackgroundColor(resources.getColorCompat(R.color.loss))
+                    binding.color.background = resources.getDrawable(R.drawable.circle_red, null)
                 }
             }
             game.inProgress -> {
                 binding.homeScore.text = game.homeTeamScore.toString()
                 binding.awayScore.text = game.awayTeamScore.toString()
                 binding.gameStatus.text = resources.getString(R.string.in_progress)
-                binding.color.setBackgroundColor(Color.GRAY)
+                binding.color.background = resources.getDrawable(R.drawable.circle_gray, null)
             }
             else -> {
                 binding.homeScore.text = game.homeTeamRecord
                 binding.awayScore.text = game.awayTeamRecord
                 binding.gameStatus.text = resources.getString(R.string.game_number, position + 1)
-                binding.color.setBackgroundColor(Color.DKGRAY)
+                binding.color.background = resources.getDrawable(R.drawable.circle_gray, null)
             }
         }
 
