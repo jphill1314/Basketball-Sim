@@ -12,6 +12,8 @@ import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
 import com.appdev.jphil.basketballcoach.practice.PracticeFragment
 import com.appdev.jphil.basketballcoach.practice.PracticeModule
+import com.appdev.jphil.basketballcoach.rankings.RankingsFragment
+import com.appdev.jphil.basketballcoach.rankings.RankingsModule
 import com.appdev.jphil.basketballcoach.recruiting.RecruitFragment
 import com.appdev.jphil.basketballcoach.recruiting.RecruitModule
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
@@ -84,4 +86,7 @@ abstract class FragmentBindingModule {
     @ContributesAndroidInjector
     abstract fun gamePreviewFragment(): GamePreviewFragment
 
+    @PerFragment
+    @ContributesAndroidInjector(modules = [RankingsModule::class])
+    abstract fun rankingFragment(): RankingsFragment
 }

@@ -9,6 +9,10 @@ import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 
 object TeamDatabaseHelper {
 
+    fun loadAllTeams(database: BasketballDatabase): List<TeamEntity> {
+        return database.teamDao().getAllTeams()
+    }
+
     fun loadTeamById(teamId: Int, database: BasketballDatabase): Team? {
         return createTeam(database.teamDao().getTeamWithId(teamId), database)
     }

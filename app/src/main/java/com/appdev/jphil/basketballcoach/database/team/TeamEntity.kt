@@ -36,7 +36,8 @@ data class TeamEntity(
     val lastScoreDif: Int,
     val practiceType: Int,
     val knownRecruits: MutableList<Int>,
-    val gamesPlayed: Int
+    val gamesPlayed: Int,
+    val rating: Int
 ) {
 
     fun createTeam(players: MutableList<Player>, coaches: MutableList<Coach>, knownRecruits: MutableList<Recruit>): Team {
@@ -103,7 +104,8 @@ data class TeamEntity(
                 team.lastScoreDiff,
                 team.practiceType.type,
                 knownRecruits,
-                team.gamesPlayed
+                team.gamesPlayed,
+                team.teamRating
             )
         }
     }
