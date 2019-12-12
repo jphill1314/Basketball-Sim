@@ -10,6 +10,7 @@ class ViewModelFactory @Inject constructor(
     private val database: BasketballDatabase
 ): ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(GameViewModel::class.java) -> GameViewModel(database) as T

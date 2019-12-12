@@ -174,12 +174,12 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         homeBoxScoreAdapter.updatePlayers(game.homeTeam.players)
         awayBoxScoreAdapter.updatePlayers(game.awayTeam.players)
 
-        if (strategyAdapter == null && viewModel != null) {
+        if (strategyAdapter == null) {
             strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(
-                viewModel!!.gameStrategyOut.coach,
+                viewModel.gameStrategyOut.coach,
                 resources,
                 true
-            ), viewModel!!.gameStrategyOut)
+            ), viewModel.gameStrategyOut)
         }
 
         handleFoulOuts(game)
@@ -209,7 +209,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     override fun onPause() {
         super.onPause()
-        viewModel?.pauseSim()
+        viewModel.pauseSim()
         navManager.enableDrawer()
     }
 
@@ -224,9 +224,9 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         simSpeed = progress
-        viewModel?.simSpeed = (100 - simSpeed) * 20L
+        viewModel.simSpeed = (100 - simSpeed) * 20L
         if (!deadBall) {
-            viewModel?.pauseGame = simSpeed == 0
+            viewModel.pauseGame = simSpeed == 0
         }
     }
 
@@ -263,7 +263,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             fragmentManager?.let { dialog.show(it, "TAG") }
         } else if (handleFoulOuts(nullGame)) {
             binding.resumeGame.isEnabled = false
-            viewModel?.pauseGame = false
+            viewModel.pauseGame = false
             deadBall = false
             binding.callTimeout.isEnabled = true
             setTimeoutButtonText()
@@ -275,19 +275,19 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             isEnabled = true
             text = resources.getString(R.string.resume)
         }
-        viewModel?.pauseGame = true
+        viewModel.pauseGame = true
         deadBall = true
         binding.callTimeout.isEnabled = false
         setTimeoutButtonText()
     }
 
     private fun onTimeOutFabClicked() {
-        viewModel?.callTimeout()
+        viewModel.callTimeout()
         setTimeoutButtonText()
     }
 
     private fun setTimeoutButtonText() {
-        binding.callTimeout.text = if (viewModel?.userWantsTimeout() == true) {
+        binding.callTimeout.text = if (viewModel.userWantsTimeout()) {
             resources.getString(R.string.cancel_timeout)
         } else {
             resources.getString(R.string.call_timeout)
