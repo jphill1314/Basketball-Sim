@@ -27,33 +27,17 @@ class RankingsAdapter(
         return ViewHolder(ListItemRankingBinding.inflate(inflater, parent, false))
     }
 
-    override fun getItemCount(): Int = dataModels.size + 1
+    override fun getItemCount(): Int = dataModels.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == 0) {
-            bindHeader(holder.binding)
-        } else {
-            bindTeam(dataModels[position - 1], position, holder.binding)
-        }
-    }
-
-    private fun bindHeader(binding: ListItemRankingBinding) {
-        binding.apply {
-            rank.text = ""
-            name.text = resources.getString(R.string.team)
-            efficiency.text = resources.getString(R.string.adj_eff)
-            offEff.text = resources.getString(R.string.adj_off)
-            defEff.text = resources.getString(R.string.adj_def)
-            color.visibility = View.INVISIBLE
-            root.setOnClickListener(null)
-        }
+        bindTeam(dataModels[position], position + 1, holder.binding)
     }
 
     private fun bindTeam(team: TeamStatsDataModel, rank: Int, binding: ListItemRankingBinding) {
         binding.apply {
             this.rank.text = rank.toString()
-            name.text = resources.getString(R.string.two_strings, team.team.schoolName, team.team.mascot) + " ${team.team.rating}"
-            efficiency.text = formatDouble(team.rawOffEff - team.rawDefEff)
+            name.text = team.team.schoolName
+            efficiency.text = formatDouble(team.getAdjEff())
             offEff.text = formatDouble(team.rawOffEff)
             defEff.text = formatDouble(team.rawDefEff)
 

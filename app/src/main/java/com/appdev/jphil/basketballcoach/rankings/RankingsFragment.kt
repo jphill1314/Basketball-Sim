@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.databinding.FragmentRankingsBinding
 import com.appdev.jphil.basketballcoach.main.TeamManagerViewModel
@@ -57,6 +58,13 @@ class RankingsFragment : Fragment(), RankingsContract.View {
             { teamId, confId ->
                 teamViewModel?.changeTeamAndConference(teamId, confId)
             }
+        }
+        binding.header.apply {
+            name.text = resources.getString(R.string.team)
+            efficiency.text = resources.getString(R.string.adj_eff)
+            offEff.text = resources.getString(R.string.adj_off)
+            defEff.text = resources.getString(R.string.adj_def)
+            color.visibility = View.INVISIBLE
         }
     }
 }

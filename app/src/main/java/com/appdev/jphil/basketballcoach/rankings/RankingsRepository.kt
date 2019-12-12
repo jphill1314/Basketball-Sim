@@ -41,7 +41,7 @@ class RankingsRepository @Inject constructor(
                 team.calculateAdjStats(rawTempo, rawEff, games, teams)
             }
 
-            dataModels.sortByDescending { it.rawOffEff - it.rawDefEff }
+            dataModels.sortByDescending { it.getAdjEff() }
 
             withContext(Dispatchers.Main) {
                 presenter.onData(dataModels)

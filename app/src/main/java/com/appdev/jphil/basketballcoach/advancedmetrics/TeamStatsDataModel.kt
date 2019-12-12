@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.advancedmetrics
 
-import android.util.Log
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
@@ -14,6 +13,10 @@ class TeamStatsDataModel(val team: TeamEntity) {
     var adjOffEff = 0.0
     var adjDefEff = 0.0
 
+    fun getAdjEff() = adjOffEff - adjDefEff
+
+    fun getRawEff() = rawOffEff - rawDefEff
+
     fun calculateRawStats(allGames: List<GameEntity>) {
         val games = allGames.filter { it.isFinal && (it.homeTeamId == team.teamId || it.awayTeamId == team.teamId) }
         if (games.isEmpty()) {
@@ -23,7 +26,6 @@ class TeamStatsDataModel(val team: TeamEntity) {
         rawTempo = calcRawTempo(games)
         rawOffEff = calcRawOffEff(games)
         rawDefEff = calcRawDefEff(games)
-        Log.d("testtest", "tempo: $rawTempo  offEff: $rawOffEff   defEff: $rawDefEff")
     }
 
     fun calculateAdjStats(aveTempo: Double, aveEff: Double, allGames: List<GameEntity>, allTeams: Map<Int, TeamStatsDataModel>) {
@@ -42,7 +44,6 @@ class TeamStatsDataModel(val team: TeamEntity) {
         adjTempo = calcAdjTempo(aveTempo, gamesAndOpponents)
         adjOffEff = calcAdjOffEff(aveEff, gamesAndOpponents)
         adjDefEff = calcAdjDefEff(aveEff, gamesAndOpponents)
-        Log.d("testtest", "tempo: $adjTempo  offEff: $adjOffEff   defEff: $adjDefEff")
     }
 
     private fun calcRawTempo(games: List<GameEntity>): Double {
@@ -97,7 +98,7 @@ class TeamStatsDataModel(val team: TeamEntity) {
             val expected = rawDefEff + (opponent.rawOffEff - aveEff)
             val result = getPointsAllowed(game) / getPossessions(game) * 100.0
             val diff = (result / expected) - 1
-            total += expected * diff + rawOffEff
+            total += expected * diff + rawDefEff
         }
         return total / gamesAndOpponents.size
     }
