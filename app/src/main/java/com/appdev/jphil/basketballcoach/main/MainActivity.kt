@@ -52,6 +52,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 R.id.roster,
                 R.id.schedule,
                 R.id.standings,
+                R.id.rankings,
                 R.id.recruiting,
                 R.id.strategy,
                 R.id.staff,

@@ -58,7 +58,7 @@ class ScheduleAdapter(
     }
 
     private fun handleGame(game: ScheduleDataModel, position: Int, binding: ListItemScheduleBinding) {
-        binding.homeName.text = game.homeTeamName
+        binding.homeName.text = game.homeTeamName + ""
         binding.awayName.text = game.awayTeamName
         when {
             game.isFinal -> {

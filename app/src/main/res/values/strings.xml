@@ -4,6 +4,7 @@
     <string name="roster">Roster</string>
     <string name="schedule">Schedule</string>
     <string name="standings">Standings</string>
+    <string name="rankings">Rankings</string>
     <string name="recruiting">Recruiting</string>
     <string name="strategy">Strategy</string>
     <string name="staff">Staff</string>
@@ -196,4 +197,8 @@
     <string name="cancel_timeout">Cancel Timeout</string>
     <string name="resume">Resume</string>
     <string name="pause">Pause</string>
+
+    <string name="adj_eff">Adj Eff</string>
+    <string name="adj_off">Adj Off</string>
+    <string name="adj_def">Adj Def</string>
 </resources>

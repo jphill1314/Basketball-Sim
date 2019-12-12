@@ -126,4 +126,8 @@
             app:popUpTo="@id/gamePreviewFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/rankings"
+        android:name="com.appdev.jphil.basketballcoach.rankings.RankingsFragment"
+        android:label="@string/rankings" />
 </navigation>
