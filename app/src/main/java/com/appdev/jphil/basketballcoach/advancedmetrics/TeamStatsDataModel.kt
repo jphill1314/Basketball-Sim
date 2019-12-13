@@ -1,10 +1,17 @@
 package com.appdev.jphil.basketballcoach.advancedmetrics
 
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 
-class TeamStatsDataModel(val team: TeamEntity) {
+class TeamStatsDataModel(
+    val teamName: String,
+    val teamId: Int,
+    val confId: Int,
+    val isUser: Boolean,
+    val color: TeamColor
+) {
     var rawTempo = 0.0
     var rawOffEff = 0.0
     var rawDefEff = 0.0
@@ -13,12 +20,20 @@ class TeamStatsDataModel(val team: TeamEntity) {
     var adjOffEff = 0.0
     var adjDefEff = 0.0
 
+    constructor(team: TeamEntity): this(
+        team.schoolName,
+        team.teamId,
+        team.conferenceId,
+        team.isUser,
+        TeamColor.fromInt(team.color)
+    )
+
     fun getAdjEff() = adjOffEff - adjDefEff
 
     fun getRawEff() = rawOffEff - rawDefEff
 
     fun calculateRawStats(allGames: List<GameEntity>) {
-        val games = allGames.filter { it.isFinal && (it.homeTeamId == team.teamId || it.awayTeamId == team.teamId) }
+        val games = allGames.filter { it.isFinal && (it.homeTeamId == teamId || it.awayTeamId == teamId) }
         if (games.isEmpty()) {
             return
         }
@@ -31,9 +46,9 @@ class TeamStatsDataModel(val team: TeamEntity) {
     fun calculateAdjStats(aveTempo: Double, aveEff: Double, allGames: List<GameEntity>, allTeams: Map<Int, TeamStatsDataModel>) {
         val gamesAndOpponents = mutableListOf<Pair<GameEntity, TeamStatsDataModel>>()
         allGames.filter { it.isFinal }.forEach { game ->
-            if (game.homeTeamId == team.teamId) {
+            if (game.homeTeamId == teamId) {
                 gamesAndOpponents.add(Pair(game, allTeams[game.awayTeamId] ?: error("Team missing - id: ${game.awayTeamId}")))
-            } else if (game.awayTeamId == team.teamId) {
+            } else if (game.awayTeamId == teamId) {
                 gamesAndOpponents.add(Pair(game, allTeams[game.homeTeamId] ?: error("Team missing - id: ${game.homeTeamId}")))
             }
         }
@@ -104,7 +119,7 @@ class TeamStatsDataModel(val team: TeamEntity) {
     }
 
     private fun getPointsScored(game: GameEntity): Int {
-        return if (game.homeTeamId == team.teamId) {
+        return if (game.homeTeamId == teamId) {
             game.homeScore
         } else {
             game.awayScore
@@ -112,7 +127,7 @@ class TeamStatsDataModel(val team: TeamEntity) {
     }
 
     private fun getPointsAllowed(game: GameEntity): Int {
-        return if (game.homeTeamId != team.teamId) {
+        return if (game.homeTeamId != teamId) {
             game.homeScore
         } else {
             game.awayScore
