@@ -1,9 +1,12 @@
 package com.appdev.jphil.basketballcoach.rankings
 
+import android.util.Log
+import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -36,11 +39,21 @@ class RankingsRepository @Inject constructor(
             val rawTempo = totalTempo / dataModels.size
             val rawEff = (totalOffEff + totalDefEff) / (2 * dataModels.size)
 
+            totalTempo = 0.0
+            totalOffEff = 0.0
+            totalDefEff = 0.0
             dataModels.forEach { team ->
-                // TODO: fix adjustments to not be so bad
                 team.calculateAdjStats(rawTempo, rawEff, games, teams)
+                totalTempo += team.adjTempo
+                totalOffEff += team.adjOffEff
+                totalDefEff += team.adjDefEff
             }
 
+            dataModels.add(TeamStatsDataModel("Average", -1, -1, false, TeamColor.Red).apply {
+                adjTempo = totalTempo / teams.size
+                adjOffEff = totalOffEff / teams.size
+                adjDefEff = totalDefEff / teams.size
+            })
             dataModels.sortByDescending { it.getAdjEff() }
 
             withContext(Dispatchers.Main) {

@@ -36,19 +36,23 @@ class RankingsAdapter(
     private fun bindTeam(team: TeamStatsDataModel, rank: Int, binding: ListItemRankingBinding) {
         binding.apply {
             this.rank.text = rank.toString()
-            name.text = team.team.schoolName
+            name.text = team.teamName
             efficiency.text = formatDouble(team.getAdjEff())
-            offEff.text = formatDouble(team.rawOffEff)
-            defEff.text = formatDouble(team.rawDefEff)
+            tempo.text = formatDouble(team.adjTempo)
+            offEff.text = formatDouble(team.adjOffEff)
+            defEff.text = formatDouble(team.adjDefEff)
 
-            if (team.team.isUser || team.team.teamId == teamId) {
+            if (team.isUser || team.teamId == teamId) {
                 color.visibility = View.VISIBLE
-                val teamColor = TeamColor.fromInt(team.team.color)
-                color.setBackgroundColor(resources.getColorCompat(teamColor.getColor()))
+                color.setBackgroundColor(resources.getColorCompat(team.color.getColor()))
             } else {
                 color.visibility = View.INVISIBLE
             }
-            root.setOnClickListener { onClick(team.team.teamId, team.team.conferenceId) }
+            if (team.teamId != -1) {
+                root.setOnClickListener { onClick(team.teamId, team.confId) }
+            } else {
+                root.setOnClickListener(null)
+            }
         }
     }
 

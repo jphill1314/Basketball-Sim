@@ -62,6 +62,7 @@ class RankingsFragment : Fragment(), RankingsContract.View {
         binding.header.apply {
             name.text = resources.getString(R.string.team)
             efficiency.text = resources.getString(R.string.adj_eff)
+            tempo.text = "Tempo"
             offEff.text = resources.getString(R.string.adj_off)
             defEff.text = resources.getString(R.string.adj_def)
             color.visibility = View.INVISIBLE
