@@ -113,6 +113,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     }
 
     private fun setTeamNameAndRating(team: Team) {
+        val oldName = navBinding.navTeamName.text
         navBinding.navTeamName.text = team.name
         navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.teamRating)
 
@@ -122,7 +123,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             findItem(R.id.practice).isVisible = team.isUser
         }
 
-        if (teamTheme != team.color) {
+        if (teamTheme != team.color || team.name != oldName) {
             teamTheme = team.color
             navToRoster = true
             recreate()
