@@ -14,13 +14,13 @@ object GameDatabaseHelper {
             database.gameDao().insertGame(GameEntity.from(game))
             TeamDatabaseHelper.saveTeam(game.homeTeam, database)
             TeamDatabaseHelper.saveTeam(game.awayTeam, database)
-            saveStats(game, database)
+            database.playerDao().insertGameStats(getStats(game))
         }
     }
 
     fun saveGameAndStats(game: Game, database: BasketballDatabase) {
         database.gameDao().insertGame(GameEntity.from(game))
-        saveStats(game, database)
+        database.playerDao().insertGameStats(getStats(game))
     }
 
     fun loadGameByIdWithTeams(gameId: Int, teams: Map<Int, Team>, database: BasketballDatabase): Game? {
@@ -93,9 +93,9 @@ object GameDatabaseHelper {
         database.gameDao().deleteAllGameEvents()
     }
 
-    private fun saveStats(game: Game, database: BasketballDatabase) {
+    fun getStats(game: Game): List<GameStatsEntity> {
+        val stats = mutableListOf<GameStatsEntity>()
         if (game.isFinal) {
-            val stats = mutableListOf<GameStatsEntity>()
             game.homeTeam.players.forEach { player ->
                 stats.add(GameStatsEntity.generate(
                         player,
@@ -118,7 +118,7 @@ object GameDatabaseHelper {
                         game.id!!
                     ))
             }
-            database.playerDao().insertGameStats(stats)
         }
+        return stats
     }
 }

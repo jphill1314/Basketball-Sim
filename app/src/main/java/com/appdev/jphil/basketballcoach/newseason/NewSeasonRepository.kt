@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.newseason
 
 import android.content.res.Resources
+import android.util.Log
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
@@ -82,6 +83,7 @@ class NewSeasonRepository @Inject constructor(
 
         // Remove players who graduated
         team.returningPlayers(team.players.filter { it.year < 4 })
+        Log.d("TestTest", "Returning Players: ${team.players.size}")
 
         // Extra improvement for returning players
         for (i in 1..(PRACTICES / 2)) {
@@ -92,6 +94,7 @@ class NewSeasonRepository @Inject constructor(
         recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.forEach { commit ->
             team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
         }
+        Log.d("TestTest", "With Recruits: ${team.players.size}")
 
         // Remove list of known recruits
         team.knownRecruits.clear()
