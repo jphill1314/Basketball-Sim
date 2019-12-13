@@ -61,7 +61,7 @@ class Recruit(
     }
 
     fun updateInterest(team: Team, event: RecruitingEvent, gameNumber: Int) {
-        if (!isCommitted) {
+        if (!isCommitted && RecruitUtil.teamHasOpenSpot(team, position)) {
             val interestInTeam = interestInTeams.first { it.teamId == team.teamId }
             isCommitted = interestInTeam.updateInterest(getTeamMultiplier(team), event, gameNumber)
             if (isCommitted) {
@@ -103,7 +103,7 @@ class Recruit(
     }
 
     fun considerScholarship(team: Team) {
-        if (!isCommitted) {
+        if (!isCommitted && RecruitUtil.teamHasOpenSpot(team, position)) {
             val interestInTeam = interestInTeams.first { it.teamId == team.teamId }
             isCommitted = interestInTeam.considerScholarship()
             if (isCommitted) {

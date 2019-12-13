@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.simulation
 
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
@@ -29,17 +30,25 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
             var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             onSimStarted(gameId - id - 1)
             val teams = mutableMapOf<Int, Team>()
+            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+            val games = mutableListOf<Game>()
             while (id < gameId && !simIsCancelled) {
                 GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)?.let { game ->
+                    games.add(game)
                     teams[game.homeTeam.teamId] = game.homeTeam
                     teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
-                        simGame(game)
+                        simGame(game, recruits)
                         updatePresenter(game)
                     }
                 }
             }
-            BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
+            BatchInsertHelper.saveGamesTeamsAndRecruits(
+                games,
+                teams.map { (_, team) -> team },
+                recruits,
+                database
+            )
             if (simIsCancelled) {
                 onSimComplete()
             } else {
@@ -63,17 +72,25 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
             var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             onSimStarted(gameId - id)
             val teams = mutableMapOf<Int, Team>()
+            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+            val games = mutableListOf<Game>()
             while (id <= gameId && !simIsCancelled) {
                 GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)?.let { game ->
+                    games.add(game)
                     teams[game.homeTeam.teamId] = game.homeTeam
                     teams[game.awayTeam.teamId] = game.awayTeam
                     if (!game.isFinal) {
-                        simGame(game)
+                        simGame(game, recruits)
                         updatePresenter(game)
                     }
                 }
             }
-            BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
+            BatchInsertHelper.saveGamesTeamsAndRecruits(
+                games,
+                teams.map { (_, team) -> team },
+                recruits,
+                database
+            )
             onSimComplete()
         }
     }
@@ -86,14 +103,22 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     .filter { !it.isFinal && it.tournamentId == null }
                     .sortedBy { it.id }
                 onSimStarted(games.size)
+                val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+                val realGames = mutableListOf<Game>()
                 games.forEach { gameEntity ->
                     val game = GameDatabaseHelper.loadGameByIdWithTeams(gameEntity.id!!, teams, database)!!
+                    realGames.add(game)
                     teams[game.homeTeam.teamId] = game.homeTeam
                     teams[game.awayTeam.teamId] = game.awayTeam
-                    simGame(game)
+                    simGame(game, recruits)
                     updatePresenter(game)
                 }
-                BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
+                BatchInsertHelper.saveGamesTeamsAndRecruits(
+                    realGames,
+                    teams.map { (_, team) -> team },
+                    recruits,
+                    database
+                )
                 onSeasonFinished(false)
             } else {
                 ConferenceDatabaseHelper.loadAllConferenceEntities(database).forEach { conference ->
@@ -111,6 +136,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         GlobalScope.launch(Dispatchers.IO) {
             val teams = mutableMapOf<Int, Team>()
             var isFinished = false
+            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
             while (!isFinished) {
                 isFinished = true
                 ConferenceDatabaseHelper.loadAllConferences(database).forEach {
@@ -119,7 +145,12 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     }
                 }
                 if (isFinished) {
-                    BatchInsertHelper.saveTeams(teams.map { (_, team) -> team }, database)
+                    BatchInsertHelper.saveGamesTeamsAndRecruits(
+                        emptyList(),
+                        teams.map { (_, team) -> team },
+                        recruits,
+                        database
+                    )
                     onSeasonFinished(true)
                     return@launch
                 }
@@ -129,7 +160,8 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                 while (game != null) {
                     teams[game.homeTeam.teamId] = game.homeTeam
                     teams[game.awayTeam.teamId] = game.awayTeam
-                    simGame(game)
+                    simGame(game, recruits)
+                    GameDatabaseHelper.saveGameAndStats(game, database)
                     updatePresenter(game)
                     game = GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)
                 }
@@ -141,13 +173,12 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         simIsCancelled = true
     }
 
-    private fun simGame(game: Game) {
+    private fun simGame(game: Game, recruits: List<Recruit>) {
         game.simulateFullGame()
-        val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
-        recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
+        recruits.forEach { it.updateInterestAfterGame(game) }
+
         game.homeTeam.doScouting(recruits)
         game.awayTeam.doScouting(recruits)
-
         if (!game.homeTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits)
         }
@@ -155,8 +186,6 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
         if (!game.awayTeam.isUser) {
             TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
         }
-        GameDatabaseHelper.saveGameAndStats(game, database)
-        RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
 
     private suspend fun onSeasonFinished(areTournamentsOver: Boolean) {

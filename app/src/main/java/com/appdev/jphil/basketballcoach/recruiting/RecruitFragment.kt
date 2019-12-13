@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.recruits.RecruitUtil
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.TeamManagerViewModel
@@ -85,38 +86,30 @@ class RecruitFragment : Fragment(), RecruitContract.View {
 
             findViewById<TextView>(R.id.center)?.text = resources.getString(
                 R.string.number_and_parens,
-                getReturningPlayersAtPosition(team, 1),
-                getCommitsAtPosition(team, recruits, 1)
+                RecruitUtil.getReturningPlayersAtPosition(team, 1),
+                RecruitUtil.getCommitsAtPosition(team, 1)
             )
             findViewById<TextView>(R.id.sg)?.text = resources.getString(
                 R.string.number_and_parens,
-                getReturningPlayersAtPosition(team, 2),
-                getCommitsAtPosition(team, recruits, 2)
+                RecruitUtil.getReturningPlayersAtPosition(team, 2),
+                RecruitUtil.getCommitsAtPosition(team, 2)
             )
             findViewById<TextView>(R.id.sf)?.text = resources.getString(
                 R.string.number_and_parens,
-                getReturningPlayersAtPosition(team, 3),
-                getCommitsAtPosition(team, recruits, 3)
+                RecruitUtil.getReturningPlayersAtPosition(team, 3),
+                RecruitUtil.getCommitsAtPosition(team, 3)
             )
             findViewById<TextView>(R.id.pf)?.text = resources.getString(
                 R.string.number_and_parens,
-                getReturningPlayersAtPosition(team, 4),
-                getCommitsAtPosition(team, recruits, 4)
+                RecruitUtil.getReturningPlayersAtPosition(team, 4),
+                RecruitUtil.getCommitsAtPosition(team, 4)
             )
             findViewById<TextView>(R.id.c)?.text = resources.getString(
                 R.string.number_and_parens,
-                getReturningPlayersAtPosition(team, 5),
-                getCommitsAtPosition(team, recruits, 5)
+                RecruitUtil.getReturningPlayersAtPosition(team, 5),
+                RecruitUtil.getCommitsAtPosition(team, 5)
             )
         }
-    }
-
-    private fun getReturningPlayersAtPosition(team: Team, position: Int): Int {
-        return team.roster.filter { it.year != 3 && it.position == position }.size
-    }
-
-    private fun getCommitsAtPosition(team: Team, recruits: List<Recruit>, position: Int): Int {
-        return recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId && it.position == position }.size
     }
 
     override fun goToRecruitOverview(recruitId: Int) {

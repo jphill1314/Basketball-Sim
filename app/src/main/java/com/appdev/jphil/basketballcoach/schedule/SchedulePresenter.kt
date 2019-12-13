@@ -65,6 +65,9 @@ class SchedulePresenter @Inject constructor(
             finishedGame.homeScore,
             finishedGame.awayScore
         ))
+        if (state == null) {
+            onSimulationStarted(-1)
+        }
         state?.games?.postValue(simGames)
         state?.text?.postValue(if (simGames.size == totalGames) {
             resources.getString(R.string.saving_sim_results)
