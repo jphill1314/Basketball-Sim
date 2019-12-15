@@ -156,7 +156,7 @@ class Shot(
         return when (shotLocation) {
             // 2 point shot
             1 -> {
-                if (shotSuccess > ((r.nextDouble() * shooter.closeRangeShot) * (r.nextDouble() * 5))) {
+                if (shotSuccess > ((r.nextDouble() * shooter.closeRangeShot) * (r.nextDouble() * 6))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
                         shotText.shortMake(shooter, defender, wellDefended, this)
@@ -181,7 +181,7 @@ class Shot(
                 }
             }
             2 -> {
-                if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 6))) {
+                if (shotSuccess > ((r.nextDouble() * shooter.midRangeShot) * (r.nextDouble() * 7))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
                         shotText.midMake(shooter, defender, wellDefended, this)
@@ -206,7 +206,7 @@ class Shot(
                 }
             }
             3 -> {
-                if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 7))) {
+                if (shotSuccess > ((r.nextDouble() * shooter.longRangeShot) * (r.nextDouble() * 10))) {
                     playAsString = if (type != Plays.FOUL) {
                         homeTeamHasBall = !homeTeamHasBall
                         shotText.longMake(shooter, defender, wellDefended, this)
