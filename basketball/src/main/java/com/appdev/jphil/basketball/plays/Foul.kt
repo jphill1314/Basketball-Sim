@@ -42,19 +42,21 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
     }
 
     private fun getFloorFoul(): Int {
-        var foulChance = 8.0 / (70)
+        var foulChance = 0.45
 
         if (foulType == FoulType.OFF_BALL) {
             // foul could be on anyone not with the ball
-            if (r.nextBoolean()) {
-                // 50/50 chance for which team is called
+            if (r.nextDouble() > .75) {
                 isOnDefense = false
                 positionOfPlayerFouled = getFouler(offense)
                 fouler = offense.getPlayerAtPosition(positionOfPlayerFouled)
                 val aggression =
                     (offense.getPlayerAtPosition(playerWithBall).aggressiveness + ((offense.aggression + 10) * 5) / 2.0)
                 foulChance -= (fouler!!.offBallMovement - aggression) / 20000
-                playAsString = foulText.offenseOffBallFoul(fouler!!, defense.getPlayerAtPosition(positionOfPlayerFouled))
+                playAsString = foulText.offenseOffBallFoul(
+                    fouler!!,
+                    defense.getPlayerAtPosition(positionOfPlayerFouled)
+                )
             } else {
                 isOnDefense = true
                 positionOfPlayerFouled = getFouler(defense)
@@ -62,26 +64,34 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
                 val aggression =
                     (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
                 foulChance -= (fouler!!.offBallDefense - aggression) / 20000
-                playAsString = foulText.defenseOffBallFoul(fouler!!, offense.getPlayerAtPosition(positionOfPlayerFouled))
+                playAsString = foulText.defenseOffBallFoul(
+                    fouler!!,
+                    offense.getPlayerAtPosition(positionOfPlayerFouled)
+                )
             }
         } else {
             // foul could be on person with ball or their defender
             positionOfPlayerFouled = playerWithBall
-            if (r.nextDouble() > .75) {
-                // offensive foul less likely than defensive
+            if (r.nextDouble() > .55) {
                 isOnDefense = false
                 fouler = offense.getPlayerAtPosition(playerWithBall)
                 val aggression =
                     (offense.getPlayerAtPosition(playerWithBall).aggressiveness + ((offense.aggression + 10) * 5) / 2.0)
                 foulChance -= (fouler!!.ballHandling - aggression) / 20000
-                playAsString = foulText.offenseOnBallFoul(fouler!!, defense.getPlayerAtPosition(positionOfPlayerFouled))
+                playAsString = foulText.offenseOnBallFoul(
+                    fouler!!,
+                    defense.getPlayerAtPosition(positionOfPlayerFouled)
+                )
             } else {
                 isOnDefense = true
                 fouler = defense.getPlayerAtPosition(playerWithBall)
                 val aggression =
                     (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
                 foulChance -= (fouler!!.onBallDefense - aggression) / 20000
-                playAsString = foulText.defenseOnBallFoul(fouler!!, offense.getPlayerAtPosition(positionOfPlayerFouled))
+                playAsString = foulText.defenseOnBallFoul(
+                    fouler!!,
+                    offense.getPlayerAtPosition(positionOfPlayerFouled)
+                )
             }
         }
 
@@ -97,35 +107,13 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
         }
     }
 
-    private fun getFouler(team: Team): Int {
-        val values = Array(5) { 0 }
-
-        for (i in 0..4) {
-            values[i] = r.nextInt(100) / team.players[i].offBallDefense
-        }
-
-        values[playerWithBall - 1] = -100
-
-        return if (values[0] > values[1] && values[0] > values[2] && values[0] > values[3] && values[0] > values[4]) {
-            1
-        } else if (values[1] > values[0] && values[1] > values[2] && values[1] > values[3] && values[1] > values[4]) {
-            2
-        } else if (values[2] > values[1] && values[2] > values[0] && values[2] > values[3] && values[2] > values[4]) {
-            3
-        } else if ((values[3] > values[1] && values[3] > values[2] && values[4] > values[0] && values[4] > values[4]) || playerWithBall == 5) {
-            4
-        } else {
-            5
-        }
-    }
-
     private fun getReboundingFoul(): Int {
-        var foulChance = 5 / 70.0
+        var foulChance = .15
 
         // The assumption is that this is called after it has been decided who is going to get the rebound
         positionOfPlayerFouled = playerWithBall
         val aggression: Double
-        fouler = if (r.nextDouble() > 0.35) {
+        fouler = if (r.nextDouble() > 0.4) {
             // more likely that the person who wasn't going to get the rebound is called for the foul
             isOnDefense = true
             aggression = (defense.getPlayerAtPosition(playerWithBall).aggressiveness + ((defense.aggression + 10) * 5) / 2.0)
@@ -154,9 +142,9 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
     private fun getShootingFoul(): Int {
         positionOfPlayerFouled = playerWithBall
         var foulChance: Double = when (foulType) {
-            FoulType.SHOOTING_CLOSE -> 8.75 / 25
-            FoulType.SHOOTING_MID -> 1.0 / 15
-            FoulType.SHOOTING_LONG -> .25 / 20
+            FoulType.SHOOTING_CLOSE -> 0.25
+            FoulType.SHOOTING_MID -> 0.02
+            FoulType.SHOOTING_LONG -> 0.0075
             else -> 0.0
         }
 
@@ -195,5 +183,27 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
         playAsString = foulText.intentionalFoul(fouler!!, offense.getPlayerAtPosition(playerWithBall))
         fouler!!.fouls++
         return 1
+    }
+
+    private fun getFouler(team: Team): Int {
+        val values = Array(5) { 0 }
+
+        for (i in 0..4) {
+            values[i] = r.nextInt(100) / team.players[i].offBallDefense
+        }
+
+        values[playerWithBall - 1] = -100
+
+        return if (values[0] > values[1] && values[0] > values[2] && values[0] > values[3] && values[0] > values[4]) {
+            1
+        } else if (values[1] > values[0] && values[1] > values[2] && values[1] > values[3] && values[1] > values[4]) {
+            2
+        } else if (values[2] > values[1] && values[2] > values[0] && values[2] > values[3] && values[2] > values[4]) {
+            3
+        } else if ((values[3] > values[1] && values[3] > values[2] && values[4] > values[0] && values[4] > values[4]) || playerWithBall == 5) {
+            4
+        } else {
+            5
+        }
     }
 }

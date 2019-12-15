@@ -173,7 +173,7 @@ class Game(
         const val lengthOfHalf = 20 * 60 // 20 minutes
         const val lengthOfOvertime = 5 * 60 // 5 minutes
         const val lengthOfShotClock = 30 // 30 seconds
-        const val resetShotClockTime = 20 // shot clock resets to 20 on a defensive foul
+        const val resetShotClockTime = 20 // shot clock resets to 20 on a defensive foul TODO: also reset for offensive rebound
         const val maxTimeouts = 4
     }
 }
