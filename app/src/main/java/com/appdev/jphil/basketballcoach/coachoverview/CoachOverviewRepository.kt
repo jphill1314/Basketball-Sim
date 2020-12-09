@@ -17,19 +17,12 @@ class CoachOverviewRepository @Inject constructor(
 
     private lateinit var presenter: CoachOverviewContract.Presenter
 
-    override fun loadCoach() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val coach = CoachDatabaseHelper.loadCoachById(coachId, database)
-            withContext(Dispatchers.Main) {
-                presenter.onCoachLoaded(coach)
-            }
-        }
+    override suspend fun loadCoach(): Coach {
+        return CoachDatabaseHelper.loadCoachById(coachId, database)
     }
 
-    override fun saveCoach(coach: Coach) {
-        GlobalScope.launch(Dispatchers.IO) {
-            CoachDatabaseHelper.saveCoach(coach, database)
-        }
+    override suspend fun saveCoach(coach: Coach) {
+        CoachDatabaseHelper.saveCoach(coach, database)
     }
 
     override fun attachPresenter(presenter: CoachOverviewContract.Presenter) {

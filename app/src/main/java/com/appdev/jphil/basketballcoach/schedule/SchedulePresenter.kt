@@ -4,6 +4,8 @@ import android.content.res.Resources
 import com.appdev.jphil.basketball.datamodels.ScheduleDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
@@ -24,8 +26,9 @@ class SchedulePresenter @Inject constructor(
     private val resources: Resources,
     private val repository: ScheduleContract.Repository,
     private val gameSimRepository: SimulationContract.GameSimRepository,
-    private val newSeasonRepository: NewSeasonRepository
-): ScheduleContract.Presenter {
+    private val newSeasonRepository: NewSeasonRepository,
+    dispatcherProvider: DispatcherProvider
+): BasePresenter(dispatcherProvider), ScheduleContract.Presenter {
 
     init {
         repository.attachPresenter(this)
@@ -41,7 +44,47 @@ class SchedulePresenter @Inject constructor(
     private var teamsSaved = 0
 
     override fun fetchSchedule() {
-        repository.fetchSchedule()
+        coroutineScope.launch {
+            val model = repository.fetchSchedule()
+            val games = model.games
+
+            teamGames = games.filter { it.homeTeamId == teamId || it.awayTeamId == teamId }
+            val dataModels = mutableListOf<ScheduleDataModel>()
+            teamGames.forEach { game ->
+                val homeTeamRecord = RecordUtil.getRecordAsPair(games, game.homeTeamId)
+                val homeRecord = resources.getString(
+                    R.string.standings_dash,
+                    homeTeamRecord.first,
+                    homeTeamRecord.second
+                )
+                val awayTeamRecord = RecordUtil.getRecordAsPair(games, game.awayTeamId)
+                val awayRecord = resources.getString(
+                    R.string.standings_dash,
+                    awayTeamRecord.first,
+                    awayTeamRecord.second
+                )
+
+                dataModels.add(
+                    ScheduleDataModel(
+                        game.id ?: 0,
+                        game.homeTeamName,
+                        homeRecord,
+                        game.homeScore,
+                        game.awayTeamName,
+                        awayRecord,
+                        game.awayScore,
+                        game.isFinal,
+                        isVictory(game),
+                        game.inProgress
+                    )
+                )
+            }
+
+            if (!isSimming) {
+                view?.hideProgressBar()
+            }
+            view?.displaySchedule(dataModels, model.isUsersSchedule)
+        }
     }
 
     override fun onSimulationStarted(totalGames: Int) {
@@ -106,38 +149,6 @@ class SchedulePresenter @Inject constructor(
         }
     }
 
-    override fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean) {
-        teamGames = games.filter { it.homeTeamId == teamId || it.awayTeamId == teamId }
-        val dataModels = mutableListOf<ScheduleDataModel>()
-        teamGames.forEach { game ->
-            val homeTeamRecord = RecordUtil.getRecordAsPair(games, game.homeTeamId)
-            val homeRecord = resources.getString(R.string.standings_dash, homeTeamRecord.first, homeTeamRecord.second)
-            val awayTeamRecord = RecordUtil.getRecordAsPair(games, game.awayTeamId)
-            val awayRecord = resources.getString(R.string.standings_dash, awayTeamRecord.first, awayTeamRecord.second)
-
-            dataModels.add(
-                ScheduleDataModel(
-                    game.id ?: 0,
-                    game.homeTeamName,
-                    homeRecord,
-                    game.homeScore,
-                    game.awayTeamName,
-                    awayRecord,
-                    game.awayScore,
-                    game.isFinal,
-                    isVictory(game),
-                    game.inProgress
-                )
-            )
-        }
-
-        if (!isSimming) {
-            view?.hideProgressBar()
-        }
-        view?.displaySchedule(dataModels, isUsersSchedule)
-
-    }
-
     private fun isVictory(game: GameEntity): Boolean {
         return if (game.isFinal) {
             if (game.homeTeamId == teamId) {
@@ -177,7 +188,7 @@ class SchedulePresenter @Inject constructor(
     }
 
     override fun finishSeason() {
-        GlobalScope.launch {
+        coroutineScope.launch {
             if (repository.tournamentIsOver(confId)) {
                 view?.showProgressBar()
                 state = SimDialogState().apply { text.postValue("Finish Season") }

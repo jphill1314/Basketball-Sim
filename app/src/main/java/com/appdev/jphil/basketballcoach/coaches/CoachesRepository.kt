@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.coaches
 
+import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
@@ -16,13 +17,8 @@ class CoachesRepository @Inject constructor(
 
     private lateinit var presenter: CoachesContract.Presenter
 
-    override fun loadCoaches() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(teamId, database)
-            withContext(Dispatchers.Main) {
-                presenter.onCoachesLoaded(coaches)
-            }
-        }
+    override suspend fun loadCoaches(): List<Coach> {
+        return CoachDatabaseHelper.loadAllCoachesByTeamId(teamId, database)
     }
 
     override fun attachPresenter(presenter: CoachesContract.Presenter) {

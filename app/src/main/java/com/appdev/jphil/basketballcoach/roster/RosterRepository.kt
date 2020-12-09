@@ -21,27 +21,23 @@ class RosterRepository @Inject constructor(
 
     private lateinit var presenter: RosterContract.Presenter
 
-    override fun fetchData() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val teamId = lazyTeamId.get()
-            var team = if (teamId == -1) {
-                TeamDatabaseHelper.loadUserTeam(database)
-            } else {
-                TeamDatabaseHelper.loadTeamById(teamId, database)
-            }
-
-            if (team == null) {
-                NewGameGenerator.generateNewGame(resources, database)
-                team = TeamDatabaseHelper.loadUserTeam(database)
-            }
-            withContext(Dispatchers.Main) { presenter.onDataFetched(team!!) }
+    override suspend fun fetchData(): Team {
+        val teamId = lazyTeamId.get()
+        var team = if (teamId == -1) {
+            TeamDatabaseHelper.loadUserTeam(database)
+        } else {
+            TeamDatabaseHelper.loadTeamById(teamId, database)
         }
+
+        if (team == null) {
+            NewGameGenerator.generateNewGame(resources, database)
+            team = TeamDatabaseHelper.loadUserTeam(database)
+        }
+        return team!!
     }
 
-    override fun saveTeam(team: Team) {
-        GlobalScope.launch(Dispatchers.IO) {
-            TeamDatabaseHelper.saveTeam(team, database)
-        }
+    override suspend fun saveTeam(team: Team) {
+        TeamDatabaseHelper.saveTeam(team, database)
     }
 
     override fun attachPresenter(presenter: RosterContract.Presenter) {

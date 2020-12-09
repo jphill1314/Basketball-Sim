@@ -19,7 +19,6 @@ interface ScheduleContract {
 
     interface Presenter : MVPContract.Presenter<View>, SimulationContract.GameSimPresenter {
         fun fetchSchedule()
-        fun onScheduleLoaded(games: List<GameEntity>, isUsersSchedule: Boolean)
         fun playGame(gameId: Int)
         fun simulateGame(gameId: Int)
         fun goToConferenceTournament()
@@ -28,7 +27,7 @@ interface ScheduleContract {
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun fetchSchedule()
+        suspend fun fetchSchedule(): ScheduleModel
         suspend fun tournamentIsOver(confId: Int): Boolean
     }
 }

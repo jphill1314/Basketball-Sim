@@ -14,13 +14,12 @@ interface RosterContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onDataFetched(team: Team)
         fun onPlayerSelected(player: Player)
         fun onPlayerLongPressed(player: Player)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun fetchData()
-        fun saveTeam(team: Team)
+        suspend fun fetchData(): Team
+        suspend fun saveTeam(team: Team)
     }
 }

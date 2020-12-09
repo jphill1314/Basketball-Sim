@@ -14,13 +14,12 @@ interface RecruitOverviewContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onRecruitLoaded(recruit: Recruit, team: Team)
         fun onScoutClicked()
         fun onOfferScholarshipClicked()
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun loadRecruit()
-        fun saveRecruit(recruit: Recruit)
+        suspend fun loadRecruit(): RecruitOverviewModel
+        suspend fun saveRecruit(recruit: Recruit)
     }
 }

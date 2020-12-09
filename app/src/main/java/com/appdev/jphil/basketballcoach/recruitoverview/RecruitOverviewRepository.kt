@@ -20,20 +20,16 @@ class RecruitOverviewRepository @Inject constructor(
 
     private lateinit var presenter: RecruitOverviewContract.Presenter
 
-    override fun loadRecruit() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val recruit = RecruitDatabaseHelper.loadRecruitWithId(recruitId, database)
-            val team = TeamDatabaseHelper.loadTeamById(teamId, database)
-            withContext(Dispatchers.Main) {
-                presenter.onRecruitLoaded(recruit, team!!)
-            }
-        }
+    override suspend fun loadRecruit(): RecruitOverviewModel {
+        val recruit = RecruitDatabaseHelper.loadRecruitWithId(recruitId, database)
+        val team = TeamDatabaseHelper.loadTeamById(teamId, database) ?: throw IllegalStateException(
+            "No team exists for teamId = $teamId"
+        )
+        return RecruitOverviewModel(team, recruit)
     }
 
-    override fun saveRecruit(recruit: Recruit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            RecruitDatabaseHelper.saveRecruits(listOf(recruit), database)
-        }
+    override suspend fun saveRecruit(recruit: Recruit) {
+        RecruitDatabaseHelper.saveRecruits(listOf(recruit), database)
     }
 
     override fun attachPresenter(presenter: RecruitOverviewContract.Presenter) {

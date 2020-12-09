@@ -2,11 +2,15 @@ package com.appdev.jphil.basketballcoach.practice
 
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.players.PracticeType
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PracticePresenter @Inject constructor(
-    private val repository: PracticeContract.Repository
-) : PracticeContract.Presenter {
+    private val repository: PracticeContract.Repository,
+    dispatcherProvider: DispatcherProvider
+) : BasePresenter(dispatcherProvider), PracticeContract.Presenter {
 
     private var view: PracticeContract.View? = null
     private var team: Team? = null
@@ -16,12 +20,11 @@ class PracticePresenter @Inject constructor(
     }
 
     override fun fetchData() {
-        repository.loadTeam()
-    }
-
-    override fun onTeamLoaded(team: Team) {
-        view?.displayPracticeInfo(team)
-        this.team = team
+        coroutineScope.launch {
+            val safeTeam = repository.loadTeam()
+            team = safeTeam
+            view?.displayPracticeInfo(safeTeam)
+        }
     }
 
     override fun onPracticeTypeChanged(type: Int) {
@@ -38,7 +41,11 @@ class PracticePresenter @Inject constructor(
     }
 
     override fun onViewDetached() {
-        team?.let { repository.saveTeam(it) }
+        team?.let { safeTeam ->
+            coroutineScope.launch {
+                repository.saveTeam(safeTeam)
+            }
+        }
         view = null
     }
 }

@@ -1,5 +1,7 @@
 package com.appdev.jphil.basketballcoach.main.injection
 
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import com.appdev.jphil.basketballcoach.arch.DispatcherProviderImpl
 import com.appdev.jphil.basketballcoach.main.DaggerNavHost
 import com.appdev.jphil.basketballcoach.main.MainActivity
 import com.appdev.jphil.basketballcoach.main.NavigationManager
@@ -22,6 +24,10 @@ abstract class MainActivityModule {
     @Binds
     @PerActivity
     abstract fun bindsNavigationManager(activity: MainActivity): NavigationManager
+
+    @Binds
+    @PerActivity
+    abstract fun bindsDispatcherProdiver(dispatcherProvider: DispatcherProviderImpl): DispatcherProvider
 
     @Module
     companion object {

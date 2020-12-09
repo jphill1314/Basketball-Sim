@@ -71,7 +71,7 @@ class NewSeasonRepository @Inject constructor(
         }
     }
 
-    private fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
+    private suspend fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
         // Make each player a year older
         team.players.forEach { player ->
             player.year++

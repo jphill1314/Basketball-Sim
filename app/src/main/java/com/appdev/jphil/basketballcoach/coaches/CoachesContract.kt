@@ -11,10 +11,9 @@ interface CoachesContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onCoachesLoaded(coaches: List<Coach>)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun loadCoaches()
+        suspend fun loadCoaches(): List<Coach>
     }
 }

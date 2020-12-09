@@ -2,12 +2,16 @@ package com.appdev.jphil.basketballcoach.strategy
 
 import android.content.res.Resources
 import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StrategyPresenter @Inject constructor(
     private val repository: StrategyContract.Repository,
-    private val resources: Resources
-) : StrategyContract.Presenter {
+    private val resources: Resources,
+    dispatcherProvider: DispatcherProvider
+) : BasePresenter(dispatcherProvider), StrategyContract.Presenter {
 
     private var view: StrategyContract.View? = null
     private lateinit var coach: Coach
@@ -17,13 +21,13 @@ class StrategyPresenter @Inject constructor(
     }
 
     override fun fetchStrategy() {
-        repository.loadStrategy()
-    }
-
-    override fun onStrategyLoaded(coach: Coach) {
-        // TODO: only show strategy of user
-        this.coach = coach
-        view?.updateStrategy(StrategyDataModel.generateDataModels(coach, resources, false))
+        coroutineScope.launch {
+            coach = repository.loadStrategy()
+            // TODO: only show strategy of user
+            view?.updateStrategy(
+                StrategyDataModel.generateDataModels(coach, resources, false)
+            )
+        }
     }
 
     override fun onPaceChanged(pace: Int) {
@@ -68,6 +72,8 @@ class StrategyPresenter @Inject constructor(
 
     override fun onViewDetached() {
         view = null
-        repository.saveStrategy(coach)
+        coroutineScope.launch {
+            repository.saveStrategy(coach)
+        }
     }
 }

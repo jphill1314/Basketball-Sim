@@ -1,11 +1,15 @@
 package com.appdev.jphil.basketballcoach.coachoverview
 
 import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CoachOverviewPresenter @Inject constructor(
-    private val repository: CoachOverviewContract.Repository
-): CoachOverviewContract.Presenter {
+    private val repository: CoachOverviewContract.Repository,
+    dispatcherProvider: DispatcherProvider
+): BasePresenter(dispatcherProvider), CoachOverviewContract.Presenter {
 
     init {
         repository.attachPresenter(this)
@@ -15,12 +19,10 @@ class CoachOverviewPresenter @Inject constructor(
     private lateinit var coach: Coach
 
     override fun fetchData() {
-        repository.loadCoach()
-    }
-
-    override fun onCoachLoaded(coach: Coach) {
-        this.coach = coach
-        view?.displayCoach(coach)
+        coroutineScope.launch {
+            coach = repository.loadCoach()
+            view?.displayCoach(coach)
+        }
     }
 
     override fun positionToggled(position: Int) {
@@ -64,6 +66,8 @@ class CoachOverviewPresenter @Inject constructor(
 
     override fun onViewDetached() {
         view = null
-        repository.saveCoach(coach)
+        coroutineScope.launch {
+            repository.saveCoach(coach)
+        }
     }
 }

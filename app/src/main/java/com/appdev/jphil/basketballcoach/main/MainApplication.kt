@@ -19,10 +19,10 @@ class MainApplication @Inject constructor() : Application(), HasAndroidInjector 
     override fun onCreate() {
         super.onCreate()
 
-        FlurryAgent.Builder()
-            .withLogEnabled(true)
-            .withCaptureUncaughtExceptions(true)
-            .build(this, resources.getString(R.string.flurry_key))
+//        FlurryAgent.Builder()
+//            .withLogEnabled(true)
+//            .withCaptureUncaughtExceptions(true)
+//            .build(this, resources.getString(R.string.flurry_key))
 
         component = DaggerAppComponent.builder()
             .application(this)

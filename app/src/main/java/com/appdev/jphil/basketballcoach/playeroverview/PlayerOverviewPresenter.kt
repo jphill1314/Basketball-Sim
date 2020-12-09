@@ -3,11 +3,17 @@ package com.appdev.jphil.basketballcoach.playeroverview
 import android.view.View
 import android.widget.AdapterView
 import com.appdev.jphil.basketball.players.Player
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.util.StatsUtil
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PlayerOverviewPresenter @Inject constructor(private val repository: PlayerOverviewContract.Repository): PlayerOverviewContract.Presenter {
+class PlayerOverviewPresenter @Inject constructor(
+    private val repository: PlayerOverviewContract.Repository,
+    dispatcherProvider: DispatcherProvider
+): BasePresenter(dispatcherProvider), PlayerOverviewContract.Presenter {
 
     private var view: PlayerOverviewContract.View? = null
     private val stats = mutableListOf<GameStatsEntity>()
@@ -17,10 +23,18 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
         repository.attachPresenter(this)
     }
 
-    override fun onPlayerLoaded(player: Player, stats: List<GameStatsEntity>) {
-        this.player = player
-        view?.addPlayerInfo(player, StatsUtil().apply { calculateTotals(stats) })
-        onStatsLoaded(stats)
+    override fun onViewAttached(view: PlayerOverviewContract.View) {
+        this.view = view
+        coroutineScope.launch {
+            val model = repository.fetchPlayerAndStats()
+            player = model.player
+            view.addPlayerInfo(player, StatsUtil().apply { calculateTotals(model.stats) })
+            onStatsLoaded(model.stats)
+        }
+    }
+
+    override fun onViewDetached() {
+        view = null
     }
 
     private fun onStatsLoaded(stats: List<GameStatsEntity>) {
@@ -91,14 +105,5 @@ class PlayerOverviewPresenter @Inject constructor(private val repository: Player
             0 -> this.view?.displayPlayerInfo()
             else -> this.view?.displayPlayerStats()
         }
-    }
-
-    override fun onViewAttached(view: PlayerOverviewContract.View) {
-        this.view = view
-        repository.fetchPlayerAndStats()
-    }
-
-    override fun onViewDetached() {
-        view = null
     }
 }

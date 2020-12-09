@@ -5,7 +5,7 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 
 object RecruitDatabaseHelper {
 
-    fun saveRecruits(recruits: List<Recruit>, database: BasketballDatabase) {
+    suspend fun saveRecruits(recruits: List<Recruit>, database: BasketballDatabase) {
         val recruitEntities = mutableListOf<RecruitEntity>()
         val interestEntities = mutableListOf<RecruitInterestEntity>()
 
@@ -20,7 +20,7 @@ object RecruitDatabaseHelper {
         database.recruitDao().insertInterests(interestEntities)
     }
 
-    fun loadAllRecruits(database: BasketballDatabase): MutableList<Recruit> {
+    suspend fun loadAllRecruits(database: BasketballDatabase): MutableList<Recruit> {
         val recruits = mutableListOf<Recruit>()
         database.recruitDao().getAllRecruits().forEach { recruit ->
             recruits.add(recruit.createRecruit(database.recruitDao().getAllInterestsWithRecruitID(recruit.id)))
@@ -28,13 +28,13 @@ object RecruitDatabaseHelper {
         return recruits
     }
 
-    fun loadRecruitWithId(recruitId: Int, database: BasketballDatabase): Recruit {
+    suspend fun loadRecruitWithId(recruitId: Int, database: BasketballDatabase): Recruit {
         val recruit = database.recruitDao().getRecruitWithId(recruitId)
         val interests = database.recruitDao().getAllInterestsWithRecruitID(recruitId)
         return recruit.createRecruit(interests)
     }
 
-    fun deleteAllRecruits(database: BasketballDatabase) {
+    suspend fun deleteAllRecruits(database: BasketballDatabase) {
         database.recruitDao().deleteAllRecruitInterests()
         database.recruitDao().deleteAllRecruits()
     }

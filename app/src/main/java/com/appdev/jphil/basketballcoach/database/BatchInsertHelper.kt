@@ -18,14 +18,14 @@ import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 
 object BatchInsertHelper {
 
-    fun saveConferences(conferences: List<Conference>, database: BasketballDatabase) {
+    suspend fun saveConferences(conferences: List<Conference>, database: BasketballDatabase) {
         val teams = mutableListOf<Team>()
         conferences.forEach { teams.addAll(it.teams) }
         saveTeams(teams, database)
         ConferenceDatabaseHelper.saveOnlyConferences(conferences, database)
     }
 
-    fun saveTeams(teams: List<Team>, database: BasketballDatabase) {
+    suspend fun saveTeams(teams: List<Team>, database: BasketballDatabase) {
         val players = mutableListOf<PlayerEntity>()
         val progress = mutableListOf<PlayerProgressionEntity>()
         val coaches = mutableListOf<CoachEntity>()
@@ -50,7 +50,7 @@ object BatchInsertHelper {
         database.teamDao().insertTeams(teamEntities)
     }
 
-    fun saveGamesTeamsAndRecruits(
+    suspend fun saveGamesTeamsAndRecruits(
         games: List<Game>,
         teams: List<Team>,
         recruits: List<Recruit>,

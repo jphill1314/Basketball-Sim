@@ -9,11 +9,9 @@ interface RankingsContract {
         fun displayData(teams: List<TeamStatsDataModel>)
     }
 
-    interface Presenter : MVPContract.Presenter<View> {
-        fun onData(teams: List<TeamStatsDataModel>)
-    }
+    interface Presenter : MVPContract.Presenter<View>
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun fetchData()
+        suspend fun fetchData(): List<TeamStatsDataModel>
     }
 }

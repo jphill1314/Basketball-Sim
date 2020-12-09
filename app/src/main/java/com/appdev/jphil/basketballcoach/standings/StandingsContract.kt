@@ -16,13 +16,12 @@ interface StandingsContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onData(teams: List<Team>, games: List<GameEntity>, conferences : List<ConferenceEntity>)
         fun onTeamSelected(standingsDataModel: StandingsDataModel)
         fun onConferenceChanged(confId: Int)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun fetchData()
-        fun onConferenceIdChanged(confId: Int)
+        suspend fun fetchData(): StandingsModel
+        suspend fun onConferenceIdChanged(confId: Int): StandingsModel
     }
 }

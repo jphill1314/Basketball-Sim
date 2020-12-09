@@ -11,12 +11,11 @@ interface PracticeContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onTeamLoaded(team: Team)
         fun onPracticeTypeChanged(type: Int)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun loadTeam()
-        fun saveTeam(team: Team)
+        suspend fun loadTeam(): Team
+        suspend fun saveTeam(team: Team)
     }
 }

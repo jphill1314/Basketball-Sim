@@ -8,7 +8,7 @@ import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 
 object GameDatabaseHelper {
 
-    fun saveGames(games: List<Game>, database: BasketballDatabase) {
+    suspend fun saveGames(games: List<Game>, database: BasketballDatabase) {
         games.forEach { game ->
             game.pauseGame()
             database.gameDao().insertGame(GameEntity.from(game))
@@ -18,12 +18,12 @@ object GameDatabaseHelper {
         }
     }
 
-    fun saveGameAndStats(game: Game, database: BasketballDatabase) {
+    suspend fun saveGameAndStats(game: Game, database: BasketballDatabase) {
         database.gameDao().insertGame(GameEntity.from(game))
         database.playerDao().insertGameStats(getStats(game))
     }
 
-    fun loadGameByIdWithTeams(gameId: Int, teams: Map<Int, Team>, database: BasketballDatabase): Game? {
+    suspend fun loadGameByIdWithTeams(gameId: Int, teams: Map<Int, Team>, database: BasketballDatabase): Game? {
         database.gameDao().getGameWithId(gameId)?.let { game ->
             return createGameWithTeams(game, teams, database)
         }
@@ -31,12 +31,12 @@ object GameDatabaseHelper {
         return null
     }
 
-    fun loadGameById(gameId: Int, database: BasketballDatabase): Game? {
+    suspend fun loadGameById(gameId: Int, database: BasketballDatabase): Game? {
         val game = database.gameDao().getGameWithId(gameId)
         return game?.let { createGame(it, database) }
     }
 
-    fun loadGamesForTournament(tournamentId: Int, teams: Map<Int, Team>, database: BasketballDatabase): List<Game> {
+    suspend fun loadGamesForTournament(tournamentId: Int, teams: Map<Int, Team>, database: BasketballDatabase): List<Game> {
         val games = mutableListOf<Game>()
         database.gameDao().getGamesWithTournamentId(tournamentId).forEach { entity ->
             games.add(createGameWithTeams(entity, teams, database))
@@ -44,51 +44,47 @@ object GameDatabaseHelper {
         return games
     }
 
-    fun hasTournamentGames(database: BasketballDatabase): Boolean {
+    suspend fun hasTournamentGames(database: BasketballDatabase): Boolean {
         return database.gameDao().getTournamentGames().isNotEmpty()
     }
 
-    private fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
+    private suspend fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
         val homeTeam = TeamDatabaseHelper.loadTeamById(entity.homeTeamId, database)!!
         val awayTeam = TeamDatabaseHelper.loadTeamById(entity.awayTeamId, database)!!
         return entity.createGame(homeTeam, awayTeam)
     }
 
-    private fun createGameWithTeams(game: GameEntity, teams: Map<Int, Team>, database: BasketballDatabase): Game {
+    private suspend fun createGameWithTeams(game: GameEntity, teams: Map<Int, Team>, database: BasketballDatabase): Game {
         val homeTeam = teams[game.homeTeamId] ?: TeamDatabaseHelper.loadTeamById(game.homeTeamId, database)!!
         val awayTeam = teams[game.awayTeamId] ?: TeamDatabaseHelper.loadTeamById(game.awayTeamId, database)!!
         return game.createGame(homeTeam, awayTeam)
     }
 
-    fun saveOnlyGames(games: List<Game>, database: BasketballDatabase) {
+    suspend fun saveOnlyGames(games: List<Game>, database: BasketballDatabase) {
         games.forEach { game -> database.gameDao().insertGame(GameEntity.from(game)) }
     }
 
-    fun saveGameEvents(events: List<GameEventEntity>, database: BasketballDatabase) {
+    suspend fun saveGameEvents(events: List<GameEventEntity>, database: BasketballDatabase) {
         database.gameDao().insertGameEvents(events)
     }
 
-    fun loadGameEvents(gameId: Int, database: BasketballDatabase): List<GameEventEntity> {
+    suspend fun loadGameEvents(gameId: Int, database: BasketballDatabase): List<GameEventEntity> {
         return database.gameDao().getAllGameEventsForGame(gameId)
     }
 
-    fun loadCompletedGameEntities(database: BasketballDatabase): List<GameEntity> {
+    suspend fun loadCompletedGameEntities(database: BasketballDatabase): List<GameEntity> {
         return database.gameDao().getGamesWithIsFinal(true)
     }
 
-    fun loadAllGameEntities(database: BasketballDatabase): List<GameEntity> {
+    suspend fun loadAllGameEntities(database: BasketballDatabase): List<GameEntity> {
         return database.gameDao().getAllGames()
     }
 
-    fun getFirstGameWithIsFinal(isFinal: Boolean, database: BasketballDatabase): Int {
+    suspend fun getFirstGameWithIsFinal(isFinal: Boolean, database: BasketballDatabase): Int {
         return database.gameDao().getFirstGameWithIsFinal(isFinal)
     }
 
-    fun getFirstGameOfTeam(teamId: Int, isFinal: Boolean, database: BasketballDatabase): Int {
-        return database.gameDao().getFistGameOfTeam(isFinal, teamId)
-    }
-
-    fun deleteAllGames(database: BasketballDatabase) {
+    suspend fun deleteAllGames(database: BasketballDatabase) {
         database.gameDao().deleteAllGames()
         database.gameDao().deleteAllGameEvents()
     }

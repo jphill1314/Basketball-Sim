@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.recruiting
 
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
@@ -18,21 +19,14 @@ class RecruitRepository @Inject constructor(
 
     private lateinit var presenter: RecruitContract.Presenter
 
-    override fun loadRecruits() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val team = TeamDatabaseHelper.loadTeamById(teamId, database)
-            team?.let {
-                withContext(Dispatchers.Main) {
-                    presenter.onRecruitsLoaded(it)
-                }
-            }
-        }
+    override suspend fun loadRecruits(): Team {
+        return TeamDatabaseHelper.loadTeamById(teamId, database) ?: throw IllegalStateException(
+            "No team exists with teamId = $teamId"
+        )
     }
 
-    override fun saveRecruits(recruits: List<Recruit>) {
-        GlobalScope.launch(Dispatchers.IO) {
-            RecruitDatabaseHelper.saveRecruits(recruits, database)
-        }
+    override suspend fun saveRecruits(recruits: List<Recruit>) {
+        RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
 
     override fun attachPresenter(presenter: RecruitContract.Presenter) {

@@ -5,17 +5,17 @@ import androidx.room.*
 @Dao
 interface ConferenceDao {
     @Query("SELECT * FROM ConferenceEntity")
-    fun getAllConferenceEntities(): List<ConferenceEntity>
+    suspend fun getAllConferenceEntities(): List<ConferenceEntity>
 
     @Query("SELECT * FROM ConferenceEntity where id in (:id)")
-    fun getConferenceWithId(id: Int): ConferenceEntity?
+    suspend fun getConferenceWithId(id: Int): ConferenceEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertConferences(conferences: List<ConferenceEntity>)
+    suspend fun insertConferences(conferences: List<ConferenceEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertConference(conference: ConferenceEntity)
+    suspend fun insertConference(conference: ConferenceEntity)
 
     @Delete
-    fun deleteConference(conference: ConferenceEntity)
+    suspend fun deleteConference(conference: ConferenceEntity)
 }

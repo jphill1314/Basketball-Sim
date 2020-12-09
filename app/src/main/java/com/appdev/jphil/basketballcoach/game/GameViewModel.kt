@@ -184,7 +184,7 @@ class GameViewModel(
         return newEvents
     }
 
-    private fun updateRecruitsAfterGame(game: Game) {
+    private suspend fun updateRecruitsAfterGame(game: Game) {
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
         recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
         game.homeTeam.doScouting(recruits)
