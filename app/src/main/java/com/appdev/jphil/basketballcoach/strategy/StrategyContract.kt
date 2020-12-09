@@ -11,12 +11,11 @@ interface StrategyContract {
 
     interface Presenter : MVPContract.Presenter<View>, Adapter.Out {
         fun fetchStrategy()
-        fun onStrategyLoaded(coach: Coach)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun loadStrategy()
-        fun saveStrategy(coach: Coach)
+        suspend fun loadStrategy(): Coach
+        suspend fun saveStrategy(coach: Coach)
     }
 
     interface Adapter {

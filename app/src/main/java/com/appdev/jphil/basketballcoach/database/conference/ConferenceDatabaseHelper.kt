@@ -13,7 +13,7 @@ import com.appdev.jphil.basketballcoach.util.RecordUtil
 
 object ConferenceDatabaseHelper {
 
-    fun loadConferenceById(conferenceId: Int, database: BasketballDatabase): Conference? {
+    suspend fun loadConferenceById(conferenceId: Int, database: BasketballDatabase): Conference? {
         val conferenceEntity = database.conferenceDao().getConferenceWithId(conferenceId)
         return conferenceEntity?.let { conference ->
             val teamEntities = database.teamDao().getTeamsInConference(conferenceId)
@@ -25,7 +25,7 @@ object ConferenceDatabaseHelper {
         }
     }
 
-    fun saveConference(conference: Conference, database: BasketballDatabase) {
+    suspend fun saveConference(conference: Conference, database: BasketballDatabase) {
         conference.teams.forEach { team -> TeamDatabaseHelper.saveTeam(team, database) }
         database.conferenceDao().insertConference(
             ConferenceEntity(
@@ -36,11 +36,11 @@ object ConferenceDatabaseHelper {
         )
     }
 
-    fun loadAllConferenceEntities(database: BasketballDatabase): List<ConferenceEntity> {
+    suspend fun loadAllConferenceEntities(database: BasketballDatabase): List<ConferenceEntity> {
         return database.conferenceDao().getAllConferenceEntities()
     }
 
-    fun loadAllConferences(database: BasketballDatabase): List<Conference> {
+    suspend fun loadAllConferences(database: BasketballDatabase): List<Conference> {
         val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
         val teams = database.teamDao().getAllTeams()
         val conferences = mutableListOf<Conference>()
@@ -59,7 +59,7 @@ object ConferenceDatabaseHelper {
         return conferences
     }
 
-    fun loadAllConferencesExcept(ignoreId: Int, database: BasketballDatabase): List<Conference> {
+    suspend fun loadAllConferencesExcept(ignoreId: Int, database: BasketballDatabase): List<Conference> {
         val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
         val teams = database.teamDao().getAllTeams()
         val conferences = mutableListOf<Conference>()
@@ -81,7 +81,7 @@ object ConferenceDatabaseHelper {
         return conferences
     }
 
-    fun saveOnlyConferences(conferences: List<Conference>, database: BasketballDatabase) {
+    suspend fun saveOnlyConferences(conferences: List<Conference>, database: BasketballDatabase) {
         database.conferenceDao().insertConferences(conferences.map {
             ConferenceEntity(
                 it.id,
@@ -90,7 +90,7 @@ object ConferenceDatabaseHelper {
         })
     }
 
-    private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): Map<Int, Team> {
+    suspend private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): Map<Int, Team> {
         val teams = mutableMapOf<Int, Team>()
         teamEntities.forEach { entity ->
             TeamDatabaseHelper.createTeam(entity, database)?.let {
@@ -100,7 +100,7 @@ object ConferenceDatabaseHelper {
         return teams
     }
 
-    fun createTournament(conference: Conference, database: BasketballDatabase): Tournament? {
+    suspend fun createTournament(conference: Conference, database: BasketballDatabase): Tournament? {
         val teams = mutableMapOf<Int, Team>()
         conference.teams.forEach { teams[it.teamId] = it }
         return createTournament(
@@ -111,7 +111,7 @@ object ConferenceDatabaseHelper {
         )
     }
 
-    private fun createTournament(
+    private suspend fun createTournament(
         conference: Conference,
         games: List<GameEntity>,
         teams: Map<Int, Team>,
@@ -127,7 +127,7 @@ object ConferenceDatabaseHelper {
         return conference.tournament
     }
 
-    private fun updateTournament(tournament: Tournament, teams: Map<Int, Team>, database: BasketballDatabase) {
+    private suspend fun updateTournament(tournament: Tournament, teams: Map<Int, Team>, database: BasketballDatabase) {
         Log.d("Tournament", "Update tournament for: ${tournament.getId()}")
         val currentGames = GameDatabaseHelper.loadGamesForTournament(tournament.getId(), teams, database).toMutableList()
         tournament.replaceGames(currentGames)

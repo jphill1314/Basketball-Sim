@@ -17,18 +17,13 @@ class PracticeRepository @Inject constructor(
 
     private lateinit var presenter: PracticeContract.Presenter
 
-    override fun loadTeam() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val team = TeamDatabaseHelper.loadTeamById(teamId, database)
-            if (team != null) {
-                withContext(Dispatchers.Main) {
-                    presenter.onTeamLoaded(team)
-                }
-            }
-        }
+    override suspend fun loadTeam(): Team {
+        return TeamDatabaseHelper.loadTeamById(teamId, database) ?: throw IllegalStateException(
+            "Not team exists with teamId = $teamId"
+        )
     }
 
-    override fun saveTeam(team: Team) {
+    override suspend fun saveTeam(team: Team) {
         GlobalScope.launch(Dispatchers.IO) {
             TeamDatabaseHelper.saveTeam(team, database)
         }

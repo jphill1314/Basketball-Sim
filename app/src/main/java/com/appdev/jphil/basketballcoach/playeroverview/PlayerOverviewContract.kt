@@ -15,11 +15,9 @@ interface PlayerOverviewContract {
         fun displayPlayerStats()
     }
 
-    interface Presenter : MVPContract.Presenter<View>, AdapterView.OnItemSelectedListener {
-        fun onPlayerLoaded(player: Player, stats: List<GameStatsEntity>)
-    }
+    interface Presenter : MVPContract.Presenter<View>, AdapterView.OnItemSelectedListener
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun fetchPlayerAndStats()
+        suspend fun fetchPlayerAndStats(): PlayerOverviewModel
     }
 }

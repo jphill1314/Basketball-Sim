@@ -14,14 +14,13 @@ interface RecruitContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onRecruitsLoaded(team: Team)
         fun onSortSelected()
         fun onPositionFilterSelected(filterType: Int)
         fun onRecruitPressed(recruit: Recruit)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun loadRecruits()
-        fun saveRecruits(recruits: List<Recruit>)
+        suspend fun loadRecruits(): Team
+        suspend fun saveRecruits(recruits: List<Recruit>)
     }
 }

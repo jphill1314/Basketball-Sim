@@ -17,19 +17,12 @@ class StrategyRepository @Inject constructor(
 
     private lateinit var presenter: StrategyContract.Presenter
 
-    override fun loadStrategy() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val coach = CoachDatabaseHelper.loadHeadCoachByTeamId(teamId, database)
-            withContext(Dispatchers.Main) {
-                presenter.onStrategyLoaded(coach)
-            }
-        }
+    override suspend fun loadStrategy(): Coach {
+        return CoachDatabaseHelper.loadHeadCoachByTeamId(teamId, database)
     }
 
-    override fun saveStrategy(coach: Coach) {
-        GlobalScope.launch(Dispatchers.IO) {
-            CoachDatabaseHelper.saveCoach(coach, database)
-        }
+    override suspend fun saveStrategy(coach: Coach) {
+        CoachDatabaseHelper.saveCoach(coach, database)
     }
 
     override fun attachPresenter(presenter: StrategyContract.Presenter) {

@@ -9,19 +9,19 @@ import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 
 object TeamDatabaseHelper {
 
-    fun loadAllTeams(database: BasketballDatabase): List<TeamEntity> {
+    suspend fun loadAllTeams(database: BasketballDatabase): List<TeamEntity> {
         return database.teamDao().getAllTeams()
     }
 
-    fun loadTeamById(teamId: Int, database: BasketballDatabase): Team? {
+    suspend fun loadTeamById(teamId: Int, database: BasketballDatabase): Team? {
         return createTeam(database.teamDao().getTeamWithId(teamId), database)
     }
 
-    fun loadUserTeam(database: BasketballDatabase): Team? {
+    suspend fun loadUserTeam(database: BasketballDatabase): Team? {
         return createTeam(database.teamDao().getTeamIsUser(true), database)
     }
 
-    fun createTeam(teamEntity: TeamEntity?, database: BasketballDatabase): Team? {
+    suspend fun createTeam(teamEntity: TeamEntity?, database: BasketballDatabase): Team? {
         return teamEntity?.let {
             val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(it.teamId, database)
             val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(it.teamId, database)
@@ -31,7 +31,7 @@ object TeamDatabaseHelper {
         }
     }
 
-    fun saveTeam(team: Team, database: BasketballDatabase) {
+    suspend fun saveTeam(team: Team, database: BasketballDatabase) {
         team.roster.forEach { player -> PlayerDatabaseHelper.savePlayer(player, database) }
         team.coaches.forEach { coach -> CoachDatabaseHelper.saveCoach(coach, database) }
         database.teamDao().insertTeam(TeamEntity.from(team))

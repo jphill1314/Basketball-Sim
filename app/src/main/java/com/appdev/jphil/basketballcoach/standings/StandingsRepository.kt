@@ -17,22 +17,17 @@ class StandingsRepository @Inject constructor(
 
     private lateinit var presenter: StandingsContract.Presenter
 
-    override fun fetchData() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val conferences = ConferenceDatabaseHelper.loadAllConferenceEntities(database)
-            val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database)
-            val games = GameDatabaseHelper.loadCompletedGameEntities(database)
-            withContext(Dispatchers.Main) {
-                conference?.teams?.let {
-                    presenter.onData(it, games, conferences)
-                }
-            }
-        }
+    override suspend fun fetchData(): StandingsModel {
+        val conferences = ConferenceDatabaseHelper.loadAllConferenceEntities(database)
+        val games = GameDatabaseHelper.loadCompletedGameEntities(database)
+        val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database) ?:
+            throw IllegalStateException("No conference exists for conferenceId = $conferenceId")
+        return StandingsModel(conference.teams, games, conferences)
     }
 
-    override fun onConferenceIdChanged(confId: Int) {
+    override suspend fun onConferenceIdChanged(confId: Int): StandingsModel {
         conferenceId = confId
-        fetchData()
+        return fetchData()
     }
 
     override fun attachPresenter(presenter: StandingsContract.Presenter) {

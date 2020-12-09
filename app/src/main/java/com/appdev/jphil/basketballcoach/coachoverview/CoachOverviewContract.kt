@@ -11,7 +11,6 @@ interface CoachOverviewContract {
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun onCoachLoaded(coach: Coach)
         fun positionToggled(position: Int)
         fun setMinRating(minRating: Int)
         fun setMaxRating(maxRating: Int)
@@ -20,7 +19,7 @@ interface CoachOverviewContract {
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        fun loadCoach()
-        fun saveCoach(coach: Coach)
+        suspend fun loadCoach(): Coach
+        suspend fun saveCoach(coach: Coach)
     }
 }

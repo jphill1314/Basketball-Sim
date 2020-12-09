@@ -2,11 +2,15 @@ package com.appdev.jphil.basketballcoach.recruiting
 
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RecruitPresenter @Inject constructor(
-    private val repository: RecruitContract.Repository
-) : RecruitContract.Presenter {
+    private val repository: RecruitContract.Repository,
+    dispatcherProvider: DispatcherProvider
+) : BasePresenter(dispatcherProvider), RecruitContract.Presenter {
 
     private var view : RecruitContract.View? = null
     private val sortedRecruits = mutableListOf<Recruit>()
@@ -19,14 +23,12 @@ class RecruitPresenter @Inject constructor(
     }
 
     override fun fetchData() {
-        repository.loadRecruits()
-    }
-
-    override fun onRecruitsLoaded(team: Team) {
-        this.team = team
-        sortedRecruits.clear()
-        sortedRecruits.addAll(team.knownRecruits.sortedBy { -it.rating })
-        view?.displayRecruits(getRecruits(), team)
+        coroutineScope.launch {
+            team = repository.loadRecruits()
+            sortedRecruits.clear()
+            sortedRecruits.addAll(team.knownRecruits.sortedBy { -it.rating })
+            view?.displayRecruits(getRecruits(), team)
+        }
     }
 
     override fun onSortSelected() {
@@ -70,6 +72,8 @@ class RecruitPresenter @Inject constructor(
 
     override fun onViewDetached() {
         view = null
-        repository.saveRecruits(sortedRecruits)
+        coroutineScope.launch {
+            repository.saveRecruits(sortedRecruits)
+        }
     }
 }

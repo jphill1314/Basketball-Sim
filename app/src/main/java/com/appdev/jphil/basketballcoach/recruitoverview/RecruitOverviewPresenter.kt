@@ -5,11 +5,15 @@ import com.appdev.jphil.basketball.recruits.RecruitInterest
 import com.appdev.jphil.basketball.recruits.RecruitingEvent
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RecruitOverviewPresenter @Inject constructor(
-    private val repository: RecruitOverviewContract.Repository
-) : RecruitOverviewContract.Presenter{
+    private val repository: RecruitOverviewContract.Repository,
+    dispatcherProvider: DispatcherProvider
+) : BasePresenter(dispatcherProvider), RecruitOverviewContract.Presenter{
 
     private var view: RecruitOverviewContract.View? = null
     private lateinit var recruit: Recruit
@@ -21,16 +25,16 @@ class RecruitOverviewPresenter @Inject constructor(
     }
 
     override fun fetchData() {
-        repository.loadRecruit()
-    }
-
-    override fun onRecruitLoaded(recruit: Recruit, team: Team) {
-        this.recruit = recruit
-        this.team = team
-        interest = recruit.interestInTeams.first { it.teamId == team.teamId }
-        view?.displayRecruit(recruit)
-        if (!team.isUser) {
-            view?.disableAllButtons()
+        coroutineScope.launch {
+            repository.loadRecruit().let {
+                recruit = it.recruit
+                team = it.team
+            }
+            interest = recruit.interestInTeams.first { it.teamId == team.teamId }
+            view?.displayRecruit(recruit)
+            if (!team.isUser) {
+                view?.disableAllButtons()
+            }
         }
     }
 
@@ -62,7 +66,9 @@ class RecruitOverviewPresenter @Inject constructor(
     }
 
     override fun onViewDetached() {
-        repository.saveRecruit(recruit)
         view = null
+        coroutineScope.launch {
+            repository.saveRecruit(recruit)
+        }
     }
 }

@@ -5,50 +5,50 @@ import androidx.room.*
 @Dao
 interface GameDao {
     @Query("SELECT * FROM GameEntity")
-    fun getAllGames(): List<GameEntity>
+    suspend fun getAllGames(): List<GameEntity>
 
     @Query("SELECT * FROM GameEntity where homeTeamId in (:teamId) or awayTeamId in (:teamId)")
-    fun getAllGamesWithTeamId(teamId: Int): List<GameEntity>
+    suspend fun getAllGamesWithTeamId(teamId: Int): List<GameEntity>
 
     @Query("SELECT * FROM GameEntity where id in (:gameId)")
-    fun getGameWithId(gameId: Int): GameEntity?
+    suspend fun getGameWithId(gameId: Int): GameEntity?
 
     @Query("SELECT * FROM GameEntity where isFinal in (:isFinal)")
-    fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
+    suspend fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
 
     @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal)")
-    fun getFirstGameWithIsFinal(isFinal: Boolean): Int
+    suspend fun getFirstGameWithIsFinal(isFinal: Boolean): Int
 
     @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal) and awayTeamId in (:teamId) or homeTeamId in (:teamId)")
-    fun getFistGameOfTeam(isFinal: Boolean, teamId: Int): Int
+    suspend fun getFistGameOfTeam(isFinal: Boolean, teamId: Int): Int
 
     @Query("SELECT * FROM GameEntity where tournamentId in (:tournamentId)")
-    fun getGamesWithTournamentId(tournamentId: Int): List<GameEntity>
+    suspend fun getGamesWithTournamentId(tournamentId: Int): List<GameEntity>
 
     @Query("SELECT * FROM GameEntity where tournamentId not null")
-    fun getTournamentGames(): List<GameEntity>
+    suspend fun getTournamentGames(): List<GameEntity>
 
     @Query("DELETE FROM GameEntity")
-    fun deleteAllGames()
+    suspend fun deleteAllGames()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGames(games: List<GameEntity>)
+    suspend fun insertGames(games: List<GameEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGame(game: GameEntity): Long
+    suspend fun insertGame(game: GameEntity): Long
 
     @Delete
-    fun deleteGame(game: GameEntity)
+    suspend fun deleteGame(game: GameEntity)
 
     @Query("SELECT * FROM GameEventEntity where gameId in (:gameId)")
-    fun getAllGameEventsForGame(gameId: Int): List<GameEventEntity>
+    suspend fun getAllGameEventsForGame(gameId: Int): List<GameEventEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGameEvents(gameEvents: List<GameEventEntity>)
+    suspend fun insertGameEvents(gameEvents: List<GameEventEntity>)
 
     @Query("DELETE FROM GameEventEntity")
-    fun deleteAllGameEvents()
+    suspend fun deleteAllGameEvents()
 
     @Delete
-    fun deleteGameEvents(gameEvents: List<GameEventEntity>)
+    suspend fun deleteGameEvents(gameEvents: List<GameEventEntity>)
 }

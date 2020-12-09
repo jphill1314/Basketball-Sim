@@ -2,11 +2,18 @@ package com.appdev.jphil.basketballcoach.roster
 
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
+import com.appdev.jphil.basketballcoach.arch.BasePresenter
+import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
 import com.flurry.android.FlurryAgent
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RosterPresenter @Inject constructor(private val repository: RosterContract.Repository): RosterContract.Presenter {
+class RosterPresenter @Inject constructor(
+    private val repository: RosterContract.Repository,
+    dispatcherProvider: DispatcherProvider
+): BasePresenter(dispatcherProvider), RosterContract.Presenter {
 
     private var view: RosterContract.View? = null
     private lateinit var team: Team
@@ -17,13 +24,11 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
     }
 
     override fun fetchData() {
-        repository.fetchData()
-    }
-
-    override fun onDataFetched(team: Team) {
-        this.team = team
-        view?.updateTeamAndConference(team.teamId, team.conferenceId)
-        displayData(team.roster, team)
+        coroutineScope.launch {
+            team = repository.fetchData()
+            view?.updateTeamAndConference(team.teamId, team.conferenceId)
+            displayData(team.roster, team)
+        }
     }
 
     override fun onPlayerSelected(player: Player) {
@@ -32,7 +37,7 @@ class RosterPresenter @Inject constructor(private val repository: RosterContract
         } else {
             if (this.player?.id != player.id) {
                 team.swapPlayers(player.rosterIndex, this.player!!.rosterIndex)
-                repository.saveTeam(team)
+                coroutineScope.launch { repository.saveTeam(team) }
                 displayData(team.roster, team)
                 FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SWAP_PLAYERS))
             }

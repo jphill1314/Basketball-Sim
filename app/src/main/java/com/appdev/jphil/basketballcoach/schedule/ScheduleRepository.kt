@@ -18,23 +18,16 @@ class ScheduleRepository @Inject constructor(
 
     private lateinit var presenter: ScheduleContract.Presenter
 
-    override fun fetchSchedule() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val gameEntities = GameDatabaseHelper.loadAllGameEntities(database).filter { it.tournamentId == null }
-            val team = TeamDatabaseHelper.loadUserTeam(database)
-            withContext(Dispatchers.Main) {
-                presenter.onScheduleLoaded(gameEntities, team?.teamId == teamId)
-            }
-        }
+    override suspend fun fetchSchedule(): ScheduleModel {
+        val gameEntities = GameDatabaseHelper.loadAllGameEntities(database).filter { it.tournamentId == null }
+        val team = TeamDatabaseHelper.loadUserTeam(database)
+        return ScheduleModel(gameEntities, team?.teamId == teamId)
     }
 
     override suspend fun tournamentIsOver(confId: Int): Boolean {
-        var isOver = false
-        GlobalScope.launch(Dispatchers.IO) {
-            val conferences = ConferenceDatabaseHelper.loadAllConferenceEntities(database)
-            isOver = conferences.first { it.id == confId }.tournamentIsFinished
-        }.join()
-        return isOver
+        return ConferenceDatabaseHelper.loadAllConferenceEntities(database)
+            .first { it.id == confId }
+            .tournamentIsFinished
     }
 
     override fun attachPresenter(presenter: ScheduleContract.Presenter) {

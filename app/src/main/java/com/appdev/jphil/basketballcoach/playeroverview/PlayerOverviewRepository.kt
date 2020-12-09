@@ -16,14 +16,10 @@ class PlayerOverviewRepository @Inject constructor(
 
     private lateinit var presenter: PlayerOverviewContract.Presenter
 
-    override fun fetchPlayerAndStats() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val player = PlayerDatabaseHelper.loadPlayerById(playerId, database)
-            val stats = PlayerDatabaseHelper.loadGameStatsForPlayer(playerId, database)
-            withContext(Dispatchers.Main) {
-                presenter.onPlayerLoaded(player, stats)
-            }
-        }
+    override suspend fun fetchPlayerAndStats(): PlayerOverviewModel {
+        val player = PlayerDatabaseHelper.loadPlayerById(playerId, database)
+        val stats = PlayerDatabaseHelper.loadGameStatsForPlayer(playerId, database)
+        return PlayerOverviewModel(player, stats)
     }
 
     override fun attachPresenter(presenter: PlayerOverviewContract.Presenter) {
