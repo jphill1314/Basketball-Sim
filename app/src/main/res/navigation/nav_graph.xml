@@ -30,6 +30,10 @@
             app:destination="@id/gamePreviewFragment" />
     </fragment>
     <fragment
+        android:id="@+id/compose_schedule"
+        android:name="com.appdev.jphil.basketballcoach.schedulecompose.ui.ComposeScheduleFragment"
+        android:label="@string/schedule"/>
+    <fragment
         android:id="@+id/roster"
         android:name="com.appdev.jphil.basketballcoach.roster.RosterFragment"
         android:label="@string/roster"

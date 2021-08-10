@@ -55,4 +55,7 @@ interface GameDao {
 
     @Query("SELECT * FROM GameEntity where (homeTeamId in (:teamId) or awayTeamId in (:teamId)) and tournamentId is null")
     fun getGamesForTeam(teamId: Int): Flow<List<GameEntity>>
+
+    @Query("SELECT * FROM GameEntity")
+    fun getAllGamesFlow(): Flow<List<GameEntity>>
 }

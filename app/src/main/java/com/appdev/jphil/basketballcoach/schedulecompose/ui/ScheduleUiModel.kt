@@ -3,12 +3,15 @@ package com.appdev.jphil.basketballcoach.schedulecompose.ui
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 
 data class ScheduleUiModel(
-    val id: String,
+    val id: Int,
+    val gameNumber: Int,
     val topTeamName: String,
     val bottomTeamName: String,
     val topTeamScore: String,
     val bottomTeamScore: String,
-    val isShowButtons: Boolean
+    val isShowButtons: Boolean,
+    val isFinal: Boolean,
+    val isSelectedTeamWinner: Boolean
 ) : UiModel {
     interface Interactor {
         fun toggleShowButtons(uiModel: ScheduleUiModel)

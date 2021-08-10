@@ -2,21 +2,31 @@ package com.appdev.jphil.basketballcoach.schedulecompose.data
 
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.flurry.sdk.it
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class ScheduleRepository constructor(
+class ScheduleRepository @Inject constructor(
     private val gameDao: GameDao
 ) {
 
-    fun getGamesFroTeam(teamId: Int) = gameDao
-        .getGamesForTeam(teamId)
-        .map { it.toDataModel() }
+    fun getGames() = gameDao
+        .getAllGamesFlow()
+        .map { entities ->
+            entities.map { entity ->
+                entity.toDataModel()
+            }
+        }
 
     private fun GameEntity.toDataModel() = ScheduleDataModel(
+        gameId = id ?: -1,
+        topTeamId = awayTeamId,
+        bottomTeamId = homeTeamId,
         topTeamName = awayTeamName,
         bottomTeamName = homeTeamName,
-        topTeamScore = awayScore.toString(),
-        bottomTeamScore = homeScore.toString()
+        topTeamScore = awayScore,
+        bottomTeamScore = homeScore,
+        isInProgress = inProgress,
+        isFinal = isFinal
     )
 }

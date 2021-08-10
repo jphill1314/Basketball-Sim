@@ -17,5 +17,10 @@ abstract class DatabaseModule {
         fun providesDatabase(application: Application): BasketballDatabase {
             return Room.databaseBuilder(application, BasketballDatabase::class.java, "basketball-db").build()
         }
+
+        @JvmStatic
+        @PerApplication
+        @Provides
+        fun providesGameDao(database: BasketballDatabase) = database.gameDao()
     }
 }

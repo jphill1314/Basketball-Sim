@@ -50,7 +50,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.roster,
-                R.id.schedule,
+                R.id.compose_schedule,
                 R.id.standings,
                 R.id.rankings,
                 R.id.recruiting,
