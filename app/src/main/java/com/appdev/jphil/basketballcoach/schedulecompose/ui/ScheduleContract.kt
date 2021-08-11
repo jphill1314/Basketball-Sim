@@ -7,17 +7,23 @@ import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
 interface ScheduleContract {
 
     interface ScheduleInteractor :
-        ScheduleUiModel.Interactor
+        ScheduleUiModel.Interactor {
+            fun onDismissSimDialog()
+        }
 
     data class ScheduleDataState(
         val teamId: Int,
         val isLoading: Boolean,
         val selectedGameId: Int,
-        val dataModels: List<ScheduleDataModel>
+        val showSimDialog: Boolean,
+        val dataModels: List<ScheduleDataModel>,
+        val dialogDataModels: List<ScheduleDataModel>
     )
 
     data class ScheduleViewState(
         val isLoading: Boolean,
-        val uiModels: List<UiModel>
+        val showSimDialog: Boolean,
+        val uiModels: List<UiModel>,
+        val dialogUiModels: List<UiModel>
     ): ViewState
 }

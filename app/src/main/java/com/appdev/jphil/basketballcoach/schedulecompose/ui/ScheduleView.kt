@@ -7,11 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
@@ -29,6 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -42,6 +51,9 @@ fun ScheduleScreen(
         CircularProgressIndicator(modifier = Modifier.size(75.dp))
     } else {
         ScheduleView(viewState = viewState, interactor = interactor)
+        if (viewState.showSimDialog) {
+            SimulationDialog(viewState.dialogUiModels, interactor)
+        }
     }
 }
 
@@ -179,6 +191,98 @@ fun PreviewScheduleItem() {
     )
 }
 
+@Composable
+fun SimulationDialog(
+    uiModels: List<UiModel>,
+    interactor: ScheduleContract.ScheduleInteractor
+) {
+    Dialog(onDismissRequest = { interactor.onDismissSimDialog() }) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.90f)
+            .background(Color.White)
+        ) {
+            Column {
+                DialogGames(uiModels)
+                TextButton(
+                    onClick = { interactor.onDismissSimDialog() },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text(text = "Cancel Sim")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DialogGames(uiModels: List<UiModel>) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(1.dp),
+        modifier = Modifier.fillMaxHeight(0.9f)
+    ) {
+        items(uiModels) { model ->
+            when (model) {
+                is ScheduleUiModel -> DialogGame(model)
+            }
+        }
+    }
+}
+
+@Composable
+fun DialogGame(model: ScheduleUiModel) {
+    Card {
+        Column(
+            modifier = Modifier.background(Color.White)
+        ) {
+            DialogGameRow(
+                teamName = model.topTeamName,
+                teamScore = model.topTeamScore,
+                isWinner = model.topTeamScore > model.bottomTeamScore
+            )
+            DialogGameRow(
+                teamName = model.bottomTeamName,
+                teamScore = model.bottomTeamScore,
+                isWinner = model.topTeamScore < model.bottomTeamScore
+            )
+        }
+    }
+}
+
+@Composable
+private fun DialogGameRow(
+    teamName: String,
+    teamScore: String,
+    isWinner: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Text(
+            text = teamName,
+            style = MaterialTheme.typography.body1.copy(
+                color = if (isWinner) Color.Green else Color.Gray
+            ),
+            modifier = Modifier
+                .weight(1f)
+        )
+        Text(
+            text = teamScore,
+            style = MaterialTheme.typography.body1.copy(
+                color = if (isWinner) Color.Green else Color.Gray
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDialog() {
+    SimulationDialog(previewViewState.dialogUiModels, previewInteractor)
+}
+
 private val previewUiModel = ScheduleUiModel(
     id = 1,
     gameNumber = 1,
@@ -195,9 +299,12 @@ private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun toggleShowButtons(uiModel: ScheduleUiModel) {}
     override fun simulateGame(uiModel: ScheduleUiModel) {}
     override fun playGame(uiModel: ScheduleUiModel) {}
+    override fun onDismissSimDialog() {}
 }
 
 private val previewViewState = ScheduleContract.ScheduleViewState(
     isLoading = false,
-    uiModels = List(15) { previewUiModel }
+    showSimDialog = false,
+    uiModels = List(15) { previewUiModel },
+    dialogUiModels = List(15) { previewUiModel }
 )

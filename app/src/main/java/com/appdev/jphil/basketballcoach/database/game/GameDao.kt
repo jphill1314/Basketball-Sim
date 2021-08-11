@@ -58,4 +58,7 @@ interface GameDao {
 
     @Query("SELECT * FROM GameEntity")
     fun getAllGamesFlow(): Flow<List<GameEntity>>
+
+    @Query("SELECT * FROM GameEntity where isFinal in (:isFinal) and id > (:firstGameId)")
+    fun getAllGamesWithIsFinalFlow(isFinal: Boolean, firstGameId: Int): Flow<List<GameEntity>>
 }

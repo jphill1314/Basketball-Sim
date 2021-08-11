@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
+import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
 import javax.inject.Inject
 
@@ -10,7 +11,9 @@ class ScheduleTransformer @Inject constructor() {
     ): ScheduleContract.ScheduleViewState {
         return ScheduleContract.ScheduleViewState(
             isLoading = dataState.isLoading,
-            uiModels = createUiModels(dataState)
+            showSimDialog = dataState.showSimDialog,
+            uiModels = createUiModels(dataState),
+            dialogUiModels = createDialogUiModels(dataState.dialogDataModels)
         )
     }
 
@@ -70,5 +73,21 @@ class ScheduleTransformer @Inject constructor() {
         }
 
         return records
+    }
+
+    private fun createDialogUiModels(dataModels: List<ScheduleDataModel>): List<UiModel> {
+        return dataModels.reversed().map { model ->
+            ScheduleUiModel(
+                id = model.gameId,
+                gameNumber = 1,
+                topTeamName = model.topTeamName,
+                bottomTeamName = model.bottomTeamName,
+                topTeamScore = model.topTeamScore.toString(),
+                bottomTeamScore = model.bottomTeamScore.toString(),
+                isShowButtons = false,
+                isFinal = model.isFinal,
+                isSelectedTeamWinner = false
+            )
+        }
     }
 }
