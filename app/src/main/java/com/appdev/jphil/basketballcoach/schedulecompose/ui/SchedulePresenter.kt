@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
+import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
 import com.flurry.sdk.it
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class SchedulePresenter(
     private val params: Params,
     private val transformer: ScheduleTransformer,
-    private val scheduleRepository: ScheduleRepository
+    private val scheduleRepository: ScheduleRepository,
+    private val gameSimRepository: GameSimRepository2
 ) : ViewModel(), ScheduleContract.ScheduleInteractor {
 
     data class Params @Inject constructor(
@@ -62,7 +64,7 @@ class SchedulePresenter(
     }
 
     override fun simulateGame(uiModel: ScheduleUiModel) {
-
+        gameSimRepository.simulateUpToAndIncludingGame(uiModel.id)
     }
 
     override fun playGame(uiModel: ScheduleUiModel) {
