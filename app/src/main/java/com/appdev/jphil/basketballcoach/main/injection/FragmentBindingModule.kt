@@ -20,8 +20,6 @@ import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewModule
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.roster.RosterModule
-import com.appdev.jphil.basketballcoach.schedule.ScheduleFragment
-import com.appdev.jphil.basketballcoach.schedule.ScheduleModule
 import com.appdev.jphil.basketballcoach.schedulecompose.ui.ComposeScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
@@ -38,10 +36,6 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [RosterModule::class])
     abstract fun rosterFragment(): RosterFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [ScheduleModule::class])
-    abstract fun scheduleFragment(): ScheduleFragment
 
     @PerFragment
     @ContributesAndroidInjector(modules = [GameModule::class])
