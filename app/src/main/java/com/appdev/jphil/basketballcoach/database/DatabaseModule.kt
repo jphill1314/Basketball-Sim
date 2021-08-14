@@ -39,5 +39,9 @@ abstract class DatabaseModule {
         @PerApplication
         @Provides
         fun providesRecruitDao(database: BasketballDatabase) = database.recruitDao()
+
+        @PerApplication
+        @Provides
+        fun providesRelationalDao(database: BasketballDatabase) = database.relationalDao()
     }
 }
