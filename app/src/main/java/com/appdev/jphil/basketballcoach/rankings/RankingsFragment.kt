@@ -54,8 +54,7 @@ class RankingsFragment : Fragment(), RankingsContract.View {
     override fun displayData(teams: List<TeamStatsDataModel>) {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = RankingsAdapter(teams, teamViewModel?.teamId ?: 0, resources)
-            { teamId, confId ->
+            adapter = RankingsAdapter(teams, teamViewModel?.teamId ?: 0, resources) { teamId, confId ->
                 teamViewModel?.changeTeamAndConference(teamId, confId)
             }
         }

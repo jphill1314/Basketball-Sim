@@ -20,7 +20,7 @@ object HalfTimeHelper {
                 deadball = false
                 madeShot = false
                 if (half != 1) {
-                    gamePlays.add(EndOfHalf(this,false, homeTeamHasBall))
+                    gamePlays.add(EndOfHalf(this, false, homeTeamHasBall))
                     homeTimeouts++
                     awayTimeouts++
                 }
@@ -30,7 +30,7 @@ object HalfTimeHelper {
                 deadball = true
                 madeShot = false
 
-                gamePlays.add(EndOfHalf(this,false, homeTeamHadBall))
+                gamePlays.add(EndOfHalf(this, false, homeTeamHadBall))
 
                 if (homeTimeouts == Game.maxTimeouts) {
                     homeTimeouts--
@@ -48,16 +48,15 @@ object HalfTimeHelper {
             homeTeam.lastScoreDiff = homeScore - awayScore
             awayTeam.lastScoreDiff = awayScore - homeScore
 
-            if(half < 3){
+            if (half < 3) {
                 homeFouls = 0
                 awayFouls = 0
             }
 
-            if(half == 2){
+            if (half == 2) {
                 // half time
                 updateTimePlayed(false, true)
-            }
-            else{
+            } else {
                 // coach talk before game or between overtime periods
                 TimeoutHelper.runTimeout(this)
                 deadball = false

@@ -19,8 +19,8 @@ class BoxScoreStatsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoxScorePlayerViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return BoxScorePlayerViewHolder(
-                ListItemBoxScoreBinding.inflate(inflater, parent, false)
-            )
+            ListItemBoxScoreBinding.inflate(inflater, parent, false)
+        )
     }
 
     override fun getItemCount(): Int = (helper.getPlayers().size + NUM_OF_NON_PLAYERS) * NUM_OF_STATS
@@ -82,7 +82,7 @@ class BoxScoreStatsAdapter(
     }
 
     private fun getPoints(player: Player): Int {
-        return with (player) {
+        return with(player) {
             freeThrowMakes + 2 * twoPointMakes + 3 * threePointMakes
         }
     }

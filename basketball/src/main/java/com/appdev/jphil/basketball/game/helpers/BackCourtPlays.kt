@@ -9,7 +9,7 @@ import kotlin.random.Random
 object BackCourtPlays {
 
     fun getBackCourtPlay(game: Game): MutableList<BasketballPlay> {
-        with (game) {
+        with(game) {
             val liveBallModifier = when {
                 deadball -> 0
                 consecutivePresses != 1 -> 0
@@ -43,5 +43,4 @@ object BackCourtPlays {
             return mutableListOf(play)
         }
     }
-
 }

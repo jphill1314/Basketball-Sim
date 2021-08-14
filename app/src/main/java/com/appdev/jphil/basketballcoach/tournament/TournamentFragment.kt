@@ -2,15 +2,14 @@ package com.appdev.jphil.basketballcoach.tournament
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager.widget.ViewPager
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.NavigationManager
@@ -18,6 +17,7 @@ import com.appdev.jphil.basketballcoach.simdialog.SimDialog
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.tournament.round.RoundFragment
 import com.appdev.jphil.basketballcoach.tournament.round.TournamentViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -51,7 +51,8 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tournament, container, false)
@@ -80,12 +81,14 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        findNavController().navigate(TournamentFragmentDirections.actionTournamentFragmentToGamePreviewFragment(
-            gameId,
-            homeName,
-            awayName,
-            userIsHomeTeam
-        ))
+        findNavController().navigate(
+            TournamentFragmentDirections.actionTournamentFragmentToGamePreviewFragment(
+                gameId,
+                homeName,
+                awayName,
+                userIsHomeTeam
+            )
+        )
     }
 
     override fun showDialog() {
@@ -119,11 +122,9 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     }
 
     override fun onPageScrollStateChanged(p0: Int) {
-
     }
 
     override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-
     }
 
     override fun onPageSelected(position: Int) {
@@ -133,8 +134,10 @@ class TournamentFragment : Fragment(), TournamentContract.View, ViewPager.OnPage
     }
 
     private fun updateFragment(fragment: RoundFragment, dataModels: MutableList<TournamentDataModel>) {
-        fragment.addData(mutableListOf<TournamentDataModel>().apply {
-            addAll(dataModels.filter { it.round == fragment.getFragmentRound() })
-        })
+        fragment.addData(
+            mutableListOf<TournamentDataModel>().apply {
+                addAll(dataModels.filter { it.round == fragment.getFragmentRound() })
+            }
+        )
     }
 }

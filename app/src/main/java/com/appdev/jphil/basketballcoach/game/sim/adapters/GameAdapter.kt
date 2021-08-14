@@ -16,9 +16,9 @@ class GameAdapter(
     private val resources: Resources,
     private val homeColor: Int,
     private val awayColor: Int
-): RecyclerView.Adapter<GameAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<GameAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ListItemGameEventBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ListItemGameEventBinding) : RecyclerView.ViewHolder(binding.root)
 
     private val plays = mutableListOf<GameEventEntity>()
 
@@ -47,11 +47,13 @@ class GameAdapter(
         }
         viewHolder.binding.gameScore.text = score
 
-        viewHolder.binding.teamColor.setBackgroundColor(if (play.homeTeamHasBall) {
-            ResourcesCompat.getColor(resources, homeColor, null)
-        } else {
-            ResourcesCompat.getColor(resources, awayColor, null)
-        })
+        viewHolder.binding.teamColor.setBackgroundColor(
+            if (play.homeTeamHasBall) {
+                ResourcesCompat.getColor(resources, homeColor, null)
+            } else {
+                ResourcesCompat.getColor(resources, awayColor, null)
+            }
+        )
     }
 
     fun addEvents(newEvents: List<GameEventEntity>) {

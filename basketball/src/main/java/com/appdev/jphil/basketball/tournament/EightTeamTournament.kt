@@ -9,7 +9,7 @@ class EightTeamTournament(
     private val id: Int,
     teams: List<Team>,
     val dataModels: List<StandingsDataModel>
-): Tournament {
+) : Tournament {
     private val sortedTeams = mutableListOf<Team>()
     private val games = mutableListOf<Game>()
     private val scheduleDataModels = MutableList(7) {
@@ -17,12 +17,14 @@ class EightTeamTournament(
     }
 
     init {
-        dataModels.sortedWith(compareBy(
-            { -it.getConferenceWinPercentage() },
-            { -it.conferenceWins },
-            { -it.getWinPercentage() },
-            { -it.totalWins }
-        )).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
+        dataModels.sortedWith(
+            compareBy(
+                { -it.getConferenceWinPercentage() },
+                { -it.conferenceWins },
+                { -it.getWinPercentage() },
+                { -it.totalWins }
+            )
+        ).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
     }
 
     override fun getScheduleDataModels() = scheduleDataModels

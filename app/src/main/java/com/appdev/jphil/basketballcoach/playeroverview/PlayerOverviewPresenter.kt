@@ -13,7 +13,7 @@ import javax.inject.Inject
 class PlayerOverviewPresenter @Inject constructor(
     private val repository: PlayerOverviewContract.Repository,
     dispatcherProvider: DispatcherProvider
-): BasePresenter(dispatcherProvider), PlayerOverviewContract.Presenter {
+) : BasePresenter(dispatcherProvider), PlayerOverviewContract.Presenter {
 
     private var view: PlayerOverviewContract.View? = null
     private val stats = mutableListOf<GameStatsEntity>()
@@ -93,7 +93,8 @@ class PlayerOverviewPresenter @Inject constructor(
                 fouls,
                 freeThrowShots,
                 freeThrowMakes
-        ))
+            )
+        )
 
         view?.addPlayerStats(this.stats)
     }

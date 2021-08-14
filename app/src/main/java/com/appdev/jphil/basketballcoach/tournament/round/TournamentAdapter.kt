@@ -2,12 +2,12 @@ package com.appdev.jphil.basketballcoach.tournament.round
 
 import android.content.res.Resources
 import android.os.Handler
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.appdev.jphil.basketballcoach.R
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
+import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.tournament.TournamentContract
 import com.appdev.jphil.basketballcoach.util.Pixels
 

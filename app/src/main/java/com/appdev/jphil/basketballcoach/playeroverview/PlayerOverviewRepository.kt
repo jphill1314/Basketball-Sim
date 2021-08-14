@@ -3,10 +3,6 @@ package com.appdev.jphil.basketballcoach.playeroverview
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.PlayerId
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PlayerOverviewRepository @Inject constructor(

@@ -14,7 +14,7 @@ class RecruitAdapter(
     private val teamId: Int,
     private val presenter: RecruitContract.Presenter,
     private val resources: Resources
-): RecyclerView.Adapter<RecruitAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecruitAdapter.ViewHolder>() {
 
     private val positionNames = resources.getStringArray(R.array.position_abbreviation)
     private val playerTypes = resources.getStringArray(R.array.player_types)
@@ -25,7 +25,7 @@ class RecruitAdapter(
         notifyDataSetChanged()
     }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val position: TextView = view.findViewById(R.id.position)
         val name: TextView = view.findViewById(R.id.name)
         val rating: TextView = view.findViewById(R.id.rating)

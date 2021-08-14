@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.practice
 
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.players.PracticeType
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.arch.BasePresenter
 import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import kotlinx.coroutines.launch

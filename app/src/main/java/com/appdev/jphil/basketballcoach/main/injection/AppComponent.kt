@@ -10,11 +10,13 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 
 @PerApplication
-@Component(modules = [
-    AndroidSupportInjectionModule::class,
-    AppModule::class,
-    DatabaseModule::class
-])
+@Component(
+    modules = [
+        AndroidSupportInjectionModule::class,
+        AppModule::class,
+        DatabaseModule::class
+    ]
+)
 interface AppComponent : AndroidInjector<MainApplication> {
 
     @Component.Builder

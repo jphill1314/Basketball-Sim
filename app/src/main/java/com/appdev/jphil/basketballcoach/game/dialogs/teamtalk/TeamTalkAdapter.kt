@@ -11,7 +11,7 @@ class TeamTalkAdapter(
     private val onClick: (type: CoachTalk) -> Unit
 ) : RecyclerView.Adapter<TeamTalkAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ListItemTeamTalkBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ListItemTeamTalkBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

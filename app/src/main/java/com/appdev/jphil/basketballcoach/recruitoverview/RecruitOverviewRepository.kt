@@ -6,10 +6,6 @@ import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.RecruitId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RecruitOverviewRepository @Inject constructor(

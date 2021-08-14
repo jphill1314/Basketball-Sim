@@ -1,9 +1,9 @@
 package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.teams.TeamColor
 import kotlin.random.Random
 

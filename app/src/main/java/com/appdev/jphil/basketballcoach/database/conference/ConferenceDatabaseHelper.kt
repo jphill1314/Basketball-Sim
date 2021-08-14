@@ -82,15 +82,18 @@ object ConferenceDatabaseHelper {
     }
 
     suspend fun saveOnlyConferences(conferences: List<Conference>, database: BasketballDatabase) {
-        database.conferenceDao().insertConferences(conferences.map {
-            ConferenceEntity(
-                it.id,
-                it.name,
-                it.tournament?.getWinnerOfTournament() != null)
-        })
+        database.conferenceDao().insertConferences(
+            conferences.map {
+                ConferenceEntity(
+                    it.id,
+                    it.name,
+                    it.tournament?.getWinnerOfTournament() != null
+                )
+            }
+        )
     }
 
-    suspend private fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): Map<Int, Team> {
+    private suspend fun generateTeams(database: BasketballDatabase, teamEntities: List<TeamEntity>): Map<Int, Team> {
         val teams = mutableMapOf<Int, Team>()
         teamEntities.forEach { entity ->
             TeamDatabaseHelper.createTeam(entity, database)?.let {
@@ -132,11 +135,13 @@ object ConferenceDatabaseHelper {
         val currentGames = GameDatabaseHelper.loadGamesForTournament(tournament.getId(), teams, database).toMutableList()
         tournament.replaceGames(currentGames)
 
-        currentGames.addAll(tournament.generateNextRound(2018).map { // TODO: inject
-            it.apply {
-                it.id = database.gameDao().insertGame(GameEntity.from(it)).toInt()
+        currentGames.addAll(
+            tournament.generateNextRound(2018).map { // TODO: inject
+                it.apply {
+                    it.id = database.gameDao().insertGame(GameEntity.from(it)).toInt()
+                }
             }
-        })
+        )
         tournament.replaceGames(currentGames)
     }
 }

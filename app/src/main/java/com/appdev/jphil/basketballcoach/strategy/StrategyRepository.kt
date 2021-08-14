@@ -4,16 +4,12 @@ import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class StrategyRepository @Inject constructor(
     @TeamId private val teamId: Int,
     private val database: BasketballDatabase
-): StrategyContract.Repository {
+) : StrategyContract.Repository {
 
     private lateinit var presenter: StrategyContract.Presenter
 

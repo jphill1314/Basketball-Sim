@@ -184,7 +184,7 @@ class Player(
         twoPointMakes = 0
         threePointAttempts = 0
         threePointMakes = 0
-        assists =0
+        assists = 0
         offensiveRebounds = 0
         defensiveRebounds = 0
         turnovers = 0

@@ -17,7 +17,7 @@ class TournamentViewPagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         return RoundFragment.newInstance(
-            mutableListOf<TournamentDataModel>().apply{ addAll(dataModels.filter { it.round == position + 1 }) },
+            mutableListOf<TournamentDataModel>().apply { addAll(dataModels.filter { it.round == position + 1 }) },
             presenter
         )
     }

@@ -4,10 +4,6 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class StandingsRepository @Inject constructor(
@@ -20,8 +16,8 @@ class StandingsRepository @Inject constructor(
     override suspend fun fetchData(): StandingsModel {
         val conferences = ConferenceDatabaseHelper.loadAllConferenceEntities(database)
         val games = GameDatabaseHelper.loadCompletedGameEntities(database)
-        val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database) ?:
-            throw IllegalStateException("No conference exists for conferenceId = $conferenceId")
+        val conference = ConferenceDatabaseHelper.loadConferenceById(conferenceId, database)
+            ?: throw IllegalStateException("No conference exists for conferenceId = $conferenceId")
         return StandingsModel(conference.teams, games, conferences)
     }
 

@@ -33,15 +33,23 @@ class SimDialog : DialogFragment() {
     }
 
     fun setState(state: SimDialogState) {
-        state.games.observe(this, Observer { dataModels ->
-            adapter.updateItems(dataModels)
-        })
-        state.text.observe(this, Observer { text ->
-            binding.simText.text = text
-        })
-        state.canCancel.observe(this, Observer { canCancel ->
-            binding.cancelButton.isEnabled = canCancel
-        })
+        state.games.observe(
+            this,
+            Observer { dataModels ->
+                adapter.updateItems(dataModels)
+            }
+        )
+        state.text.observe(
+            this,
+            Observer { text ->
+                binding.simText.text = text
+            }
+        )
+        state.canCancel.observe(
+            this,
+            Observer { canCancel ->
+                binding.cancelButton.isEnabled = canCancel
+            }
+        )
     }
 }
-

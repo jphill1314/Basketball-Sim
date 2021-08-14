@@ -2,11 +2,11 @@ package com.appdev.jphil.basketballcoach.coaches
 
 import android.content.res.Resources
 import android.graphics.Typeface
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
 
@@ -14,9 +14,9 @@ class CoachesAdapter(
     private val coaches: List<Coach>,
     private val resources: Resources,
     private val onClick: (coachId: Int) -> Unit
-): RecyclerView.Adapter<CoachesAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<CoachesAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val position: TextView = view.findViewById(R.id.position)
         val name: TextView = view.findViewById(R.id.name)
         val rating: TextView = view.findViewById(R.id.rating)

@@ -3,9 +3,6 @@ package com.appdev.jphil.basketballcoach.practice
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +10,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import dagger.android.support.AndroidSupportInjection

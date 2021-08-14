@@ -15,14 +15,16 @@ object RecruitFactory {
         val recruits = mutableListOf<Recruit>()
 
         for (i in 1..numberOfRecruits) {
-            recruits.add(generateRecruit(
-                i,
-                firstNames[Random.nextInt(firstNames.size)],
-                lastNames[Random.nextInt(lastNames.size)],
-                (i % 5) + 1,
-                generateRating(),
-                generateRating()
-            ))
+            recruits.add(
+                generateRecruit(
+                    i,
+                    firstNames[Random.nextInt(firstNames.size)],
+                    lastNames[Random.nextInt(lastNames.size)],
+                    (i % 5) + 1,
+                    generateRating(),
+                    generateRating()
+                )
+            )
         }
 
         return recruits
@@ -32,7 +34,7 @@ object RecruitFactory {
         var rating = 25
         do {
             rating += Random.nextInt(26)
-        } while (Random.nextDouble() > min(0.5,  (rating / 200.0)) && rating < 75)
+        } while (Random.nextDouble() > min(0.5, (rating / 200.0)) && rating < 75)
 
         return rating
     }

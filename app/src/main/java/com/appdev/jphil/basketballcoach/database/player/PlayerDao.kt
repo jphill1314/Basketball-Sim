@@ -1,6 +1,10 @@
 package com.appdev.jphil.basketballcoach.database.player
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface PlayerDao {
@@ -22,7 +26,6 @@ interface PlayerDao {
 
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
-
 
     // Game Stats Entity
     @Query("SELECT * FROM GameStatsEntity where playerId in (:playerId)")

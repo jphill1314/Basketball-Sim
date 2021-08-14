@@ -11,7 +11,7 @@ import com.appdev.jphil.basketballcoach.database.typeconverters.BooleanListConve
 import com.appdev.jphil.basketballcoach.database.typeconverters.IntListTypeConverter
 
 @Entity
-@TypeConverters(value =  [BooleanListConverter::class, IntListTypeConverter::class])
+@TypeConverters(value = [BooleanListConverter::class, IntListTypeConverter::class])
 data class GameEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
@@ -134,6 +134,5 @@ data class GameEntity(
                 game.scoreline.awayScores
             )
         }
-
     }
 }

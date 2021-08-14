@@ -4,7 +4,6 @@ enum class RecruitingEvent(val type: Int) {
     SCOUT(0),
     OFFER_SCHOLARSHIP(1);
 
-
     companion object {
         fun getEventByType(type: Int): RecruitingEvent {
             return when (type) {

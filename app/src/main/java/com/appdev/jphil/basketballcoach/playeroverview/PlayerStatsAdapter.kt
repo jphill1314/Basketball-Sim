@@ -1,11 +1,11 @@
 package com.appdev.jphil.basketballcoach.playeroverview
 
 import android.content.res.Resources
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 
@@ -42,7 +42,7 @@ class PlayerStatsAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val stat = stats[position]
-        with (viewHolder) {
+        with(viewHolder) {
             opponent.text = if (stat.isHomeGame) {
                 resources.getString(R.string.vs_opp, stat.opponent)
             } else {
@@ -76,19 +76,19 @@ class PlayerStatsAdapter(
     }
 
     private fun getResult(stat: GameStatsEntity): String {
-        return with (stat) {
-             if (isHomeGame) {
+        return with(stat) {
+            if (isHomeGame) {
                 if (homeScore > awayScore) {
                     resources.getString(R.string.w_score, homeScore, awayScore)
                 } else {
                     resources.getString(R.string.l_score, homeScore, awayScore)
                 }
             } else {
-                 if (homeScore > awayScore) {
-                     resources.getString(R.string.l_score, awayScore, homeScore)
-                 } else {
-                     resources.getString(R.string.w_score, awayScore, homeScore)
-                 }
+                if (homeScore > awayScore) {
+                    resources.getString(R.string.l_score, awayScore, homeScore)
+                } else {
+                    resources.getString(R.string.w_score, awayScore, homeScore)
+                }
             }
         }
     }

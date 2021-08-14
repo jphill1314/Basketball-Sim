@@ -44,12 +44,14 @@ class GamePreviewFragment : Fragment() {
             homeTeamName.text = args.homeTeamName
             awayTeamName.text = args.awayTeamName
             startGame.setOnClickListener {
-                findNavController().navigate(GamePreviewFragmentDirections.actionGamePreviewFragmentToGameFragment(
-                    args.gameId,
-                    args.homeTeamName,
-                    args.awayTeamName,
-                    args.isUserHomeTeam
-                ))
+                findNavController().navigate(
+                    GamePreviewFragmentDirections.actionGamePreviewFragmentToGameFragment(
+                        args.gameId,
+                        args.homeTeamName,
+                        args.awayTeamName,
+                        args.isUserHomeTeam
+                    )
+                )
             }
         }
         return binding.root

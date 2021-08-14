@@ -54,8 +54,10 @@ class Coach(
     }
 
     fun getRating(): Int {
-        return (teachShooting + teachPostMoves + teachBallControl + teachPostDefense + teachPerimeterDefense +
-                teachPositioning + teachRebounding + teachConditioning) / 8
+        return (
+            teachShooting + teachPostMoves + teachBallControl + teachPostDefense + teachPerimeterDefense +
+                teachPositioning + teachRebounding + teachConditioning
+            ) / 8
     }
 
     fun doScouting(unknownRecruits: MutableList<Recruit>): List<Recruit> {
@@ -65,7 +67,7 @@ class Coach(
     fun updateStrategy(teamScore: Int, opponentScore: Int, half: Int, timeRemaining: Int) {
         // TODO: change more than intentionally foul and make coaches actually different as to when to call this
         if (timeRemaining < 2 * 60 && half > 1) {
-           StrategyHelper.updateStrategyLateGame(teamScore - opponentScore, timeRemaining, this)
+            StrategyHelper.updateStrategyLateGame(teamScore - opponentScore, timeRemaining, this)
         } else {
             StrategyHelper.updateStrategy(teamScore - opponentScore, this)
         }

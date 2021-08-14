@@ -15,7 +15,7 @@ class GamePreviewAdapter(
     private val onClick: (player: Player) -> Unit
 ) : RecyclerView.Adapter<GamePreviewAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ListItemGamePreviewBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ListItemGamePreviewBinding) : RecyclerView.ViewHolder(binding.root)
 
     private val homePlayers = mutableListOf<Player>()
     private val awayPlayers = mutableListOf<Player>()
@@ -73,7 +73,7 @@ class GamePreviewAdapter(
             position.text = ""
             rating.text = ""
             year.text = ""
-            root.setOnClickListener {  }
+            root.setOnClickListener { }
         }
     }
 }

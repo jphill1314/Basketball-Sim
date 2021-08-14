@@ -2,12 +2,15 @@ package com.appdev.jphil.basketballcoach.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.core.view.GravityCompat
 import android.view.MenuItem
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.ui.*
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
