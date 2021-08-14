@@ -3,11 +3,11 @@ package com.appdev.jphil.basketballcoach.database.team
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.database.typeconverters.IntListTypeConverter
 

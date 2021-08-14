@@ -13,7 +13,7 @@ import javax.inject.Inject
 class RosterPresenter @Inject constructor(
     private val repository: RosterContract.Repository,
     dispatcherProvider: DispatcherProvider
-): BasePresenter(dispatcherProvider), RosterContract.Presenter {
+) : BasePresenter(dispatcherProvider), RosterContract.Presenter {
 
     private var view: RosterContract.View? = null
     private lateinit var team: Team

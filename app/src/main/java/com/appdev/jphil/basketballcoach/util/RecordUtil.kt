@@ -1,8 +1,8 @@
 package com.appdev.jphil.basketballcoach.util
 
+import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
-import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 
 object RecordUtil {
 

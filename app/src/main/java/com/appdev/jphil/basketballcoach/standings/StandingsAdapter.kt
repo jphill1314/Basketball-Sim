@@ -2,9 +2,9 @@ package com.appdev.jphil.basketballcoach.standings
 
 import android.content.res.Resources
 import android.graphics.Color
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ListItemStandingEntryBinding
@@ -16,7 +16,7 @@ class StandingsAdapter(
     private val standings: List<StandingsDataModel>,
     private val presenter: StandingsContract.Presenter,
     private val resources: Resources
-): RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ListItemStandingEntryBinding) : RecyclerView.ViewHolder(binding.root)
 

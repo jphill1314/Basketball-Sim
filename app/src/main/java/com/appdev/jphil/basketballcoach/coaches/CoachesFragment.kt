@@ -2,13 +2,13 @@ package com.appdev.jphil.basketballcoach.coaches
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
 import dagger.android.support.AndroidSupportInjection

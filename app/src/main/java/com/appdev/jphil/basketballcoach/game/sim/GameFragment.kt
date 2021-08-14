@@ -1,16 +1,19 @@
 package com.appdev.jphil.basketballcoach.game.sim
 
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.SeekBar
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.players.Player
@@ -21,9 +24,9 @@ import com.appdev.jphil.basketballcoach.databinding.FragmentGameBinding
 import com.appdev.jphil.basketballcoach.game.GameViewModel
 import com.appdev.jphil.basketballcoach.game.dialogs.PlayerOverviewDialogFragment
 import com.appdev.jphil.basketballcoach.game.dialogs.teamtalk.TeamTalkDialog
-import com.appdev.jphil.basketballcoach.game.sim.boxscore.BoxScoreAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameTeamStatsAdapter
+import com.appdev.jphil.basketballcoach.game.sim.boxscore.BoxScoreAdapter
 import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
@@ -67,14 +70,17 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
                 homeBoxScoreAdapter = BoxScoreAdapter(resources, args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
                 awayBoxScoreAdapter = BoxScoreAdapter(resources, !args.isUserHomeTeam, this) { showPlayerAttributeDialog(it) }
                 gameId = args.gameId
-                gameState.observe(this@GameFragment, Observer { gameState ->
-                    isInTimeout = gameState.isTimeout
-                    if (gameState.isNewHalf) {
-                        notifyNewHalf(gameState.newEvents)
-                    } else {
-                        updateGame(gameState.game, gameState.newEvents)
+                gameState.observe(
+                    this@GameFragment,
+                    Observer { gameState ->
+                        isInTimeout = gameState.isTimeout
+                        if (gameState.isNewHalf) {
+                            notifyNewHalf(gameState.newEvents)
+                        } else {
+                            updateGame(gameState.game, gameState.newEvents)
+                        }
                     }
-                })
+                )
                 simulateGame()
             }
     }
@@ -99,7 +105,7 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
             requireContext(),
             R.array.game_views,
             android.R.layout.simple_spinner_dropdown_item
-        ).also { adapter->
+        ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinner.adapter = adapter
         }
@@ -175,11 +181,14 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         awayBoxScoreAdapter.updatePlayers(game.awayTeam.players)
 
         if (strategyAdapter == null) {
-            strategyAdapter = StrategyAdapter(StrategyDataModel.generateDataModels(
-                viewModel.gameStrategyOut.coach,
-                resources,
-                true
-            ), viewModel.gameStrategyOut)
+            strategyAdapter = StrategyAdapter(
+                StrategyDataModel.generateDataModels(
+                    viewModel.gameStrategyOut.coach,
+                    resources,
+                    true
+                ),
+                viewModel.gameStrategyOut
+            )
         }
 
         handleFoulOuts(game)

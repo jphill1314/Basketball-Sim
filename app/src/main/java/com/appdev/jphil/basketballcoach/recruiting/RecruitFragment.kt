@@ -2,7 +2,12 @@ package com.appdev.jphil.basketballcoach.recruiting
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -50,7 +55,7 @@ class RecruitFragment : Fragment(), RecruitContract.View {
         when (item.itemId) {
             R.id.sort_high_to_low -> presenter.onSortSelected()
             R.id.filter_positions -> {
-                AlertDialog.Builder(context!!)
+                AlertDialog.Builder(requireContext())
                     .setTitle(R.string.filter_positions)
                     .setItems(resources.getStringArray(R.array.position_filters)) { _, which ->
                         presenter.onPositionFilterSelected(which)

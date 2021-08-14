@@ -1,10 +1,10 @@
 package com.appdev.jphil.basketballcoach.tournament.round
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketballcoach.R
 
 abstract class TournamentViewHolder(view: View, private val tvSize: Int) : RecyclerView.ViewHolder(view) {
@@ -15,7 +15,7 @@ abstract class TournamentViewHolder(view: View, private val tvSize: Int) : Recyc
     abstract val views: List<View>
 
     fun animate(scale: Float, size: Int) {
-        views.forEach {view ->
+        views.forEach { view ->
             getAnimation(view, (scale * tvSize).toInt())
         }
         getAnimation(itemView, size)
@@ -31,13 +31,12 @@ abstract class TournamentViewHolder(view: View, private val tvSize: Int) : Recyc
         }
     }
 
-
     class NoButtonViewHolder(view: View, tvSize: Int) : TournamentViewHolder(view, tvSize) {
         val gameStatus: TextView = view.findViewById(R.id.game_status)
         override val views = listOf(itemView, homeName, awayName, homeScore, awayScore, gameStatus)
     }
 
-    class ButtonViewHolder(view: View, tvSize: Int): TournamentViewHolder(view, tvSize) {
+    class ButtonViewHolder(view: View, tvSize: Int) : TournamentViewHolder(view, tvSize) {
         val playGame: Button = view.findViewById(R.id.play_game)
         val simGame: Button = view.findViewById(R.id.sim_game)
         override val views = listOf(itemView, homeName, awayName, homeScore, awayScore)

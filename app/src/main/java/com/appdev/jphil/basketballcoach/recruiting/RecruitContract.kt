@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.recruiting
 
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.MVPContract
 
 interface RecruitContract {

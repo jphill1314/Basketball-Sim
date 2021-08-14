@@ -42,18 +42,23 @@ class TournamentPresenter @Inject constructor(
     }
 
     override fun updateSchedule(finishedGame: Game) {
-        simGames.add(0, SimDialogDataModel(
-            finishedGame.homeTeam.schoolName,
-            finishedGame.awayTeam.schoolName,
-            finishedGame.homeScore,
-            finishedGame.awayScore
-        ))
+        simGames.add(
+            0,
+            SimDialogDataModel(
+                finishedGame.homeTeam.schoolName,
+                finishedGame.awayTeam.schoolName,
+                finishedGame.homeScore,
+                finishedGame.awayScore
+            )
+        )
         state?.games?.postValue(simGames)
-        state?.text?.postValue(if (simGames.size == totalGames) {
-            resources.getString(R.string.saving_sim_results)
-        } else {
-            resources.getString(R.string.sim_game_x_of_y, simGames.size + 1, totalGames)
-        })
+        state?.text?.postValue(
+            if (simGames.size == totalGames) {
+                resources.getString(R.string.saving_sim_results)
+            } else {
+                resources.getString(R.string.sim_game_x_of_y, simGames.size + 1, totalGames)
+            }
+        )
     }
 
     override fun onTournamentLoaded(games: MutableList<TournamentDataModel>) {

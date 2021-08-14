@@ -1,11 +1,11 @@
 package com.appdev.jphil.basketballcoach.recruitoverview
 
 import android.content.res.Resources
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketballcoach.R
 
@@ -16,7 +16,7 @@ class RecruitOverviewAdapter(
 
     private val interactions = resources.getStringArray(R.array.interactions)
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val team: TextView = view.findViewById(R.id.team_name)
         val interaction: TextView = view.findViewById(R.id.interaction)
         val interest: TextView = view.findViewById(R.id.interest)
@@ -32,7 +32,7 @@ class RecruitOverviewAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val teamInterest = recruit.interestInTeams[position]
 
-        with (viewHolder) {
+        with(viewHolder) {
             team.text = teamInterest.teamName
 
             val index = when {

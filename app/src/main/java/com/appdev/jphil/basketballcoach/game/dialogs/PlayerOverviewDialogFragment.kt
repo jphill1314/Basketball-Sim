@@ -65,7 +65,7 @@ class PlayerOverviewDialogFragment : DialogFragment() {
     }
 
     private fun getPoints(player: Player): Int {
-        return with (player) {
+        return with(player) {
             freeThrowMakes + 2 * twoPointMakes + 3 * threePointMakes
         }
     }

@@ -1,12 +1,12 @@
 package com.appdev.jphil.basketballcoach.strategy
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketballcoach.R
 
 class StrategyAdapter(
@@ -14,17 +14,17 @@ class StrategyAdapter(
     private val out: StrategyContract.Adapter.Out
 ) : RecyclerView.Adapter<StrategyAdapter.ViewHolder>() {
 
-    abstract class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    abstract class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.title)
     }
 
-    class SeekbarViewHolder(view: View): ViewHolder(view) {
+    class SeekbarViewHolder(view: View) : ViewHolder(view) {
         val lower: TextView = view.findViewById(R.id.lower)
         val higher: TextView = view.findViewById(R.id.higher)
         val seekbar: SeekBar = view.findViewById(R.id.seekbar)
     }
 
-    class ToggleViewHolder(view: View): ViewHolder(view) {
+    class ToggleViewHolder(view: View) : ViewHolder(view) {
         val toggleButton: ToggleButton = view.findViewById(R.id.toggle_button)
     }
 

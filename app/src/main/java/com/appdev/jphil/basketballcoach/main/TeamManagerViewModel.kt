@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class TeamManagerViewModel(private val database: BasketballDatabase): ViewModel() {
+class TeamManagerViewModel(private val database: BasketballDatabase) : ViewModel() {
 
     var teamId = -1
     var conferenceId = 0

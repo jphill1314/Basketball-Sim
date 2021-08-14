@@ -7,19 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -38,7 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import kotlinx.coroutines.flow.StateFlow
 
@@ -205,10 +199,11 @@ fun SimulationDialog(
     interactor: ScheduleContract.ScheduleInteractor
 ) {
     Dialog(onDismissRequest = { interactor.onDismissSimDialog() }) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.90f)
-            .background(Color.White)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.90f)
+                .background(Color.White)
         ) {
             Column {
                 Text(
@@ -331,7 +326,7 @@ private val previewDialogState = SimDialogUiModel(
     isSimulatingToGame = false,
     numberOfGamesSimmed = 5,
     numberOfGamesToSim = 10,
-    gameModels = List(5) { previewUiModel}
+    gameModels = List(5) { previewUiModel }
 )
 
 private val previewViewState = ScheduleContract.ScheduleViewState(

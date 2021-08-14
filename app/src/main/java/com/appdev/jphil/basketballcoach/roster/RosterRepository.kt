@@ -7,17 +7,13 @@ import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewGameGenerator
 import dagger.Lazy
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RosterRepository @Inject constructor(
     @TeamId private val lazyTeamId: Lazy<Int>,
     private val database: BasketballDatabase,
     private val resources: Resources
-): RosterContract.Repository {
+) : RosterContract.Repository {
 
     private lateinit var presenter: RosterContract.Presenter
 
