@@ -11,7 +11,7 @@ class ScheduleViewModelFactory @Inject constructor(
     private val gameSimRepository2: GameSimRepository2,
     private val transformer: ScheduleTransformer,
     private val params: SchedulePresenter.Params
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

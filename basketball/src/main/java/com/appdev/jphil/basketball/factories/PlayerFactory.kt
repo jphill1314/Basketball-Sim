@@ -53,7 +53,7 @@ object PlayerFactory {
         index: Int,
         type: PlayerType,
         recruitPotential: Int = 0
-    ) : Player {
+    ): Player {
         val newRating = rating + 10
         val i = position - 1
         val pType = type.type

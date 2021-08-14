@@ -24,9 +24,13 @@ class ScoutingAssignment(
     }
 
     private fun isDisoverable(recruit: Recruit): Boolean {
-        return (Random.nextInt(100) < 30 ||
-               (recruit.rating in minRating..maxRating &&
-                recruit.potential in minPotential..maxPotential)) &&
-               positions.contains(recruit.position)
+        return (
+            Random.nextInt(100) < 30 ||
+                (
+                    recruit.rating in minRating..maxRating &&
+                        recruit.potential in minPotential..maxPotential
+                    )
+            ) &&
+            positions.contains(recruit.position)
     }
 }

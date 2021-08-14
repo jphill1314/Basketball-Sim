@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.game.extensions.makeSubs
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
 import com.appdev.jphil.basketball.game.helpers.TimeoutHelper
@@ -16,11 +15,17 @@ import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.game.sim.GameEventsHelper
 import com.appdev.jphil.basketballcoach.game.sim.GameState
 import com.appdev.jphil.basketballcoach.game.sim.GameStrategyOut
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GameViewModel(
     private val database: BasketballDatabase
-): ViewModel() {
+) : ViewModel() {
     var gameId = -1
     var simSpeed = 1000L
     var pauseGame = true
@@ -104,7 +109,7 @@ class GameViewModel(
                                 game.makeUserSubsIfPossible()
                                 _gameState.postValue(GameState(game, getNewPlayEvents(game), isTimeout = true))
                                 pauseGame = true
-                                while(pauseGame && isActive) {
+                                while (pauseGame && isActive) {
                                     Thread.sleep(100)
                                 }
                                 TimeoutHelper.runTimeout(game)

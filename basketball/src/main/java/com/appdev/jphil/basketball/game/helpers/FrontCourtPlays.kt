@@ -2,7 +2,11 @@ package com.appdev.jphil.basketball.game.helpers
 
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.players.Player
-import com.appdev.jphil.basketball.plays.*
+import com.appdev.jphil.basketball.plays.BasketballPlay
+import com.appdev.jphil.basketball.plays.Pass
+import com.appdev.jphil.basketball.plays.PostMove
+import com.appdev.jphil.basketball.plays.Rebound
+import com.appdev.jphil.basketball.plays.Shot
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import kotlin.random.Random
@@ -10,7 +14,7 @@ import kotlin.random.Random
 object FrontCourtPlays {
 
     fun getFrontCourtPlay(game: Game): MutableList<BasketballPlay> {
-        with (game) {
+        with(game) {
             consecutivePresses = 1
             val shotUrgency: Int = if (homeTeamHasBall) {
                 Game.lengthOfHalf / homeTeam.pace
@@ -115,7 +119,7 @@ object FrontCourtPlays {
     }
 
     private fun getPasser(game: Game): Player {
-        with (game) {
+        with(game) {
             return if (homeTeamHasBall) {
                 homeTeam.getPlayerAtPosition(lastPlayerWithBall)
             } else {

@@ -1,15 +1,14 @@
 package com.appdev.jphil.basketball.game.helpers
 
-import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeSubs
 
 object TimeoutHelper {
 
     fun isTimeoutCalled(game: Game): Boolean {
-        with (game) {
-            if(deadball && !madeShot) {
-                if(callMediaTimeout(this)) {
+        with(game) {
+            if (deadball && !madeShot) {
+                if (callMediaTimeout(this)) {
                     gamePlays.last().playAsString += miscText.mediaTimeOut()
                     return true
                 }
@@ -28,7 +27,7 @@ object TimeoutHelper {
     }
 
     fun runTimeout(game: Game) {
-        with (game) {
+        with(game) {
             homeTeam.coachTalk(!isNeutralCourt, homeScore - awayScore, userIsCoaching)
             awayTeam.coachTalk(false, awayScore - homeScore, userIsCoaching)
 
@@ -48,100 +47,80 @@ object TimeoutHelper {
     }
 
     private fun callMediaTimeout(game: Game): Boolean {
-        with (game) {
+        with(game) {
             return if (half == 1) {
                 if (timeRemaining < 16 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[0]) {
                     mediaTimeOuts[0] = true
                     true
-                }
-                else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
+                } else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
                     mediaTimeOuts[1] = true
                     true
-                }
-                else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
+                } else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
                     mediaTimeOuts[2] = true
                     true
-                }
-                else if (timeRemaining < 4 * 60 && !mediaTimeOuts[3]) {
+                } else if (timeRemaining < 4 * 60 && !mediaTimeOuts[3]) {
                     mediaTimeOuts[3] = true
                     true
-                }
-                else {
+                } else {
                     false
                 }
-            }
-            else if (half == 2) {
+            } else if (half == 2) {
                 if (timeRemaining < 16 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[4]) {
                     mediaTimeOuts[4] = true
                     true
-                }
-                else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
+                } else if (timeRemaining < 12 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
                     mediaTimeOuts[5] = true
                     true
-                }
-                else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
+                } else if (timeRemaining < 8 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
                     mediaTimeOuts[6] = true
                     true
-                }
-                else if (timeRemaining < 4 * 60 && !mediaTimeOuts[7]) {
+                } else if (timeRemaining < 4 * 60 && !mediaTimeOuts[7]) {
                     mediaTimeOuts[7] = true
                     true
-                }
-                else {
+                } else {
                     false
                 }
-            }
-            else {
+            } else {
                 false
             }
         }
     }
 
     private fun coachTimeoutExtends(game: Game): Boolean {
-        with (game) {
+        with(game) {
             return if (half == 1) {
                 if (timeRemaining < 16.5 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[0]) {
-                    mediaTimeOuts[0]= true
+                    mediaTimeOuts[0] = true
                     true
-                }
-                else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
+                } else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[1]) {
                     mediaTimeOuts[1] = true
                     true
-                }
-                else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
+                } else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[2]) {
                     mediaTimeOuts[2] = true
                     true
-                }
-                else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[3]) {
+                } else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[3]) {
                     mediaTimeOuts[3] = true
                     true
-                }
-                else {
+                } else {
                     false
                 }
-            }
-            else if (half == 2) {
+            } else if (half == 2) {
                 if (timeRemaining < 16.5 * 60 && timeRemaining > 12 * 60 && !mediaTimeOuts[4]) {
                     mediaTimeOuts[4] = true
                     true
-                }
-                else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
+                } else if (timeRemaining < 12.5 * 60 && timeRemaining > 8 * 60 && !mediaTimeOuts[5]) {
                     mediaTimeOuts[5] = true
                     true
-                }
-                else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
+                } else if (timeRemaining < 8.5 * 60 && timeRemaining > 4 * 60 && !mediaTimeOuts[6]) {
                     mediaTimeOuts[6] = true
                     true
-                }
-                else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[7]) {
+                } else if (timeRemaining < 4.5 * 60 && !mediaTimeOuts[7]) {
                     mediaTimeOuts[7] = true
                     true
-                }
-                else {
+                } else {
                     false
                 }
-            }
-            else {
+            } else {
                 false
             }
         }

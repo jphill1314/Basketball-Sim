@@ -32,5 +32,5 @@ class SimDialogAdapter : RecyclerView.Adapter<SimDialogAdapter.ViewHolder>() {
         }
     }
 
-    class ViewHolder(val binding: ListItemSimpleGameResultBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ListItemSimpleGameResultBinding) : RecyclerView.ViewHolder(binding.root)
 }

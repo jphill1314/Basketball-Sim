@@ -12,7 +12,7 @@ import javax.inject.Inject
 class TournamentRepository @Inject constructor(
     private val database: BasketballDatabase,
     @ConferenceId private val conferenceId: Int
-): TournamentContract.Repository {
+) : TournamentContract.Repository {
 
     private lateinit var presenter: TournamentContract.Presenter
 

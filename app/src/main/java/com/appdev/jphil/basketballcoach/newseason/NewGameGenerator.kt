@@ -7,7 +7,17 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
 import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.basketball.*
+import com.appdev.jphil.basketballcoach.basketball.AtlanticAthleticAssociation
+import com.appdev.jphil.basketballcoach.basketball.CaliforniaConference
+import com.appdev.jphil.basketballcoach.basketball.CanadianAthleticConference
+import com.appdev.jphil.basketballcoach.basketball.DesertConference
+import com.appdev.jphil.basketballcoach.basketball.GreatLakesConference
+import com.appdev.jphil.basketballcoach.basketball.GulfCoastConference
+import com.appdev.jphil.basketballcoach.basketball.MiddleAmericaConference
+import com.appdev.jphil.basketballcoach.basketball.MountainAthleticAssociation
+import com.appdev.jphil.basketballcoach.basketball.NortheasternAthleticAssociation
+import com.appdev.jphil.basketballcoach.basketball.TobaccoConference
+import com.appdev.jphil.basketballcoach.basketball.WesternConference
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
@@ -57,5 +67,4 @@ object NewGameGenerator {
             RecruitDatabaseHelper.saveRecruits(world.recruits, database)
         }.join()
     }
-
 }

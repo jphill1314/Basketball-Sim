@@ -33,10 +33,14 @@ class Press(
     override fun generatePlay(): Int {
         getPasserAndTarget()
 
-        val passSuccess = ((passer.passing + target.offBallMovement) /
-                (r.nextInt(randomBound) + 1.0)).toInt() + r.nextInt(randomBound)
-        val defSuccess = ((passDefender.onBallDefense + targetDefender.onBallDefense) /
-                (r.nextInt(defense.pressAggression) + 1.0)).toInt() + r.nextInt(randomBound)
+        val passSuccess = (
+            (passer.passing + target.offBallMovement) /
+                (r.nextInt(randomBound) + 1.0)
+            ).toInt() + r.nextInt(randomBound)
+        val defSuccess = (
+            (passDefender.onBallDefense + targetDefender.onBallDefense) /
+                (r.nextInt(defense.pressAggression) + 1.0)
+            ).toInt() + r.nextInt(randomBound)
 
         // TODO: when a team is hurrying there should be a greater chance for turnovers and fast breaks
         when {

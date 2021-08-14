@@ -9,9 +9,27 @@ import com.appdev.jphil.basketball.plays.EndOfHalf
 import com.appdev.jphil.basketball.plays.Pass
 import com.appdev.jphil.basketball.plays.enums.FreeThrowTypes
 import com.appdev.jphil.basketball.plays.utils.PassingUtils
-import com.appdev.jphil.basketball.playtext.*
+import com.appdev.jphil.basketball.playtext.FTPlayText
+import com.appdev.jphil.basketball.playtext.FastBreakPlayText
+import com.appdev.jphil.basketball.playtext.FoulPlayText
+import com.appdev.jphil.basketball.playtext.MiscPlayText
+import com.appdev.jphil.basketball.playtext.PassPlayText
+import com.appdev.jphil.basketball.playtext.PostMoveText
+import com.appdev.jphil.basketball.playtext.PressPlayText
+import com.appdev.jphil.basketball.playtext.ReboundPlayText
+import com.appdev.jphil.basketball.playtext.ShotPlayText
+import com.appdev.jphil.basketball.playtext.TipOffPlayText
 import com.appdev.jphil.basketball.teams.Team
-import com.appdev.jphil.basketball.textcontracts.*
+import com.appdev.jphil.basketball.textcontracts.FastBreakTextContract
+import com.appdev.jphil.basketball.textcontracts.FoulTextContract
+import com.appdev.jphil.basketball.textcontracts.FreeThrowTextContract
+import com.appdev.jphil.basketball.textcontracts.MiscTextContract
+import com.appdev.jphil.basketball.textcontracts.PassTextContract
+import com.appdev.jphil.basketball.textcontracts.PostMoveTextContract
+import com.appdev.jphil.basketball.textcontracts.PressTextContract
+import com.appdev.jphil.basketball.textcontracts.ReboundTextContract
+import com.appdev.jphil.basketball.textcontracts.ShotTextContract
+import com.appdev.jphil.basketball.textcontracts.TipOffTextContract
 
 class Game(
     val homeTeam: Team,
@@ -46,7 +64,7 @@ class Game(
     var homeTimeouts = maxTimeouts
     var awayTimeouts = maxTimeouts
 
-    var mediaTimeOuts = MutableList(10) {false}
+    var mediaTimeOuts = MutableList(10) { false }
     var homeTeamHasBall = true
     var deadball = false
     var madeShot = false
@@ -66,13 +84,13 @@ class Game(
     val gamePlays = mutableListOf<BasketballPlay>()
     val passingUtils = PassingUtils(homeTeam, awayTeam, 100)
 
-    fun simulateFullGame(){
+    fun simulateFullGame() {
         setupGame()
 
-        while(half < 3 || homeScore == awayScore){
+        while (half < 3 || homeScore == awayScore) {
             HalfTimeHelper.startHalf(this)
 
-            while(timeRemaining > 0) {
+            while (timeRemaining > 0) {
                 simPlay()
                 if (TimeoutHelper.isTimeoutCalled(this)) {
                     TimeoutHelper.runTimeout(this)
@@ -116,7 +134,7 @@ class Game(
         isFinal = true
         inProgress = false
 
-        gamePlays.add(EndOfHalf(this,true, homeTeamHasBall))
+        gamePlays.add(EndOfHalf(this, true, homeTeamHasBall))
     }
 
     fun changePossession() {

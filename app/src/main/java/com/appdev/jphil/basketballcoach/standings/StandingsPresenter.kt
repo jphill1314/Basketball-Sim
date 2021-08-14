@@ -61,12 +61,16 @@ class StandingsPresenter @Inject constructor(
             standings.add(RecordUtil.getRecord(games, team))
         }
 
-        view?.addTeams(standings.sortedWith(compareBy(
-            { -it.getConferenceWinPercentage() },
-            { -it.conferenceWins },
-            { -it.getWinPercentage() },
-            { -it.totalWins }
-        )))
+        view?.addTeams(
+            standings.sortedWith(
+                compareBy(
+                    { -it.getConferenceWinPercentage() },
+                    { -it.conferenceWins },
+                    { -it.getWinPercentage() },
+                    { -it.totalWins }
+                )
+            )
+        )
     }
 
     override fun onViewAttached(view: StandingsContract.View) {

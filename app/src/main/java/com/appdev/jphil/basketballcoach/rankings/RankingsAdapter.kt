@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.appdev.jphil.basketball.teams.TeamColor
-import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.databinding.ListItemRankingBinding
 import com.appdev.jphil.basketballcoach.util.getColor
 import com.appdev.jphil.basketballcoach.util.getColorCompat
-import java.util.*
+import java.util.Locale
 
 class RankingsAdapter(
     private val dataModels: List<TeamStatsDataModel>,
@@ -20,7 +18,7 @@ class RankingsAdapter(
     private val onClick: (teamId: Int, confId: Int) -> Unit
 ) : RecyclerView.Adapter<RankingsAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ListItemRankingBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ListItemRankingBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

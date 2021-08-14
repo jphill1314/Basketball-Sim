@@ -2,11 +2,11 @@ package com.appdev.jphil.basketballcoach.roster
 
 import android.content.res.Resources
 import android.graphics.Typeface
-import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ListItemHeaderBinding
 import com.appdev.jphil.basketballcoach.databinding.ListItemRosterBinding
@@ -21,9 +21,9 @@ class RosterAdapter(
     private val classes: Array<String> = resources.getStringArray(R.array.years)
     var isUsersTeam = false
 
-    abstract class ViewHolder(view: View): RecyclerView.ViewHolder(view)
-    class PlayerViewHolder(val binding: ListItemRosterBinding): ViewHolder(binding.root)
-    class HeaderViewHolder(val binding: ListItemHeaderBinding): ViewHolder(binding.root)
+    abstract class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class PlayerViewHolder(val binding: ListItemRosterBinding) : ViewHolder(binding.root)
+    class HeaderViewHolder(val binding: ListItemHeaderBinding) : ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -35,7 +35,7 @@ class RosterAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(position) {
+        return when (position) {
             0 -> 0
             7 -> 0
             else -> 1

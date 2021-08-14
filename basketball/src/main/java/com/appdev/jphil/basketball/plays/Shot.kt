@@ -26,7 +26,7 @@ class Shot(
         val defender = defense.getPlayerAtPosition(playerWithBall)
 
         // First determine where the shot will be taken from
-        val shotClose = (shooter.closeRangeShot - (offense.offenseFavorsThrees / 2) + 25  + r.nextInt(SHOT_LOCATION_BOUND))
+        val shotClose = (shooter.closeRangeShot - (offense.offenseFavorsThrees / 2) + 25 + r.nextInt(SHOT_LOCATION_BOUND))
         val shotMid = (shooter.midRangeShot + r.nextInt(SHOT_LOCATION_BOUND))
         val shotLong = (shooter.longRangeShot + (offense.offenseFavorsThrees / 2) - 25 + r.nextInt(SHOT_LOCATION_BOUND))
 

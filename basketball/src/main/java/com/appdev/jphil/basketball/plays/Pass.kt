@@ -82,7 +82,7 @@ class Pass(game: Game) : BasketballPlay(game) {
     }
 
     private fun successfulPass(passSuccess: Int): Pair<Int, Int> {
-        //TODO: add chance to have the ball knocked out of bounds
+        // TODO: add chance to have the ball knocked out of bounds
         playerWithBall = targetPos
         if (location < 1) {
             // the ball was inbounded in the backcourt so more time needs to come off the clock
@@ -98,7 +98,7 @@ class Pass(game: Game) : BasketballPlay(game) {
                 else -> Pair(9, 3)
             }
         } else {
-            //TODO: add pass leading to a shot / post move / etc
+            // TODO: add pass leading to a shot / post move / etc
             isGreatPass = passSuccess > 25
             playAsString = if (deadBall) {
                 playText.successfulInbound(passer, target)

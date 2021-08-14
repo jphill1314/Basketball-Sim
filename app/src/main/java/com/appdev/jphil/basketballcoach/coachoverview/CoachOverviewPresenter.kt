@@ -9,7 +9,7 @@ import javax.inject.Inject
 class CoachOverviewPresenter @Inject constructor(
     private val repository: CoachOverviewContract.Repository,
     dispatcherProvider: DispatcherProvider
-): BasePresenter(dispatcherProvider), CoachOverviewContract.Presenter {
+) : BasePresenter(dispatcherProvider), CoachOverviewContract.Presenter {
 
     init {
         repository.attachPresenter(this)

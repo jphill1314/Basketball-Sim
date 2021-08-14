@@ -10,7 +10,7 @@ import com.appdev.jphil.basketball.plays.Rebound
 object MiscPlays {
 
     fun canIntentionalFoul(game: Game): Boolean {
-        with (game) {
+        with(game) {
             if (!deadball) {
                 return if (homeTeamHasBall) awayTeam.intentionallyFoul else homeTeam.intentionallyFoul
             }
@@ -19,7 +19,7 @@ object MiscPlays {
     }
 
     fun getIntentionalFoul(game: Game): MutableList<BasketballPlay> {
-        with (game) {
+        with(game) {
             if (!deadball) {
                 if (homeTeamHasBall) {
                     if (awayTeam.intentionallyFoul) {
@@ -40,7 +40,7 @@ object MiscPlays {
     }
 
     fun getFreeThrows(game: Game): MutableList<BasketballPlay> {
-        with (game) {
+        with(game) {
             shootFreeThrows = false
             val plays = mutableListOf<BasketballPlay>()
             val freeThrows = FreeThrows(game, freeThrowType)
@@ -51,7 +51,7 @@ object MiscPlays {
             }
             plays.add(freeThrows)
 
-            if(!freeThrows.madeLastShot){
+            if (!freeThrows.madeLastShot) {
                 val rebound = Rebound(game)
                 if (rebound.homeTeamStartsWithBall != rebound.homeTeamHasBall) {
                     changePossession()

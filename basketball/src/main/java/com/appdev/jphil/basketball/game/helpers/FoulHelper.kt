@@ -69,18 +69,15 @@ object FoulHelper {
             if (foul.homeTeamHasBall) {
                 game.awayFouls++
                 false
-            }
-            else {
+            } else {
                 game.homeFouls++
                 true
             }
-        }
-        else {
+        } else {
             if (foul.homeTeamHasBall) {
                 game.homeFouls++
                 true
-            }
-            else {
+            } else {
                 game.awayFouls++
                 false
             }

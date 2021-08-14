@@ -1,7 +1,7 @@
 package com.appdev.jphil.basketballcoach.tournament
 
-import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketball.datamodels.TournamentDataModel
+import com.appdev.jphil.basketballcoach.MVPContract
 import com.appdev.jphil.basketballcoach.simdialog.SimDialogState
 import com.appdev.jphil.basketballcoach.simulation.SimulationContract
 

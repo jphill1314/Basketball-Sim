@@ -1,11 +1,11 @@
 package com.appdev.jphil.basketballcoach.coachoverview
 
 import android.content.res.Resources
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
 
@@ -14,7 +14,7 @@ class CoachAttributeAdapter(
     private val resources: Resources
 ) : RecyclerView.Adapter<CoachAttributeAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder (view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val attribute: TextView = view.findViewById(R.id.player_attribute)
     }
 

@@ -13,7 +13,6 @@ import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
-import com.appdev.jphil.basketballcoach.database.recruit.RecruitEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 
 object BatchInsertHelper {
@@ -69,5 +68,4 @@ object BatchInsertHelper {
 
         RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
-
 }

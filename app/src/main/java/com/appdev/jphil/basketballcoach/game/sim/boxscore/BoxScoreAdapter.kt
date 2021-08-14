@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketballcoach.databinding.ViewBoxScoreBinding
 import com.appdev.jphil.basketballcoach.game.GameViewModel
-import java.util.*
+import java.util.Collections
 
 class BoxScoreAdapter(
     resources: Resources,
     private val isUsersTeam: Boolean,
     private val viewModel: GameViewModel,
     private val onLongPress: (player: Player) -> Unit
-): RecyclerView.Adapter<BoxScoreAdapter.ViewHolder>(), BoxScoreContract {
+) : RecyclerView.Adapter<BoxScoreAdapter.ViewHolder>(), BoxScoreContract {
 
     private val statsAdapter = BoxScoreStatsAdapter(resources, this)
     private val playersAdapter = BoxScoreNamesAdapter(resources, this)
@@ -38,7 +38,7 @@ class BoxScoreAdapter(
         }
     }
 
-    class ViewHolder(val binding: ViewBoxScoreBinding): RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ViewBoxScoreBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -36,11 +36,11 @@ class GreatLakesConference(rating: Int) : ConferenceGeneratorDataModel(
             "Racers",
             "IND"
         ),
-         TeamGeneratorDataModel(
-             "Cincinnati",
-             "Log Drivers",
-             "CIN"
-         ),
+        TeamGeneratorDataModel(
+            "Cincinnati",
+            "Log Drivers",
+            "CIN"
+        ),
         TeamGeneratorDataModel(
             "Pittsburgh",
             "Forges",

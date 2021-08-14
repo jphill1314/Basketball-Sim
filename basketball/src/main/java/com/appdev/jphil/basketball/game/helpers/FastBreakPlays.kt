@@ -8,7 +8,7 @@ import com.appdev.jphil.basketball.plays.Rebound
 object FastBreakPlays {
 
     fun getFastBreakPlay(game: Game): MutableList<BasketballPlay> {
-        with (game) {
+        with(game) {
             val play = FastBreak(this)
             updateTimeRemaining(play)
             return if (play.points == 0) {

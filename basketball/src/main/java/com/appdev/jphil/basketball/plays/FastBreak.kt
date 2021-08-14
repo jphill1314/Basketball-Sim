@@ -4,7 +4,7 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.plays.enums.FoulType
 import com.appdev.jphil.basketball.plays.enums.Plays
 
-class FastBreak(game: Game): BasketballPlay(game) {
+class FastBreak(game: Game) : BasketballPlay(game) {
 
     private val fastBreakText = game.fastBreakText
 

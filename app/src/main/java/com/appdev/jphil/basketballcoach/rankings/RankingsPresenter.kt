@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RankingsPresenter @Inject constructor(
     private val repository: RankingsContract.Repository,
     dispatcherProvider: DispatcherProvider
-): BasePresenter(dispatcherProvider), RankingsContract.Presenter {
+) : BasePresenter(dispatcherProvider), RankingsContract.Presenter {
 
     private var view: RankingsContract.View? = null
 

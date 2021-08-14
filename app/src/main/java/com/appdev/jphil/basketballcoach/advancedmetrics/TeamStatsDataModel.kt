@@ -20,7 +20,7 @@ class TeamStatsDataModel(
     var adjOffEff = 0.0
     var adjDefEff = 0.0
 
-    constructor(team: TeamEntity): this(
+    constructor(team: TeamEntity) : this(
         team.schoolName,
         team.teamId,
         team.conferenceId,

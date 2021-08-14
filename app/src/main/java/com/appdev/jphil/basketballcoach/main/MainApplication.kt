@@ -1,14 +1,12 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.app.Application
-import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.main.injection.AppComponent
 import com.appdev.jphil.basketballcoach.main.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import javax.inject.Inject
-import com.flurry.android.FlurryAgent
 import dagger.android.HasAndroidInjector
+import javax.inject.Inject
 
 class MainApplication @Inject constructor() : Application(), HasAndroidInjector {
 

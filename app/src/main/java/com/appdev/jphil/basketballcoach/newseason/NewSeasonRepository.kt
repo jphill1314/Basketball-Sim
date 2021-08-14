@@ -2,7 +2,6 @@ package com.appdev.jphil.basketballcoach.newseason
 
 import android.content.res.Resources
 import android.util.Log
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.game.Game
@@ -10,6 +9,7 @@ import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
 import com.appdev.jphil.basketball.schedule.smartShuffleList
+import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.BatchInsertHelper
@@ -99,19 +99,20 @@ class NewSeasonRepository @Inject constructor(
         // Remove list of known recruits
         team.knownRecruits.clear()
 
-
         for (position in 1..5) {
             // Fill empty spots in roster
             while (team.players.filter { it.position == position }.size < 2) {
-                team.addNewPlayer(PlayerFactory.generatePlayer(
-                    firstNames[Random.nextInt(firstNames.size)],
-                    lastNames[Random.nextInt(lastNames.size)],
-                    position,
-                    0,
-                    team.teamId,
-                    Random.nextInt(WALK_ON_VARIATION) + WALK_ON_MIN,
-                    team.players.size
-                ))
+                team.addNewPlayer(
+                    PlayerFactory.generatePlayer(
+                        firstNames[Random.nextInt(firstNames.size)],
+                        lastNames[Random.nextInt(lastNames.size)],
+                        position,
+                        0,
+                        team.teamId,
+                        Random.nextInt(WALK_ON_VARIATION) + WALK_ON_MIN,
+                        team.players.size
+                    )
+                )
             }
 
             // Sort roster so that best players start

@@ -19,8 +19,8 @@ class BoxScoreNamesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoxScoreLeftViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return BoxScoreLeftViewHolder(
-                ListItemBoxScoreLeftBinding.inflate(inflater, parent, false)
-            )
+            ListItemBoxScoreLeftBinding.inflate(inflater, parent, false)
+        )
     }
 
     override fun getItemCount(): Int = helper.getPlayers().size + NUM_OF_NON_PLAYERS

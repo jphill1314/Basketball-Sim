@@ -97,7 +97,8 @@ object GameDatabaseHelper {
         val stats = mutableListOf<GameStatsEntity>()
         if (game.isFinal) {
             game.homeTeam.players.forEach { player ->
-                stats.add(GameStatsEntity.generate(
+                stats.add(
+                    GameStatsEntity.generate(
                         player,
                         game.season,
                         game.awayTeam.schoolName,
@@ -105,10 +106,12 @@ object GameDatabaseHelper {
                         game.homeScore,
                         game.awayScore,
                         game.id!!
-                    ))
+                    )
+                )
             }
             game.awayTeam.players.forEach { player ->
-                stats.add(GameStatsEntity.generate(
+                stats.add(
+                    GameStatsEntity.generate(
                         player,
                         game.season,
                         game.homeTeam.schoolName,
@@ -116,7 +119,8 @@ object GameDatabaseHelper {
                         game.homeScore,
                         game.awayScore,
                         game.id!!
-                    ))
+                    )
+                )
             }
         }
         return stats

@@ -17,15 +17,17 @@ object BasketballFactory {
         val conferences = mutableListOf<Conference>()
         var teams = 0
         conferenceDataModels.forEachIndexed { index, dataModel ->
-            conferences.add(createConference(
-                teams,
-                index,
-                dataModel.minRating,
-                dataModel.name,
-                dataModel.teams,
-                firstNames,
-                lastNames
-            ))
+            conferences.add(
+                createConference(
+                    teams,
+                    index,
+                    dataModel.minRating,
+                    dataModel.name,
+                    dataModel.teams,
+                    firstNames,
+                    lastNames
+                )
+            )
             teams += dataModel.teams.size
         }
 
@@ -52,18 +54,20 @@ object BasketballFactory {
     ): Conference {
         val teams = mutableListOf<Team>()
         teamDataModels.forEachIndexed { index, dataModel ->
-            teams.add(TeamFactory.generateTeam(
-                startId + index,
-                dataModel.schoolName,
-                dataModel.mascot,
-                TeamColor.random(),
-                dataModel.abbreviation,
-                minRating + Random.nextInt(15) + dataModel.ratingVariance,
-                conferenceId,
-                index == 1 && conferenceId == 0, // TODO: make this not bad
-                firstNames,
-                lastNames
-            ))
+            teams.add(
+                TeamFactory.generateTeam(
+                    startId + index,
+                    dataModel.schoolName,
+                    dataModel.mascot,
+                    TeamColor.random(),
+                    dataModel.abbreviation,
+                    minRating + Random.nextInt(15) + dataModel.ratingVariance,
+                    conferenceId,
+                    index == 1 && conferenceId == 0, // TODO: make this not bad
+                    firstNames,
+                    lastNames
+                )
+            )
         }
 
         return Conference(

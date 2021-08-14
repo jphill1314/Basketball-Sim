@@ -28,5 +28,5 @@ interface ScheduleContract {
         val uiModels: List<UiModel>,
         val dialogUiModel: SimDialogUiModel?,
         val gameToPlay: ScheduleUiModel? = null,
-    ): ViewState
+    ) : ViewState
 }

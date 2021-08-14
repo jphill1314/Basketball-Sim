@@ -1,8 +1,8 @@
 package com.appdev.jphil.basketball.plays
 
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.plays.enums.Plays
+import com.appdev.jphil.basketball.teams.Team
 import kotlin.random.Random
 
 abstract class BasketballPlay(val game: Game) {
@@ -15,7 +15,7 @@ abstract class BasketballPlay(val game: Game) {
     var location = game.location
 
     lateinit var type: Plays // what kind of play? Pass, turnover, shot, foul, etc
-    var points = 0// were points scored on this play?
+    var points = 0 // were points scored on this play?
     var playAsString = ""
     val r = Random
     val homeTeamStartsWithBall = homeTeamHasBall

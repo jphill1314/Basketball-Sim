@@ -21,20 +21,23 @@ import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 
-@Database(entities = [
-    TeamEntity::class,
-    PlayerEntity::class,
-    CoachEntity::class,
-    ConferenceEntity::class,
-    GameEntity::class,
-    GameStatsEntity::class,
-    GameEventEntity::class,
-    PlayerProgressionEntity::class,
-    RecruitEntity::class,
-    RecruitInterestEntity::class,
-    ScoutingAssignmentEntity::class],
-    version = 1)
-abstract class BasketballDatabase: RoomDatabase() {
+@Database(
+    entities = [
+        TeamEntity::class,
+        PlayerEntity::class,
+        CoachEntity::class,
+        ConferenceEntity::class,
+        GameEntity::class,
+        GameStatsEntity::class,
+        GameEventEntity::class,
+        PlayerProgressionEntity::class,
+        RecruitEntity::class,
+        RecruitInterestEntity::class,
+        ScoutingAssignmentEntity::class
+    ],
+    version = 1
+)
+abstract class BasketballDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
     abstract fun teamDao(): TeamDao
     abstract fun conferenceDao(): ConferenceDao

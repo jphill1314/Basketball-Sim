@@ -1,14 +1,14 @@
 package com.appdev.jphil.basketballcoach.coachoverview
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketballcoach.R
@@ -111,7 +111,7 @@ class CoachOverviewFragment : Fragment(), CoachOverviewContract.View {
     }
 
     private fun createTextListener(listener: (value: Int) -> Unit): TextWatcher {
-        return object : TextWatcher{
+        return object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 try {
                     listener(s?.toString()?.toInt() ?: -1)

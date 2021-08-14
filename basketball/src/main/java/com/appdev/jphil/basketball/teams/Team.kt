@@ -7,7 +7,7 @@ import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
-import java.util.*
+import java.util.Collections
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -17,7 +17,7 @@ class Team(
     val mascot: String,
     val abbreviation: String,
     val color: TeamColor,
-    val players: MutableList<Player>,// for use in games
+    val players: MutableList<Player>, // for use in games
     val conferenceId: Int,
     val isUser: Boolean,
     val coaches: MutableList<Coach>,
@@ -296,7 +296,8 @@ class Team(
         for (index in players.indices) {
             if ((player.getRatingAtPositionNoFatigue(position) - player.fatigue) <
                 (players[index].getRatingAtPositionNoFatigue(position) - players[index].fatigue) &&
-                    players[index].isEligible()) {
+                players[index].isEligible()
+            ) {
                 player = players[index]
                 indexOfBest = index
             }

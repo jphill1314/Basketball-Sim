@@ -92,7 +92,7 @@ class StandingsFragment : Fragment(), StandingsContract.View {
     }
 
     override fun changeTeamAndConference(standingsDataModel: StandingsDataModel) {
-        with (standingsDataModel) {
+        with(standingsDataModel) {
             teamManager?.changeTeamAndConference(teamId, conferenceId)
         }
     }

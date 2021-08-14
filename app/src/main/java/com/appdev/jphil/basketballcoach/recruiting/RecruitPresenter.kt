@@ -12,7 +12,7 @@ class RecruitPresenter @Inject constructor(
     dispatcherProvider: DispatcherProvider
 ) : BasePresenter(dispatcherProvider), RecruitContract.Presenter {
 
-    private var view : RecruitContract.View? = null
+    private var view: RecruitContract.View? = null
     private val sortedRecruits = mutableListOf<Recruit>()
     private var positionFilter = 0
     private var sortHighToLow = true

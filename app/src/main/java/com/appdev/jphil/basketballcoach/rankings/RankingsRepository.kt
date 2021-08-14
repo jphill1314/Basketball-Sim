@@ -45,11 +45,13 @@ class RankingsRepository @Inject constructor(
             totalDefEff += team.adjDefEff
         }
 
-        dataModels.add(TeamStatsDataModel("Average", -1, -1, false, TeamColor.Red).apply {
-            adjTempo = totalTempo / teams.size
-            adjOffEff = totalOffEff / teams.size
-            adjDefEff = totalDefEff / teams.size
-        })
+        dataModels.add(
+            TeamStatsDataModel("Average", -1, -1, false, TeamColor.Red).apply {
+                adjTempo = totalTempo / teams.size
+                adjOffEff = totalOffEff / teams.size
+                adjDefEff = totalDefEff / teams.size
+            }
+        )
         dataModels.sortByDescending { it.getAdjEff() }
 
         return dataModels

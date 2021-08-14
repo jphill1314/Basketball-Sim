@@ -19,7 +19,7 @@ class MiscPlayText : MiscTextContract {
 
     override fun timeOut(team: Team, extendsToFull: Boolean): String {
         return "\n${team.name} have called a timeout" +
-                if (extendsToFull) " and it will extend to a full media timeout." else "."
+            if (extendsToFull) " and it will extend to a full media timeout." else "."
     }
 
     override fun endOfHalf(half: Int, gameOver: Boolean): String {
@@ -28,7 +28,7 @@ class MiscPlayText : MiscTextContract {
             half == 2 && gameOver -> "And that will be the end of the game!"
             half == 2 && !gameOver -> "And that is the end of regulation! This game is going to overtime!"
             half > 2 && gameOver -> "And that will finally bring this game to an end after ${half - 2} overtimes!"
-            else -> "And that's the end of overtime number ${half -2}, but we're going to need another one to decide a winner tonight!"
+            else -> "And that's the end of overtime number ${half - 2}, but we're going to need another one to decide a winner tonight!"
         }
     }
 

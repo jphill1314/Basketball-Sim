@@ -1,10 +1,8 @@
 package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
-import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
 import com.flurry.sdk.it
@@ -13,7 +11,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

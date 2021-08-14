@@ -13,7 +13,7 @@ import javax.inject.Inject
 class RecruitOverviewPresenter @Inject constructor(
     private val repository: RecruitOverviewContract.Repository,
     dispatcherProvider: DispatcherProvider
-) : BasePresenter(dispatcherProvider), RecruitOverviewContract.Presenter{
+) : BasePresenter(dispatcherProvider), RecruitOverviewContract.Presenter {
 
     private var view: RecruitOverviewContract.View? = null
     private lateinit var recruit: Recruit
@@ -39,7 +39,7 @@ class RecruitOverviewPresenter @Inject constructor(
     }
 
     override fun onScoutClicked() {
-        if (doInteraction()){
+        if (doInteraction()) {
             recruit.updateInterest(team, RecruitingEvent.SCOUT, team.gamesPlayed)
             view?.displayRecruit(recruit)
         } else {
@@ -49,7 +49,7 @@ class RecruitOverviewPresenter @Inject constructor(
     }
 
     override fun onOfferScholarshipClicked() {
-        if (doInteraction() && !interest.isOfferedScholarship){
+        if (doInteraction() && !interest.isOfferedScholarship) {
             recruit.updateInterest(team, RecruitingEvent.OFFER_SCHOLARSHIP, team.gamesPlayed)
             view?.displayRecruit(recruit)
         } else {

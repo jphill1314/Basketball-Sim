@@ -18,7 +18,6 @@ class StatsUtil {
     var totalFreeThrowShots = 0
     var totalFreeThrowMakes = 0
 
-
     fun calculateTotals(gamesStats: List<GameStatsEntity>) {
         gamesStats.forEach {
             if (it.timePlayed > 0) {
@@ -41,11 +40,11 @@ class StatsUtil {
     }
 
     fun getMinutesAvg(): String {
-      return if (gamesPlayed == 0) {
-          "0"
-      } else {
-          FORMAT.format(totalTimePlayed / 60.0 / gamesPlayed)
-      }
+        return if (gamesPlayed == 0) {
+            "0"
+        } else {
+            FORMAT.format(totalTimePlayed / 60.0 / gamesPlayed)
+        }
     }
 
     fun getPointsAvg(): String {

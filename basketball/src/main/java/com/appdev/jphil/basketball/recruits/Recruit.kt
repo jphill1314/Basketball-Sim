@@ -36,20 +36,22 @@ class Recruit(
         }
 
         val range = Random.nextInt(101 - coachRecruitingRating)
-        val offset = if (range > 0 ) Random.nextInt(range) - range / 2 else 0
+        val offset = if (range > 0) Random.nextInt(range) - range / 2 else 0
 
-        interestInTeams.add(RecruitInterest(
-            null,
-            id,
-            team.teamId,
-            team.name,
-            interest.toInt(),
-            range,
-            offset,
-            false,
-            -1000,
-            false
-        ))
+        interestInTeams.add(
+            RecruitInterest(
+                null,
+                id,
+                team.teamId,
+                team.name,
+                interest.toInt(),
+                range,
+                offset,
+                false,
+                -1000,
+                false
+            )
+        )
     }
 
     fun revokeScholarship(teamId: Int) {
