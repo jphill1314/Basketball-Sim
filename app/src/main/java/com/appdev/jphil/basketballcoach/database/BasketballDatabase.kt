@@ -17,6 +17,7 @@ import com.appdev.jphil.basketballcoach.database.player.PlayerProgressionEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDao
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitInterestEntity
+import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 
@@ -40,4 +41,5 @@ abstract class BasketballDatabase: RoomDatabase() {
     abstract fun gameDao(): GameDao
     abstract fun coachDao(): CoachDao
     abstract fun recruitDao(): RecruitDao
+    abstract fun relationalDao(): RelationalDao
 }

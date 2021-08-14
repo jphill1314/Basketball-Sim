@@ -1,10 +1,14 @@
 package com.appdev.jphil.basketballcoach.database.game
 
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
+import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
+import com.appdev.jphil.basketballcoach.database.relations.TeamRelations
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.flurry.sdk.it
 
 object GameDatabaseHelper {
 
@@ -116,5 +120,35 @@ object GameDatabaseHelper {
             }
         }
         return stats
+    }
+
+    suspend fun getGameById(
+        gameId: Int,
+        allRecruits: List<Recruit>,
+        relationalDao: RelationalDao
+    ): Game {
+        val gameRelations = relationalDao.loadGameWithTeams(gameId)
+        return gameRelations.gameEntity.createGame(
+            homeTeam = createTeam(gameRelations.homeTeam, allRecruits),
+            awayTeam = createTeam(gameRelations.awayTeam, allRecruits)
+        )
+    }
+
+    private fun createTeam(teamRelations: TeamRelations, allRecruits: List<Recruit>): Team {
+        return teamRelations.teamEntity.createTeam(
+            players = teamRelations.playerEntities.map { relation ->
+                relation.playerEntity.createPlayer().apply {
+                    relation.progressions.sortedBy { it.progressionNumber }.forEach {
+                        progression.add(it.createProgression(this))
+                    }
+                }
+            }.toMutableList(),
+            coaches = teamRelations.coachEntities.map { relation ->
+                relation.coachRelations.createCoach(relation.assignmentEntity)
+            }.toMutableList(),
+            knownRecruits = teamRelations.teamEntity.knownRecruits.map { id ->
+                allRecruits.first { it.id == id }
+            }.toMutableList()
+        )
     }
 }
