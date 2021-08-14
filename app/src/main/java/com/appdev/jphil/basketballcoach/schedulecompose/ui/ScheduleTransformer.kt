@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
+import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
 import javax.inject.Inject
 
 class ScheduleTransformer @Inject constructor() {
@@ -11,9 +12,9 @@ class ScheduleTransformer @Inject constructor() {
     ): ScheduleContract.ScheduleViewState {
         return ScheduleContract.ScheduleViewState(
             isLoading = dataState.isLoading,
-            showSimDialog = dataState.showSimDialog,
+            gameToPlay = dataState.gameToPlay,
             uiModels = createUiModels(dataState),
-            dialogUiModels = createDialogUiModels(dataState.dialogDataModels)
+            dialogUiModel = createDialogModel(dataState.simState, dataState.dialogDataModels)
         )
     }
 
@@ -50,7 +51,8 @@ class ScheduleTransformer @Inject constructor() {
                 isSelectedTeamWinner = when (model.topTeamId) {
                     dataState.teamId -> model.topTeamScore > model.bottomTeamScore
                     else -> model.bottomTeamScore > model.topTeamScore
-                }
+                },
+                isHomeTeamUser = model.isHomeTeamUser
             )
         }
     }
@@ -75,6 +77,21 @@ class ScheduleTransformer @Inject constructor() {
         return records
     }
 
+    private fun createDialogModel(
+        simState: GameSimRepository2.SimulationState?,
+        dataModels: List<ScheduleDataModel>
+    ): SimDialogUiModel? {
+        return simState?.let {
+            SimDialogUiModel(
+                isSimActive = it.isSimActive,
+                isSimulatingToGame = it.isSimulatingToGame,
+                numberOfGamesToSim = it.numberOfGamesToSim,
+                numberOfGamesSimmed = it.numberOfGamesSimmed,
+                gameModels = createDialogUiModels(dataModels)
+            )
+        }
+    }
+
     private fun createDialogUiModels(dataModels: List<ScheduleDataModel>): List<UiModel> {
         return dataModels.reversed().map { model ->
             ScheduleUiModel(
@@ -86,7 +103,8 @@ class ScheduleTransformer @Inject constructor() {
                 bottomTeamScore = model.bottomTeamScore.toString(),
                 isShowButtons = false,
                 isFinal = model.isFinal,
-                isSelectedTeamWinner = false
+                isSelectedTeamWinner = false,
+                isHomeTeamUser = model.isHomeTeamUser
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
@@ -8,16 +9,16 @@ import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
 import com.flurry.sdk.it
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SchedulePresenter(
@@ -34,7 +35,7 @@ class SchedulePresenter(
     private val initialState = ScheduleContract.ScheduleDataState(
         isLoading = true,
         selectedGameId = -1,
-        showSimDialog = false,
+        simState = null,
         teamId = params.teamId,
         dataModels = emptyList(),
         dialogDataModels = emptyList()
@@ -45,44 +46,53 @@ class SchedulePresenter(
     private val _state = MutableStateFlow(initialState)
     lateinit var state: StateFlow<ScheduleContract.ScheduleViewState>
 
+    private val _events = MutableSharedFlow<ScheduleContract.ScheduleEvent>()
+    val events = _events.asSharedFlow()
+
     init {
-        collectSchedule()
+        collectData()
         viewModelScope.launch {
             state = _state.map { transformer.transformDataModels(it) }.stateIn(this)
         }
     }
 
-    private fun collectSchedule() {
+    private fun collectData() {
         viewModelScope.launch {
-            scheduleRepository.getGames().collect {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    dataModels = it
-                )
+            scheduleRepository.getGames().collect { dataModels ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        dataModels = dataModels
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            gameSimRepository.isSimulationActive.collect { simState ->
+                _state.update {
+                    it.copy(simState = simState)
+                }
             }
         }
     }
 
     override fun toggleShowButtons(uiModel: ScheduleUiModel) {
         if (uiModel.isFinal) return
-        val currentState = _state.value
-        _state.value = currentState.copy(
-            selectedGameId = if (currentState.selectedGameId == uiModel.id) -1 else uiModel.id
-        )
+        _state.update {
+            it.copy(
+                selectedGameId = if (it.selectedGameId == uiModel.id) -1 else uiModel.id
+            )
+        }
     }
 
     override fun simulateGame(uiModel: ScheduleUiModel) {
-        _state.value = _state.value.copy(
-            showSimDialog = true,
-            selectedGameId = -1
-        )
-
+        _state.update { it.copy(selectedGameId = -1) }
         dialogJob?.cancel()
         dialogJob = viewModelScope.launch {
-            scheduleRepository.getGamesForDialog().collect {
-                _state.value = _state.value.copy(
-                    dialogDataModels = it
-                )
+            scheduleRepository.getGamesForDialog().collect { dataModels ->
+                _state.update {
+                    it.copy(dialogDataModels = dataModels)
+                }
             }
         }
 
@@ -90,30 +100,49 @@ class SchedulePresenter(
     }
 
     override fun playGame(uiModel: ScheduleUiModel) {
-        _state.value = _state.value.copy(
-            showSimDialog = true,
-            selectedGameId = -1
-        )
+        _state.update {
+            it.copy(
+                selectedGameId = -1,
+                gameToPlay = uiModel
+            )
+        }
 
         dialogJob?.cancel()
         dialogJob = viewModelScope.launch {
-            scheduleRepository.getGamesForDialog().collect {
-                _state.value = _state.value.copy(
-                    dialogDataModels = it
-                )
+            scheduleRepository.getGamesForDialog().collect { dataModels ->
+                _state.update {
+                    it.copy(dialogDataModels = dataModels)
+                }
             }
         }
 
-        // TODO: figure out how to know when the simulation is finished
         gameSimRepository.simulateUpToGame(uiModel.id)
     }
 
     override fun onDismissSimDialog() {
         dialogJob?.cancel()
         gameSimRepository.cancelSimulation()
-        _state.value = _state.value.copy(
-            showSimDialog = false,
-            dialogDataModels = emptyList()
-        )
+        _state.update {
+            it.copy(
+                simState = null,
+                dialogDataModels = emptyList()
+            )
+        }
     }
+
+    override fun onStartGame(uiModel: ScheduleUiModel) {
+        _state.update {
+            it.copy(
+                simState = null,
+                dialogDataModels = emptyList()
+            )
+        }
+        viewModelScope.launch {
+            _events.emit(NavigateToGame(uiModel))
+        }
+    }
+
+    data class NavigateToGame(
+        val gameModel: ScheduleUiModel
+    ) : ScheduleContract.ScheduleEvent
 }

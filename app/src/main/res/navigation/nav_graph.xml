@@ -18,21 +18,13 @@
         android:name="com.appdev.jphil.basketballcoach.strategy.StrategyFragment"
         android:label="@string/strategy" />
     <fragment
-        android:id="@+id/schedule"
-        android:name="com.appdev.jphil.basketballcoach.schedule.ScheduleFragment"
-        android:label="@string/schedule"
-        tools:layout="@layout/fragment_schedule">
-        <action
-            android:id="@+id/action_scheduleFragment_to_tournamentFragment"
-            app:destination="@id/tournamentFragment" />
-        <action
-            android:id="@+id/action_schedule_to_gamePreviewFragment"
-            app:destination="@id/gamePreviewFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/compose_schedule"
         android:name="com.appdev.jphil.basketballcoach.schedulecompose.ui.ComposeScheduleFragment"
-        android:label="@string/schedule"/>
+        android:label="@string/schedule">
+        <action
+            android:id="@+id/to_gamePreviewFragment"
+            app:destination="@id/gamePreviewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/roster"
         android:name="com.appdev.jphil.basketballcoach.roster.RosterFragment"

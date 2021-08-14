@@ -69,16 +69,10 @@ class ScheduleFragment : Fragment(), ScheduleContract.View {
     }
 
     override fun startGameFragment(gameId: Int, homeName: String, awayName: String, userIsHomeTeam: Boolean) {
-        findNavController().navigate(ScheduleFragmentDirections.actionScheduleToGamePreviewFragment(
-            gameId,
-            homeName,
-            awayName,
-            userIsHomeTeam
-        ))
+
     }
 
     override fun goToConferenceTournament() {
-        findNavController().navigate(ScheduleFragmentDirections.actionScheduleFragmentToTournamentFragment())
     }
 
     override fun showProgressBar() {

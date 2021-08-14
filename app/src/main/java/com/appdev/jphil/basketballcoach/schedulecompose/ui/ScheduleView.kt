@@ -51,8 +51,8 @@ fun ScheduleScreen(
         CircularProgressIndicator(modifier = Modifier.size(75.dp))
     } else {
         ScheduleView(viewState = viewState, interactor = interactor)
-        if (viewState.showSimDialog) {
-            SimulationDialog(viewState.dialogUiModels, interactor)
+        viewState.dialogUiModel?.let {
+            SimulationDialog(it, viewState.gameToPlay, interactor)
         }
     }
 }
@@ -66,7 +66,7 @@ fun ScheduleView(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        itemsIndexed(viewState.uiModels) { index, item ->
+        items(viewState.uiModels) { item ->
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
             }
@@ -193,7 +193,8 @@ fun PreviewScheduleItem() {
 
 @Composable
 fun SimulationDialog(
-    uiModels: List<UiModel>,
+    simDialogUiModel: SimDialogUiModel,
+    gameToPlay: ScheduleUiModel?,
     interactor: ScheduleContract.ScheduleInteractor
 ) {
     Dialog(onDismissRequest = { interactor.onDismissSimDialog() }) {
@@ -203,12 +204,26 @@ fun SimulationDialog(
             .background(Color.White)
         ) {
             Column {
-                DialogGames(uiModels)
-                TextButton(
-                    onClick = { interactor.onDismissSimDialog() },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text(text = "Cancel Sim")
+                Text(
+                    text = "Simulating game: ${simDialogUiModel.numberOfGamesSimmed} of ${simDialogUiModel.numberOfGamesToSim}",
+                    style = MaterialTheme.typography.body1
+                )
+                DialogGames(simDialogUiModel.gameModels)
+                Row {
+                    TextButton(
+                        onClick = { interactor.onDismissSimDialog() },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text(text = if (simDialogUiModel.isSimActive) "Cancel Sim" else "Close")
+                    }
+                    if (!simDialogUiModel.isSimActive && simDialogUiModel.isSimulatingToGame && gameToPlay != null) {
+                        TextButton(
+                            onClick = { interactor.onStartGame(gameToPlay) },
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Text(text = "Start Game")
+                        }
+                    }
                 }
             }
         }
@@ -280,7 +295,7 @@ private fun DialogGameRow(
 @Preview
 @Composable
 fun PreviewDialog() {
-    SimulationDialog(previewViewState.dialogUiModels, previewInteractor)
+    SimulationDialog(previewDialogState, previewUiModel, previewInteractor)
 }
 
 private val previewUiModel = ScheduleUiModel(
@@ -292,7 +307,8 @@ private val previewUiModel = ScheduleUiModel(
     bottomTeamScore = "85",
     isShowButtons = true,
     isFinal = true,
-    isSelectedTeamWinner = true
+    isSelectedTeamWinner = true,
+    isHomeTeamUser = true
 )
 
 private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
@@ -300,11 +316,19 @@ private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun simulateGame(uiModel: ScheduleUiModel) {}
     override fun playGame(uiModel: ScheduleUiModel) {}
     override fun onDismissSimDialog() {}
+    override fun onStartGame(uiModel: ScheduleUiModel) {}
 }
+
+private val previewDialogState = SimDialogUiModel(
+    isSimActive = true,
+    isSimulatingToGame = false,
+    numberOfGamesSimmed = 5,
+    numberOfGamesToSim = 10,
+    gameModels = List(5) { previewUiModel}
+)
 
 private val previewViewState = ScheduleContract.ScheduleViewState(
     isLoading = false,
-    showSimDialog = false,
     uiModels = List(15) { previewUiModel },
-    dialogUiModels = List(15) { previewUiModel }
+    dialogUiModel = previewDialogState
 )
