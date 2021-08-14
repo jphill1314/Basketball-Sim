@@ -1,12 +1,14 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
@@ -50,7 +52,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.roster,
-                R.id.schedule,
+                R.id.compose_schedule,
                 R.id.standings,
                 R.id.rankings,
                 R.id.recruiting,
@@ -91,6 +93,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 if (appBarConfiguration.topLevelDestinations.contains(nav.currentDestination?.id)) {
                     binding.drawerLayout.openDrawer(GravityCompat.START)
                 } else {
+                    Log.d("Navigation", "Press back - Current dest: ${nav.currentDestination}")
                     nav.popBackStack()
                 }
                 true
