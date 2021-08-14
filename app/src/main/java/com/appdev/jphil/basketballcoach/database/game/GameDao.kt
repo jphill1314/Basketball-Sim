@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.database.game
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
@@ -51,4 +52,13 @@ interface GameDao {
 
     @Delete
     suspend fun deleteGameEvents(gameEvents: List<GameEventEntity>)
+
+    @Query("SELECT * FROM GameEntity where (homeTeamId in (:teamId) or awayTeamId in (:teamId)) and tournamentId is null")
+    fun getGamesForTeam(teamId: Int): Flow<List<GameEntity>>
+
+    @Query("SELECT * FROM GameEntity")
+    fun getAllGamesFlow(): Flow<List<GameEntity>>
+
+    @Query("SELECT * FROM GameEntity where isFinal in (:isFinal) and id > (:firstGameId)")
+    fun getAllGamesWithIsFinalFlow(isFinal: Boolean, firstGameId: Int): Flow<List<GameEntity>>
 }
