@@ -23,11 +23,11 @@ class RecruitInterest(
 
     fun onTeamGameCompleted(game: Game, multiplier: Double) {
         if (game.homeTeam.teamId == teamId) {
-            with (game) {
+            with(game) {
                 updateInterestAfterGame(homeScore, homeTeam.teamRating, awayScore, awayTeam.teamRating, multiplier)
             }
         } else {
-            with (game) {
+            with(game) {
                 updateInterestAfterGame(awayScore, awayTeam.teamRating, homeScore, homeTeam.teamRating, multiplier)
             }
         }

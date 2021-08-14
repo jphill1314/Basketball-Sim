@@ -23,12 +23,12 @@ class ShotPlayText : ShotTextContract {
     }
 
     override fun shortFoul(shooter: Player, fouler: Player, shotMade: Boolean, shot: Shot): String {
-        return if(shotMade) {
+        return if (shotMade) {
             "${shooter.fullName} shoots from close, is fouled, and makes the shot! He'll get a chance " +
-                    "at a three point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
+                "at a three point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
         } else {
             "${shooter.fullName} shoots from close and misses, but ${fouler.fullName} has been called for a foul. " +
-                    "${shooter.firstName} will instead get to shoot two free throws."
+                "${shooter.firstName} will instead get to shoot two free throws."
         }
     }
 
@@ -49,12 +49,12 @@ class ShotPlayText : ShotTextContract {
     }
 
     override fun midFoul(shooter: Player, fouler: Player, shotMade: Boolean, shot: Shot): String {
-        return if(shotMade) {
+        return if (shotMade) {
             "${shooter.fullName} shoots from mid range, is fouled, and makes the shot! He'll get a chance " +
-                    "at a three point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
+                "at a three point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
         } else {
             "${shooter.fullName} shoots from mid range and misses, but ${fouler.fullName} has been called for a foul. " +
-                    "${shooter.firstName} will instead get to shoot two free throws."
+                "${shooter.firstName} will instead get to shoot two free throws."
         }
     }
 
@@ -75,12 +75,12 @@ class ShotPlayText : ShotTextContract {
     }
 
     override fun longFoul(shooter: Player, fouler: Player, shotMade: Boolean, shot: Shot): String {
-        return if(shotMade) {
+        return if (shotMade) {
             "${shooter.fullName} shoots from three, is fouled, and makes the shot! He'll get a chance " +
-                    "at a four point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
+                "at a four point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
         } else {
             "${shooter.fullName} shoots from three and misses, but ${fouler.fullName} has been called for a foul. " +
-                    "${shooter.firstName} will instead get to shoot three free throws."
+                "${shooter.firstName} will instead get to shoot three free throws."
         }
     }
 
@@ -93,12 +93,12 @@ class ShotPlayText : ShotTextContract {
     }
 
     override fun halfCourtFoul(shooter: Player, fouler: Player, shotMade: Boolean, shot: Shot): String {
-        return if(shotMade) {
+        return if (shotMade) {
             "${shooter.fullName} shoots from near half court, is fouled, and makes the shot! He'll get a chance " +
-                    "at a four point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
+                "at a four point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
         } else {
             "${shooter.fullName} shoots from near half court and misses, but ${fouler.fullName} has been called for a foul. " +
-                    "${shooter.firstName} will instead get to shoot three free throws."
+                "${shooter.firstName} will instead get to shoot three free throws."
         }
     }
 
@@ -111,12 +111,12 @@ class ShotPlayText : ShotTextContract {
     }
 
     override fun beyondHalfCourtFoul(shooter: Player, fouler: Player, shotMade: Boolean, shot: Shot): String {
-        return if(shotMade) {
+        return if (shotMade) {
             "${shooter.fullName} shoots from well beyond half court, is fouled, and makes the shot! He'll get a chance " +
-                    "at a four point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
+                "at a four point play thanks to the foul by ${fouler.fullName}." + addAssist(shot)
         } else {
             "${shooter.fullName} shoots from well beyond half court and misses, but ${fouler.fullName} has been called for a foul. " +
-                    "${shooter.firstName} will instead get to shoot three free throws."
+                "${shooter.firstName} will instead get to shoot three free throws."
         }
     }
 

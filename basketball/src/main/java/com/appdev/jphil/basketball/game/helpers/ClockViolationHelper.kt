@@ -6,8 +6,8 @@ import com.appdev.jphil.basketball.plays.BasketballPlay
 object ClockViolationHelper {
 
     fun getShotClockViolation(game: Game, play: BasketballPlay) {
-        with (game) {
-            if(shotClock == 0 && timeRemaining > 0){
+        with(game) {
+            if (shotClock == 0 && timeRemaining > 0) {
                 play.playAsString += if (homeTeamHasBall) {
                     miscText.shotClockViolation(homeTeam)
                 } else {
@@ -19,7 +19,7 @@ object ClockViolationHelper {
     }
 
     fun getBackCourtViolation(game: Game, play: BasketballPlay) {
-        with (game) {
+        with(game) {
             if (timeInBackcourt >= 10 && location == -1) {
                 val overshoot = timeInBackcourt - 10
                 timeRemaining += overshoot
@@ -35,7 +35,7 @@ object ClockViolationHelper {
     }
 
     private fun handleTurnover(game: Game) {
-        with (game) {
+        with(game) {
             if (homeTeamHasBall) {
                 homeTeam.turnovers++
             } else {

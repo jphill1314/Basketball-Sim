@@ -41,7 +41,7 @@ object TeamRecruitInteractor {
         if (interest.lastInteractionGame + GAMES_BETWEEN_INTERACTIONS <= team.gamesPlayed) {
             if (recruit.getRatingRangeForTeam(team.teamId) > 10) {
                 recruit.updateInterest(team, RecruitingEvent.SCOUT, team.gamesPlayed)
-            } else if (!interest.isOfferedScholarship){
+            } else if (!interest.isOfferedScholarship) {
                 recruit.updateInterest(team, RecruitingEvent.OFFER_SCHOLARSHIP, team.gamesPlayed)
             } else {
                 recruit.considerScholarship(team)

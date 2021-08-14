@@ -15,7 +15,7 @@ fun main() {
     simulateGames(false)
 }
 
-private fun Game.getAsString(): String{
+private fun Game.getAsString(): String {
     return "Half:$half \t ${homeTeam.name}:$homeScore - ${awayTeam.name}:$awayScore"
 }
 
@@ -45,11 +45,11 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
     var maxMargin: Game? = null
     var minMargin: Game? = null
 
-    for(i in 1..totalGames) {
-        val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red,"home", homeRating, 1, false, listOf("first"), listOf("last"))
+    for (i in 1..totalGames) {
+        val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red, "home", homeRating, 1, false, listOf("first"), listOf("last"))
         val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, listOf("first"), listOf("last"))
         val game = Game(homeTeam, awayTeam, isNeutralCourt, 1, false)
-        if(highScore == null){
+        if (highScore == null) {
             highScore = game
             lowScore = game
             maxMargin = game
@@ -58,26 +58,26 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
 
         game.simulateFullGame()
 
-        if(game.homeScore > game.awayScore){
+        if (game.homeScore > game.awayScore) {
             homeWins++
         }
-        if(game.half > 2){
+        if (game.half > 2) {
             otGames++
         }
 
-        if(max(game.homeScore, game.awayScore) > max(highScore.homeScore, highScore.awayScore)){
+        if (max(game.homeScore, game.awayScore) > max(highScore.homeScore, highScore.awayScore)) {
             highScore = game
         }
 
-        if(min(game.homeScore, game.awayScore) < min(lowScore!!.homeScore, lowScore.awayScore)){
+        if (min(game.homeScore, game.awayScore) < min(lowScore!!.homeScore, lowScore.awayScore)) {
             lowScore = game
         }
 
-        if(abs(game.homeScore - game.awayScore) > abs(maxMargin!!.homeScore - maxMargin.awayScore)){
+        if (abs(game.homeScore - game.awayScore) > abs(maxMargin!!.homeScore - maxMargin.awayScore)) {
             maxMargin = game
         }
 
-        if(abs(game.homeScore - game.awayScore) < abs(minMargin!!.homeScore - minMargin.awayScore)){
+        if (abs(game.homeScore - game.awayScore) < abs(minMargin!!.homeScore - minMargin.awayScore)) {
             minMargin = game
         }
 
@@ -109,7 +109,7 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
     } else {
         println("Home Court")
     }
-    println("home wins: $homeWins-${homeWins.toDouble()/totalGames}")
+    println("home wins: $homeWins-${homeWins.toDouble() / totalGames}")
     println("ot games: $otGames")
 
     val doubleGames = totalGames * 2.0
@@ -117,7 +117,7 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
     println("average tempo: ${possessions / totalGames}")
     println("eff: ${(totalScore / possessions.toDouble()) * 50}")
 
-    println("average margin: ${totalMargin/(totalGames.toDouble())}")
+    println("average margin: ${totalMargin / (totalGames.toDouble())}")
     println("max margin: ${maxMargin!!.getAsString()}")
     println("min margin: ${minMargin!!.getAsString()}")
     println("high score: ${highScore!!.getAsString()}")

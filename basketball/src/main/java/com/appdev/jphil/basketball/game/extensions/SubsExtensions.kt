@@ -2,10 +2,9 @@ package com.appdev.jphil.basketball.game.extensions
 
 import com.appdev.jphil.basketball.game.Game
 
-
 fun Game.makeSubs() {
-    if(shootFreeThrows){
-        if(homeTeamHasBall){
+    if (shootFreeThrows) {
+        if (homeTeamHasBall) {
             if (userIsCoaching) {
                 // Only make subs for non-user team
                 if (homeTeam.isUser) {
@@ -18,8 +17,7 @@ fun Game.makeSubs() {
                 homeTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
                 awayTeam.aiMakeSubs(-1, half, timeRemaining)
             }
-        }
-        else{
+        } else {
             if (userIsCoaching) {
                 if (homeTeam.isUser) {
                     awayTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
@@ -31,8 +29,7 @@ fun Game.makeSubs() {
                 awayTeam.aiMakeSubs(playerWithBall - 1, half, timeRemaining)
             }
         }
-    }
-    else {
+    } else {
         if (userIsCoaching) {
             if (homeTeam.isUser) {
                 awayTeam.aiMakeSubs(-1, half, timeRemaining)
