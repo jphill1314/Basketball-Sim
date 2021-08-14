@@ -5,6 +5,7 @@ import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.flurry.sdk.it
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 class GameSimRepository2 @Inject constructor(
     dispatcherProvider: DispatcherProvider,
-    private val database: BasketballDatabase
+    private val database: BasketballDatabase,
+    private val relationalDao: RelationalDao
 ) {
 
     data class SimulationState(
@@ -45,11 +47,10 @@ class GameSimRepository2 @Inject constructor(
             val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
 
-            _isSimulationActive.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId) }
+            _isSimulationActive.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId + 1) }
 
             for (gameId in firstGameId..lastGameId) {
-                val game = GameDatabaseHelper.loadGameById(gameId, database)
-                    ?: throw IllegalArgumentException("Cannot load game with id: $gameId")
+                val game = GameDatabaseHelper.getGameById(gameId, recruits, relationalDao)
 
                 game.simulateFullGame()
                 recruits.forEach { it.updateInterestAfterGame(game) }
@@ -89,11 +90,10 @@ class GameSimRepository2 @Inject constructor(
             val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
 
-            _isSimulationActive.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId) }
+            _isSimulationActive.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId + 1) }
 
             for (gameId in firstGameId until lastGameId) {
-                val game = GameDatabaseHelper.loadGameById(gameId, database)
-                    ?: throw IllegalArgumentException("Cannot load game with id: $gameId")
+                val game = GameDatabaseHelper.getGameById(gameId, recruits, relationalDao)
 
                 game.simulateFullGame()
                 recruits.forEach { it.updateInterestAfterGame(game) }
