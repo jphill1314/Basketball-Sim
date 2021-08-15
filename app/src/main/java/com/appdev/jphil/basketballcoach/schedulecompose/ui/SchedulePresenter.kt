@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
-import com.flurry.sdk.it
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class SchedulePresenter(
     private val params: Params,
@@ -84,15 +83,7 @@ class SchedulePresenter(
 
     override fun simulateGame(uiModel: ScheduleUiModel) {
         _state.update { it.copy(selectedGameId = -1) }
-        dialogJob?.cancel()
-        dialogJob = viewModelScope.launch {
-            scheduleRepository.getGamesForDialog().collect { dataModels ->
-                _state.update {
-                    it.copy(dialogDataModels = dataModels)
-                }
-            }
-        }
-
+        launchDialog()
         gameSimRepository.simulateUpToAndIncludingGame(uiModel.id)
     }
 
@@ -104,15 +95,7 @@ class SchedulePresenter(
             )
         }
 
-        dialogJob?.cancel()
-        dialogJob = viewModelScope.launch {
-            scheduleRepository.getGamesForDialog().collect { dataModels ->
-                _state.update {
-                    it.copy(dialogDataModels = dataModels)
-                }
-            }
-        }
-
+        launchDialog()
         gameSimRepository.simulateUpToGame(uiModel.id)
     }
 
@@ -139,7 +122,31 @@ class SchedulePresenter(
         }
     }
 
+    override fun openTournament(tournamentId: Int) {
+        if (tournamentId < 0) {
+            launchDialog()
+            gameSimRepository.simulateUntilConferenceTournaments()
+        } else {
+            viewModelScope.launch {
+                _events.emit(NavigateToTournament)
+            }
+        }
+    }
+
+    private fun launchDialog() {
+        dialogJob?.cancel()
+        dialogJob = viewModelScope.launch {
+            scheduleRepository.getGamesForDialog().collect { dataModels ->
+                _state.update {
+                    it.copy(dialogDataModels = dataModels)
+                }
+            }
+        }
+    }
+
     data class NavigateToGame(
         val gameModel: ScheduleUiModel
     ) : ScheduleContract.ScheduleEvent
+
+    object NavigateToTournament : ScheduleContract.ScheduleEvent
 }

@@ -9,7 +9,8 @@ interface ScheduleContract {
 
     interface ScheduleInteractor :
         ScheduleUiModel.Interactor,
-        SimDialogUiModel.Interactor
+        SimDialogUiModel.Interactor,
+        TournamentUiModel.Interactor
 
     interface ScheduleEvent
 

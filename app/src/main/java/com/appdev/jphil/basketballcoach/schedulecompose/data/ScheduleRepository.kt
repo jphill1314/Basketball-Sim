@@ -4,10 +4,9 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import com.flurry.sdk.it
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 class ScheduleRepository @Inject constructor(
     private val gameDao: GameDao,
@@ -42,6 +41,7 @@ class ScheduleRepository @Inject constructor(
         bottomTeamScore = homeScore,
         isInProgress = inProgress,
         isFinal = isFinal,
-        isHomeTeamUser = homeTeamId == userTeamId
+        isHomeTeamUser = homeTeamId == userTeamId,
+        tournamentId = tournamentId
     )
 }

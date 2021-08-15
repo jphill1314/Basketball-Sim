@@ -33,6 +33,9 @@ interface GameDao {
     @Query("SELECT * FROM GameEntity where tournamentId not null")
     suspend fun getTournamentGames(): List<GameEntity>
 
+    @Query("select * from GameEntity where tournamentId is null")
+    suspend fun getNonTournamentGames(): List<GameEntity>
+
     @Query("DELETE FROM GameEntity")
     suspend fun deleteAllGames()
 

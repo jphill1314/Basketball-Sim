@@ -20,10 +20,14 @@ class ScheduleTransformer @Inject constructor() {
 
     private fun createUiModels(
         dataState: ScheduleContract.ScheduleDataState
-    ): List<ScheduleUiModel> {
+    ): List<UiModel> {
         val teamRecords = calculateTeamRecords(dataState.dataModels)
-        return dataState.dataModels.filter {
+        val teamGames = dataState.dataModels.filter {
             it.topTeamId == dataState.teamId || it.bottomTeamId == dataState.teamId
+        }
+
+        val scheduleModels = teamGames.filter {
+            it.tournamentId == null
         }.mapIndexed { index, model ->
             ScheduleUiModel(
                 id = model.gameId,
@@ -55,6 +59,30 @@ class ScheduleTransformer @Inject constructor() {
                 isHomeTeamUser = model.isHomeTeamUser
             )
         }
+
+        val tournamentModels = if (teamGames.size != scheduleModels.size || teamGames.lastOrNull()?.isFinal == true) {
+            // TODO: make this account for championship tournament too
+            // TODO: make this logic not suck
+            if (teamGames.lastOrNull()?.isFinal == true && teamGames.size == scheduleModels.size) {
+                listOf(
+                    TournamentUiModel(
+                        1,
+                        "Conference Tournament"
+                    )
+                )
+            } else {
+                listOf(
+                    TournamentUiModel(
+                        teamGames.lastOrNull()?.tournamentId ?: -1,
+                        "Conference Tournament"
+                    )
+                )
+            }
+        } else {
+            emptyList()
+        }
+
+        return scheduleModels + tournamentModels
     }
 
     private fun calculateTeamRecords(dataModels: List<ScheduleDataModel>): Map<Int, Pair<Int, Int>> {

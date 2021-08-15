@@ -10,5 +10,6 @@ data class ScheduleDataModel(
     val bottomTeamScore: Int,
     val isInProgress: Boolean,
     val isFinal: Boolean,
-    val isHomeTeamUser: Boolean
+    val isHomeTeamUser: Boolean,
+    val tournamentId: Int?
 )

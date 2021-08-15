@@ -11,8 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
 
 class ComposeScheduleFragment : Fragment() {
 
@@ -28,6 +28,7 @@ class ComposeScheduleFragment : Fragment() {
             presenter.events.collect { event ->
                 when (event) {
                     is SchedulePresenter.NavigateToGame -> navigateToGame(event.gameModel)
+                    is SchedulePresenter.NavigateToTournament -> navigateToTournament()
                 }
             }
         }
@@ -57,6 +58,12 @@ class ComposeScheduleFragment : Fragment() {
                 awayTeamName = gameModel.topTeamName,
                 isUserHomeTeam = gameModel.isHomeTeamUser
             )
+        )
+    }
+
+    private fun navigateToTournament() {
+        findNavController().navigate(
+            ComposeScheduleFragmentDirections.toTournament()
         )
     }
 }

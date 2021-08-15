@@ -24,6 +24,9 @@
         <action
             android:id="@+id/to_gamePreviewFragment"
             app:destination="@id/gamePreviewFragment" />
+        <action
+            android:id="@+id/to_tournament"
+            app:destination="@id/tournamentFragment"/>
     </fragment>
     <fragment
         android:id="@+id/roster"

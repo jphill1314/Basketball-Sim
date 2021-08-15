@@ -70,6 +70,7 @@ fun ScheduleView(
         items(viewState.uiModels) { item ->
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
+                is TournamentUiModel -> TournamentItem(tournamentUiModel = item, interactor = interactor)
             }
         }
     }
@@ -193,6 +194,32 @@ fun PreviewScheduleItem() {
 }
 
 @Composable
+fun TournamentItem(
+    tournamentUiModel: TournamentUiModel,
+    interactor: ScheduleContract.ScheduleInteractor
+) {
+    Card(
+        modifier = Modifier
+            .clickable { interactor.openTournament(tournamentUiModel.id) }
+    ) {
+        Text(
+            text = tournamentUiModel.name,
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewTournamentItem() {
+    TournamentItem(previewTournamentUiModel, previewInteractor)
+}
+
+@Composable
 fun SimulationDialog(
     simDialogUiModel: SimDialogUiModel,
     gameToPlay: ScheduleUiModel?,
@@ -206,9 +233,18 @@ fun SimulationDialog(
                 .background(Color.White)
         ) {
             Column {
+                val titleText = if (simDialogUiModel.isSimActive) {
+                    "Simulating game: ${simDialogUiModel.numberOfGamesSimmed} of ${simDialogUiModel.numberOfGamesToSim}"
+                } else {
+                    "Simulation complete. ${simDialogUiModel.numberOfGamesSimmed} games simulated."
+                }
                 Text(
-                    text = "Simulating game: ${simDialogUiModel.numberOfGamesSimmed} of ${simDialogUiModel.numberOfGamesToSim}",
-                    style = MaterialTheme.typography.body1
+                    text = titleText,
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 )
                 DialogGames(simDialogUiModel.gameModels)
                 Row {
@@ -313,12 +349,18 @@ private val previewUiModel = ScheduleUiModel(
     isHomeTeamUser = true
 )
 
+private val previewTournamentUiModel = TournamentUiModel(
+    1,
+    "Conference Tournament"
+)
+
 private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun toggleShowButtons(uiModel: ScheduleUiModel) {}
     override fun simulateGame(uiModel: ScheduleUiModel) {}
     override fun playGame(uiModel: ScheduleUiModel) {}
     override fun onDismissSimDialog() {}
     override fun onStartGame(uiModel: ScheduleUiModel) {}
+    override fun openTournament(tournamentId: Int) {}
 }
 
 private val previewDialogState = SimDialogUiModel(
