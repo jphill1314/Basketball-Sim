@@ -39,8 +39,10 @@ class EightTeamTournament(
                     newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
                     newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
                 }
-                4 -> {
+                2 -> {
                     newGames.add(NewGameHelper.newGame(getWinner(games[0]), getWinner(games[1]), season, id))
+                }
+                4 -> {
                     newGames.add(NewGameHelper.newGame(getWinner(games[3]), getWinner(games[2]), season, id))
                 }
                 6 -> newGames.add(NewGameHelper.newGame(getWinner(games[4]), getWinner(games[5]), season, id))
@@ -67,6 +69,8 @@ class EightTeamTournament(
     }
 
     override fun getId() = id
+
+    override fun getGames() = games
 
     private fun updateDataModels() {
         games.forEachIndexed { index, game ->

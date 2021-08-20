@@ -8,7 +8,6 @@ import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class GameSimRepository2 @Inject constructor(
     dispatcherProvider: DispatcherProvider,
@@ -24,32 +24,24 @@ class GameSimRepository2 @Inject constructor(
     private val relationalDao: RelationalDao,
     private val gameDao: GameDao
 ) {
-
-    data class SimulationState(
-        val isSimActive: Boolean = false,
-        val isSimulatingToGame: Boolean = false,
-        val numberOfGamesToSim: Int = 0,
-        val numberOfGamesSimmed: Int = 0
-    )
-
     private val repositoryScope = CoroutineScope(Job() + dispatcherProvider.io)
     private var simJob: Job? = null
 
-    private val _isSimulationActive = MutableStateFlow<SimulationState?>(null)
-    val isSimulationActive = _isSimulationActive.asStateFlow()
+    private val _simState = MutableStateFlow<SimulationState?>(null)
+    val simState = _simState.asStateFlow()
 
     fun simulateUpToAndIncludingGame(lastGameId: Int) {
-        _isSimulationActive.update { SimulationState() }
+        _simState.update { SimulationState() }
         simulateGames(lastGameId)
     }
 
     fun simulateUpToGame(lastGameId: Int) {
-        _isSimulationActive.update { SimulationState(isSimulatingToGame = true) }
+        _simState.update { SimulationState(isSimulatingToGame = true) }
         simulateGames(lastGameId - 1)
     }
 
     fun simulateUntilConferenceTournaments() {
-        _isSimulationActive.update { SimulationState() }
+        _simState.update { SimulationState() }
         repositoryScope.launch {
             gameDao.getNonTournamentGames().last().id?.let {
                 simulateGames(it)
@@ -60,16 +52,16 @@ class GameSimRepository2 @Inject constructor(
     private fun simulateGames(lastGameId: Int) {
         simJob?.cancel()
         simJob = repositoryScope.launch {
-            _isSimulationActive.update { it?.copy(isSimActive = true) }
+            _simState.update { it?.copy(isSimActive = true) }
             val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
             if (firstGameId >= lastGameId) {
-                _isSimulationActive.update { it?.copy(isSimActive = false) }
+                _simState.update { it?.copy(isSimActive = false) }
                 return@launch
             }
 
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
 
-            _isSimulationActive.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId + 1) }
+            _simState.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId + 1) }
 
             for (gameId in firstGameId..lastGameId) {
                 val game = GameDatabaseHelper.getGameById(gameId, recruits, relationalDao)
@@ -91,7 +83,7 @@ class GameSimRepository2 @Inject constructor(
                 TeamDatabaseHelper.saveTeam(game.homeTeam, database)
                 TeamDatabaseHelper.saveTeam(game.awayTeam, database)
 
-                _isSimulationActive.update {
+                _simState.update {
                     it?.copy(numberOfGamesSimmed = it.numberOfGamesSimmed + 1)
                 }
 
@@ -100,7 +92,7 @@ class GameSimRepository2 @Inject constructor(
                 }
             }
             RecruitDatabaseHelper.saveRecruits(recruits, database)
-            _isSimulationActive.update { it?.copy(isSimActive = false) }
+            _simState.update { it?.copy(isSimActive = false) }
         }
     }
 

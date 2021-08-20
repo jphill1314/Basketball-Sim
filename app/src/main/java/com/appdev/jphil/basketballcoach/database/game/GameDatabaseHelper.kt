@@ -8,7 +8,6 @@ import com.appdev.jphil.basketballcoach.database.player.GameStatsEntity
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.relations.TeamRelations
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import com.flurry.sdk.it
 
 object GameDatabaseHelper {
 
@@ -138,7 +137,7 @@ object GameDatabaseHelper {
         )
     }
 
-    private fun createTeam(teamRelations: TeamRelations, allRecruits: List<Recruit>): Team {
+    fun createTeam(teamRelations: TeamRelations, allRecruits: List<Recruit>): Team {
         return teamRelations.teamEntity.createTeam(
             players = teamRelations.playerEntities.map { relation ->
                 relation.playerEntity.createPlayer().apply {

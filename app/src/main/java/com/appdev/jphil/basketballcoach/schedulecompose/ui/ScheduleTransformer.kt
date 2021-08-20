@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
-import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
+import com.appdev.jphil.basketballcoach.simulation.SimulationState
 import javax.inject.Inject
 
 class ScheduleTransformer @Inject constructor() {
@@ -106,7 +106,7 @@ class ScheduleTransformer @Inject constructor() {
     }
 
     private fun createDialogModel(
-        simState: GameSimRepository2.SimulationState?,
+        simState: SimulationState?,
         dataModels: List<ScheduleDataModel>
     ): SimDialogUiModel? {
         return simState?.let {

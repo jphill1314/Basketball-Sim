@@ -10,4 +10,5 @@ interface Tournament {
     fun getWinnerOfTournament(): Team?
     fun replaceGames(newGames: List<Game>)
     fun getId(): Int
+    fun getGames(): List<Game>
 }

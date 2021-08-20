@@ -10,4 +10,8 @@ interface RelationalDao {
     @Transaction
     @Query("select * from GameEntity where id in (:gameId)")
     suspend fun loadGameWithTeams(gameId: Int): GameRelations
+
+    @Transaction
+    @Query("select * from ConferenceEntity")
+    suspend fun loadAllConferenceTournamentData(): List<ConferenceTournamentRelations>
 }
