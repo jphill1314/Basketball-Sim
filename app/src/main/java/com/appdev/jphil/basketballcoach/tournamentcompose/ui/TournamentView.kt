@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.schedulecompose.ui
+package com.appdev.jphil.basketballcoach.tournamentcompose.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -30,17 +30,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
+import com.appdev.jphil.basketballcoach.schedulecompose.ui.ScheduleUiModel
+import com.appdev.jphil.basketballcoach.schedulecompose.ui.SimDialogUiModel
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 @ExperimentalAnimationApi
-fun ScheduleScreen(
-    viewStateFlow: StateFlow<ScheduleContract.ScheduleViewState>,
-    interactor: ScheduleContract.ScheduleInteractor
+fun TournamentScreen(
+    viewStateFlow: StateFlow<TournamentContract.TournamentViewState>,
+    interactor: TournamentContract.TournamentInteractor
 ) {
     val viewState by viewStateFlow.collectAsState()
     if (viewState.isLoading) {
@@ -61,8 +62,8 @@ fun ScheduleScreen(
 @ExperimentalAnimationApi
 @Composable
 fun ScheduleView(
-    viewState: ScheduleContract.ScheduleViewState,
-    interactor: ScheduleContract.ScheduleInteractor
+    viewState: TournamentContract.TournamentViewState,
+    interactor: TournamentContract.TournamentInteractor
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -70,20 +71,9 @@ fun ScheduleView(
         items(viewState.uiModels) { item ->
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
-                is TournamentUiModel -> TournamentItem(tournamentUiModel = item, interactor = interactor)
             }
         }
     }
-}
-
-@ExperimentalAnimationApi
-@Preview
-@Composable
-fun PreviewScheduleView() {
-    ScheduleView(
-        previewViewState,
-        previewInteractor
-    )
 }
 
 @ExperimentalAnimationApi
@@ -183,47 +173,11 @@ private fun ScheduleButtons(
     }
 }
 
-@ExperimentalAnimationApi
-@Preview
-@Composable
-fun PreviewScheduleItem() {
-    ScheduleItem(
-        previewUiModel,
-        previewInteractor
-    )
-}
-
-@Composable
-fun TournamentItem(
-    tournamentUiModel: TournamentUiModel,
-    interactor: ScheduleContract.ScheduleInteractor
-) {
-    Card(
-        modifier = Modifier
-            .clickable { interactor.openTournament(tournamentUiModel.id) }
-    ) {
-        Text(
-            text = tournamentUiModel.name,
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 32.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewTournamentItem() {
-    TournamentItem(previewTournamentUiModel, previewInteractor)
-}
-
 @Composable
 fun SimulationDialog(
     simDialogUiModel: SimDialogUiModel,
     gameToPlay: ScheduleUiModel?,
-    interactor: ScheduleContract.ScheduleInteractor
+    interactor: TournamentContract.TournamentInteractor
 ) {
     Dialog(onDismissRequest = { interactor.onDismissSimDialog() }) {
         Box(
@@ -329,51 +283,3 @@ private fun DialogGameRow(
         )
     }
 }
-
-@Preview
-@Composable
-fun PreviewDialog() {
-    SimulationDialog(previewDialogState, previewUiModel, previewInteractor)
-}
-
-private val previewUiModel = ScheduleUiModel(
-    id = 1,
-    gameNumber = 1,
-    topTeamName = "Team A",
-    bottomTeamName = "Team B",
-    topTeamScore = " 90",
-    bottomTeamScore = "85",
-    isShowButtons = true,
-    isFinal = true,
-    isSelectedTeamWinner = true,
-    isHomeTeamUser = true
-)
-
-private val previewTournamentUiModel = TournamentUiModel(
-    1,
-    "Conference Tournament",
-    true
-)
-
-private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
-    override fun toggleShowButtons(uiModel: ScheduleUiModel) {}
-    override fun simulateGame(uiModel: ScheduleUiModel) {}
-    override fun playGame(uiModel: ScheduleUiModel) {}
-    override fun onDismissSimDialog() {}
-    override fun onStartGame(uiModel: ScheduleUiModel) {}
-    override fun openTournament(tournamentId: Int) {}
-}
-
-private val previewDialogState = SimDialogUiModel(
-    isSimActive = true,
-    isSimulatingToGame = false,
-    numberOfGamesSimmed = 5,
-    numberOfGamesToSim = 10,
-    gameModels = List(5) { previewUiModel }
-)
-
-private val previewViewState = ScheduleContract.ScheduleViewState(
-    isLoading = false,
-    uiModels = List(15) { previewUiModel },
-    dialogUiModel = previewDialogState
-)

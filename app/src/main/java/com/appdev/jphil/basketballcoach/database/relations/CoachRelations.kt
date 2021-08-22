@@ -12,5 +12,5 @@ data class CoachRelations(
         parentColumn = "id",
         entityColumn = "coachId"
     )
-    val assignmentEntity: ScoutingAssignmentEntity
+    val assignmentEntity: ScoutingAssignmentEntity?
 )

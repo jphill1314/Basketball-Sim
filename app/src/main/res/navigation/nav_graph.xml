@@ -26,7 +26,7 @@
             app:destination="@id/gamePreviewFragment" />
         <action
             android:id="@+id/to_tournament"
-            app:destination="@id/tournamentFragment"/>
+            app:destination="@id/composeTournament"/>
     </fragment>
     <fragment
         android:id="@+id/roster"
@@ -102,6 +102,17 @@
         <action
             android:id="@+id/action_tournamentFragment_to_gamePreviewFragment"
             app:destination="@id/gamePreviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/composeTournament"
+        android:name="com.appdev.jphil.basketballcoach.tournamentcompose.ui.ComposeTournamentFragment"
+        android:label="@string/tournament">
+        <argument
+            android:name="doesTournamentExist"
+            app:argType="boolean"/>
+        <action
+            android:id="@+id/tournament_to_gamePreview"
+            app:destination="@id/gamePreviewFragment"/>
     </fragment>
     <fragment
         android:id="@+id/gamePreviewFragment"

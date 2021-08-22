@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class SchedulePresenter(
     private val params: Params,
@@ -31,6 +31,7 @@ class SchedulePresenter(
     private val initialState = ScheduleContract.ScheduleDataState(
         isLoading = true,
         selectedGameId = -1,
+        isTournamentExisting = false,
         simState = null,
         teamId = params.teamId,
         dataModels = emptyList(),
@@ -102,6 +103,11 @@ class SchedulePresenter(
     override fun onDismissSimDialog() {
         dialogJob?.cancel()
         gameSimRepository.cancelSimulation()
+        if (_state.value.simState?.isSimulatingSeason == true) {
+            viewModelScope.launch {
+                _events.emit(NavigateToTournament(false))
+            }
+        }
         _state.update {
             it.copy(
                 simState = null,
@@ -128,7 +134,7 @@ class SchedulePresenter(
             gameSimRepository.simulateUntilConferenceTournaments()
         } else {
             viewModelScope.launch {
-                _events.emit(NavigateToTournament)
+                _events.emit(NavigateToTournament(tournamentId >= 0))
             }
         }
     }
@@ -148,5 +154,7 @@ class SchedulePresenter(
         val gameModel: ScheduleUiModel
     ) : ScheduleContract.ScheduleEvent
 
-    object NavigateToTournament : ScheduleContract.ScheduleEvent
+    data class NavigateToTournament(
+        val isTournamentExisting: Boolean
+    ) : ScheduleContract.ScheduleEvent
 }

@@ -23,7 +23,8 @@ data class ScheduleUiModel(
 
 data class TournamentUiModel(
     val id: Int,
-    val name: String
+    val name: String,
+    val isExisting: Boolean
 ) : UiModel {
     interface Interactor {
         fun openTournament(tournamentId: Int)

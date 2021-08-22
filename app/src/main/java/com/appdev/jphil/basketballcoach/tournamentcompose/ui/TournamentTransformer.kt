@@ -1,16 +1,18 @@
-package com.appdev.jphil.basketballcoach.schedulecompose.ui
+package com.appdev.jphil.basketballcoach.tournamentcompose.ui
 
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
+import com.appdev.jphil.basketballcoach.schedulecompose.ui.ScheduleUiModel
+import com.appdev.jphil.basketballcoach.schedulecompose.ui.SimDialogUiModel
 import com.appdev.jphil.basketballcoach.simulation.SimulationState
 import javax.inject.Inject
 
-class ScheduleTransformer @Inject constructor() {
+class TournamentTransformer @Inject constructor() {
 
     fun transformDataModels(
-        dataState: ScheduleContract.ScheduleDataState
-    ): ScheduleContract.ScheduleViewState {
-        return ScheduleContract.ScheduleViewState(
+        dataState: TournamentContract.TournamentDataState
+    ): TournamentContract.TournamentViewState {
+        return TournamentContract.TournamentViewState(
             isLoading = dataState.isLoading,
             gameToPlay = dataState.gameToPlay,
             uiModels = createUiModels(dataState),
@@ -19,16 +21,11 @@ class ScheduleTransformer @Inject constructor() {
     }
 
     private fun createUiModels(
-        dataState: ScheduleContract.ScheduleDataState
+        dataState: TournamentContract.TournamentDataState
     ): List<UiModel> {
         val teamRecords = calculateTeamRecords(dataState.dataModels)
-        val teamGames = dataState.dataModels.filter {
-            it.topTeamId == dataState.teamId || it.bottomTeamId == dataState.teamId
-        }
 
-        val scheduleModels = teamGames.filter {
-            it.tournamentId == null
-        }.mapIndexed { index, model ->
+        return dataState.dataModels.mapIndexed { index, model ->
             ScheduleUiModel(
                 id = model.gameId,
                 gameNumber = index + 1,
@@ -52,39 +49,10 @@ class ScheduleTransformer @Inject constructor() {
                 },
                 isShowButtons = model.gameId == dataState.selectedGameId,
                 isFinal = model.isFinal,
-                isSelectedTeamWinner = when (model.topTeamId) {
-                    dataState.teamId -> model.topTeamScore > model.bottomTeamScore
-                    else -> model.bottomTeamScore > model.topTeamScore
-                },
+                isSelectedTeamWinner = true,
                 isHomeTeamUser = model.isHomeTeamUser
             )
         }
-
-        val tournamentModels = if (teamGames.size != scheduleModels.size || teamGames.lastOrNull()?.isFinal == true) {
-            // TODO: make this account for championship tournament too
-            // TODO: make this logic not suck
-            if (teamGames.lastOrNull()?.isFinal == true && teamGames.size == scheduleModels.size) {
-                listOf(
-                    TournamentUiModel(
-                        -1,
-                        "Conference Tournament",
-                        false
-                    )
-                )
-            } else {
-                listOf(
-                    TournamentUiModel(
-                        teamGames.lastOrNull()?.tournamentId ?: -1,
-                        "Conference Tournament",
-                        true
-                    )
-                )
-            }
-        } else {
-            emptyList()
-        }
-
-        return scheduleModels + tournamentModels
     }
 
     private fun calculateTeamRecords(dataModels: List<ScheduleDataModel>): Map<Int, Pair<Int, Int>> {

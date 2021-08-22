@@ -18,6 +18,7 @@ interface ScheduleContract {
         val teamId: Int,
         val isLoading: Boolean,
         val selectedGameId: Int,
+        val isTournamentExisting: Boolean,
         val gameToPlay: ScheduleUiModel? = null,
         val simState: SimulationState?,
         val dataModels: List<ScheduleDataModel>,

@@ -19,6 +19,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -165,5 +166,10 @@ class TournamentSimRepository @Inject constructor(
             }
         }
         tournament.replaceGames(tournamentGames + newGames)
+    }
+
+    fun cancelSimulation() {
+        simJob?.cancel("Simulation cancelled by user")
+        simJob = null
     }
 }

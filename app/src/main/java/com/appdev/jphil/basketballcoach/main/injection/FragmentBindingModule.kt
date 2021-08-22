@@ -27,6 +27,8 @@ import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyModule
 import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
+import com.appdev.jphil.basketballcoach.tournamentcompose.ComposeTournamentModule
+import com.appdev.jphil.basketballcoach.tournamentcompose.ui.ComposeTournamentFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -88,4 +90,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun composeScheduleFragment(): ComposeScheduleFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [ComposeTournamentModule::class])
+    abstract fun composeTournamentFragment(): ComposeTournamentFragment
 }
