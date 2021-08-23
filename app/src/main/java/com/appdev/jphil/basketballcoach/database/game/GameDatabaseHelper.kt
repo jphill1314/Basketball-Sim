@@ -83,7 +83,7 @@ object GameDatabaseHelper {
         return database.gameDao().getAllGames()
     }
 
-    suspend fun getFirstGameWithIsFinal(isFinal: Boolean, database: BasketballDatabase): Int {
+    suspend fun getFirstGameWithIsFinal(isFinal: Boolean, database: BasketballDatabase): Int? {
         return database.gameDao().getFirstGameWithIsFinal(isFinal)
     }
 

@@ -22,12 +22,11 @@ data class ScheduleUiModel(
 }
 
 data class TournamentUiModel(
-    val id: Int,
     val name: String,
     val isExisting: Boolean
 ) : UiModel {
     interface Interactor {
-        fun openTournament(tournamentId: Int)
+        fun openTournament(isExisting: Boolean)
     }
 }
 

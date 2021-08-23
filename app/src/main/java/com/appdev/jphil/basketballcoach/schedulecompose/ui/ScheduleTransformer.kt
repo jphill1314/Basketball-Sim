@@ -60,28 +60,20 @@ class ScheduleTransformer @Inject constructor() {
             )
         }
 
-        val tournamentModels = if (teamGames.size != scheduleModels.size || teamGames.lastOrNull()?.isFinal == true) {
-            // TODO: make this account for championship tournament too
-            // TODO: make this logic not suck
-            if (teamGames.lastOrNull()?.isFinal == true && teamGames.size == scheduleModels.size) {
-                listOf(
-                    TournamentUiModel(
-                        -1,
-                        "Conference Tournament",
-                        false
-                    )
+        val tournamentModels = when {
+            dataState.isTournamentExisting -> listOf(
+                TournamentUiModel(
+                    "Conference Tournament",
+                    true
                 )
-            } else {
-                listOf(
-                    TournamentUiModel(
-                        teamGames.lastOrNull()?.tournamentId ?: -1,
-                        "Conference Tournament",
-                        true
-                    )
+            )
+            teamGames.lastOrNull()?.isFinal == true -> listOf(
+                TournamentUiModel(
+                    "Conference Tournament",
+                    false
                 )
-            }
-        } else {
-            emptyList()
+            )
+            else -> emptyList<UiModel>()
         }
 
         return scheduleModels + tournamentModels

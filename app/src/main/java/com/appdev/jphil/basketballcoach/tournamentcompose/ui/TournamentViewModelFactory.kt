@@ -11,7 +11,7 @@ class TournamentViewModelFactory @Inject constructor(
     private val tournamentTransformer: TournamentTransformer,
     private val tournamentRepository: TournamentRepository,
     private val tournamentSimRepository: TournamentSimRepository
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

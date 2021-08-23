@@ -15,7 +15,6 @@ import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentR
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.util.RecordUtil
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class TournamentSimRepository @Inject constructor(
     dispatcherProvider: DispatcherProvider,
@@ -39,12 +39,12 @@ class TournamentSimRepository @Inject constructor(
     val simState = _simState.asStateFlow()
 
     fun simulateGame(userConferenceId: Int, gameId: Int) {
-        _simState.update { it?.copy(isSimulatingToGame = false) }
+        _simState.update { SimulationState() }
         simulateGames(userConferenceId, gameId)
     }
 
     fun simulateToGame(userConferenceId: Int, gameId: Int) {
-        _simState.update { it?.copy(isSimulatingToGame = true) }
+        _simState.update { SimulationState(isSimulatingToGame = true) }
         simulateGames(userConferenceId, gameId - 1)
     }
 
@@ -55,7 +55,10 @@ class TournamentSimRepository @Inject constructor(
             val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
             // load all tournaments
             val tournaments = loadTournaments(userConferenceId, allRecruits)
-            val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database) ?: run {
+                _simState.update { it?.copy(isSimActive = false) }
+                return@launch
+            }
 
             _simState.update {
                 it?.copy(numberOfGamesToSim = lastGameId - firstGameId + 1)

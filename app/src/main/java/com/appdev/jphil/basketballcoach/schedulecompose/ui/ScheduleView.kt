@@ -200,7 +200,7 @@ fun TournamentItem(
 ) {
     Card(
         modifier = Modifier
-            .clickable { interactor.openTournament(tournamentUiModel.id) }
+            .clickable { interactor.openTournament(tournamentUiModel.isExisting) }
     ) {
         Text(
             text = tournamentUiModel.name,
@@ -350,7 +350,6 @@ private val previewUiModel = ScheduleUiModel(
 )
 
 private val previewTournamentUiModel = TournamentUiModel(
-    1,
     "Conference Tournament",
     true
 )
@@ -361,7 +360,7 @@ private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun playGame(uiModel: ScheduleUiModel) {}
     override fun onDismissSimDialog() {}
     override fun onStartGame(uiModel: ScheduleUiModel) {}
-    override fun openTournament(tournamentId: Int) {}
+    override fun openTournament(isExisting: Boolean) {}
 }
 
 private val previewDialogState = SimDialogUiModel(

@@ -8,7 +8,6 @@ import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class GameSimRepository2 @Inject constructor(
     dispatcherProvider: DispatcherProvider,
@@ -54,7 +54,7 @@ class GameSimRepository2 @Inject constructor(
         simJob = repositoryScope.launch {
             _simState.update { it?.copy(isSimActive = true) }
             val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
-            if (firstGameId >= lastGameId) {
+            if (firstGameId == null || firstGameId >= lastGameId) {
                 _simState.update { it?.copy(isSimActive = false) }
                 return@launch
             }

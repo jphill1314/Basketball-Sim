@@ -22,7 +22,7 @@ interface GameDao {
     suspend fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
 
     @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal)")
-    suspend fun getFirstGameWithIsFinal(isFinal: Boolean): Int
+    suspend fun getFirstGameWithIsFinal(isFinal: Boolean): Int?
 
     @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal) and awayTeamId in (:teamId) or homeTeamId in (:teamId)")
     suspend fun getFistGameOfTeam(isFinal: Boolean, teamId: Int): Int

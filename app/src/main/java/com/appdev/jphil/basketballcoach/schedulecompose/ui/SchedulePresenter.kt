@@ -2,10 +2,10 @@ package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SchedulePresenter(
     private val params: Params,
@@ -25,7 +26,8 @@ class SchedulePresenter(
 ) : ViewModel(), ScheduleContract.ScheduleInteractor {
 
     data class Params @Inject constructor(
-        @TeamId val teamId: Int
+        @TeamId val teamId: Int,
+        @ConferenceId val conferenceId: Int
     )
 
     private val initialState = ScheduleContract.ScheduleDataState(
@@ -69,6 +71,15 @@ class SchedulePresenter(
                 _state.update {
                     it.copy(simState = simState)
                 }
+            }
+        }
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isTournamentExisting = scheduleRepository.doesTournamentExistForConference(
+                        conferenceId = params.conferenceId
+                    )
+                )
             }
         }
     }
@@ -128,14 +139,14 @@ class SchedulePresenter(
         }
     }
 
-    override fun openTournament(tournamentId: Int) {
-        if (tournamentId < 0) {
+    override fun openTournament(isExisting: Boolean) {
+        if (isExisting) {
+            viewModelScope.launch {
+                _events.emit(NavigateToTournament(true))
+            }
+        } else {
             launchDialog()
             gameSimRepository.simulateUntilConferenceTournaments()
-        } else {
-            viewModelScope.launch {
-                _events.emit(NavigateToTournament(tournamentId >= 0))
-            }
         }
     }
 

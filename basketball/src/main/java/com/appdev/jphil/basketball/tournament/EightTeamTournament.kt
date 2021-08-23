@@ -31,25 +31,28 @@ class EightTeamTournament(
 
     override fun generateNextRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
-        if (games.filter { it.isFinal }.size == games.size) {
-            when (games.size) {
-                0 -> {
-                    newGames.add(NewGameHelper.newGame(sortedTeams[0], sortedTeams[7], season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[1], sortedTeams[6], season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
-                }
-                2 -> {
-                    newGames.add(NewGameHelper.newGame(getWinner(games[0]), getWinner(games[1]), season, id))
-                }
-                4 -> {
-                    newGames.add(NewGameHelper.newGame(getWinner(games[3]), getWinner(games[2]), season, id))
-                }
-                6 -> newGames.add(NewGameHelper.newGame(getWinner(games[4]), getWinner(games[5]), season, id))
+
+        val gameSize = games.size
+        val finalGameSize = games.filter { it.isFinal }.size
+        when {
+            gameSize == 0 -> {
+                newGames.add(NewGameHelper.newGame(sortedTeams[0], sortedTeams[7], season, id))
+                newGames.add(NewGameHelper.newGame(sortedTeams[1], sortedTeams[6], season, id))
+                newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
+                newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
             }
-            games.addAll(newGames)
-            updateDataModels()
+            finalGameSize == 2 && gameSize == 4 -> {
+                newGames.add(NewGameHelper.newGame(getWinner(games[0]), getWinner(games[1]), season, id))
+            }
+            finalGameSize == 4 && gameSize == 5 -> {
+                newGames.add(NewGameHelper.newGame(getWinner(games[3]), getWinner(games[2]), season, id))
+            }
+            finalGameSize == 6 && gameSize == 6 -> {
+                newGames.add(NewGameHelper.newGame(getWinner(games[4]), getWinner(games[5]), season, id))
+            }
         }
+        games.addAll(newGames)
+        updateDataModels()
         return newGames
     }
 

@@ -11,8 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.android.support.AndroidSupportInjection
-import javax.inject.Inject
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 class ComposeScheduleFragment : Fragment() {
 

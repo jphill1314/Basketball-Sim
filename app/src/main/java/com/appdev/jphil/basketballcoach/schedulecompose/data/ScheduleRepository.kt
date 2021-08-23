@@ -5,6 +5,7 @@ import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -12,6 +13,10 @@ class ScheduleRepository @Inject constructor(
     private val gameDao: GameDao,
     private val database: BasketballDatabase
 ) {
+
+    suspend fun doesTournamentExistForConference(conferenceId: Int): Boolean {
+        return gameDao.getGamesWithTournamentId(conferenceId).isNotEmpty()
+    }
 
     suspend fun getGames(): Flow<List<ScheduleDataModel>> {
         val userTeam = TeamDatabaseHelper.loadUserTeam(database)!!.teamId
@@ -25,7 +30,8 @@ class ScheduleRepository @Inject constructor(
 
     suspend fun getGamesForDialog(): Flow<List<ScheduleDataModel>> {
         val userTeam = TeamDatabaseHelper.loadUserTeam(database)!!.teamId
-        val firstId = gameDao.getFirstGameWithIsFinal(false) - 1
+        val firstGameId = gameDao.getFirstGameWithIsFinal(false) ?: return emptyFlow()
+        val firstId = firstGameId - 1
         return gameDao.getAllGamesWithIsFinalFlow(true, firstId).map { entities ->
             entities.map { it.toDataModel(userTeam) }
         }

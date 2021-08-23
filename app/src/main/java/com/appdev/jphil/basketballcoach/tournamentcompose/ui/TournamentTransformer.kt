@@ -23,56 +23,20 @@ class TournamentTransformer @Inject constructor() {
     private fun createUiModels(
         dataState: TournamentContract.TournamentDataState
     ): List<UiModel> {
-        val teamRecords = calculateTeamRecords(dataState.dataModels)
-
         return dataState.dataModels.mapIndexed { index, model ->
             ScheduleUiModel(
                 id = model.gameId,
                 gameNumber = index + 1,
                 topTeamName = model.topTeamName,
                 bottomTeamName = model.bottomTeamName,
-                topTeamScore = when {
-                    model.isFinal -> model.topTeamScore.toString()
-                    model.isInProgress -> model.topTeamScore.toString()
-                    else -> {
-                        val record = teamRecords.getOrElse(model.topTeamId) { Pair(0, 0) }
-                        "${record.first} - ${record.second}"
-                    }
-                },
-                bottomTeamScore = when {
-                    model.isFinal -> model.bottomTeamScore.toString()
-                    model.isInProgress -> model.bottomTeamScore.toString()
-                    else -> {
-                        val record = teamRecords.getOrElse(model.bottomTeamId) { Pair(0, 0) }
-                        "${record.first} - ${record.second}"
-                    }
-                },
+                topTeamScore = model.topTeamScore.toString(),
+                bottomTeamScore = model.bottomTeamScore.toString(),
                 isShowButtons = model.gameId == dataState.selectedGameId,
                 isFinal = model.isFinal,
                 isSelectedTeamWinner = true,
                 isHomeTeamUser = model.isHomeTeamUser
             )
         }
-    }
-
-    private fun calculateTeamRecords(dataModels: List<ScheduleDataModel>): Map<Int, Pair<Int, Int>> {
-        val records = mutableMapOf<Int, Pair<Int, Int>>()
-        dataModels.forEach { game ->
-            if (!game.isFinal) return@forEach
-
-            val topRecord = records.getOrPut(game.topTeamId) { Pair(0, 0) }
-            val bottomRecord = records.getOrPut(game.bottomTeamId) { Pair(0, 0) }
-
-            if (game.topTeamScore > game.bottomTeamScore) {
-                records[game.topTeamId] = Pair(topRecord.first + 1, topRecord.second)
-                records[game.bottomTeamId] = Pair(bottomRecord.first, bottomRecord.second + 1)
-            } else {
-                records[game.topTeamId] = Pair(topRecord.first, topRecord.second + 1)
-                records[game.bottomTeamId] = Pair(bottomRecord.first + 1, bottomRecord.second)
-            }
-        }
-
-        return records
     }
 
     private fun createDialogModel(
