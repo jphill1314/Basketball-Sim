@@ -30,6 +30,12 @@ data class TournamentUiModel(
     }
 }
 
+object FinishSeasonUiModel : UiModel {
+    interface Interactor {
+        fun startNewSeason()
+    }
+}
+
 data class SimDialogUiModel(
     val isSimActive: Boolean,
     val isSimulatingToGame: Boolean,

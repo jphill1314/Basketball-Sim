@@ -7,6 +7,7 @@ import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketball.tournament.Tournament
 import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
@@ -15,6 +16,7 @@ import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentR
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import com.appdev.jphil.basketballcoach.util.RecordUtil
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -24,12 +26,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class TournamentSimRepository @Inject constructor(
     dispatcherProvider: DispatcherProvider,
     private val relationalDao: RelationalDao,
     private val gameDao: GameDao,
+    private val conferenceDao: ConferenceDao,
     private val database: BasketballDatabase
 ) {
     private val repositoryScope = CoroutineScope(SupervisorJob() + dispatcherProvider.io)
@@ -100,6 +102,12 @@ class TournamentSimRepository @Inject constructor(
             }
 
             // save data
+            tournaments.forEach { tournament ->
+                if (tournament.getWinnerOfTournament() != null) {
+                    val conference = conferenceDao.getConferenceWithId(tournament.getId())!!
+                    conferenceDao.insertConference(conference.copy(tournamentIsFinished = true))
+                }
+            }
             RecruitDatabaseHelper.saveRecruits(allRecruits, database)
             _simState.update { it?.copy(isSimActive = false) }
         }

@@ -10,7 +10,8 @@ interface ScheduleContract {
     interface ScheduleInteractor :
         ScheduleUiModel.Interactor,
         SimDialogUiModel.Interactor,
-        TournamentUiModel.Interactor
+        TournamentUiModel.Interactor,
+        FinishSeasonUiModel.Interactor
 
     interface ScheduleEvent
 
@@ -19,6 +20,7 @@ interface ScheduleContract {
         val isLoading: Boolean,
         val selectedGameId: Int,
         val isTournamentExisting: Boolean,
+        val isSeasonOver: Boolean = false,
         val gameToPlay: ScheduleUiModel? = null,
         val simState: SimulationState?,
         val dataModels: List<ScheduleDataModel>,

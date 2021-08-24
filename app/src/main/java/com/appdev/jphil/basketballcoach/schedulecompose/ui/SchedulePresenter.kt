@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
+import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,13 +18,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class SchedulePresenter(
     private val params: Params,
     private val transformer: ScheduleTransformer,
     private val scheduleRepository: ScheduleRepository,
-    private val gameSimRepository: GameSimRepository2
+    private val gameSimRepository: GameSimRepository2,
+    private val newSeasonRepository: NewSeasonRepository
 ) : ViewModel(), ScheduleContract.ScheduleInteractor {
 
     data class Params @Inject constructor(
@@ -70,6 +72,13 @@ class SchedulePresenter(
             gameSimRepository.simState.collect { simState ->
                 _state.update {
                     it.copy(simState = simState)
+                }
+            }
+        }
+        viewModelScope.launch {
+            scheduleRepository.isSeasonFinished().collect { isFinished ->
+                _state.update {
+                    it.copy(isSeasonOver = isFinished)
                 }
             }
         }
@@ -158,6 +167,14 @@ class SchedulePresenter(
                     it.copy(dialogDataModels = dataModels)
                 }
             }
+        }
+    }
+
+    override fun startNewSeason() {
+        // todo: handle situation where user's season is done, but all games are not
+        _state.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            newSeasonRepository.startNewSeason()
         }
     }
 

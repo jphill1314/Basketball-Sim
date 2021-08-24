@@ -71,6 +71,7 @@ fun ScheduleView(
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
                 is TournamentUiModel -> TournamentItem(tournamentUiModel = item, interactor = interactor)
+                is FinishSeasonUiModel -> FinishSeasonItem(finishSeasonModel = item, interactor = interactor)
             }
         }
     }
@@ -220,6 +221,26 @@ fun PreviewTournamentItem() {
 }
 
 @Composable
+fun FinishSeasonItem(
+    finishSeasonModel: FinishSeasonUiModel,
+    interactor: ScheduleContract.ScheduleInteractor
+) {
+    Card(
+        modifier = Modifier
+            .clickable { interactor.startNewSeason() }
+    ) {
+        Text(
+            text = "Start new season",
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+        )
+    }
+}
+
+@Composable
 fun SimulationDialog(
     simDialogUiModel: SimDialogUiModel,
     gameToPlay: ScheduleUiModel?,
@@ -361,6 +382,7 @@ private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun onDismissSimDialog() {}
     override fun onStartGame(uiModel: ScheduleUiModel) {}
     override fun openTournament(isExisting: Boolean) {}
+    override fun startNewSeason() {}
 }
 
 private val previewDialogState = SimDialogUiModel(

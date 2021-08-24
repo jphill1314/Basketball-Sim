@@ -76,7 +76,13 @@ class ScheduleTransformer @Inject constructor() {
             else -> emptyList<UiModel>()
         }
 
-        return scheduleModels + tournamentModels
+        val seasonOverModels = if (dataState.isSeasonOver) {
+            listOf(FinishSeasonUiModel)
+        } else {
+            emptyList()
+        }
+
+        return scheduleModels + tournamentModels + seasonOverModels
     }
 
     private fun calculateTeamRecords(dataModels: List<ScheduleDataModel>): Map<Int, Pair<Int, Int>> {
