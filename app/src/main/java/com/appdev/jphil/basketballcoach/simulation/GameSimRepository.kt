@@ -27,7 +27,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
     override fun playGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             simIsCancelled = false
-            var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)!!
             onSimStarted(gameId - id - 1)
             val teams = mutableMapOf<Int, Team>()
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
@@ -69,7 +69,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
     override fun simGame(gameId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             simIsCancelled = false
-            var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)!!
             onSimStarted(gameId - id)
             val teams = mutableMapOf<Int, Team>()
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
@@ -155,7 +155,7 @@ class GameSimRepository @Inject constructor(private val database: BasketballData
                     return@launch
                 }
 
-                var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+                var id = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)!!
                 var game = GameDatabaseHelper.loadGameByIdWithTeams(id++, teams, database)
                 while (game != null) {
                     teams[game.homeTeam.teamId] = game.homeTeam

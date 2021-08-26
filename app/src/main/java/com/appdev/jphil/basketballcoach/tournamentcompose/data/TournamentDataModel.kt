@@ -1,6 +1,6 @@
-package com.appdev.jphil.basketballcoach.schedulecompose.data
+package com.appdev.jphil.basketballcoach.tournamentcompose.data
 
-data class ScheduleDataModel(
+data class TournamentDataModel(
     val gameId: Int,
     val topTeamId: Int,
     val bottomTeamId: Int,
@@ -10,6 +10,5 @@ data class ScheduleDataModel(
     val bottomTeamScore: Int,
     val isInProgress: Boolean,
     val isFinal: Boolean,
-    val isHomeTeamUser: Boolean,
-    val tournamentId: Int?
+    val isHomeTeamUser: Boolean
 )

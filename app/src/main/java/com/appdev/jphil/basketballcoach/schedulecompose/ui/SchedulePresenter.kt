@@ -2,10 +2,12 @@ package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
+import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
-import com.flurry.sdk.it
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,22 +18,24 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class SchedulePresenter(
     private val params: Params,
     private val transformer: ScheduleTransformer,
     private val scheduleRepository: ScheduleRepository,
-    private val gameSimRepository: GameSimRepository2
+    private val gameSimRepository: GameSimRepository2,
+    private val newSeasonRepository: NewSeasonRepository
 ) : ViewModel(), ScheduleContract.ScheduleInteractor {
 
     data class Params @Inject constructor(
-        @TeamId val teamId: Int
+        @TeamId val teamId: Int,
+        @ConferenceId val conferenceId: Int
     )
 
     private val initialState = ScheduleContract.ScheduleDataState(
         isLoading = true,
         selectedGameId = -1,
+        isTournamentExisting = false,
         simState = null,
         teamId = params.teamId,
         dataModels = emptyList(),
@@ -65,10 +69,33 @@ class SchedulePresenter(
             }
         }
         viewModelScope.launch {
-            gameSimRepository.isSimulationActive.collect { simState ->
+            gameSimRepository.simState.collect { simState ->
                 _state.update {
                     it.copy(simState = simState)
                 }
+            }
+        }
+        viewModelScope.launch {
+            scheduleRepository.isSeasonFinished().collect { isFinished ->
+                _state.update {
+                    it.copy(isSeasonOver = isFinished)
+                }
+            }
+        }
+        viewModelScope.launch {
+            scheduleRepository.areAllGamesComplete().collect { areAllComplete ->
+                _state.update {
+                    it.copy(areAllGamesFinal = areAllComplete)
+                }
+            }
+        }
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isTournamentExisting = scheduleRepository.doesTournamentExistForConference(
+                        conferenceId = params.conferenceId
+                    )
+                )
             }
         }
     }
@@ -84,15 +111,7 @@ class SchedulePresenter(
 
     override fun simulateGame(uiModel: ScheduleUiModel) {
         _state.update { it.copy(selectedGameId = -1) }
-        dialogJob?.cancel()
-        dialogJob = viewModelScope.launch {
-            scheduleRepository.getGamesForDialog().collect { dataModels ->
-                _state.update {
-                    it.copy(dialogDataModels = dataModels)
-                }
-            }
-        }
-
+        launchDialog()
         gameSimRepository.simulateUpToAndIncludingGame(uiModel.id)
     }
 
@@ -104,21 +123,18 @@ class SchedulePresenter(
             )
         }
 
-        dialogJob?.cancel()
-        dialogJob = viewModelScope.launch {
-            scheduleRepository.getGamesForDialog().collect { dataModels ->
-                _state.update {
-                    it.copy(dialogDataModels = dataModels)
-                }
-            }
-        }
-
+        launchDialog()
         gameSimRepository.simulateUpToGame(uiModel.id)
     }
 
     override fun onDismissSimDialog() {
         dialogJob?.cancel()
         gameSimRepository.cancelSimulation()
+        if (_state.value.simState?.isSimulatingSeason == true) {
+            viewModelScope.launch {
+                _events.emit(NavigateToTournament(false))
+            }
+        }
         _state.update {
             it.copy(
                 simState = null,
@@ -139,7 +155,40 @@ class SchedulePresenter(
         }
     }
 
+    override fun openTournament(isExisting: Boolean) {
+        if (isExisting || _state.value.areAllGamesFinal) {
+            viewModelScope.launch {
+                _events.emit(NavigateToTournament(true))
+            }
+        } else {
+            launchDialog()
+            gameSimRepository.simulateUntilConferenceTournaments()
+        }
+    }
+
+    private fun launchDialog() {
+        dialogJob?.cancel()
+        dialogJob = viewModelScope.launch {
+            scheduleRepository.getGamesForDialog().collect { dataModels ->
+                _state.update {
+                    it.copy(dialogDataModels = dataModels)
+                }
+            }
+        }
+    }
+
+    override fun startNewSeason() {
+        _state.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            newSeasonRepository.startNewSeason()
+        }
+    }
+
     data class NavigateToGame(
         val gameModel: ScheduleUiModel
+    ) : ScheduleContract.ScheduleEvent
+
+    data class NavigateToTournament(
+        val isTournamentExisting: Boolean
     ) : ScheduleContract.ScheduleEvent
 }

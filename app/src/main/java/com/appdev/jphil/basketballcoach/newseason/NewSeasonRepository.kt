@@ -17,10 +17,6 @@ import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHe
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -32,8 +28,8 @@ class NewSeasonRepository @Inject constructor(
     private val firstNames = resources.getStringArray(R.array.first_names).asList()
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
-    fun startNewSeason(callback: () -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
+    suspend fun startNewSeason() {
+            // TODO: investigate why some games might not get deleted here
             GameDatabaseHelper.deleteAllGames(database)
             val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
@@ -66,9 +62,6 @@ class NewSeasonRepository @Inject constructor(
                 NewGameGenerator.NUM_RECRUITS
             )
             RecruitDatabaseHelper.saveRecruits(newRecruits, database)
-
-            withContext(Dispatchers.Main) { callback() }
-        }
     }
 
     private suspend fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
