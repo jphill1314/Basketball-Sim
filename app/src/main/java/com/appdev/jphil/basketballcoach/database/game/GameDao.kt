@@ -22,7 +22,10 @@ interface GameDao {
     suspend fun getGamesWithIsFinal(isFinal: Boolean): List<GameEntity>
 
     @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal)")
-    suspend fun getFirstGameWithIsFinal(isFinal: Boolean): Int
+    suspend fun getFirstGameWithIsFinal(isFinal: Boolean): Int?
+
+    @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal)")
+    fun getFirstGameWithIsFinalFlow(isFinal: Boolean): Flow<Int?>
 
     @Query("SELECT min(id) FROM GameEntity where isFinal in (:isFinal) and awayTeamId in (:teamId) or homeTeamId in (:teamId)")
     suspend fun getFistGameOfTeam(isFinal: Boolean, teamId: Int): Int
@@ -32,6 +35,9 @@ interface GameDao {
 
     @Query("SELECT * FROM GameEntity where tournamentId not null")
     suspend fun getTournamentGames(): List<GameEntity>
+
+    @Query("select * from GameEntity where tournamentId is null")
+    suspend fun getNonTournamentGames(): List<GameEntity>
 
     @Query("DELETE FROM GameEntity")
     suspend fun deleteAllGames()
@@ -65,4 +71,7 @@ interface GameDao {
 
     @Query("SELECT * FROM GameEntity where isFinal in (:isFinal) and id > (:firstGameId)")
     fun getAllGamesWithIsFinalFlow(isFinal: Boolean, firstGameId: Int): Flow<List<GameEntity>>
+
+    @Query("SELECT * FROM GameEntity where tournamentId in (:tournamentId)")
+    fun getGamesWithTournamentIdFlow(tournamentId: Int): Flow<List<GameEntity>>
 }

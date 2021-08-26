@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ConferenceDao {
@@ -19,6 +20,9 @@ interface ConferenceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertConference(conference: ConferenceEntity)
+
+    @Query("SELECT * FROM ConferenceEntity")
+    fun getAllConferenceEntitiesFlow(): Flow<List<ConferenceEntity>>
 
     @Delete
     suspend fun deleteConference(conference: ConferenceEntity)

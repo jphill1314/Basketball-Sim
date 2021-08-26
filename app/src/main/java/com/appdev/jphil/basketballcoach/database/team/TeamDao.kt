@@ -20,6 +20,9 @@ interface TeamDao {
     @Query("SELECT * FROM TeamEntity where isUser in (:isUser)")
     suspend fun getTeamIsUser(isUser: Boolean): TeamEntity?
 
+    @Query("SELECT teamId FROM TeamEntity where isUser in (:isUser)")
+    suspend fun getUserTeamId(isUser: Boolean): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTeams(teams: List<TeamEntity>)
 

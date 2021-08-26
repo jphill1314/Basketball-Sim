@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.schedulecompose.ui
 
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
-import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
+import com.appdev.jphil.basketballcoach.simulation.SimulationState
 import javax.inject.Inject
 
 class ScheduleTransformer @Inject constructor() {
@@ -20,10 +20,14 @@ class ScheduleTransformer @Inject constructor() {
 
     private fun createUiModels(
         dataState: ScheduleContract.ScheduleDataState
-    ): List<ScheduleUiModel> {
+    ): List<UiModel> {
         val teamRecords = calculateTeamRecords(dataState.dataModels)
-        return dataState.dataModels.filter {
+        val teamGames = dataState.dataModels.filter {
             it.topTeamId == dataState.teamId || it.bottomTeamId == dataState.teamId
+        }
+
+        val scheduleModels = teamGames.filter {
+            it.tournamentId == null
         }.mapIndexed { index, model ->
             ScheduleUiModel(
                 id = model.gameId,
@@ -55,6 +59,30 @@ class ScheduleTransformer @Inject constructor() {
                 isHomeTeamUser = model.isHomeTeamUser
             )
         }
+
+        val tournamentModels = when {
+            dataState.isTournamentExisting -> listOf(
+                TournamentUiModel(
+                    "Conference Tournament",
+                    true
+                )
+            )
+            teamGames.lastOrNull()?.isFinal == true -> listOf(
+                TournamentUiModel(
+                    "Conference Tournament",
+                    false
+                )
+            )
+            else -> emptyList<UiModel>()
+        }
+
+        val seasonOverModels = if (dataState.isSeasonOver) {
+            listOf(FinishSeasonUiModel)
+        } else {
+            emptyList()
+        }
+
+        return scheduleModels + tournamentModels + seasonOverModels
     }
 
     private fun calculateTeamRecords(dataModels: List<ScheduleDataModel>): Map<Int, Pair<Int, Int>> {
@@ -78,7 +106,7 @@ class ScheduleTransformer @Inject constructor() {
     }
 
     private fun createDialogModel(
-        simState: GameSimRepository2.SimulationState?,
+        simState: SimulationState?,
         dataModels: List<ScheduleDataModel>
     ): SimDialogUiModel? {
         return simState?.let {

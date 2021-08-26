@@ -33,29 +33,34 @@ class TenTeamTournament(
 
     override fun generateNextRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
-        if (games.filter { it.isFinal }.size == games.size) {
-            when (games.size) {
-                0 -> {
-                    newGames.add(NewGameHelper.newGame(sortedTeams[7], sortedTeams[8], season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[6], sortedTeams[9], season, id))
-                }
-                2 -> {
-                    newGames.add(NewGameHelper.newGame(sortedTeams[0], getWinner(games[0]), season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
-                    newGames.add(NewGameHelper.newGame(sortedTeams[1], getWinner(games[1]), season, id))
-                }
-                6 -> {
-                    newGames.add(NewGameHelper.newGame(getWinner(games[2]), getWinner(games[3]), season, id))
-                    newGames.add(NewGameHelper.newGame(getWinner(games[5]), getWinner(games[4]), season, id))
-                }
-                8 -> {
-                    newGames.add(NewGameHelper.newGame(getWinner(games[6]), getWinner(games[7]), season, id))
-                }
+
+        val gamesSize = games.size
+        val finalGamesSize = games.filter { it.isFinal }.size
+        when {
+            gamesSize == 0 -> {
+                newGames.add(NewGameHelper.newGame(sortedTeams[7], sortedTeams[8], season, id))
+                newGames.add(NewGameHelper.newGame(sortedTeams[6], sortedTeams[9], season, id))
             }
-            games.addAll(newGames)
-            if (games.size == 2) makeInitialDataModels() else updateDataModels()
+            finalGamesSize == 1 && gamesSize == 2 -> {
+                newGames.add(NewGameHelper.newGame(sortedTeams[0], getWinner(games[0]), season, id))
+                newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
+                newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
+            }
+            finalGamesSize == 2 && gamesSize == 5 -> {
+                newGames.add(NewGameHelper.newGame(sortedTeams[1], getWinner(games[1]), season, id))
+            }
+            finalGamesSize == 4 && gamesSize == 6 -> {
+                newGames.add(NewGameHelper.newGame(getWinner(games[2]), getWinner(games[3]), season, id))
+            }
+            finalGamesSize == 6 && gamesSize == 7 -> {
+                newGames.add(NewGameHelper.newGame(getWinner(games[5]), getWinner(games[4]), season, id))
+            }
+            finalGamesSize == 8 && gamesSize == 8 -> {
+                newGames.add(NewGameHelper.newGame(getWinner(games[6]), getWinner(games[7]), season, id))
+            }
         }
+        games.addAll(newGames)
+        if (games.size == 2) makeInitialDataModels() else updateDataModels()
         return newGames
     }
 
@@ -75,6 +80,8 @@ class TenTeamTournament(
     }
 
     override fun getId() = id
+
+    override fun getGames() = games
 
     private fun updateDataModels() {
         games.forEachIndexed { index, game ->

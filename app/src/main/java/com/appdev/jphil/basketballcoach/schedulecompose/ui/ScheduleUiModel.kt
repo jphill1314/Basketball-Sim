@@ -21,6 +21,21 @@ data class ScheduleUiModel(
     }
 }
 
+data class TournamentUiModel(
+    val name: String,
+    val isExisting: Boolean
+) : UiModel {
+    interface Interactor {
+        fun openTournament(isExisting: Boolean)
+    }
+}
+
+object FinishSeasonUiModel : UiModel {
+    interface Interactor {
+        fun startNewSeason()
+    }
+}
+
 data class SimDialogUiModel(
     val isSimActive: Boolean,
     val isSimulatingToGame: Boolean,

@@ -28,6 +28,9 @@ class ComposeScheduleFragment : Fragment() {
             presenter.events.collect { event ->
                 when (event) {
                     is SchedulePresenter.NavigateToGame -> navigateToGame(event.gameModel)
+                    is SchedulePresenter.NavigateToTournament -> navigateToTournament(
+                        event.isTournamentExisting
+                    )
                 }
             }
         }
@@ -57,6 +60,12 @@ class ComposeScheduleFragment : Fragment() {
                 awayTeamName = gameModel.topTeamName,
                 isUserHomeTeam = gameModel.isHomeTeamUser
             )
+        )
+    }
+
+    private fun navigateToTournament(isTournamentExisting: Boolean) {
+        findNavController().navigate(
+            ComposeScheduleFragmentDirections.toTournament(isTournamentExisting)
         )
     }
 }
