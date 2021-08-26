@@ -83,6 +83,13 @@ class SchedulePresenter(
             }
         }
         viewModelScope.launch {
+            scheduleRepository.areAllGamesComplete().collect { areAllComplete ->
+                _state.update {
+                    it.copy(areAllGamesFinal = areAllComplete)
+                }
+            }
+        }
+        viewModelScope.launch {
             _state.update {
                 it.copy(
                     isTournamentExisting = scheduleRepository.doesTournamentExistForConference(
@@ -149,7 +156,7 @@ class SchedulePresenter(
     }
 
     override fun openTournament(isExisting: Boolean) {
-        if (isExisting) {
+        if (isExisting || _state.value.areAllGamesFinal) {
             viewModelScope.launch {
                 _events.emit(NavigateToTournament(true))
             }
@@ -171,7 +178,6 @@ class SchedulePresenter(
     }
 
     override fun startNewSeason() {
-        // todo: handle situation where user's season is done, but all games are not
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             newSeasonRepository.startNewSeason()

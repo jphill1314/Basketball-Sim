@@ -6,7 +6,7 @@ import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.tournament.EightTeamTournament
 import com.appdev.jphil.basketball.tournament.TenTeamTournament
 import com.appdev.jphil.basketball.tournament.Tournament
-import java.lang.IllegalStateException
+import com.appdev.jphil.basketball.tournament.TournamentType
 
 class Conference(
     val id: Int,
@@ -15,6 +15,12 @@ class Conference(
 ) {
 
     var tournament: Tournament? = null
+
+    // TODO: make this more flexible
+    val tournamentType = when (teams.size) {
+        8 -> TournamentType.EIGHT
+        else -> TournamentType.TEN
+    }
 
     fun generateSchedule(season: Int): List<Game> {
         val games = mutableListOf<Game>()

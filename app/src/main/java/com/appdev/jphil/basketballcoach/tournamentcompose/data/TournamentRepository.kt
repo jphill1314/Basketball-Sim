@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.tournamentcompose.data
 import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.tournament.Tournament
+import com.appdev.jphil.basketball.tournament.TournamentType
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
@@ -32,6 +33,19 @@ class TournamentRepository @Inject constructor(
             conferenceId, // TODO: make sure this is always the user's conference
             allRecruits
         )
+    }
+
+    suspend fun getTournamentType(conferenceId: Int): TournamentType {
+        val conferenceRelation = relationalDao.loadConferenceTournamentData(conferenceId)
+        val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
+        val conference = Conference(
+            conferenceRelation.conferenceEntity.id,
+            conferenceRelation.conferenceEntity.name,
+            conferenceRelation.teamEntities.map {
+                GameDatabaseHelper.createTeam(it, allRecruits)
+            }
+        )
+        return conference.tournamentType
     }
 
     suspend fun getGamesForTournament(tournamentId: Int): Flow<List<ScheduleDataModel>> {

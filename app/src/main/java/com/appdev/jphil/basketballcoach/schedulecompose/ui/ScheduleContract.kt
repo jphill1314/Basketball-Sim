@@ -20,6 +20,7 @@ interface ScheduleContract {
         val isLoading: Boolean,
         val selectedGameId: Int,
         val isTournamentExisting: Boolean,
+        val areAllGamesFinal: Boolean = false,
         val isSeasonOver: Boolean = false,
         val gameToPlay: ScheduleUiModel? = null,
         val simState: SimulationState?,

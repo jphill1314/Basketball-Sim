@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -25,10 +27,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -44,7 +45,7 @@ fun TournamentScreen(
     interactor: TournamentContract.TournamentInteractor
 ) {
     val viewState by viewStateFlow.collectAsState()
-    if (viewState.isLoading) {
+    if (viewState.isLoading || viewState.tournamentType == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Center
@@ -65,12 +66,69 @@ fun ScheduleView(
     viewState: TournamentContract.TournamentViewState,
     interactor: TournamentContract.TournamentInteractor
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        items(viewState.uiModels) { item ->
+    TenTeamTournamentView {
+        viewState.uiModels.forEach { item ->
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
+            }
+        }
+    }
+}
+
+@Composable
+fun TenTeamTournamentView(
+    modifier: Modifier = Modifier,
+    contents: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier
+            .horizontalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        content = contents
+    ) { measurables, constraints ->
+        var maxHeight = 0
+        var maxWidth = 0
+        var totalWidth = 0
+        var totalHeight = 0
+
+        val itemConstraints = constraints.copy(
+            maxWidth = (constraints.minWidth * 0.8).toInt(),
+            minWidth = 0,
+            minHeight = 0
+        )
+
+        val placeables = measurables.map {
+            it.measure(itemConstraints).also { placeable ->
+                if (placeable.height > maxHeight) {
+                    maxHeight = placeable.height
+                }
+                if (placeable.width > maxWidth) {
+                    maxWidth = placeable.width
+                }
+                totalWidth += placeable.width
+                totalHeight += placeable.height
+            }
+        }
+
+        layout(totalWidth, totalHeight) {
+            placeables.forEachIndexed { index, placeable ->
+                // TODO: handle non 10-team tournaments
+                // TODO: animate item size?
+                when (index) {
+                    // Play in round
+                    0 -> placeable.placeRelative(x = 0, y = 0)
+                    1 -> placeable.placeRelative(x = 0, y = maxHeight * 3)
+                    // 1st round
+                    2 -> placeable.placeRelative(x = maxWidth, y = 0)
+                    3 -> placeable.placeRelative(x = maxWidth, y = maxHeight)
+                    4 -> placeable.placeRelative(x = maxWidth, y = maxHeight * 2)
+                    5 -> placeable.placeRelative(x = maxWidth, y = maxHeight * 3)
+                    // 2nd round
+                    6 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 0.5).toInt())
+                    7 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 2.5).toInt())
+                    // 3rd round
+                    8 -> placeable.placeRelative(x = 3 * maxWidth, y = (maxHeight * 1.5).toInt())
+                }
             }
         }
     }
@@ -83,42 +141,28 @@ fun ScheduleItem(
     interactor: ScheduleUiModel.Interactor
 ) {
     Card(
-        modifier = Modifier.clickable { interactor.toggleShowButtons(uiModel) }
+        modifier = Modifier
+            .padding(start = 8.dp, top = 8.dp)
+            .clickable { interactor.toggleShowButtons(uiModel) }
     ) {
         Column {
-            Row {
-                Box(
+            ScheduleItemRow(teamName = uiModel.topTeamName, teamScore = uiModel.topTeamScore)
+            ScheduleItemRow(teamName = uiModel.bottomTeamName, teamScore = uiModel.bottomTeamScore)
+            AnimatedVisibility(visible = !uiModel.isShowButtons) {
+                Text(
+                    text = "Game ${uiModel.gameNumber}",
+                    style = MaterialTheme.typography.body1,
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .size(30.dp)
-                        .align(CenterVertically)
-                        .clip(CircleShape)
-                        .background(uiModel.getIconColor())
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    textAlign = TextAlign.Center
                 )
-                Column {
-                    ScheduleItemRow(teamName = uiModel.topTeamName, teamScore = uiModel.topTeamScore)
-                    ScheduleItemRow(teamName = uiModel.bottomTeamName, teamScore = uiModel.bottomTeamScore)
-                }
             }
-            Text(
-                text = "Game ${uiModel.gameNumber}",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                textAlign = TextAlign.Center
-            )
             AnimatedVisibility(visible = uiModel.isShowButtons) {
                 ScheduleButtons(uiModel, interactor)
             }
         }
     }
-}
-
-private fun ScheduleUiModel.getIconColor() = if (isFinal) {
-    if (isSelectedTeamWinner) Color.Green else Color.Red
-} else {
-    Color.Gray
 }
 
 @Composable
@@ -152,7 +196,7 @@ private fun ScheduleButtons(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
+            .padding(8.dp)
     ) {
         TextButton(
             onClick = { interactor.simulateGame(uiModel) },

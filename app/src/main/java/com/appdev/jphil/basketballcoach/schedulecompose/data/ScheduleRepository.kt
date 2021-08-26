@@ -20,6 +20,10 @@ class ScheduleRepository @Inject constructor(
         return gameDao.getGamesWithTournamentId(conferenceId).isNotEmpty()
     }
 
+    fun areAllGamesComplete(): Flow<Boolean> {
+        return gameDao.getFirstGameWithIsFinalFlow(false).map { it == null }
+    }
+
     fun isSeasonFinished(): Flow<Boolean> {
         return conferenceDao.getAllConferenceEntitiesFlow().map { list ->
             list.map { it.tournamentIsFinished }.reduce { acc, b -> acc && b }

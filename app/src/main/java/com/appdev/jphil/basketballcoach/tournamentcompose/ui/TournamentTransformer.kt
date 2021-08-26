@@ -15,6 +15,7 @@ class TournamentTransformer @Inject constructor() {
         return TournamentContract.TournamentViewState(
             isLoading = dataState.isLoading,
             gameToPlay = dataState.gameToPlay,
+            tournamentType = dataState.tournamentType,
             uiModels = createUiModels(dataState),
             dialogUiModel = createDialogModel(dataState.simState, dataState.dialogDataModels)
         )
