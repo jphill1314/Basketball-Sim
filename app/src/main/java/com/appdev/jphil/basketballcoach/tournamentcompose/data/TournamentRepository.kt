@@ -13,7 +13,6 @@ import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentR
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleDataModel
 import com.appdev.jphil.basketballcoach.util.RecordUtil
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -48,13 +47,13 @@ class TournamentRepository @Inject constructor(
         return conference.tournamentType
     }
 
-    suspend fun getGamesForTournament(tournamentId: Int): Flow<List<ScheduleDataModel>> {
+    suspend fun getGamesForTournament(tournamentId: Int): Flow<List<TournamentDataModel>> {
         val userTeamId = teamDao.getUserTeamId(true)
         return gameDao.getGamesWithTournamentIdFlow(tournamentId)
             .map { flow -> flow.map { it.toDataModel(userTeamId) } }
     }
 
-    suspend fun getGamesForDialog(): Flow<List<ScheduleDataModel>> {
+    suspend fun getGamesForDialog(): Flow<List<TournamentDataModel>> {
         val userTeamId = TeamDatabaseHelper.loadUserTeam(database)!!.teamId
         val firstGameId = gameDao.getFirstGameWithIsFinal(false) ?: return emptyFlow()
         val firstId = firstGameId - 1
@@ -64,7 +63,7 @@ class TournamentRepository @Inject constructor(
     }
 
     // TODO: use TournamentDataModel when this screen gets its own views
-    private fun GameEntity.toDataModel(userTeamId: Int) = ScheduleDataModel(
+    private fun GameEntity.toDataModel(userTeamId: Int) = TournamentDataModel(
         gameId = id ?: -1,
         topTeamId = awayTeamId,
         bottomTeamId = homeTeamId,
@@ -74,8 +73,7 @@ class TournamentRepository @Inject constructor(
         bottomTeamScore = homeScore,
         isInProgress = inProgress,
         isFinal = isFinal,
-        isHomeTeamUser = homeTeamId == userTeamId,
-        tournamentId = tournamentId
+        isHomeTeamUser = homeTeamId == userTeamId
     )
 
     private suspend fun loadTournaments(

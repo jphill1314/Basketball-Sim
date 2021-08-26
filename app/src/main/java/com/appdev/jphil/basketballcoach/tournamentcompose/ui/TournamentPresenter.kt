@@ -3,7 +3,6 @@ package com.appdev.jphil.basketballcoach.tournamentcompose.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
-import com.appdev.jphil.basketballcoach.schedulecompose.ui.ScheduleUiModel
 import com.appdev.jphil.basketballcoach.simulation.TournamentSimRepository
 import com.appdev.jphil.basketballcoach.tournamentcompose.data.TournamentRepository
 import javax.inject.Inject
@@ -75,7 +74,7 @@ class TournamentPresenter(
         }
     }
 
-    override fun toggleShowButtons(uiModel: ScheduleUiModel) {
+    override fun toggleShowButtons(uiModel: TournamentGameUiModel) {
         if (uiModel.isFinal) return
         _state.update {
             it.copy(
@@ -84,7 +83,7 @@ class TournamentPresenter(
         }
     }
 
-    override fun simulateGame(uiModel: ScheduleUiModel) {
+    override fun simulateGame(uiModel: TournamentGameUiModel) {
         _state.update { it.copy(selectedGameId = -1) }
         launchDialog()
         tournamentSimRepository.simulateGame(
@@ -93,7 +92,7 @@ class TournamentPresenter(
         )
     }
 
-    override fun playGame(uiModel: ScheduleUiModel) {
+    override fun playGame(uiModel: TournamentGameUiModel) {
         // TODO: prevent user from playing wrong game
         _state.update {
             it.copy(
@@ -120,7 +119,7 @@ class TournamentPresenter(
         }
     }
 
-    override fun onStartGame(uiModel: ScheduleUiModel) {
+    override fun onStartGame(uiModel: TournamentGameUiModel) {
         TODO("Not yet implemented")
     }
 

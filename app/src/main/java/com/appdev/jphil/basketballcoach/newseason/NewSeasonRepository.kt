@@ -29,6 +29,7 @@ class NewSeasonRepository @Inject constructor(
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
     suspend fun startNewSeason() {
+            // TODO: investigate why some games might not get deleted here
             GameDatabaseHelper.deleteAllGames(database)
             val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
             val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
