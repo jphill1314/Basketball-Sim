@@ -20,15 +20,13 @@ import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewModule
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.roster.RosterModule
-import com.appdev.jphil.basketballcoach.schedulecompose.ui.ComposeScheduleFragment
+import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyModule
-import com.appdev.jphil.basketballcoach.tournament.TournamentFragment
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
-import com.appdev.jphil.basketballcoach.tournamentcompose.ComposeTournamentModule
-import com.appdev.jphil.basketballcoach.tournamentcompose.ui.ComposeTournamentFragment
+import com.appdev.jphil.basketballcoach.tournament.ui.TournamentFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -54,10 +52,6 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [PlayerOverviewModule::class])
     abstract fun playerOverviewFragment(): PlayerOverviewFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [TournamentModule::class])
-    abstract fun tournamentFragment(): TournamentFragment
 
     @PerFragment
     @ContributesAndroidInjector(modules = [CoachesModule::class])
@@ -89,9 +83,9 @@ abstract class FragmentBindingModule {
 
     @PerFragment
     @ContributesAndroidInjector
-    abstract fun composeScheduleFragment(): ComposeScheduleFragment
+    abstract fun composeScheduleFragment(): ScheduleFragment
 
     @PerFragment
-    @ContributesAndroidInjector(modules = [ComposeTournamentModule::class])
-    abstract fun composeTournamentFragment(): ComposeTournamentFragment
+    @ContributesAndroidInjector(modules = [TournamentModule::class])
+    abstract fun composeTournamentFragment(): TournamentFragment
 }
