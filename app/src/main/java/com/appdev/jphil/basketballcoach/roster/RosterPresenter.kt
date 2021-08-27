@@ -4,9 +4,6 @@ import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.arch.BasePresenter
 import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
-import com.appdev.jphil.basketballcoach.tracking.TrackingKeys
-import com.flurry.android.FlurryAgent
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,7 +36,6 @@ class RosterPresenter @Inject constructor(
                 team.swapPlayers(player.rosterIndex, this.player!!.rosterIndex)
                 coroutineScope.launch { repository.saveTeam(team) }
                 displayData(team.roster, team)
-                FlurryAgent.logEvent(TrackingKeys.EVENT_TAP, mapOf(TrackingKeys.PAYLOAD_TAP_TYPE to TrackingKeys.VALUE_SWAP_PLAYERS))
             }
             this.player = null
         }
