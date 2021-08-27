@@ -19,7 +19,7 @@
         android:label="@string/strategy" />
     <fragment
         android:id="@+id/compose_schedule"
-        android:name="com.appdev.jphil.basketballcoach.schedulecompose.ui.ComposeScheduleFragment"
+        android:name="com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment"
         android:label="@string/schedule">
         <action
             android:id="@+id/to_gamePreviewFragment"
@@ -96,16 +96,8 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/tournamentFragment"
-        android:name="com.appdev.jphil.basketballcoach.tournament.TournamentFragment"
-        android:label="@string/tournament">
-        <action
-            android:id="@+id/action_tournamentFragment_to_gamePreviewFragment"
-            app:destination="@id/gamePreviewFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/composeTournament"
-        android:name="com.appdev.jphil.basketballcoach.tournamentcompose.ui.ComposeTournamentFragment"
+        android:name="com.appdev.jphil.basketballcoach.tournament.ui.TournamentFragment"
         android:label="@string/tournament">
         <argument
             android:name="doesTournamentExist"
