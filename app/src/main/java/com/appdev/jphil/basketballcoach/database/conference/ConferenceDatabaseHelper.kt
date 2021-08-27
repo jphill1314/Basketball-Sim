@@ -130,7 +130,7 @@ object ConferenceDatabaseHelper {
     }
 
     private suspend fun updateTournament(tournament: Tournament, teams: Map<Int, Team>, database: BasketballDatabase) {
-        val currentGames = GameDatabaseHelper.loadGamesForTournament(tournament.getId(), teams, database).toMutableList()
+        val currentGames = GameDatabaseHelper.loadGamesForTournament(tournament.id, teams, database).toMutableList()
         tournament.replaceGames(currentGames)
 
         currentGames.addAll(

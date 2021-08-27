@@ -1,20 +1,16 @@
 package com.appdev.jphil.basketball.tournament
 
 import com.appdev.jphil.basketball.datamodels.StandingsDataModel
-import com.appdev.jphil.basketball.datamodels.TournamentDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 
 class EightTeamTournament(
-    private val id: Int,
+    override val id: Int,
     teams: List<Team>,
     val dataModels: List<StandingsDataModel>
 ) : Tournament {
     private val sortedTeams = mutableListOf<Team>()
-    private val games = mutableListOf<Game>()
-    private val scheduleDataModels = MutableList(7) {
-        TournamentDataModel.emptyDataModel(getRoundForGameIndex(it), false)
-    }
+    override val games = mutableListOf<Game>()
 
     init {
         dataModels.sortedWith(
@@ -26,8 +22,6 @@ class EightTeamTournament(
             )
         ).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
     }
-
-    override fun getScheduleDataModels() = scheduleDataModels
 
     override fun generateNextRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
@@ -52,7 +46,6 @@ class EightTeamTournament(
             }
         }
         games.addAll(newGames)
-        updateDataModels()
         return newGames
     }
 
@@ -68,25 +61,6 @@ class EightTeamTournament(
         games.clear()
         games.addAll(newGames)
         check(games.size <= 7) { "More than 7 games in 8 team tournament! Total games: ${games.size}" }
-        updateDataModels()
-    }
-
-    override fun getId() = id
-
-    override fun getGames() = games
-
-    private fun updateDataModels() {
-        games.forEachIndexed { index, game ->
-            scheduleDataModels[index] = TournamentDataModel.from(game, getRoundForGameIndex(index), false)
-        }
-    }
-
-    private fun getRoundForGameIndex(index: Int): Int {
-        return when (index) {
-            in 0..3 -> 1
-            4, 5 -> 2
-            else -> 3
-        }
     }
 
     private fun getWinner(game: Game): Team {
