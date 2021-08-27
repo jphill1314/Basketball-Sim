@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.newseason
 
 import android.content.res.Resources
-import android.util.Log
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.game.Game
@@ -29,39 +28,39 @@ class NewSeasonRepository @Inject constructor(
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
     suspend fun startNewSeason() {
-            // TODO: investigate why some games might not get deleted here
-            GameDatabaseHelper.deleteAllGames(database)
-            val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
-            val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
-            val games = mutableListOf<Game>()
-            val teams = mutableListOf<Team>()
-            var numberOfTeams = 0
-            conferences.forEach { conference ->
-                conference.teams.forEach {
-                    startNewSeasonForTeam(it, recruits)
-                }
-                games.addAll(conference.generateSchedule(2018))
-                numberOfTeams += conference.teams.size
-                teams.addAll(conference.teams)
+        // TODO: investigate why some games might not get deleted here
+        GameDatabaseHelper.deleteAllGames(database)
+        val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
+        val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+        val games = mutableListOf<Game>()
+        val teams = mutableListOf<Team>()
+        var numberOfTeams = 0
+        conferences.forEach { conference ->
+            conference.teams.forEach {
+                startNewSeasonForTeam(it, recruits)
             }
-            BatchInsertHelper.saveConferences(conferences, database)
-            val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(
-                conferences,
-                NewGameGenerator.NON_CON_GAMES,
-                2018
-            )
-            nonConGames.smartShuffleList(numberOfTeams)
-            GameDatabaseHelper.saveOnlyGames(nonConGames, database)
-            games.smartShuffleList(numberOfTeams)
-            GameDatabaseHelper.saveOnlyGames(games, database)
-            RecruitDatabaseHelper.deleteAllRecruits(database)
+            games.addAll(conference.generateSchedule(2018))
+            numberOfTeams += conference.teams.size
+            teams.addAll(conference.teams)
+        }
+        BatchInsertHelper.saveConferences(conferences, database)
+        val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(
+            conferences,
+            NewGameGenerator.NON_CON_GAMES,
+            2018
+        )
+        nonConGames.smartShuffleList(numberOfTeams)
+        GameDatabaseHelper.saveOnlyGames(nonConGames, database)
+        games.smartShuffleList(numberOfTeams)
+        GameDatabaseHelper.saveOnlyGames(games, database)
+        RecruitDatabaseHelper.deleteAllRecruits(database)
 
-            val newRecruits = RecruitFactory.generateRecruits(
-                firstNames,
-                lastNames,
-                NewGameGenerator.NUM_RECRUITS
-            )
-            RecruitDatabaseHelper.saveRecruits(newRecruits, database)
+        val newRecruits = RecruitFactory.generateRecruits(
+            firstNames,
+            lastNames,
+            NewGameGenerator.NUM_RECRUITS
+        )
+        RecruitDatabaseHelper.saveRecruits(newRecruits, database)
     }
 
     private suspend fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
@@ -76,7 +75,6 @@ class NewSeasonRepository @Inject constructor(
 
         // Remove players who graduated
         team.returningPlayers(team.players.filter { it.year < 4 })
-        Log.d("TestTest", "Returning Players: ${team.players.size}")
 
         // Extra improvement for returning players
         for (i in 1..(PRACTICES / 2)) {
@@ -87,7 +85,6 @@ class NewSeasonRepository @Inject constructor(
         recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.forEach { commit ->
             team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
         }
-        Log.d("TestTest", "With Recruits: ${team.players.size}")
 
         // Remove list of known recruits
         team.knownRecruits.clear()

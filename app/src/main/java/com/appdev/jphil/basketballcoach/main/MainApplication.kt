@@ -1,11 +1,13 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.app.Application
+import com.appdev.jphil.basketballcoach.BuildConfig
 import com.appdev.jphil.basketballcoach.main.injection.AppComponent
 import com.appdev.jphil.basketballcoach.main.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainApplication @Inject constructor() : Application(), HasAndroidInjector {
@@ -17,10 +19,9 @@ class MainApplication @Inject constructor() : Application(), HasAndroidInjector 
     override fun onCreate() {
         super.onCreate()
 
-//        FlurryAgent.Builder()
-//            .withLogEnabled(true)
-//            .withCaptureUncaughtExceptions(true)
-//            .build(this, resources.getString(R.string.flurry_key))
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
 
         component = DaggerAppComponent.builder()
             .application(this)

@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.newseason
 
 import android.content.res.Resources
-import android.util.Log
 import com.appdev.jphil.basketball.factories.BasketballFactory
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
@@ -60,7 +59,6 @@ object NewGameGenerator {
             val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(world.conferences, NON_CON_GAMES, 2018)
             nonConGames.smartShuffleList(numberOfTeams)
             GameDatabaseHelper.saveOnlyGames(nonConGames, database)
-            Log.d("NonCon", "NonConGames: ${nonConGames.size}")
 
             games.smartShuffleList(numberOfTeams)
             GameDatabaseHelper.saveOnlyGames(games, database)

@@ -39,7 +39,6 @@ class TournamentTransformer @Inject constructor() {
             )
         }
 
-
         // TODO: cleanup / make pretty
         // TODO: show teams that have already made it to the next round
         val placeholders: List<UiModel> = when (dataState.tournamentType) {

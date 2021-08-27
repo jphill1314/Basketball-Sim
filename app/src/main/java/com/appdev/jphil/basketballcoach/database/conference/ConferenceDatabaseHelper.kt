@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
-import android.util.Log
 import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.tournament.Tournament
@@ -131,7 +130,6 @@ object ConferenceDatabaseHelper {
     }
 
     private suspend fun updateTournament(tournament: Tournament, teams: Map<Int, Team>, database: BasketballDatabase) {
-        Log.d("Tournament", "Update tournament for: ${tournament.getId()}")
         val currentGames = GameDatabaseHelper.loadGamesForTournament(tournament.getId(), teams, database).toMutableList()
         tournament.replaceGames(currentGames)
 

@@ -7,7 +7,6 @@ import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.schedulecompose.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository2
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SchedulePresenter(
     private val params: Params,
