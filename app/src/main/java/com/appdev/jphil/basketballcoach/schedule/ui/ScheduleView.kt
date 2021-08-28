@@ -71,6 +71,10 @@ fun ScheduleView(
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
                 is TournamentUiModel -> TournamentItem(tournamentUiModel = item, interactor = interactor)
+                is NationalChampionshipUiModel -> NationalChampionshipItem(
+                    uiModel = item,
+                    interactor = interactor
+                )
                 is FinishSeasonUiModel -> FinishSeasonItem(finishSeasonModel = item, interactor = interactor)
             }
         }
@@ -205,6 +209,26 @@ fun TournamentItem(
     ) {
         Text(
             text = tournamentUiModel.name,
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+        )
+    }
+}
+
+@Composable
+fun NationalChampionshipItem(
+    uiModel: NationalChampionshipUiModel,
+    interactor: ScheduleContract.ScheduleInteractor
+) {
+    Card(
+        modifier = Modifier
+            .clickable { interactor.openNationalChampionship(uiModel.isExisting) }
+    ) {
+        Text(
+            text = "National Championship",
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -382,6 +406,7 @@ private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun onDismissSimDialog() {}
     override fun onStartGame(uiModel: ScheduleUiModel) {}
     override fun openTournament(isExisting: Boolean) {}
+    override fun openNationalChampionship(isExisting: Boolean) {}
     override fun startNewSeason() {}
 }
 

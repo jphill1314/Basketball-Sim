@@ -88,7 +88,7 @@ class TournamentSimRepository @Inject constructor(
 
                 // Update tournament with completed game
                 updateTournamentWithCompletedGame(
-                    tournaments.first { it.getId() == game.tournamentId },
+                    tournaments.first { it.id == game.tournamentId },
                     game
                 )
 
@@ -104,8 +104,11 @@ class TournamentSimRepository @Inject constructor(
             // save data
             tournaments.forEach { tournament ->
                 if (tournament.getWinnerOfTournament() != null) {
-                    val conference = conferenceDao.getConferenceWithId(tournament.getId())!!
-                    conferenceDao.insertConference(conference.copy(tournamentIsFinished = true))
+                    val conference = conferenceDao.getConferenceWithId(tournament.id)!!
+                    conferenceDao.insertConference(conference.copy(
+                        tournamentIsFinished = true,
+                        championId = tournament.getWinnerOfTournament()?.teamId ?: -1
+                    ))
                 }
             }
             RecruitDatabaseHelper.saveRecruits(allRecruits, database)
@@ -167,7 +170,7 @@ class TournamentSimRepository @Inject constructor(
         tournament: Tournament,
         newGame: Game
     ) {
-        val games = tournament.getGames().filter { it.id != newGame.id } + listOf(newGame)
+        val games = tournament.games.filter { it.id != newGame.id } + listOf(newGame)
         val tournamentGames = games.sortedBy { it.id }
         tournament.replaceGames(tournamentGames)
 

@@ -30,6 +30,14 @@ data class TournamentUiModel(
     }
 }
 
+data class NationalChampionshipUiModel(
+    val isExisting: Boolean
+): UiModel {
+    interface Interactor {
+        fun openNationalChampionship(isExisting: Boolean)
+    }
+}
+
 object FinishSeasonUiModel : UiModel {
     interface Interactor {
         fun startNewSeason()

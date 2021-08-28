@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule.data
 
+import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
@@ -20,11 +21,15 @@ class ScheduleRepository @Inject constructor(
         return gameDao.getGamesWithTournamentId(conferenceId).isNotEmpty()
     }
 
+    suspend fun doesNationalChampionshipExist(): Boolean {
+        return gameDao.getGamesWithTournamentId(NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID).isNotEmpty()
+    }
+
     fun areAllGamesComplete(): Flow<Boolean> {
         return gameDao.getFirstGameWithIsFinalFlow(false).map { it == null }
     }
 
-    fun isSeasonFinished(): Flow<Boolean> {
+    fun isSeasonFinished(): Flow<Boolean> { // TODO: remember to consider national championship
         return conferenceDao.getAllConferenceEntitiesFlow().map { list ->
             list.map { it.tournamentIsFinished }.reduce { acc, b -> acc && b }
         }

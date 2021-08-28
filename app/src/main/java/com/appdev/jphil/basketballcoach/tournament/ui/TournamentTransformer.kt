@@ -84,6 +84,26 @@ class TournamentTransformer @Inject constructor():
                     }
                 }
             }
+            TournamentType.NATIONAL_CHAMPIONSHIP -> {
+                if (games.size == 31) {
+                    emptyList()
+                } else {
+                    (games.size until 31).map {
+                        TournamentGameUiModel(
+                            id = -1,
+                            gameNumber = it + 1,
+                            topTeamName = "",
+                            topTeamScore = "",
+                            bottomTeamName = "",
+                            bottomTeamScore = "",
+                            isShowButtons = false,
+                            isFinal = false,
+                            isSelectedTeamWinner = true,
+                            isHomeTeamUser = false
+                        )
+                    }
+                }
+            }
             else -> emptyList()
         }
 
