@@ -12,6 +12,10 @@ interface RelationalDao {
     suspend fun loadTeamById(id: Int): TeamRelations
 
     @Transaction
+    @Query("select * from TeamEntity where postseasonTournamentId in (:tournamentId)")
+    suspend fun loadTeamsByTournamentId(tournamentId: Int): List<TeamRelations>
+
+    @Transaction
     @Query("select * from GameEntity where id in (:gameId)")
     suspend fun loadGameWithTeams(gameId: Int): GameRelations
 

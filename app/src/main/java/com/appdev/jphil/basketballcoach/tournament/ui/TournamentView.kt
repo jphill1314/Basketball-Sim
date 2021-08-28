@@ -86,6 +86,7 @@ fun TenTeamTournamentView(
 ) {
     Layout(
         modifier = modifier
+            .background(Color.LightGray)
             .horizontalScroll(rememberScrollState())
             .verticalScroll(rememberScrollState()),
         content = contents
@@ -145,6 +146,7 @@ fun EightTeamTournamentView(
 ) {
     Layout(
         modifier = modifier
+            .background(Color.LightGray)
             .horizontalScroll(rememberScrollState())
             .verticalScroll(rememberScrollState()),
         content = contents
@@ -201,6 +203,7 @@ fun NationalChampionshipView(
 ) {
     Layout(
         modifier = modifier
+            .background(Color.LightGray)
             .horizontalScroll(rememberScrollState())
             .verticalScroll(rememberScrollState()),
         content = contents

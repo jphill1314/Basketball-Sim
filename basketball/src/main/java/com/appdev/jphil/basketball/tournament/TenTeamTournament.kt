@@ -6,11 +6,11 @@ import com.appdev.jphil.basketball.teams.Team
 
 class TenTeamTournament(
     override val id: Int,
-    teams: List<Team>,
+    unsortedTeams: List<Team>,
     val dataModels: List<StandingsDataModel>
 ) : Tournament {
 
-    private val sortedTeams = mutableListOf<Team>()
+    override val teams = mutableListOf<Team>()
     override val games = mutableListOf<Game>()
 
     init {
@@ -21,7 +21,7 @@ class TenTeamTournament(
                 { -it.getWinPercentage() },
                 { -it.totalWins }
             )
-        ).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
+        ).forEach { dataModel -> teams.add(unsortedTeams.first { it.teamId == dataModel.teamId }) }
     }
 
     override fun generateNextRound(season: Int): List<Game> {
@@ -31,16 +31,16 @@ class TenTeamTournament(
         val finalGamesSize = games.filter { it.isFinal }.size
         when {
             gamesSize == 0 -> {
-                newGames.add(NewGameHelper.newGame(sortedTeams[7], sortedTeams[8], season, id))
-                newGames.add(NewGameHelper.newGame(sortedTeams[6], sortedTeams[9], season, id))
+                newGames.add(NewGameHelper.newGame(teams[7], teams[8], season, id))
+                newGames.add(NewGameHelper.newGame(teams[6], teams[9], season, id))
             }
             finalGamesSize == 1 && gamesSize == 2 -> {
-                newGames.add(NewGameHelper.newGame(sortedTeams[0], getWinner(games[0]), season, id))
-                newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
-                newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
+                newGames.add(NewGameHelper.newGame(teams[0], getWinner(games[0]), season, id))
+                newGames.add(NewGameHelper.newGame(teams[3], teams[4], season, id))
+                newGames.add(NewGameHelper.newGame(teams[2], teams[5], season, id))
             }
             finalGamesSize == 2 && gamesSize == 5 -> {
-                newGames.add(NewGameHelper.newGame(sortedTeams[1], getWinner(games[1]), season, id))
+                newGames.add(NewGameHelper.newGame(teams[1], getWinner(games[1]), season, id))
             }
             finalGamesSize == 4 && gamesSize == 6 -> {
                 newGames.add(NewGameHelper.newGame(getWinner(games[2]), getWinner(games[3]), season, id))

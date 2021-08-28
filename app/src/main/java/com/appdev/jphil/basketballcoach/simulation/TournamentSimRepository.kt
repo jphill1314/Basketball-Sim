@@ -4,8 +4,10 @@ import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
+import com.appdev.jphil.basketball.tournament.NationalChampionship
 import com.appdev.jphil.basketball.tournament.Tournament
 import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
+import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
@@ -40,23 +42,27 @@ class TournamentSimRepository @Inject constructor(
     private val _simState = MutableStateFlow<SimulationState?>(null)
     val simState = _simState.asStateFlow()
 
-    fun simulateGame(userConferenceId: Int, gameId: Int) {
+    fun simulateGame(userTournamentId: Int, gameId: Int) {
         _simState.update { SimulationState() }
-        simulateGames(userConferenceId, gameId)
+        simulateGames(userTournamentId, gameId)
     }
 
-    fun simulateToGame(userConferenceId: Int, gameId: Int) {
+    fun simulateToGame(userTournamentId: Int, gameId: Int) {
         _simState.update { SimulationState(isSimulatingToGame = true) }
-        simulateGames(userConferenceId, gameId - 1)
+        simulateGames(userTournamentId, gameId - 1)
     }
 
-    private fun simulateGames(userConferenceId: Int, lastGameId: Int) {
+    private fun simulateGames(userTournamentId: Int, lastGameId: Int) {
         simJob?.cancel()
         simJob = repositoryScope.launch {
             _simState.update { it?.copy(isSimActive = true) }
             val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
             // load all tournaments
-            val tournaments = loadTournaments(userConferenceId, allRecruits)
+            val tournaments = if (userTournamentId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
+                loadTournaments(userTournamentId, allRecruits)
+            } else {
+                listOf(loadNationalChampionship(allRecruits))
+            }
             val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database) ?: run {
                 _simState.update { it?.copy(isSimActive = false) }
                 return@launch
@@ -180,6 +186,33 @@ class TournamentSimRepository @Inject constructor(
             }
         }
         tournament.replaceGames(tournamentGames + newGames)
+    }
+
+    private suspend fun loadNationalChampionship(
+        allRecruits: List<Recruit>
+    ): NationalChampionship {
+        val tournamentId = NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID
+        val teams = relationalDao.loadTeamsByTournamentId(tournamentId).map {
+            GameDatabaseHelper.createTeam(it, allRecruits)
+        }
+        val games = gameDao.getGamesWithTournamentId(tournamentId).map { game ->
+            game.createGame(
+                homeTeam = teams.first { it.teamId == game.homeTeamId },
+                awayTeam = teams.first { it.teamId == game.awayTeamId }
+            )
+        }
+        return NationalChampionship(
+            tournamentId,
+            teams
+        ).apply {
+            replaceGames(games)
+            val newGames = generateNextRound(2018).map {
+                it.apply {
+                    id = gameDao.insertGame(GameEntity.from(it)).toInt()
+                }
+            }
+            replaceGames(games + newGames)
+        }
     }
 
     fun cancelSimulation() {

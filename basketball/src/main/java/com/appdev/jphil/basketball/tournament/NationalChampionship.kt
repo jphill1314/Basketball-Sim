@@ -5,8 +5,12 @@ import com.appdev.jphil.basketball.teams.Team
 
 class NationalChampionship(
     override val id: Int,
-    private val teams: List<Team>,
+    override val teams: List<Team>,
 ) : Tournament {
+
+    init {
+        teams.forEach { it.postSeasonTournamentId = id }
+    }
 
     override val games = mutableListOf<Game>()
 

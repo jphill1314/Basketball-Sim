@@ -52,7 +52,7 @@ class SchedulePresenter(
             scheduleRepository.getGames().collect { dataModels ->
                 updateState {
                     copy(
-                        isLoading = false,
+                        isLoading = if (newSeasonRepository.state.value.isWorking) true else dataModels.isEmpty(),
                         dataModels = dataModels
                     )
                 }
@@ -80,15 +80,13 @@ class SchedulePresenter(
             }
         }
         viewModelScope.launch {
-            val exists = scheduleRepository.doesTournamentExistForConference(
-                conferenceId = params.conferenceId
-            )
-            val natExists = scheduleRepository.doesNationalChampionshipExist()
-            updateState {
-                copy(
-                    isTournamentExisting = exists,
-                    nationalChampExists = natExists
-                )
+            scheduleRepository.doesTournamentExistForConference(params.conferenceId).collect {
+                updateState { copy(isTournamentExisting = it) }
+            }
+        }
+        viewModelScope.launch {
+            scheduleRepository.doesNationalChampionshipExist().collect {
+                updateState { copy(nationalChampExists = it) }
             }
         }
     }
@@ -172,7 +170,11 @@ class SchedulePresenter(
     }
 
     override fun startNewSeason() {
-        updateState { copy(isLoading = true) }
+        viewModelScope.launch {
+            newSeasonRepository.state.collect {
+                updateState { copy(isLoading = it.isWorking) }
+            }
+        }
         viewModelScope.launch {
             newSeasonRepository.startNewSeason()
         }

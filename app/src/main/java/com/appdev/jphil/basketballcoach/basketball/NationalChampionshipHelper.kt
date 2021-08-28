@@ -1,16 +1,16 @@
 package com.appdev.jphil.basketballcoach.basketball
 
-import com.appdev.jphil.basketball.conference.Conference
+import com.appdev.jphil.basketball.tournament.NationalChampionship
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
-import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
+import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -77,25 +77,13 @@ class NationalChampionshipHelper @Inject constructor(
             GameDatabaseHelper.createTeam(teamRelations, allRecruits)
         }
 
-        val tournament = Conference(
+        val tournament = NationalChampionship(
             id = NATIONAL_CHAMPIONSHIP_ID,
-            name = "National Championship",
             teams = allTeams
         )
-        tournament.generateTournament(emptyList())
-        tournament.tournament?.generateNextRound(2018)
-
-        tournament.tournament?.games?.map { GameEntity.from(it) }?.let { newGames ->
-            gameDao.insertGames(newGames)
-        }
-        conferenceDao.insertConference(
-            ConferenceEntity(
-                tournament.id,
-                tournament.name,
-                false,
-                -1
-            )
-        )
+        tournament.generateNextRound(2018)
+        tournament.games.map { GameEntity.from(it) }.let { gameDao.insertGames(it) }
+        tournament.teams.forEach { TeamDatabaseHelper.saveTeam(it, database) }
         Timber.d("Finish generation")
     }
 }

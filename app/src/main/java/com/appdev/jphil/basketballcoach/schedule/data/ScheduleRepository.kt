@@ -17,12 +17,14 @@ class ScheduleRepository @Inject constructor(
     private val database: BasketballDatabase
 ) {
 
-    suspend fun doesTournamentExistForConference(conferenceId: Int): Boolean {
-        return gameDao.getGamesWithTournamentId(conferenceId).isNotEmpty()
+    fun doesTournamentExistForConference(conferenceId: Int): Flow<Boolean> {
+        return gameDao.getGamesWithTournamentIdFlow(conferenceId).map { it.isNotEmpty() }
     }
 
-    suspend fun doesNationalChampionshipExist(): Boolean {
-        return gameDao.getGamesWithTournamentId(NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID).isNotEmpty()
+    fun doesNationalChampionshipExist(): Flow<Boolean> {
+        return gameDao.getGamesWithTournamentIdFlow(NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID).map {
+            it.isNotEmpty()
+        }
     }
 
     fun areAllGamesComplete(): Flow<Boolean> {

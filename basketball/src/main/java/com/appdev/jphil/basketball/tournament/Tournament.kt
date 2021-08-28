@@ -6,6 +6,7 @@ import com.appdev.jphil.basketball.teams.Team
 interface Tournament {
     val id: Int
     val games: List<Game>
+    val teams: List<Team>
 
     fun generateNextRound(season: Int): List<Game>
     fun getWinnerOfTournament(): Team?

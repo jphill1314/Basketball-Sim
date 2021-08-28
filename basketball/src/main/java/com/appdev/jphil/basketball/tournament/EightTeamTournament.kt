@@ -6,10 +6,10 @@ import com.appdev.jphil.basketball.teams.Team
 
 class EightTeamTournament(
     override val id: Int,
-    teams: List<Team>,
+    unsortedTeams: List<Team>,
     val dataModels: List<StandingsDataModel>
 ) : Tournament {
-    private val sortedTeams = mutableListOf<Team>()
+    override val teams = mutableListOf<Team>()
     override val games = mutableListOf<Game>()
 
     init {
@@ -20,7 +20,7 @@ class EightTeamTournament(
                 { -it.getWinPercentage() },
                 { -it.totalWins }
             )
-        ).forEach { dataModel -> sortedTeams.add(teams.first { it.teamId == dataModel.teamId }) }
+        ).forEach { dataModel -> teams.add(unsortedTeams.first { it.teamId == dataModel.teamId }) }
     }
 
     override fun generateNextRound(season: Int): List<Game> {
@@ -30,10 +30,10 @@ class EightTeamTournament(
         val finalGameSize = games.filter { it.isFinal }.size
         when {
             gameSize == 0 -> {
-                newGames.add(NewGameHelper.newGame(sortedTeams[0], sortedTeams[7], season, id))
-                newGames.add(NewGameHelper.newGame(sortedTeams[1], sortedTeams[6], season, id))
-                newGames.add(NewGameHelper.newGame(sortedTeams[2], sortedTeams[5], season, id))
-                newGames.add(NewGameHelper.newGame(sortedTeams[3], sortedTeams[4], season, id))
+                newGames.add(NewGameHelper.newGame(teams[0], teams[7], season, id))
+                newGames.add(NewGameHelper.newGame(teams[1], teams[6], season, id))
+                newGames.add(NewGameHelper.newGame(teams[2], teams[5], season, id))
+                newGames.add(NewGameHelper.newGame(teams[3], teams[4], season, id))
             }
             finalGameSize == 2 && gameSize == 4 -> {
                 newGames.add(NewGameHelper.newGame(getWinner(games[0]), getWinner(games[1]), season, id))

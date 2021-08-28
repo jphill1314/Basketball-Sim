@@ -4,7 +4,6 @@ import com.appdev.jphil.basketball.datamodels.StandingsDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.tournament.EightTeamTournament
-import com.appdev.jphil.basketball.tournament.NationalChampionship
 import com.appdev.jphil.basketball.tournament.TenTeamTournament
 import com.appdev.jphil.basketball.tournament.Tournament
 import com.appdev.jphil.basketball.tournament.TournamentType
@@ -43,7 +42,6 @@ class Conference(
             tournament = when (teams.size) {
                 8 -> EightTeamTournament(id, teams, dataModels)
                 10 -> TenTeamTournament(id, teams, dataModels)
-                32 -> NationalChampionship(id, teams)
                 else -> throw IllegalStateException("Can't make a conference with ${teams.size} teams!")
             }
         }
