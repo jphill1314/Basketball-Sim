@@ -17,6 +17,7 @@ import com.appdev.jphil.basketballcoach.util.RecordUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
@@ -35,6 +36,7 @@ class TournamentRepository @Inject constructor(
                 allRecruits
             )
         } else {
+            Timber.d("Creating national championship")
             championshipHelper.createNationalChampionship()
         }
     }
@@ -71,15 +73,16 @@ class TournamentRepository @Inject constructor(
         }
     }
 
-    // TODO: use TournamentDataModel when this screen gets its own views
     private fun GameEntity.toDataModel(userTeamId: Int) = TournamentDataModel(
         gameId = id ?: -1,
-        topTeamId = awayTeamId,
-        bottomTeamId = homeTeamId,
-        topTeamName = awayTeamName,
-        bottomTeamName = homeTeamName,
-        topTeamScore = awayScore,
-        bottomTeamScore = homeScore,
+        topTeamId = homeTeamId,
+        bottomTeamId = awayTeamId,
+        topTeamName = homeTeamName,
+        bottomTeamName = awayTeamName,
+        topTeamScore = homeScore,
+        bottomTeamScore = awayScore,
+        topTeamSeed = homeTeamSeed,
+        bottomTeamSeed = awayTeamSeed,
         isInProgress = inProgress,
         isFinal = isFinal,
         isHomeTeamUser = homeTeamId == userTeamId
@@ -124,9 +127,16 @@ class TournamentRepository @Inject constructor(
                 )
             }
             tournament.replaceGames(tournamentGames)
+            val sortedIds = tournament.teams.map { it.teamId }
             val newGames = tournament.generateNextRound(2018).map {
                 it.apply {
-                    id = gameDao.insertGame(GameEntity.from(it)).toInt()
+                    id = gameDao.insertGame(
+                        GameEntity.from(
+                            it,
+                            homeTeamSeed = sortedIds.indexOf(it.homeTeam.teamId) + 1,
+                            awayTeamSeed = sortedIds.indexOf(it.awayTeam.teamId) + 1
+                        )
+                    ).toInt()
                 }
             }
             tournament.replaceGames(tournamentGames + newGames)

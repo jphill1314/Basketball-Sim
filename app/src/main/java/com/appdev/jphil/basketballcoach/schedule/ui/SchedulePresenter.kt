@@ -152,10 +152,12 @@ class SchedulePresenter(
     }
 
     override fun openNationalChampionship(isExisting: Boolean) {
-        sendEvent(NavigateToTournament(
-            isExisting,
-            NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID
-        ))
+        sendEvent(
+            NavigateToTournament(
+                isExisting,
+                NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID
+            )
+        )
     }
 
     private fun launchDialog() {

@@ -39,6 +39,7 @@ object TeamFactory {
             generateCoaches(teamId, teamRating, firstNames, lastNames),
             mutableListOf(),
             0,
+            -1,
             -1
         )
     }

@@ -63,7 +63,7 @@ class ScheduleTransformer @Inject constructor() :
         }
 
         val tournamentModels = when {
-            (dataState.isTournamentExisting && dataState.areAllGamesFinal) || dataState.nationalChampExists-> listOf(
+            (dataState.isTournamentExisting && dataState.areAllGamesFinal) || dataState.nationalChampExists -> listOf(
                 TournamentUiModel(
                     "Conference Tournament",
                     true

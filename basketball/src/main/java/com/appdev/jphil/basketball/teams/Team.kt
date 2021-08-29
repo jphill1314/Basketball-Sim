@@ -23,7 +23,8 @@ class Team(
     val coaches: MutableList<Coach>,
     val knownRecruits: MutableList<Recruit>,
     var gamesPlayed: Int,
-    var postSeasonTournamentId: Int
+    var postSeasonTournamentId: Int,
+    var postSeasonTournamentSeed: Int
 ) {
 
     val name = "$schoolName $mascot"

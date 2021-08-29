@@ -9,6 +9,8 @@ data class TournamentGameUiModel(
     val bottomTeamName: String,
     val topTeamScore: String,
     val bottomTeamScore: String,
+    val topTeamSeed: String,
+    val bottomTeamSeed: String,
     val isShowButtons: Boolean,
     val isFinal: Boolean,
     val isSelectedTeamWinner: Boolean,

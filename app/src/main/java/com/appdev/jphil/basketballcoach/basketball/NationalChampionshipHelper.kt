@@ -82,7 +82,13 @@ class NationalChampionshipHelper @Inject constructor(
             teams = allTeams
         )
         tournament.generateNextRound(2018)
-        tournament.games.map { GameEntity.from(it) }.let { gameDao.insertGames(it) }
+        tournament.games.map {
+            GameEntity.from(
+                it,
+                homeTeamSeed = it.homeTeam.postSeasonTournamentSeed,
+                awayTeamSeed = it.awayTeam.postSeasonTournamentSeed
+            )
+        }.let { gameDao.insertGames(it) }
         tournament.teams.forEach { TeamDatabaseHelper.saveTeam(it, database) }
         Timber.d("Finish generation")
     }

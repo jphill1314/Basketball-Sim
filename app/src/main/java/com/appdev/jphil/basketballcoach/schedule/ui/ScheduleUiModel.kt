@@ -32,7 +32,7 @@ data class TournamentUiModel(
 
 data class NationalChampionshipUiModel(
     val isExisting: Boolean
-): UiModel {
+) : UiModel {
     interface Interactor {
         fun openNationalChampionship(isExisting: Boolean)
     }

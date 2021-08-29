@@ -9,7 +9,13 @@ class NationalChampionship(
 ) : Tournament {
 
     init {
-        teams.forEach { it.postSeasonTournamentId = id }
+        val sortedIds = teams.map { it.teamId }
+        teams.forEach {
+            if (it.postSeasonTournamentId != id) {
+                it.postSeasonTournamentId = id
+                it.postSeasonTournamentSeed = (sortedIds.indexOf(it.teamId) / 4) + 1
+            }
+        }
     }
 
     override val games = mutableListOf<Game>()
@@ -92,58 +98,74 @@ class NationalChampionship(
 
     private fun generateSecondRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
-        when (games.filter { it.isFinal }.size) {
+        val finalGamesSize = games.filter { it.isFinal }.size
+        val gamesSize = games.size
+        when  {
             // Game 16
-            2 -> newGames.add(NewGameHelper.newGame(games[0].winner, games[1].winner, season, id))
+            finalGamesSize == 2 && gamesSize < 17 ->
+                newGames.add(NewGameHelper.newGame(games[0].winner, games[1].winner, season, id))
             // Game 17
-            4 -> newGames.add(NewGameHelper.newGame(games[2].winner, games[3].winner, season, id))
+            finalGamesSize == 4 && gamesSize < 18 ->
+                newGames.add(NewGameHelper.newGame(games[2].winner, games[3].winner, season, id))
             // Game 18
-            6 -> newGames.add(NewGameHelper.newGame(games[4].winner, games[5].winner, season, id))
+            finalGamesSize == 6 && gamesSize < 19 ->
+                newGames.add(NewGameHelper.newGame(games[4].winner, games[5].winner, season, id))
             // Game 19
-            8 -> newGames.add(NewGameHelper.newGame(games[6].winner, games[7].winner, season, id))
+            finalGamesSize == 8 && gamesSize < 20 ->
+                newGames.add(NewGameHelper.newGame(games[6].winner, games[7].winner, season, id))
             // Game 20
-            10 -> newGames.add(NewGameHelper.newGame(games[8].winner, games[9].winner, season, id))
+            finalGamesSize == 10 && gamesSize < 21  ->
+                newGames.add(NewGameHelper.newGame(games[8].winner, games[9].winner, season, id))
             // Game 21
-            12 -> newGames.add(NewGameHelper.newGame(games[10].winner, games[11].winner, season, id))
+            finalGamesSize == 12 && gamesSize < 22 ->
+                newGames.add(NewGameHelper.newGame(games[10].winner, games[11].winner, season, id))
             // Game 22
-            14 -> newGames.add(NewGameHelper.newGame(games[12].winner, games[13].winner, season, id))
+            finalGamesSize == 14 && gamesSize < 23 ->
+                newGames.add(NewGameHelper.newGame(games[12].winner, games[13].winner, season, id))
             // Game 23
-            16 -> newGames.add(NewGameHelper.newGame(games[14].winner, games[15].winner, season, id))
+            finalGamesSize == 16 && gamesSize < 24 ->
+                newGames.add(NewGameHelper.newGame(games[14].winner, games[15].winner, season, id))
         }
         return newGames
     }
 
     private fun generateThirdRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
-        when (games.filter { it.isFinal }.size) {
+        val finalGamesSize = games.filter { it.isFinal }.size
+        val gamesSize = games.size
+        when {
             // Game 24
-            18 -> newGames.add(NewGameHelper.newGame(games[16].winner, games[17].winner, season, id))
+            finalGamesSize == 18 && gamesSize < 25 -> newGames.add(NewGameHelper.newGame(games[16].winner, games[17].winner, season, id))
             // Game 25
-            20 -> newGames.add(NewGameHelper.newGame(games[18].winner, games[19].winner, season, id))
+            finalGamesSize == 20 && gamesSize < 26 -> newGames.add(NewGameHelper.newGame(games[18].winner, games[19].winner, season, id))
             // Game 26
-            22 -> newGames.add(NewGameHelper.newGame(games[20].winner, games[21].winner, season, id))
+            finalGamesSize == 22 && gamesSize < 27 -> newGames.add(NewGameHelper.newGame(games[20].winner, games[21].winner, season, id))
             // Game 27
-            24 -> newGames.add(NewGameHelper.newGame(games[22].winner, games[23].winner, season, id))
+            finalGamesSize == 24 && gamesSize < 28 -> newGames.add(NewGameHelper.newGame(games[22].winner, games[23].winner, season, id))
         }
         return newGames
     }
 
     private fun generateFourthRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
-        when (games.filter { it.isFinal }.size) {
+        val finalGamesSize = games.filter { it.isFinal }.size
+        val gamesSize = games.size
+        when {
             // Game 28
-            26 -> newGames.add(NewGameHelper.newGame(games[24].winner, games[25].winner, season, id))
+            finalGamesSize == 26 && gamesSize < 29 -> newGames.add(NewGameHelper.newGame(games[24].winner, games[25].winner, season, id))
             // Game 29
-            28 -> newGames.add(NewGameHelper.newGame(games[26].winner, games[27].winner, season, id))
+            finalGamesSize == 28 && gamesSize < 30 -> newGames.add(NewGameHelper.newGame(games[26].winner, games[27].winner, season, id))
         }
         return newGames
     }
 
     private fun generateFifthRound(season: Int): List<Game> {
         val newGames = mutableListOf<Game>()
-        when (games.filter { it.isFinal }.size) {
+        val finalGamesSize = games.filter { it.isFinal }.size
+        val gamesSize = games.size
+        when {
             // Game 30
-            30 -> newGames.add(NewGameHelper.newGame(games[28].winner, games[29].winner, season, id))
+            finalGamesSize == 30 && gamesSize < 31 -> newGames.add(NewGameHelper.newGame(games[28].winner, games[29].winner, season, id))
         }
         return newGames
     }

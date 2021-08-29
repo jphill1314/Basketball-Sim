@@ -13,6 +13,7 @@ import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
+import com.appdev.jphil.basketballcoach.database.player.PlayerDao
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentRelations
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
@@ -34,6 +35,7 @@ class TournamentSimRepository @Inject constructor(
     private val relationalDao: RelationalDao,
     private val gameDao: GameDao,
     private val conferenceDao: ConferenceDao,
+    private val playerDao: PlayerDao,
     private val database: BasketballDatabase
 ) {
     private val repositoryScope = CoroutineScope(SupervisorJob() + dispatcherProvider.io)
@@ -88,15 +90,17 @@ class TournamentSimRepository @Inject constructor(
                     TeamRecruitInteractor.interactWithRecruits(game.awayTeam, allRecruits)
                 }
 
-                GameDatabaseHelper.saveGameAndStats(game, database)
+                saveGame(game, tournaments.first { it.id == game.tournamentId })
                 TeamDatabaseHelper.saveTeam(game.homeTeam, database)
                 TeamDatabaseHelper.saveTeam(game.awayTeam, database)
 
                 // Update tournament with completed game
-                updateTournamentWithCompletedGame(
-                    tournaments.first { it.id == game.tournamentId },
-                    game
-                )
+                val tournament = tournaments.first { it.id == game.tournamentId }
+                if (tournament is NationalChampionship) {
+                    updateChampionshipWithCompletedGame(tournament, game)
+                } else {
+                    updateTournamentWithCompletedGame(tournament, game)
+                }
 
                 _simState.update {
                     it?.copy(numberOfGamesSimmed = it.numberOfGamesSimmed + 1)
@@ -111,10 +115,12 @@ class TournamentSimRepository @Inject constructor(
             tournaments.forEach { tournament ->
                 if (tournament.getWinnerOfTournament() != null) {
                     val conference = conferenceDao.getConferenceWithId(tournament.id)!!
-                    conferenceDao.insertConference(conference.copy(
-                        tournamentIsFinished = true,
-                        championId = tournament.getWinnerOfTournament()?.teamId ?: -1
-                    ))
+                    conferenceDao.insertConference(
+                        conference.copy(
+                            tournamentIsFinished = true,
+                            championId = tournament.getWinnerOfTournament()?.teamId ?: -1
+                        )
+                    )
                 }
             }
             RecruitDatabaseHelper.saveRecruits(allRecruits, database)
@@ -162,9 +168,16 @@ class TournamentSimRepository @Inject constructor(
                 )
             }
             tournament.replaceGames(tournamentGames)
+            val sortedIds = tournament.teams.map { it.teamId }
             val newGames = tournament.generateNextRound(2018).map {
                 it.apply {
-                    id = gameDao.insertGame(GameEntity.from(it)).toInt()
+                    id = gameDao.insertGame(
+                        GameEntity.from(
+                            it,
+                            homeTeamSeed = sortedIds.indexOf(it.homeTeam.teamId) + 1,
+                            awayTeamSeed = sortedIds.indexOf(it.awayTeam.teamId) + 1
+                        )
+                    ).toInt()
                 }
             }
             tournament.replaceGames(tournamentGames + newGames)
@@ -180,9 +193,16 @@ class TournamentSimRepository @Inject constructor(
         val tournamentGames = games.sortedBy { it.id }
         tournament.replaceGames(tournamentGames)
 
+        val sortedIds = tournament.teams.map { it.teamId }
         val newGames = tournament.generateNextRound(2018).map {
             it.apply {
-                id = gameDao.insertGame(GameEntity.from(it)).toInt()
+                id = gameDao.insertGame(
+                    GameEntity.from(
+                        it,
+                        homeTeamSeed = sortedIds.indexOf(it.homeTeam.teamId) + 1,
+                        awayTeamSeed = sortedIds.indexOf(it.awayTeam.teamId) + 1
+                    )
+                ).toInt()
             }
         }
         tournament.replaceGames(tournamentGames + newGames)
@@ -208,11 +228,57 @@ class TournamentSimRepository @Inject constructor(
             replaceGames(games)
             val newGames = generateNextRound(2018).map {
                 it.apply {
-                    id = gameDao.insertGame(GameEntity.from(it)).toInt()
+                    id = gameDao.insertGame(
+                        GameEntity.from(
+                            it,
+                            it.homeTeam.postSeasonTournamentSeed,
+                            it.awayTeam.postSeasonTournamentSeed
+                        )
+                    ).toInt()
                 }
             }
             replaceGames(games + newGames)
         }
+    }
+
+    private suspend fun updateChampionshipWithCompletedGame(
+        tournament: Tournament,
+        newGame: Game
+    ) {
+        val games = tournament.games.filter { it.id != newGame.id } + listOf(newGame)
+        val tournamentGames = games.sortedBy { it.id }
+        tournament.replaceGames(tournamentGames)
+
+        val newGames = tournament.generateNextRound(2018).map {
+            it.apply {
+                id = gameDao.insertGame(
+                    GameEntity.from(
+                        it,
+                        homeTeamSeed = it.homeTeam.postSeasonTournamentSeed,
+                        awayTeamSeed = it.awayTeam.postSeasonTournamentSeed
+                    )
+                ).toInt()
+            }
+        }
+        tournament.replaceGames(tournamentGames + newGames)
+    }
+
+    private suspend fun saveGame(game: Game, tournament: Tournament) {
+        val sortedIds = tournament.teams.map { it.teamId }
+        val (homeSeed, awaySeed) = if (tournament is NationalChampionship) {
+            Pair(
+                game.homeTeam.postSeasonTournamentSeed,
+                game.awayTeam.postSeasonTournamentSeed
+            )
+        } else {
+            Pair(
+                sortedIds.indexOf(game.homeTeam.teamId) + 1,
+                sortedIds.indexOf(game.awayTeam.teamId) + 1
+            )
+        }
+
+        gameDao.insertGame(GameEntity.from(game, homeSeed, awaySeed))
+        playerDao.insertGameStats(GameDatabaseHelper.getStats(game))
     }
 
     fun cancelSimulation() {

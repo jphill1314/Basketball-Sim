@@ -305,11 +305,13 @@ fun ScheduleItem(
         Column {
             ScheduleItemRow(
                 teamName = uiModel.topTeamName,
+                teamSeed = uiModel.topTeamSeed,
                 teamScore = uiModel.topTeamScore,
                 isWinner = uiModel.topTeamScore >= uiModel.bottomTeamScore
             )
             ScheduleItemRow(
                 teamName = uiModel.bottomTeamName,
+                teamSeed = uiModel.bottomTeamSeed,
                 teamScore = uiModel.bottomTeamScore,
                 isWinner = uiModel.bottomTeamScore >= uiModel.topTeamScore
             )
@@ -333,6 +335,7 @@ fun ScheduleItem(
 @Composable
 private fun ScheduleItemRow(
     teamName: String,
+    teamSeed: String,
     teamScore: String,
     isWinner: Boolean
 ) {
@@ -342,7 +345,7 @@ private fun ScheduleItemRow(
             .padding(8.dp)
     ) {
         Text(
-            text = teamName,
+            text = if (teamName.isNotEmpty()) "#$teamSeed $teamName" else "",
             style = MaterialTheme.typography.body1.copy(
                 color = if (isWinner) Color.Black else Color.Gray
             ),
