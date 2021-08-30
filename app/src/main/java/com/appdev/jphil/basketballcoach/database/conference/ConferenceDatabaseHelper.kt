@@ -59,28 +59,6 @@ object ConferenceDatabaseHelper {
         return conferences
     }
 
-    suspend fun loadAllConferencesExcept(ignoreId: Int, database: BasketballDatabase): List<Conference> {
-        val conferenceEntities = database.conferenceDao().getAllConferenceEntities()
-        val teams = database.teamDao().getAllTeams()
-        val conferences = mutableListOf<Conference>()
-        val games = GameDatabaseHelper.loadAllGameEntities(database).toMutableList()
-        conferenceEntities.forEach { conference ->
-            if (conference.id != ignoreId) {
-                val confTeams =
-                    generateTeams(database, teams.filter { it.conferenceId == conference.id })
-                val conf = Conference(
-                    conference.id,
-                    conference.name,
-                    confTeams.map { (_, team) -> team }
-                )
-                conf.tournament = createTournament(conf, games, confTeams, database)
-                conferences.add(conf)
-            }
-        }
-        database.gameDao().insertGames(games)
-        return conferences
-    }
-
     suspend fun saveOnlyConferences(conferences: List<Conference>, database: BasketballDatabase) {
         database.conferenceDao().insertConferences(
             conferences.map {
@@ -102,17 +80,6 @@ object ConferenceDatabaseHelper {
             }
         }
         return teams
-    }
-
-    suspend fun createTournament(conference: Conference, database: BasketballDatabase): Tournament? {
-        val teams = mutableMapOf<Int, Team>()
-        conference.teams.forEach { teams[it.teamId] = it }
-        return createTournament(
-            conference,
-            GameDatabaseHelper.loadAllGameEntities(database),
-            teams,
-            database
-        )
     }
 
     private suspend fun createTournament(
