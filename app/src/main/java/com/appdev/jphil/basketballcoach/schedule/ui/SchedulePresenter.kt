@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.schedule.ui
 
 import androidx.lifecycle.viewModelScope
+import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
 import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Event
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
@@ -33,6 +34,7 @@ class SchedulePresenter(
         isLoading = true,
         selectedGameId = -1,
         isTournamentExisting = false,
+        nationalChampExists = false,
         simState = null,
         teamId = params.teamId,
         dataModels = emptyList(),
@@ -50,7 +52,7 @@ class SchedulePresenter(
             scheduleRepository.getGames().collect { dataModels ->
                 updateState {
                     copy(
-                        isLoading = false,
+                        isLoading = if (newSeasonRepository.state.value.isWorking) true else dataModels.isEmpty(),
                         dataModels = dataModels
                     )
                 }
@@ -78,10 +80,14 @@ class SchedulePresenter(
             }
         }
         viewModelScope.launch {
-            val exists = scheduleRepository.doesTournamentExistForConference(
-                conferenceId = params.conferenceId
-            )
-            updateState { copy(isTournamentExisting = exists) }
+            scheduleRepository.doesTournamentExistForConference(params.conferenceId).collect {
+                updateState { copy(isTournamentExisting = it) }
+            }
+        }
+        viewModelScope.launch {
+            scheduleRepository.doesNationalChampionshipExist().collect {
+                updateState { copy(nationalChampExists = it) }
+            }
         }
     }
 
@@ -116,7 +122,7 @@ class SchedulePresenter(
         dialogJob?.cancel()
         gameSimRepository.cancelSimulation()
         if (dataState.value.simState?.isSimulatingSeason == true) {
-            sendEvent(NavigateToTournament(false))
+            sendEvent(NavigateToTournament(false, params.conferenceId))
         }
         updateState {
             copy(
@@ -138,11 +144,20 @@ class SchedulePresenter(
 
     override fun openTournament(isExisting: Boolean) {
         if (isExisting || dataState.value.areAllGamesFinal) {
-            sendEvent(NavigateToTournament(true))
+            sendEvent(NavigateToTournament(true, params.conferenceId))
         } else {
             launchDialog()
             gameSimRepository.simulateUntilConferenceTournaments()
         }
+    }
+
+    override fun openNationalChampionship(isExisting: Boolean) {
+        sendEvent(
+            NavigateToTournament(
+                isExisting,
+                NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID
+            )
+        )
     }
 
     private fun launchDialog() {
@@ -157,7 +172,11 @@ class SchedulePresenter(
     }
 
     override fun startNewSeason() {
-        updateState { copy(isLoading = true) }
+        viewModelScope.launch {
+            newSeasonRepository.state.collect {
+                updateState { copy(isLoading = it.isWorking) }
+            }
+        }
         viewModelScope.launch {
             newSeasonRepository.startNewSeason()
         }
@@ -168,6 +187,7 @@ class SchedulePresenter(
     ) : Event
 
     data class NavigateToTournament(
-        val isTournamentExisting: Boolean
+        val isTournamentExisting: Boolean,
+        val tournamentId: Int
     ) : Event
 }

@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -29,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -56,7 +52,7 @@ fun TournamentScreen(
         TournamentView(viewState = viewState) {
             viewState.uiModels.forEach { item ->
                 when (item) {
-                    is TournamentGameUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
+                    is TournamentGameUiModel -> GameItem(uiModel = item, interactor = interactor)
                 }
             }
         }
@@ -75,128 +71,13 @@ fun TournamentView(
     when (viewState.tournamentType) {
         TournamentType.TEN -> TenTeamTournamentView(contents = contents)
         TournamentType.EIGHT -> EightTeamTournamentView(contents = contents)
-    }
-}
-
-@Composable
-fun TenTeamTournamentView(
-    modifier: Modifier = Modifier,
-    contents: @Composable () -> Unit
-) {
-    Layout(
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
-            .verticalScroll(rememberScrollState()),
-        content = contents
-    ) { measurables, constraints ->
-        var maxHeight = 0
-        var maxWidth = 0
-        var totalWidth = 0
-        var totalHeight = 0
-
-        val itemConstraints = constraints.copy(
-            maxWidth = (constraints.minWidth * 0.8).toInt(),
-            minWidth = 0,
-            minHeight = 0
-        )
-
-        val placeables = measurables.map {
-            it.measure(itemConstraints).also { placeable ->
-                if (placeable.height > maxHeight) {
-                    maxHeight = placeable.height
-                }
-                if (placeable.width > maxWidth) {
-                    maxWidth = placeable.width
-                }
-                totalWidth += placeable.width
-                totalHeight += placeable.height
-            }
-        }
-
-        layout(totalWidth, totalHeight) {
-            placeables.forEachIndexed { index, placeable ->
-                // TODO: handle non 10-team tournaments
-                // TODO: prevent user from scrolling everything off screen
-                // TODO: animate item size?
-                when (index) {
-                    // Play in round
-                    0 -> placeable.placeRelative(x = 0, y = 0)
-                    1 -> placeable.placeRelative(x = 0, y = maxHeight * 3)
-                    // 1st round
-                    2 -> placeable.placeRelative(x = maxWidth, y = 0)
-                    3 -> placeable.placeRelative(x = maxWidth, y = maxHeight)
-                    4 -> placeable.placeRelative(x = maxWidth, y = maxHeight * 2)
-                    5 -> placeable.placeRelative(x = maxWidth, y = maxHeight * 3)
-                    // 2nd round
-                    6 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 0.5).toInt())
-                    7 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 2.5).toInt())
-                    // 3rd round
-                    8 -> placeable.placeRelative(x = 3 * maxWidth, y = (maxHeight * 1.5).toInt())
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EightTeamTournamentView(
-    modifier: Modifier = Modifier,
-    contents: @Composable () -> Unit
-) {
-    Layout(
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
-            .verticalScroll(rememberScrollState()),
-        content = contents
-    ) { measurables, constraints ->
-        var maxHeight = 0
-        var maxWidth = 0
-        var totalWidth = 0
-        var totalHeight = 0
-
-        val itemConstraints = constraints.copy(
-            maxWidth = (constraints.minWidth * 0.8).toInt(),
-            minWidth = 0,
-            minHeight = 0
-        )
-
-        val placeables = measurables.map {
-            it.measure(itemConstraints).also { placeable ->
-                if (placeable.height > maxHeight) {
-                    maxHeight = placeable.height
-                }
-                if (placeable.width > maxWidth) {
-                    maxWidth = placeable.width
-                }
-                totalWidth += placeable.width
-                totalHeight += placeable.height
-            }
-        }
-
-        layout(totalWidth, totalHeight) {
-            placeables.forEachIndexed { index, placeable ->
-                // TODO: prevent user from scrolling everything off screen
-                // TODO: animate item size?
-                when (index) {
-                    // 1st round
-                    0 -> placeable.placeRelative(x = 0, y = 0)
-                    1 -> placeable.placeRelative(x = 0, y = maxHeight)
-                    2 -> placeable.placeRelative(x = 0, y = maxHeight * 2)
-                    3 -> placeable.placeRelative(x = 0, y = maxHeight * 3)
-                    // 2nd round
-                    4 -> placeable.placeRelative(x = maxWidth, y = (maxHeight * 0.5).toInt())
-                    5 -> placeable.placeRelative(x = maxWidth, y = (maxHeight * 2.5).toInt())
-                    // 3rd round
-                    6 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 1.5).toInt())
-                }
-            }
-        }
+        TournamentType.NATIONAL_CHAMPIONSHIP -> NationalChampionshipView(contents = contents)
     }
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun ScheduleItem(
+fun GameItem(
     uiModel: TournamentGameUiModel,
     interactor: TournamentGameUiModel.Interactor
 ) {
@@ -206,13 +87,15 @@ fun ScheduleItem(
             .clickable { interactor.toggleShowButtons(uiModel) }
     ) {
         Column {
-            ScheduleItemRow(
+            GameItemRow(
                 teamName = uiModel.topTeamName,
+                teamSeed = uiModel.topTeamSeed,
                 teamScore = uiModel.topTeamScore,
                 isWinner = uiModel.topTeamScore >= uiModel.bottomTeamScore
             )
-            ScheduleItemRow(
+            GameItemRow(
                 teamName = uiModel.bottomTeamName,
+                teamSeed = uiModel.bottomTeamSeed,
                 teamScore = uiModel.bottomTeamScore,
                 isWinner = uiModel.bottomTeamScore >= uiModel.topTeamScore
             )
@@ -227,15 +110,16 @@ fun ScheduleItem(
                 )
             }
             AnimatedVisibility(visible = uiModel.isShowButtons) {
-                ScheduleButtons(uiModel, interactor)
+                GameButtons(uiModel, interactor)
             }
         }
     }
 }
 
 @Composable
-private fun ScheduleItemRow(
+private fun GameItemRow(
     teamName: String,
+    teamSeed: String,
     teamScore: String,
     isWinner: Boolean
 ) {
@@ -245,24 +129,22 @@ private fun ScheduleItemRow(
             .padding(8.dp)
     ) {
         Text(
-            text = teamName,
-            style = MaterialTheme.typography.body1.copy(
-                color = if (isWinner) Color.Black else Color.Gray
-            ),
+            text = if (teamName.isNotEmpty()) "#$teamSeed $teamName" else "",
+            color = if (isWinner) Color.Black else Color.Gray,
+            style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .weight(1f)
         )
         Text(
             text = teamScore,
-            style = MaterialTheme.typography.body1.copy(
-                color = if (isWinner) Color.Black else Color.Gray
-            ),
+            color = if (isWinner) Color.Black else Color.Gray,
+            style = MaterialTheme.typography.body1,
         )
     }
 }
 
 @Composable
-private fun ScheduleButtons(
+private fun GameButtons(
     uiModel: TournamentGameUiModel,
     interactor: TournamentGameUiModel.Interactor
 ) {
@@ -279,13 +161,17 @@ private fun ScheduleButtons(
                 text = "Simulate Game"
             )
         }
-        TextButton(
-            onClick = { interactor.playGame(uiModel) },
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = "Play Game"
-            )
+        if (uiModel.isUserGame) {
+            TextButton(
+                onClick = { interactor.playGame(uiModel) },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Play Game"
+                )
+            }
+        } else {
+            Box(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -386,17 +272,15 @@ private fun DialogGameRow(
     ) {
         Text(
             text = teamName,
-            style = MaterialTheme.typography.body1.copy(
-                color = if (isWinner) Color.Black else Color.Gray
-            ),
+            color = if (isWinner) Color.Black else Color.Gray,
+            style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .weight(1f)
         )
         Text(
             text = teamScore,
-            style = MaterialTheme.typography.body1.copy(
-                color = if (isWinner) Color.Black else Color.Gray
-            )
+            color = if (isWinner) Color.Black else Color.Gray,
+            style = MaterialTheme.typography.body1
         )
     }
 }

@@ -13,7 +13,10 @@ abstract class DatabaseModule {
         @PerApplication
         @Provides
         fun providesDatabase(application: Application): BasketballDatabase {
-            return Room.databaseBuilder(application, BasketballDatabase::class.java, "basketball-db").build()
+            return Room
+                .databaseBuilder(application, BasketballDatabase::class.java, "basketball-db")
+                .addMigrations(TempMigration())
+                .build()
         }
 
         @PerApplication

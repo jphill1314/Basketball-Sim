@@ -102,6 +102,9 @@
         <argument
             android:name="doesTournamentExist"
             app:argType="boolean"/>
+        <argument
+            android:name="tournamentId"
+            app:argType="integer"/>
         <action
             android:id="@+id/tournament_to_gamePreview"
             app:destination="@id/gamePreviewFragment"/>

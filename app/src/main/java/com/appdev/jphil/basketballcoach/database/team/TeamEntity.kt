@@ -37,7 +37,9 @@ data class TeamEntity(
     val practiceType: Int,
     val knownRecruits: MutableList<Int>,
     val gamesPlayed: Int,
-    val rating: Int
+    val rating: Int,
+    val postseasonTournamentId: Int,
+    val postseasonTournamentSeed: Int
 ) {
 
     fun createTeam(players: MutableList<Player>, coaches: MutableList<Coach>, knownRecruits: MutableList<Recruit>): Team {
@@ -52,7 +54,9 @@ data class TeamEntity(
             isUser,
             coaches,
             knownRecruits,
-            gamesPlayed
+            gamesPlayed,
+            postseasonTournamentId,
+            postseasonTournamentSeed
         )
 
         team.twoPointAttempts = twoPointAttempts
@@ -105,7 +109,9 @@ data class TeamEntity(
                 team.practiceType.type,
                 knownRecruits,
                 team.gamesPlayed,
-                team.teamRating
+                team.teamRating,
+                team.postSeasonTournamentId,
+                team.postSeasonTournamentSeed
             )
         }
     }

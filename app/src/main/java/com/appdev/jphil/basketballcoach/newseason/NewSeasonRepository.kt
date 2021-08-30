@@ -16,18 +16,28 @@ import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHe
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
-import javax.inject.Inject
 import kotlin.random.Random
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
     resources: Resources
 ) {
+    data class NewSeasonState(
+        val isWorking: Boolean // TODO: add more info to give better updates to user
+    )
+
+    private val _state = MutableStateFlow(NewSeasonState(false))
+    val state = _state.asStateFlow()
 
     private val firstNames = resources.getStringArray(R.array.first_names).asList()
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
     suspend fun startNewSeason() {
+        _state.update { _state.value.copy(isWorking = true) }
         // TODO: investigate why some games might not get deleted here
         GameDatabaseHelper.deleteAllGames(database)
         val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
@@ -42,6 +52,7 @@ class NewSeasonRepository @Inject constructor(
             games.addAll(conference.generateSchedule(2018))
             numberOfTeams += conference.teams.size
             teams.addAll(conference.teams)
+            conference.tournament = null
         }
         BatchInsertHelper.saveConferences(conferences, database)
         val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(
@@ -61,6 +72,8 @@ class NewSeasonRepository @Inject constructor(
             NewGameGenerator.NUM_RECRUITS
         )
         RecruitDatabaseHelper.saveRecruits(newRecruits, database)
+
+        _state.update { _state.value.copy(isWorking = false) }
     }
 
     private suspend fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
@@ -122,6 +135,10 @@ class NewSeasonRepository @Inject constructor(
         }
 
         team.players.sortBy { it.rosterIndex }
+
+        // Remove post season tournament info
+        team.postSeasonTournamentId = -1
+        team.postSeasonTournamentSeed = -1
     }
 
     companion object {
