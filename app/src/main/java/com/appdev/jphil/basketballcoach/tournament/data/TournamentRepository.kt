@@ -12,15 +12,18 @@ import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentRelations
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
+import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.util.RecordUtil
+import timber.log.Timber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
+    @ConferenceId private val userConferenceId: Int,
+    @TeamId private val userTeamId: Int,
     private val gameDao: GameDao,
     private val teamDao: TeamDao,
     private val relationalDao: RelationalDao,
@@ -28,11 +31,11 @@ class TournamentRepository @Inject constructor(
     private val championshipHelper: NationalChampionshipHelper
 ) {
 
-    suspend fun generateTournaments(conferenceId: Int) {
-        if (conferenceId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
+    suspend fun generateTournaments(tournamentId: Int) {
+        if (tournamentId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
             val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
             loadTournaments(
-                conferenceId, // TODO: make sure this is always the user's conference
+                userConferenceId, // TODO: make sure this is always the user's conference
                 allRecruits
             )
         } else {
@@ -41,9 +44,9 @@ class TournamentRepository @Inject constructor(
         }
     }
 
-    suspend fun getTournamentType(conferenceId: Int): TournamentType {
-        return if (conferenceId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
-            val conferenceRelation = relationalDao.loadConferenceTournamentData(conferenceId)
+    suspend fun getTournamentType(tournamentId: Int): TournamentType {
+        return if (tournamentId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
+            val conferenceRelation = relationalDao.loadConferenceTournamentData(tournamentId)
             val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
             val conference = Conference(
                 conferenceRelation.conferenceEntity.id,
@@ -58,22 +61,20 @@ class TournamentRepository @Inject constructor(
         }
     }
 
-    suspend fun getGamesForTournament(tournamentId: Int): Flow<List<TournamentDataModel>> {
-        val userTeamId = teamDao.getUserTeamId(true)
+    fun getGamesForTournament(tournamentId: Int): Flow<List<TournamentDataModel>> {
         return gameDao.getGamesWithTournamentIdFlow(tournamentId)
-            .map { flow -> flow.map { it.toDataModel(userTeamId) } }
+            .map { flow -> flow.map { it.toDataModel() } }
     }
 
     suspend fun getGamesForDialog(): Flow<List<TournamentDataModel>> {
-        val userTeamId = TeamDatabaseHelper.loadUserTeam(database)!!.teamId
         val firstGameId = gameDao.getFirstGameWithIsFinal(false) ?: return emptyFlow()
         val firstId = firstGameId - 1
         return gameDao.getAllGamesWithIsFinalFlow(true, firstId).map { entities ->
-            entities.map { it.toDataModel(userTeamId) }
+            entities.map { it.toDataModel() }
         }
     }
 
-    private fun GameEntity.toDataModel(userTeamId: Int) = TournamentDataModel(
+    private fun GameEntity.toDataModel() = TournamentDataModel(
         gameId = id ?: -1,
         topTeamId = homeTeamId,
         bottomTeamId = awayTeamId,
@@ -85,7 +86,8 @@ class TournamentRepository @Inject constructor(
         bottomTeamSeed = awayTeamSeed,
         isInProgress = inProgress,
         isFinal = isFinal,
-        isHomeTeamUser = homeTeamId == userTeamId
+        isHomeTeamUser = homeTeamId == userTeamId,
+        isUserGame = homeTeamId == userTeamId || awayTeamId == userTeamId
     )
 
     private suspend fun loadTournaments(

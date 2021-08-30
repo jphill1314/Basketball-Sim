@@ -14,7 +14,8 @@ data class TournamentGameUiModel(
     val isShowButtons: Boolean,
     val isFinal: Boolean,
     val isSelectedTeamWinner: Boolean,
-    val isHomeTeamUser: Boolean
+    val isHomeTeamUser: Boolean,
+    val isUserGame: Boolean
 ) : UiModel {
     interface Interactor {
         fun toggleShowButtons(uiModel: TournamentGameUiModel)

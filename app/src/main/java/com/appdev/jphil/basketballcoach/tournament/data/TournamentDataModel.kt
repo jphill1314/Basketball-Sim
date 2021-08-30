@@ -12,5 +12,6 @@ data class TournamentDataModel(
     val bottomTeamSeed: Int,
     val isInProgress: Boolean,
     val isFinal: Boolean,
-    val isHomeTeamUser: Boolean
+    val isHomeTeamUser: Boolean,
+    val isUserGame: Boolean
 )

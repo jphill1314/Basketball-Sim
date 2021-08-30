@@ -39,7 +39,8 @@ class TournamentTransformer @Inject constructor() :
                 isShowButtons = model.gameId == dataState.selectedGameId,
                 isFinal = model.isFinal,
                 isSelectedTeamWinner = true,
-                isHomeTeamUser = model.isHomeTeamUser
+                isHomeTeamUser = model.isHomeTeamUser,
+                isUserGame = model.isUserGame
             )
         }
 
@@ -75,7 +76,8 @@ class TournamentTransformer @Inject constructor() :
                 isShowButtons = false,
                 isFinal = false,
                 isSelectedTeamWinner = true,
-                isHomeTeamUser = false
+                isHomeTeamUser = false,
+                isUserGame = false
             )
         }
     }
@@ -109,7 +111,8 @@ class TournamentTransformer @Inject constructor() :
                 isShowButtons = false,
                 isFinal = model.isFinal,
                 isSelectedTeamWinner = false,
-                isHomeTeamUser = model.isHomeTeamUser
+                isHomeTeamUser = model.isHomeTeamUser,
+                isUserGame = model.isUserGame
             )
         }
     }
