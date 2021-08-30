@@ -10,9 +10,15 @@ abstract class TournamentModule {
 
     companion object {
         @Provides
-        @Named("testing")
+        @Named("DoesTournamentExist")
         fun isTournamentExisting(
             fragment: TournamentFragment
         ) = fragment.args.doesTournamentExist
+
+        @Provides
+        @Named("TournamentId")
+        fun tournamentId(
+            fragment: TournamentFragment
+        ) = fragment.args.tournamentId
     }
 }

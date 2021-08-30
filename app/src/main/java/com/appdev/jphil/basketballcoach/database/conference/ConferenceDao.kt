@@ -15,6 +15,9 @@ interface ConferenceDao {
     @Query("SELECT * FROM ConferenceEntity where id in (:id)")
     suspend fun getConferenceWithId(id: Int): ConferenceEntity?
 
+    @Query("select championId from ConferenceEntity")
+    suspend fun getConferenceChampionIds(): List<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertConferences(conferences: List<ConferenceEntity>)
 

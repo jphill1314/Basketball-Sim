@@ -2,6 +2,8 @@ package com.appdev.jphil.basketballcoach.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDao
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.coach.ScoutingAssignmentEntity
@@ -35,7 +37,7 @@ import com.appdev.jphil.basketballcoach.database.team.TeamEntity
         RecruitInterestEntity::class,
         ScoutingAssignmentEntity::class
     ],
-    version = 1
+    version = 2
 )
 abstract class BasketballDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
@@ -45,4 +47,10 @@ abstract class BasketballDatabase : RoomDatabase() {
     abstract fun coachDao(): CoachDao
     abstract fun recruitDao(): RecruitDao
     abstract fun relationalDao(): RelationalDao
+}
+
+class TempMigration : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("alter table `TeamEntity` add column `postseasonTournamentSeed` INTEGER not null default -1")
+    }
 }

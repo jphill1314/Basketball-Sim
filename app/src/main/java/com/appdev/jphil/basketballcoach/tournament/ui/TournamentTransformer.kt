@@ -8,7 +8,7 @@ import com.appdev.jphil.basketballcoach.simulation.SimulationState
 import com.appdev.jphil.basketballcoach.tournament.data.TournamentDataModel
 import javax.inject.Inject
 
-class TournamentTransformer @Inject constructor():
+class TournamentTransformer @Inject constructor() :
     Transformer<TournamentContract.TournamentDataState, TournamentContract.TournamentViewState> {
 
     override fun transform(
@@ -34,10 +34,13 @@ class TournamentTransformer @Inject constructor():
                 bottomTeamName = model.bottomTeamName,
                 topTeamScore = model.topTeamScore.toString(),
                 bottomTeamScore = model.bottomTeamScore.toString(),
+                topTeamSeed = model.topTeamSeed.toString(),
+                bottomTeamSeed = model.bottomTeamSeed.toString(),
                 isShowButtons = model.gameId == dataState.selectedGameId,
                 isFinal = model.isFinal,
                 isSelectedTeamWinner = true,
-                isHomeTeamUser = model.isHomeTeamUser
+                isHomeTeamUser = model.isHomeTeamUser,
+                isUserGame = model.isUserGame
             )
         }
 
@@ -45,49 +48,38 @@ class TournamentTransformer @Inject constructor():
         // TODO: show teams that have already made it to the next round
         val placeholders: List<UiModel> = when (dataState.tournamentType) {
             TournamentType.EIGHT -> {
-                if (games.size == 7) {
-                    emptyList()
-                } else {
-                    (games.size until 7).map {
-                        TournamentGameUiModel(
-                            id = -1,
-                            gameNumber = it + 1,
-                            topTeamName = "",
-                            topTeamScore = "",
-                            bottomTeamName = "",
-                            bottomTeamScore = "",
-                            isShowButtons = false,
-                            isFinal = false,
-                            isSelectedTeamWinner = true,
-                            isHomeTeamUser = false
-                        )
-                    }
-                }
+                generatePlaceholderModels(games.size, 7)
             }
             TournamentType.TEN -> {
-                if (games.size == 9) {
-                    emptyList()
-                } else {
-                    (games.size until 9).map {
-                        TournamentGameUiModel(
-                            id = -1,
-                            gameNumber = it + 1,
-                            topTeamName = "",
-                            topTeamScore = "",
-                            bottomTeamName = "",
-                            bottomTeamScore = "",
-                            isShowButtons = false,
-                            isFinal = false,
-                            isSelectedTeamWinner = true,
-                            isHomeTeamUser = false
-                        )
-                    }
-                }
+                generatePlaceholderModels(games.size, 9)
+            }
+            TournamentType.NATIONAL_CHAMPIONSHIP -> {
+                generatePlaceholderModels(games.size, 31)
             }
             else -> emptyList()
         }
 
         return games + placeholders
+    }
+
+    private fun generatePlaceholderModels(start: Int, total: Int): List<UiModel> {
+        return (start until total).map {
+            TournamentGameUiModel(
+                id = -1,
+                gameNumber = it + 1,
+                topTeamName = "",
+                topTeamScore = "",
+                bottomTeamName = "",
+                bottomTeamScore = "",
+                topTeamSeed = "",
+                bottomTeamSeed = "",
+                isShowButtons = false,
+                isFinal = false,
+                isSelectedTeamWinner = true,
+                isHomeTeamUser = false,
+                isUserGame = false
+            )
+        }
     }
 
     private fun createDialogModel(
@@ -114,10 +106,13 @@ class TournamentTransformer @Inject constructor():
                 bottomTeamName = model.bottomTeamName,
                 topTeamScore = model.topTeamScore.toString(),
                 bottomTeamScore = model.bottomTeamScore.toString(),
+                topTeamSeed = model.topTeamSeed.toString(),
+                bottomTeamSeed = model.bottomTeamSeed.toString(),
                 isShowButtons = false,
                 isFinal = model.isFinal,
                 isSelectedTeamWinner = false,
-                isHomeTeamUser = model.isHomeTeamUser
+                isHomeTeamUser = model.isHomeTeamUser,
+                isUserGame = model.isUserGame
             )
         }
     }

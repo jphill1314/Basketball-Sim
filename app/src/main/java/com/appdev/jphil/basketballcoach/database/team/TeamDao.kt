@@ -17,6 +17,9 @@ interface TeamDao {
     @Query("SELECT * FROM TeamEntity where conferenceId in (:conferenceId)")
     suspend fun getTeamsInConference(conferenceId: Int): List<TeamEntity>
 
+    @Query("select * from TeamEntity where postseasonTournamentId in (:tournamentId)")
+    suspend fun getTeamsInTournament(tournamentId: Int): List<TeamEntity>
+
     @Query("SELECT * FROM TeamEntity where isUser in (:isUser)")
     suspend fun getTeamIsUser(isUser: Boolean): TeamEntity?
 

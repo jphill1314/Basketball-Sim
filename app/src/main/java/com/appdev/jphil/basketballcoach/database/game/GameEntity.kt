@@ -50,7 +50,9 @@ data class GameEntity(
     val lastPlayerWithBall: Int,
     val isConferenceGame: Boolean,
     val homeScores: MutableList<Int>,
-    val awayScores: MutableList<Int>
+    val awayScores: MutableList<Int>,
+    val homeTeamSeed: Int,
+    val awayTeamSeed: Int
 ) {
     fun createGame(homeTeam: Team, awayTeam: Team): Game {
         val game = Game(
@@ -93,7 +95,11 @@ data class GameEntity(
     }
 
     companion object {
-        fun from(game: Game): GameEntity {
+        fun from(
+            game: Game,
+            homeTeamSeed: Int = -1,
+            awayTeamSeed: Int = -1
+        ): GameEntity {
             return GameEntity(
                 game.id,
                 game.tournamentId,
@@ -131,7 +137,9 @@ data class GameEntity(
                 game.lastPlayerWithBall,
                 game.isConferenceGame,
                 game.scoreline.homeScores,
-                game.scoreline.awayScores
+                game.scoreline.awayScores,
+                homeTeamSeed,
+                awayTeamSeed
             )
         }
     }

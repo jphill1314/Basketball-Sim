@@ -3,7 +3,6 @@ package com.appdev.jphil.basketballcoach.tournament.ui
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
-import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.simulation.TournamentSimRepository
 import com.appdev.jphil.basketballcoach.tournament.data.TournamentRepository
 import kotlinx.coroutines.Job
@@ -22,8 +21,8 @@ class TournamentPresenter(
     TournamentContract.TournamentInteractor {
 
     data class Params @Inject constructor(
-        @ConferenceId val conferenceId: Int,
-        @Named("testing") val isTournamentExisting: Boolean
+        @Named("TournamentId") val conferenceId: Int,
+        @Named("DoesTournamentExist") val isTournamentExisting: Boolean
     )
 
     override val initialDataState = TournamentContract.TournamentDataState(

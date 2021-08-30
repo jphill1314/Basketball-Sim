@@ -18,6 +18,7 @@ class Conference(
 
     // TODO: make this more flexible
     val tournamentType = when (teams.size) {
+        32 -> TournamentType.NATIONAL_CHAMPIONSHIP
         8 -> TournamentType.EIGHT
         else -> TournamentType.TEN
     }

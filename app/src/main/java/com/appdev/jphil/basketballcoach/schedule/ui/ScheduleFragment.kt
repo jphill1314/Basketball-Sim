@@ -24,7 +24,8 @@ class ScheduleFragment : ComposeFragment() {
                 when (event) {
                     is SchedulePresenter.NavigateToGame -> navigateToGame(event.gameModel)
                     is SchedulePresenter.NavigateToTournament -> navigateToTournament(
-                        event.isTournamentExisting
+                        event.isTournamentExisting,
+                        event.tournamentId
                     )
                 }
             }
@@ -51,9 +52,9 @@ class ScheduleFragment : ComposeFragment() {
         )
     }
 
-    private fun navigateToTournament(isTournamentExisting: Boolean) {
+    private fun navigateToTournament(isTournamentExisting: Boolean, tournamentId: Int) {
         findNavController().navigate(
-            ScheduleFragmentDirections.toTournament(isTournamentExisting)
+            ScheduleFragmentDirections.toTournament(isTournamentExisting, tournamentId)
         )
     }
 }

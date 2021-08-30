@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 object NewGameGenerator {
 
-    const val NON_CON_GAMES = 10
+    const val NON_CON_GAMES = 0
     const val NUM_RECRUITS = 600
 
     suspend fun generateNewGame(resources: Resources, database: BasketballDatabase) {

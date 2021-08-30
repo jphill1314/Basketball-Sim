@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -25,9 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,6 +68,10 @@ fun ScheduleView(
             when (item) {
                 is ScheduleUiModel -> ScheduleItem(uiModel = item, interactor = interactor)
                 is TournamentUiModel -> TournamentItem(tournamentUiModel = item, interactor = interactor)
+                is NationalChampionshipUiModel -> NationalChampionshipItem(
+                    uiModel = item,
+                    interactor = interactor
+                )
                 is FinishSeasonUiModel -> FinishSeasonItem(finishSeasonModel = item, interactor = interactor)
             }
         }
@@ -97,20 +98,16 @@ fun ScheduleItem(
         modifier = Modifier.clickable { interactor.toggleShowButtons(uiModel) }
     ) {
         Column {
-            Row {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .size(30.dp)
-                        .align(CenterVertically)
-                        .clip(CircleShape)
-                        .background(uiModel.getIconColor())
-                )
-                Column {
-                    ScheduleItemRow(teamName = uiModel.topTeamName, teamScore = uiModel.topTeamScore)
-                    ScheduleItemRow(teamName = uiModel.bottomTeamName, teamScore = uiModel.bottomTeamScore)
-                }
-            }
+            ScheduleItemRow(
+                teamName = uiModel.topTeamName,
+                teamScore = uiModel.topTeamScore,
+                isTextFaded = uiModel.isFinal && uiModel.topTeamScore < uiModel.bottomTeamScore
+            )
+            ScheduleItemRow(
+                teamName = uiModel.bottomTeamName,
+                teamScore = uiModel.bottomTeamScore,
+                isTextFaded = uiModel.isFinal && uiModel.bottomTeamScore < uiModel.topTeamScore
+            )
             Text(
                 text = "Game ${uiModel.gameNumber}",
                 style = MaterialTheme.typography.body1,
@@ -126,16 +123,11 @@ fun ScheduleItem(
     }
 }
 
-private fun ScheduleUiModel.getIconColor() = if (isFinal) {
-    if (isSelectedTeamWinner) Color.Green else Color.Red
-} else {
-    Color.Gray
-}
-
 @Composable
 private fun ScheduleItemRow(
     teamName: String,
-    teamScore: String
+    teamScore: String,
+    isTextFaded: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -144,12 +136,14 @@ private fun ScheduleItemRow(
     ) {
         Text(
             text = teamName,
+            color = if (isTextFaded) Color.Gray else Color.Black,
             style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .weight(1f)
         )
         Text(
             text = teamScore,
+            color = if (isTextFaded) Color.Gray else Color.Black,
             style = MaterialTheme.typography.body1
         )
     }
@@ -205,6 +199,26 @@ fun TournamentItem(
     ) {
         Text(
             text = tournamentUiModel.name,
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+        )
+    }
+}
+
+@Composable
+fun NationalChampionshipItem(
+    uiModel: NationalChampionshipUiModel,
+    interactor: ScheduleContract.ScheduleInteractor
+) {
+    Card(
+        modifier = Modifier
+            .clickable { interactor.openNationalChampionship(uiModel.isExisting) }
+    ) {
+        Text(
+            text = "National Championship",
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -336,17 +350,15 @@ private fun DialogGameRow(
     ) {
         Text(
             text = teamName,
-            style = MaterialTheme.typography.body1.copy(
-                color = if (isWinner) Color.Green else Color.Gray
-            ),
+            color = if (isWinner) Color.Black else Color.Gray,
+            style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .weight(1f)
         )
         Text(
             text = teamScore,
-            style = MaterialTheme.typography.body1.copy(
-                color = if (isWinner) Color.Green else Color.Gray
-            )
+            color = if (isWinner) Color.Black else Color.Gray,
+            style = MaterialTheme.typography.body1
         )
     }
 }
@@ -382,6 +394,7 @@ private val previewInteractor = object : ScheduleContract.ScheduleInteractor {
     override fun onDismissSimDialog() {}
     override fun onStartGame(uiModel: ScheduleUiModel) {}
     override fun openTournament(isExisting: Boolean) {}
+    override fun openNationalChampionship(isExisting: Boolean) {}
     override fun startNewSeason() {}
 }
 
