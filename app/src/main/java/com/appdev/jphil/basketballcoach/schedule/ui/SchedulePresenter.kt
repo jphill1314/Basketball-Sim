@@ -7,7 +7,6 @@ import com.appdev.jphil.basketballcoach.compose.arch.Event
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
-import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
 import com.appdev.jphil.basketballcoach.schedule.data.ScheduleRepository
 import com.appdev.jphil.basketballcoach.simulation.GameSimRepository
 import kotlinx.coroutines.Job
@@ -19,8 +18,7 @@ class SchedulePresenter(
     private val params: Params,
     private val transformer: ScheduleTransformer,
     private val scheduleRepository: ScheduleRepository,
-    private val gameSimRepository: GameSimRepository,
-    private val newSeasonRepository: NewSeasonRepository
+    private val gameSimRepository: GameSimRepository
 ) : ComposePresenter<ScheduleContract.ScheduleDataState, ScheduleContract.ScheduleViewState>(),
     Transformer<ScheduleContract.ScheduleDataState, ScheduleContract.ScheduleViewState> by transformer,
     ScheduleContract.ScheduleInteractor {
@@ -52,7 +50,7 @@ class SchedulePresenter(
             scheduleRepository.getGames().collect { dataModels ->
                 updateState {
                     copy(
-                        isLoading = if (newSeasonRepository.state.value.isWorking) true else dataModels.isEmpty(),
+                        isLoading = dataModels.isEmpty(),
                         dataModels = dataModels
                     )
                 }
@@ -172,14 +170,7 @@ class SchedulePresenter(
     }
 
     override fun startNewSeason() {
-        viewModelScope.launch {
-            newSeasonRepository.state.collect {
-                updateState { copy(isLoading = it.isWorking) }
-            }
-        }
-        viewModelScope.launch {
-            newSeasonRepository.startNewSeason()
-        }
+        sendEvent(StartNewSeasonEvent)
     }
 
     data class NavigateToGame(
@@ -190,4 +181,6 @@ class SchedulePresenter(
         val isTournamentExisting: Boolean,
         val tournamentId: Int
     ) : Event
+
+    object StartNewSeasonEvent : Event
 }

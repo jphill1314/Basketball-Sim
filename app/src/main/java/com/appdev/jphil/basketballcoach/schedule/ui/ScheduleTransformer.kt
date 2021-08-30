@@ -85,11 +85,13 @@ class ScheduleTransformer @Inject constructor() :
             else -> emptyList<UiModel>()
         }
 
-        val seasonOverModels = if (dataState.isSeasonOver) {
-            listOf(FinishSeasonUiModel)
-        } else {
-            emptyList()
-        }
+//        val seasonOverModels = if (dataState.isSeasonOver) {
+//            listOf(FinishSeasonUiModel)
+//        } else {
+//            emptyList()
+//        }
+
+        val seasonOverModels = listOf(FinishSeasonUiModel)
 
         return scheduleModels + tournamentModels + seasonOverModels
     }

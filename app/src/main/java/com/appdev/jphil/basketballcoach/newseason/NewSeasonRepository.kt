@@ -12,10 +12,10 @@ import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.BatchInsertHelper
-import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,35 +24,66 @@ import javax.inject.Inject
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
+    private val relationalDao: RelationalDao,
     resources: Resources
 ) {
     data class NewSeasonState(
-        val isWorking: Boolean // TODO: add more info to give better updates to user
+        val stepNumber: Int = 0,
+        val isDeletingOldGames: Boolean = false,
+        val totalTeams: Int = 0,
+        val teamsUpdated: Int = 0,
+        val isGeneratingGames: Boolean = false,
+        val isGeneratingRecruits: Boolean = false
     )
 
-    private val _state = MutableStateFlow(NewSeasonState(false))
+    private val _state = MutableStateFlow(NewSeasonState())
     val state = _state.asStateFlow()
 
     private val firstNames = resources.getStringArray(R.array.first_names).asList()
     private val lastNames = resources.getStringArray(R.array.last_names).asList()
 
     suspend fun startNewSeason() {
-        _state.update { _state.value.copy(isWorking = true) }
-        // TODO: investigate why some games might not get deleted here
+        _state.update {
+            _state.value.copy(
+                stepNumber = 1,
+                isDeletingOldGames = true
+            )
+        }
+
         GameDatabaseHelper.deleteAllGames(database)
-        val conferences = ConferenceDatabaseHelper.loadAllConferences(database)
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
+        val conferences = relationalDao.loadAllConferenceData().map {
+            it.createConference(recruits)
+        }
+        _state.update {
+            _state.value.copy(
+                stepNumber = 2,
+                isDeletingOldGames = false,
+                totalTeams = conferences.map { it.teams.size }.reduce { acc, i ->  acc + i }
+            )
+        }
         val games = mutableListOf<Game>()
         val teams = mutableListOf<Team>()
         var numberOfTeams = 0
         conferences.forEach { conference ->
             conference.teams.forEach {
                 startNewSeasonForTeam(it, recruits)
+                _state.update {
+                    _state.value.copy(
+                        teamsUpdated = _state.value.teamsUpdated + 1
+                    )
+                }
             }
             games.addAll(conference.generateSchedule(2018))
             numberOfTeams += conference.teams.size
             teams.addAll(conference.teams)
             conference.tournament = null
+        }
+        _state.update {
+            _state.value.copy(
+                stepNumber = 3,
+                isGeneratingGames = true
+            )
         }
         BatchInsertHelper.saveConferences(conferences, database)
         val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(
@@ -64,6 +95,15 @@ class NewSeasonRepository @Inject constructor(
         GameDatabaseHelper.saveOnlyGames(nonConGames, database)
         games.smartShuffleList(numberOfTeams)
         GameDatabaseHelper.saveOnlyGames(games, database)
+
+        _state.update {
+            _state.value.copy(
+                stepNumber = 4,
+                isGeneratingGames = false,
+                isGeneratingRecruits = true
+            )
+        }
+
         RecruitDatabaseHelper.deleteAllRecruits(database)
 
         val newRecruits = RecruitFactory.generateRecruits(
@@ -73,7 +113,12 @@ class NewSeasonRepository @Inject constructor(
         )
         RecruitDatabaseHelper.saveRecruits(newRecruits, database)
 
-        _state.update { _state.value.copy(isWorking = false) }
+        _state.update {
+            _state.value.copy(
+                stepNumber = 5,
+                isGeneratingRecruits = false
+            )
+        }
     }
 
     private suspend fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
