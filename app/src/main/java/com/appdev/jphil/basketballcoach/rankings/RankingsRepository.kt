@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.rankings
 
-import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
@@ -44,14 +43,6 @@ class RankingsRepository @Inject constructor(
             totalOffEff += team.adjOffEff
             totalDefEff += team.adjDefEff
         }
-
-        dataModels.add(
-            TeamStatsDataModel("Average", -1, -1, false, TeamColor.Red).apply {
-                adjTempo = totalTempo / teams.size
-                adjOffEff = totalOffEff / teams.size
-                adjDefEff = totalDefEff / teams.size
-            }
-        )
         dataModels.sortByDescending { it.getAdjEff() }
 
         return dataModels

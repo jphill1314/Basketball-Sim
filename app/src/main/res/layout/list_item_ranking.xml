@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingVertical="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -35,7 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/rank"
         app:layout_constraintEnd_toStartOf="@id/efficiency"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +52,7 @@
         app:layout_constraintEnd_toStartOf="@id/tempo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="12.23"/>
+        tools:text="122.23"/>
 
     <TextView
         android:id="@+id/tempo"
@@ -79,7 +78,7 @@
         app:layout_constraintEnd_toStartOf="@id/def_eff"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="120.5"/>
+        tools:text="120.50"/>
 
     <TextView
         android:id="@+id/def_eff"
