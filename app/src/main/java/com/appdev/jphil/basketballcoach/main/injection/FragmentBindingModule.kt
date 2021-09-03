@@ -22,6 +22,7 @@ import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewModule
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.roster.RosterModule
 import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
+import com.appdev.jphil.basketballcoach.selectionshow.SelectionShowFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
@@ -93,4 +94,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun newSeasonFragment(): NewSeasonFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun selectionShowFragment(): SelectionShowFragment
 }

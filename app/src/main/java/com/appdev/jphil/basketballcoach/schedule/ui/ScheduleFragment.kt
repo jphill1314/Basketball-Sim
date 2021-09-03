@@ -28,6 +28,7 @@ class ScheduleFragment : ComposeFragment() {
                         event.tournamentId
                     )
                     is SchedulePresenter.StartNewSeasonEvent -> navigateToNewSeason()
+                    is SchedulePresenter.NavigateToSelectionShow -> navigateToSelectionShow()
                 }
             }
         }
@@ -62,6 +63,12 @@ class ScheduleFragment : ComposeFragment() {
     private fun navigateToNewSeason() {
         findNavController().navigate(
             ScheduleFragmentDirections.toNewSeason()
+        )
+    }
+
+    private fun navigateToSelectionShow() {
+        findNavController().navigate(
+            ScheduleFragmentDirections.toSelectionShow()
         )
     }
 }

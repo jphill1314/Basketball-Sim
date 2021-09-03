@@ -12,6 +12,9 @@ import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
 import timber.log.Timber
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class NationalChampionshipHelper @Inject constructor(
@@ -27,8 +30,18 @@ class NationalChampionshipHelper @Inject constructor(
         const val CHAMPIONSHIP_SIZE = 32
     }
 
+    data class ChampionshipLoadingState(
+        val stepCounter: Int = 0,
+        val teamNames: List<String> = emptyList(),
+        val isFinished: Boolean = false
+    )
+
+    private val _state = MutableStateFlow(ChampionshipLoadingState())
+    val state = _state.asStateFlow()
+
     suspend fun createNationalChampionship() {
-        Timber.d("Start generation")
+        Timber.d("Step 1")
+        startNextStep()
         val games = gameDao.getAllGames()
         val dataModels = mutableListOf<TeamStatsDataModel>()
         val teams = mutableMapOf<Int, TeamStatsDataModel>()
@@ -38,6 +51,8 @@ class NationalChampionshipHelper @Inject constructor(
             teams[team.teamId] = dataModels.last()
         }
 
+        Timber.d("Step 2")
+        startNextStep()
         var totalTempo = 0.0
         var totalOffEff = 0.0
         var totalDefEff = 0.0
@@ -51,6 +66,8 @@ class NationalChampionshipHelper @Inject constructor(
         val rawTempo = totalTempo / dataModels.size
         val rawEff = (totalOffEff + totalDefEff) / (2 * dataModels.size)
 
+        Timber.d("Step 3")
+        startNextStep()
         totalTempo = 0.0
         totalOffEff = 0.0
         totalDefEff = 0.0
@@ -61,7 +78,8 @@ class NationalChampionshipHelper @Inject constructor(
             totalDefEff += team.adjDefEff
         }
 
-        Timber.d("Team are ranked")
+        Timber.d("Step 4")
+        startNextStep()
         // TODO: rate all teams by more than just adj. eff.
         dataModels.sortByDescending { it.getAdjEff() }
 
@@ -73,10 +91,16 @@ class NationalChampionshipHelper @Inject constructor(
 
         val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
         val allTeams = (autoTeams + atLargeTeams).sortedByDescending { it.getAdjEff() }.map { dataModel ->
+            addTeam(dataModel.teamName)
             val teamRelations = relationalDao.loadTeamById(dataModel.teamId)
             GameDatabaseHelper.createTeam(teamRelations, allRecruits)
         }
 
+        Timber.d("Step 5")
+        // TODO: this is by far the longest part
+        // maybe that means I should move the team stuff here
+        // It could be announcing the pairngs too!!!
+        startNextStep()
         val tournament = NationalChampionship(
             id = NATIONAL_CHAMPIONSHIP_ID,
             teams = allTeams
@@ -90,6 +114,19 @@ class NationalChampionshipHelper @Inject constructor(
             )
         }.let { gameDao.insertGames(it) }
         tournament.teams.forEach { TeamDatabaseHelper.saveTeam(it, database) }
-        Timber.d("Finish generation")
+
+        _state.update { _state.value.copy(isFinished = true) }
+    }
+
+    private fun startNextStep() {
+        _state.update { _state.value.copy(stepCounter = _state.value.stepCounter + 1) }
+    }
+
+    private fun addTeam(name: String) {
+        val currentState = _state.value
+        val seed = (currentState.teamNames.size / 4) + 1
+        _state.update {
+            currentState.copy(teamNames = currentState.teamNames + listOf("#$seed) $name"))
+        }
     }
 }
