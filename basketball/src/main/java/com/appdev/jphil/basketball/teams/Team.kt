@@ -319,7 +319,7 @@ class Team(
         return indexOfBest
     }
 
-    private fun calculateTeamRating(): Int {
+    fun calculateTeamRating(): Int {
         var rating = 0
         for (p in roster) {
             rating += p.getOverallRating()
@@ -351,5 +351,12 @@ class Team(
         var nextYearsPlayers = roster.filter { it.position == position && it.year != 3 }.size
         nextYearsPlayers += knownRecruits.filter { it.isCommitted && it.teamCommittedTo == teamId && it.position == position }.size
         return 3 - nextYearsPlayers > 0
+    }
+
+    fun startNewSeason() {
+        knownRecruits.clear()
+        postSeasonTournamentId = -1
+        postSeasonTournamentSeed = -1
+        gamesPlayed = 0
     }
 }

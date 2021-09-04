@@ -16,11 +16,11 @@ import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
+import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-import kotlin.random.Random
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
@@ -144,9 +144,6 @@ class NewSeasonRepository @Inject constructor(
             team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
         }
 
-        // Remove list of known recruits
-        team.knownRecruits.clear()
-
         for (position in 1..5) {
             // Fill empty spots in roster
             while (team.players.filter { it.position == position }.size < 2) {
@@ -181,9 +178,7 @@ class NewSeasonRepository @Inject constructor(
 
         team.players.sortBy { it.rosterIndex }
 
-        // Remove post season tournament info
-        team.postSeasonTournamentId = -1
-        team.postSeasonTournamentSeed = -1
+        team.startNewSeason()
     }
 
     companion object {
