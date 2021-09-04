@@ -23,8 +23,6 @@ fun TenTeamTournamentView(
     ) { measurables, constraints ->
         var maxHeight = 0
         var maxWidth = 0
-        var totalWidth = 0
-        var totalHeight = 0
 
         val itemConstraints = constraints.copy(
             maxWidth = (constraints.minWidth * 0.8).toInt(),
@@ -40,12 +38,10 @@ fun TenTeamTournamentView(
                 if (placeable.width > maxWidth) {
                     maxWidth = placeable.width
                 }
-                totalWidth += placeable.width
-                totalHeight += placeable.height
             }
         }
 
-        layout(totalWidth, totalHeight) {
+        layout((maxWidth * 4.25).toInt(), maxHeight * 5) {
             placeables.forEachIndexed { index, placeable ->
                 // TODO: prevent user from scrolling everything off screen
                 // TODO: animate item size?
@@ -83,8 +79,6 @@ fun EightTeamTournamentView(
     ) { measurables, constraints ->
         var maxHeight = 0
         var maxWidth = 0
-        var totalWidth = 0
-        var totalHeight = 0
 
         val itemConstraints = constraints.copy(
             maxWidth = (constraints.minWidth * 0.8).toInt(),
@@ -100,12 +94,10 @@ fun EightTeamTournamentView(
                 if (placeable.width > maxWidth) {
                     maxWidth = placeable.width
                 }
-                totalWidth += placeable.width
-                totalHeight += placeable.height
             }
         }
 
-        layout(totalWidth, totalHeight) {
+        layout((maxWidth * 3.25).toInt(), maxHeight * 5) {
             placeables.forEachIndexed { index, placeable ->
                 // TODO: prevent user from scrolling everything off screen
                 // TODO: animate item size?
@@ -140,8 +132,6 @@ fun NationalChampionshipView(
     ) { measurables, constraints ->
         var maxHeight = 0
         var maxWidth = 0
-        var totalWidth = 0
-        var totalHeight = 0
 
         val itemConstraints = constraints.copy(
             maxWidth = (constraints.minWidth * 0.8).toInt(),
@@ -157,12 +147,10 @@ fun NationalChampionshipView(
                 if (placeable.width > maxWidth) {
                     maxWidth = placeable.width
                 }
-                totalWidth += placeable.width
-                totalHeight += placeable.height
             }
         }
 
-        layout(totalWidth, totalHeight) {
+        layout((maxWidth * 5.25).toInt(), maxHeight * 17) {
             placeables.forEachIndexed { index, placeable ->
                 // TODO: prevent user from scrolling everything off screen
                 // TODO: animate item size? <- this is almost def gonna be needed here

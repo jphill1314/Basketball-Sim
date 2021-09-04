@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.basketball
+package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
