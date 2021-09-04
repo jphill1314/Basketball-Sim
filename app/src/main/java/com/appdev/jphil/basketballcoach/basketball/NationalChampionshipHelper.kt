@@ -11,7 +11,9 @@ import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import timber.log.Timber
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class NationalChampionshipHelper @Inject constructor(
@@ -27,8 +29,17 @@ class NationalChampionshipHelper @Inject constructor(
         const val CHAMPIONSHIP_SIZE = 32
     }
 
+    data class ChampionshipLoadingState(
+        val stepCounter: Int = 0,
+        val games: List<String> = emptyList(),
+        val isFinished: Boolean = false
+    )
+
+    private val _state = MutableStateFlow(ChampionshipLoadingState())
+    val state = _state.asStateFlow()
+
     suspend fun createNationalChampionship() {
-        Timber.d("Start generation")
+        startNextStep()
         val games = gameDao.getAllGames()
         val dataModels = mutableListOf<TeamStatsDataModel>()
         val teams = mutableMapOf<Int, TeamStatsDataModel>()
@@ -61,7 +72,6 @@ class NationalChampionshipHelper @Inject constructor(
             totalDefEff += team.adjDefEff
         }
 
-        Timber.d("Team are ranked")
         // TODO: rate all teams by more than just adj. eff.
         dataModels.sortByDescending { it.getAdjEff() }
 
@@ -77,19 +87,43 @@ class NationalChampionshipHelper @Inject constructor(
             GameDatabaseHelper.createTeam(teamRelations, allRecruits)
         }
 
+        // TODO: this is by far the longest part
+        // maybe that means I should move the team stuff here
+        // It could be announcing the pairngs too!!!
         val tournament = NationalChampionship(
             id = NATIONAL_CHAMPIONSHIP_ID,
             teams = allTeams
         )
         tournament.generateNextRound(2018)
-        tournament.games.map {
+        tournament.games.map { game ->
             GameEntity.from(
-                it,
-                homeTeamSeed = it.homeTeam.postSeasonTournamentSeed,
-                awayTeamSeed = it.awayTeam.postSeasonTournamentSeed
+                game,
+                homeTeamSeed = game.homeTeam.postSeasonTournamentSeed,
+                awayTeamSeed = game.awayTeam.postSeasonTournamentSeed
             )
-        }.let { gameDao.insertGames(it) }
-        tournament.teams.forEach { TeamDatabaseHelper.saveTeam(it, database) }
-        Timber.d("Finish generation")
+        }.let { entities ->
+            _state.update { state ->
+                state.copy(
+                    games = entities.map { it.toSummaryString() },
+                    stepCounter = 1
+                )
+            }
+            gameDao.insertGames(entities)
+        }
+        tournament.teams.forEachIndexed { index, team ->
+            when (index) {
+                3, 7, 11 -> startNextStep()
+                in 15..31 -> startNextStep()
+            }
+            TeamDatabaseHelper.saveTeam(team, database)
+        }
+
+        _state.update { _state.value.copy(isFinished = true) }
     }
+
+    private fun startNextStep() {
+        _state.update { _state.value.copy(stepCounter = _state.value.stepCounter + 1) }
+    }
+
+    private fun GameEntity.toSummaryString() = "$homeTeamSeed. $homeTeamName vs. $awayTeamSeed. $awayTeamName"
 }

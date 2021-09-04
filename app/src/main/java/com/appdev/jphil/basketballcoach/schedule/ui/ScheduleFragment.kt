@@ -27,6 +27,8 @@ class ScheduleFragment : ComposeFragment() {
                         event.isTournamentExisting,
                         event.tournamentId
                     )
+                    is SchedulePresenter.StartNewSeasonEvent -> navigateToNewSeason()
+                    is SchedulePresenter.NavigateToSelectionShow -> navigateToSelectionShow()
                 }
             }
         }
@@ -55,6 +57,18 @@ class ScheduleFragment : ComposeFragment() {
     private fun navigateToTournament(isTournamentExisting: Boolean, tournamentId: Int) {
         findNavController().navigate(
             ScheduleFragmentDirections.toTournament(isTournamentExisting, tournamentId)
+        )
+    }
+
+    private fun navigateToNewSeason() {
+        findNavController().navigate(
+            ScheduleFragmentDirections.toNewSeason()
+        )
+    }
+
+    private fun navigateToSelectionShow() {
+        findNavController().navigate(
+            ScheduleFragmentDirections.toSelectionShow()
         )
     }
 }
