@@ -47,13 +47,13 @@ object TeamRecruitInteractor {
 
     private fun isInterestedInRecruit(team: Team, recruit: Recruit): Boolean {
         val recruitRating = (recruit.getRatingMaxForTeam(team.teamId) + recruit.getRatingMinForTeam(team.teamId)) / 2
-        val allowableRange = getRatingRange(team)
-        return recruitRating in allowableRange.first..allowableRange.second
+        val minRating = max(0, team.teamRating - (team.gamesPlayed * 2))
+        return recruitRating > minRating
     }
 
     fun getRatingRange(team: Team): Pair<Int, Int> {
         val min = max(0, team.teamRating - (team.gamesPlayed * 2))
-        val max = min(100, team.teamRating + 60 - (team.gamesPlayed * 2))
+        val max = min(100, team.teamRating + 60)
         return Pair(min, max)
     }
 }

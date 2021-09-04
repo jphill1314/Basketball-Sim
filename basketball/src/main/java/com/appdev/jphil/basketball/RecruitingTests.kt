@@ -14,7 +14,40 @@ import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import kotlin.random.Random
 
+
 fun main() {
+    simulateXSeasons(20)
+//    distributionTest()
+}
+
+private fun distributionTest() {
+    val random = java.util.Random()
+    random.nextGaussian()
+
+    val distribution = (0..600).map { random.nextGaussian() * 15 + 65 }
+    println("Ave: ${distribution.average()}")
+    println("Max: ${distribution.maxOrNull()}")
+    println("Min: ${distribution.minOrNull()}")
+    println("Players > 100: ${distribution.filter { it > 100 }.size}")
+    println("Players > 80: ${distribution.filter { it > 80 }.size}")
+    println("Players > 70: ${distribution.filter { it > 70 }.size}")
+    println("Players < 60: ${distribution.filter { it < 60 }.size}")
+    println("Players < 40: ${distribution.filter { it < 40 }.size}")
+    println("Players < 25: ${distribution.filter { it < 25 }.size}")
+
+    val recruits = (0..600).map { RecruitFactory.generateRating(random) }
+    println("--------------------")
+    println("Ave: ${recruits.average()}")
+    println("Max: ${recruits.maxOrNull()}")
+    println("Min: ${recruits.minOrNull()}")
+    println("Players > 99: ${recruits.filter { it > 99 }.size}")
+    println("Players > 80: ${recruits.filter { it > 80 }.size}")
+    println("Players > 70: ${recruits.filter { it > 70 }.size}")
+    println("Players < 60: ${recruits.filter { it > 60 }.size}")
+    println("Players < 40: ${recruits.filter { it < 40 }.size}")
+}
+
+private fun simulateXSeasons(seasonsToSim: Int) {
     var basketballWorld = createTeams()
 
     val teamRatings = mutableMapOf<Int, Int>()
@@ -24,9 +57,13 @@ fun main() {
         }
     }
 
-    for (year in 2019 until 2050) {
+    for (year in 2019 until 2019 + seasonsToSim) {
         println("Season: $year")
         basketballWorld = simulateSeason(basketballWorld, year)
+
+        val original = teamRatings.map { it.value }.average()
+        val final = basketballWorld.conferences.map { it.teams.map { team -> team.calculateTeamRating() }.average() }.average()
+        println("Original: $original - Final $final")
     }
 
     basketballWorld.conferences.forEach { conference ->
@@ -114,7 +151,7 @@ private fun createTeams(): BasketballWorld {
                 mascot = pair.second,
                 color = TeamColor.Red,
                 teamAbbreviation = pair.second,
-                teamRating = 50 + 5 * index,
+                teamRating = 80 + 5 * index,
                 conferenceId = 1,
                 isUser = false,
                 firstNames = listOf("first"),
@@ -132,7 +169,7 @@ private fun createTeams(): BasketballWorld {
                 mascot = pair.second,
                 color = TeamColor.Red,
                 teamAbbreviation = pair.second,
-                teamRating = 60 + 5 * index,
+                teamRating = 80 + 5 * index,
                 conferenceId = 1,
                 isUser = false,
                 firstNames = listOf("first"),

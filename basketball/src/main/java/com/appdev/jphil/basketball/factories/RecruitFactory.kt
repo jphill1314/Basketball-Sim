@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.recruits.RecruitDesire
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -13,6 +14,7 @@ object RecruitFactory {
         numberOfRecruits: Int
     ): List<Recruit> {
         val recruits = mutableListOf<Recruit>()
+        val random = java.util.Random()
 
         for (i in 1..numberOfRecruits) {
             recruits.add(
@@ -21,8 +23,8 @@ object RecruitFactory {
                     firstNames[Random.nextInt(firstNames.size)],
                     lastNames[Random.nextInt(lastNames.size)],
                     (i % 5) + 1,
-                    generateRating(),
-                    generateRating()
+                    generateRating(random),
+                    generateRating(random)
                 )
             )
         }
@@ -30,13 +32,15 @@ object RecruitFactory {
         return recruits
     }
 
-    private fun generateRating(): Int {
-        var rating = 25
-        do {
-            rating += Random.nextInt(26)
-        } while (Random.nextDouble() > min(0.5, (rating / 200.0)) && rating < 75)
-
-        return rating
+    fun generateRating(random: java.util.Random): Int {
+//        var rating = 25
+//        do {
+//            rating += Random.nextInt(26)
+//        } while (Random.nextDouble() > min(0.5, (rating / 200.0)) && rating < 75)
+//
+//        return rating
+        val rating = (random.nextGaussian() * 15 + 65).toInt()
+        return max(25, min(100, rating))
     }
 
     private fun generateDesires(): List<RecruitDesire> {
