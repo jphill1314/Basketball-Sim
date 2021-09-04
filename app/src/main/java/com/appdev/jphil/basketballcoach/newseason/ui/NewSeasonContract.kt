@@ -7,7 +7,7 @@ import com.appdev.jphil.basketballcoach.compose.arch.ViewState
 interface NewSeasonContract {
 
     interface Interactor :
-            StartNewSeasonModel.Interactor
+        StartNewSeasonModel.Interactor
 
     data class NewSeasonDataState(
         val stepNumber: Int = 0,

@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 class NewSeasonPresenter(
     private val newSeasonRepository: NewSeasonRepository
 ) : ComposePresenter<
-        NewSeasonContract.NewSeasonDataState,
-        NewSeasonContract.NewSeasonViewState>(),
-        NewSeasonContract.Interactor {
+    NewSeasonContract.NewSeasonDataState,
+    NewSeasonContract.NewSeasonViewState>(),
+    NewSeasonContract.Interactor {
 
     override val initialDataState = NewSeasonContract.NewSeasonDataState()
 

@@ -16,11 +16,11 @@ import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
-import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.random.Random
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
@@ -59,7 +59,7 @@ class NewSeasonRepository @Inject constructor(
             _state.value.copy(
                 stepNumber = 2,
                 isDeletingOldGames = false,
-                totalTeams = conferences.map { it.teams.size }.reduce { acc, i ->  acc + i }
+                totalTeams = conferences.map { it.teams.size }.sum()
             )
         }
         val games = mutableListOf<Game>()

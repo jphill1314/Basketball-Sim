@@ -37,43 +37,42 @@ fun ListView(
     state: NationalChampionshipHelper.ChampionshipLoadingState,
     interactor: SelectionShowContract.Interactor
 ) {
-    Column {
-        LazyColumn {
-            item {
-                Text(
-                    text = "National Championship Selection Show", // TODO: can I use "selection show"
-                    style = MaterialTheme.typography.h5,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            item {
-                val text = when (state.stepCounter) {
-                    1 -> "Gathering committee"
-                    2 -> "Considering quality loses"
-                    3 -> "What's a mid-major?"
-                    4, 5 -> "Bursting bubbles"
-                    else -> ""
-                }
-                SelectionShowStep(
-                    text = text,
-                    isLoading = !state.isFinished
-                )
-            }
-            itemsIndexed(state.teamNames.reversed()) { index, name ->
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.body1,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                )
-            }
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Text(
+            text = "National Championship Selection Show", // TODO: can I use "selection show"
+            style = MaterialTheme.typography.h5,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        val text = when (state.stepCounter) {
+            1 -> "Gathering committee"
+            2 -> "Considering quality loses"
+            3 -> "What's a mid-major?"
+            in 4..90 -> "Bursting bubbles"
+            else -> ""
         }
-
+        SelectionShowStep(
+            text = text,
+            isLoading = !state.isFinished
+        )
         if (state.isFinished) {
             EnterTournamentButton(interactor = interactor)
+        }
+
+        LazyColumn {
+            val gamesToShow = state.stepCounter - 4
+            if (gamesToShow > 0) {
+                itemsIndexed(state.games.take(gamesToShow).reversed()) { _, game ->
+                    Text(
+                        text = game,
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -110,7 +109,7 @@ fun SelectionShowStep(
 fun EnterTournamentButton(interactor: SelectionShowContract.Interactor) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
     ) {
         TextButton(
             onClick = { interactor.onEnterBracket() },
@@ -135,7 +134,7 @@ fun MorePreviews() {
     ListView(
         state = NationalChampionshipHelper.ChampionshipLoadingState(
             stepCounter = 2,
-            teamNames = listOf("#1) Team A", "#2) Team B"),
+            games = listOf("1. Team A vs 8. Team F", "2. Team B vs 7. Team G"),
             isFinished = false
         ),
         interactor = object : SelectionShowContract.Interactor {

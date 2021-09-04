@@ -41,7 +41,7 @@ fun TenTeamTournamentView(
             }
         }
 
-        layout(maxWidth * 4, maxHeight * 4) {
+        layout((maxWidth * 4.25).toInt(), maxHeight * 5) {
             placeables.forEachIndexed { index, placeable ->
                 // TODO: prevent user from scrolling everything off screen
                 // TODO: animate item size?
@@ -97,7 +97,7 @@ fun EightTeamTournamentView(
             }
         }
 
-        layout(maxWidth * 3, maxHeight * 4) {
+        layout((maxWidth * 3.25).toInt(), maxHeight * 5) {
             placeables.forEachIndexed { index, placeable ->
                 // TODO: prevent user from scrolling everything off screen
                 // TODO: animate item size?
@@ -150,7 +150,7 @@ fun NationalChampionshipView(
             }
         }
 
-        layout(maxWidth * 5, maxHeight * 16) {
+        layout((maxWidth * 5.25).toInt(), maxHeight * 17) {
             placeables.forEachIndexed { index, placeable ->
                 // TODO: prevent user from scrolling everything off screen
                 // TODO: animate item size? <- this is almost def gonna be needed here
