@@ -4,6 +4,7 @@ import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.coaches.ScoutingAssignmentHelper
 import com.appdev.jphil.basketball.game.CoachTalk
+import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
@@ -26,6 +27,10 @@ class Team(
     var postSeasonTournamentId: Int,
     var postSeasonTournamentSeed: Int
 ) {
+
+    // TODO: move these later
+    val location: Location = Location.DC
+    val prestige: Int = 70
 
     val name = "$schoolName $mascot"
     val roster = mutableListOf<Player>() // for use everywhere else

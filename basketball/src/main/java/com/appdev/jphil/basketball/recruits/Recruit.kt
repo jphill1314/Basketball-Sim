@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball.recruits
 
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerType
 import com.appdev.jphil.basketball.teams.Team
@@ -20,6 +21,9 @@ class Recruit(
     var teamCommittedTo: Int,
     val interestInTeams: MutableList<RecruitInterest>
 ) {
+
+    // TODO: move this
+    val location: Location = Location.DC
 
     val fullName = "$firstName $lastName"
 
