@@ -9,7 +9,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 class NewRecruitInterest(
-    val team: Team,
+    val teamId: Int,
     private val preferredPrestige: Int,
     private val wantsClose: Boolean,
     private val wantsFar: Boolean,
@@ -32,40 +32,61 @@ class NewRecruitInterest(
         const val MAX_CHANGE_FROM_RECRUITMENT = 10
     }
 
-    fun createInitialInterest(recruit: Recruit) {
+    fun getInterest(): Int {
+        return (prestigeInterest ?: 0) +
+                (locationInterest ?: 0) +
+                (playingTimeInterest ?: 0) +
+                (playStyleInterest ?: 0) +
+                (teamAbilityInterest ?: 0) +
+                recruitmentInterest
+    }
+
+    fun getRecruitmentLevel(): Int {
+        var level = 0
+
+        if (prestigeInterest != null) level++
+        if (locationInterest != null) level++
+        if (playingTimeInterest != null) level++
+        if (playStyleInterest != null) level++
+        if (teamAbilityInterest != null) level++
+
+        return level
+    }
+
+    fun createInitialInterest(team: Team, recruit: Recruit) {
         if (team.prestige > 75) {
-            prestigeInterest = getInterestFromPrestige()
+            prestigeInterest = getInterestFromPrestige(team)
         }
         if (team.location == recruit.location) {
-            locationInterest = getInterestFromLocation(recruit)
+            locationInterest = getInterestFromLocation(team, recruit)
         }
     }
 
-    fun doActiveRecruitment(recruit: Recruit, game: Game, recruitingCoach: Coach?) {
+    fun doActiveRecruitment(team: Team, recruit: Recruit, game: Game, recruitingCoach: Coach?) {
         if (recruitingCoach != null) {
             when {
                 prestigeInterest == null -> {
-                    prestigeInterest = getInterestFromPrestige()
+                    prestigeInterest = getInterestFromPrestige(team)
                 }
                 locationInterest == null -> {
-                    locationInterest = getInterestFromLocation(recruit)
+                    locationInterest = getInterestFromLocation(team, recruit)
                 }
                 playingTimeInterest == null -> {
-                    playingTimeInterest = getInterestFromPlayingTime(recruit)
+                    playingTimeInterest = getInterestFromPlayingTime(team, recruit)
                 }
                 playStyleInterest == null -> {
                     playStyleInterest = getInterestFromPlayStyle(team.getHeadCoach())
                 }
                 teamAbilityInterest == null -> {
-                    teamAbilityInterest = getInterestFromTeamAbility(recruit)
+                    teamAbilityInterest = getInterestFromTeamAbility(team, recruit)
                 }
             }
         }
 
-        recruitmentInterest += getInterestFromActiveRecruitment(game, recruit, recruitingCoach)
+        recruitmentInterest += getInterestFromActiveRecruitment(team, game, recruit, recruitingCoach)
     }
 
-    private fun allowPassiveGrowth(recruit: Recruit): Boolean {
+    private fun allowPassiveGrowth(team: Team, recruit: Recruit): Boolean {
         if (team.prestige > 75) {
             return true
         }
@@ -79,13 +100,14 @@ class NewRecruitInterest(
     }
 
     private fun getInterestFromActiveRecruitment(
+        team: Team,
         game: Game,
         recruit: Recruit,
         recruitingCoach: Coach?
     ): Int {
-        val maxInterestChange = MAX_CHANGE_FROM_RECRUITMENT * game.getInterestModifier()
+        val maxInterestChange = MAX_CHANGE_FROM_RECRUITMENT * game.getInterestModifier(team)
         if (recruitingCoach == null) {
-            return if (allowPassiveGrowth(recruit)) (maxInterestChange * 0.25).toInt() else 0
+            return if (allowPassiveGrowth(team, recruit)) (maxInterestChange * 0.25).toInt() else 0
         }
 
         val interestChange = if (maxInterestChange > 0) {
@@ -96,7 +118,7 @@ class NewRecruitInterest(
         return interestChange.toInt()
     }
 
-    private fun Game.getInterestModifier(): Int {
+    private fun Game.getInterestModifier(team: Team): Int {
         val teamRating: Int
         val teamScore: Int
         val otherRating: Int
@@ -125,11 +147,11 @@ class NewRecruitInterest(
         }
     }
 
-    private fun getInterestFromPrestige(): Int {
+    private fun getInterestFromPrestige(team: Team, ): Int {
         return max(0, min(MAX_DESIRE, team.prestige - preferredPrestige + MAX_DESIRE))
     }
 
-    private fun getInterestFromLocation(recruit: Recruit): Int {
+    private fun getInterestFromLocation(team: Team, recruit: Recruit): Int {
         return when {
             wantsClose -> when {
                 team.location == recruit.location -> MAX_DESIRE
@@ -145,7 +167,7 @@ class NewRecruitInterest(
         }
     }
 
-    private fun getInterestFromPlayingTime(recruit: Recruit): Int {
+    private fun getInterestFromPlayingTime(team: Team, recruit: Recruit): Int {
         val competition = team.players.filter {
             it.year < 3 && it.position == recruit.position
         }.sortedByDescending {
@@ -215,7 +237,7 @@ class NewRecruitInterest(
         return ((threesMatch + pressMatch + aggroMatch) / 3.0).toInt()
     }
 
-    private fun getInterestFromTeamAbility(recruit: Recruit): Int {
+    private fun getInterestFromTeamAbility(team: Team, recruit: Recruit): Int {
         return when {
             wantsToBeStar -> when {
                 recruit.rating > team.teamRating + 10 -> MAX_DESIRE

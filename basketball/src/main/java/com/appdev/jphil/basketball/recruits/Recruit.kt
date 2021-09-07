@@ -23,9 +23,18 @@ class Recruit(
 ) {
     val fullName = "$firstName $lastName"
 
-    fun updateRecruitment(teamId: Int, game: Game, coach: Coach) {
+    fun getInterest(teamId: Int): Int {
+        return recruitInterests.first { it.teamId == teamId }.getInterest()
+    }
+
+    fun getRecruitmentLevel(teamId: Int): Int {
+        return recruitInterests.first { it.teamId == teamId }.getRecruitmentLevel()
+    }
+
+    fun updateRecruitment(team: Team, game: Game, coach: Coach) {
         if (!isCommitted) {
-            recruitInterests.first { it.team.teamId == teamId }.doActiveRecruitment(
+            recruitInterests.first { it.teamId == team.teamId }.doActiveRecruitment(
+                team,
                 this,
                 game,
                 coach
@@ -38,7 +47,7 @@ class Recruit(
 
         teams.forEach { team ->
             val interest = desires.createInterest(team)
-            interest.createInitialInterest(this)
+            interest.createInitialInterest(team, this)
             recruitInterests.add(interest)
         }
     }
@@ -53,6 +62,7 @@ class Recruit(
             rating,
             index,
             playerType,
+            true, // TODO: handle walk ons
             potential
         )
     }

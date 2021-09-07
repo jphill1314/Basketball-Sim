@@ -2,6 +2,7 @@ package com.appdev.jphil.basketball
 
 import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.plays.IntentionalFoul
 import com.appdev.jphil.basketball.plays.PostMove
 import com.appdev.jphil.basketball.teams.TeamColor
@@ -46,8 +47,8 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
     var minMargin: Game? = null
 
     for (i in 1..totalGames) {
-        val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red, "home", homeRating, 1, false, listOf("first"), listOf("last"))
-        val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, listOf("first"), listOf("last"))
+        val homeTeam = TeamFactory.generateTeam(1, "home", "team", TeamColor.Red, "home", homeRating, 1, false, Location.PR, listOf("first"), listOf("last"))
+        val awayTeam = TeamFactory.generateTeam(2, "away", "team", TeamColor.Red, "away", awayRating, 1, false, Location.PR, listOf("first"), listOf("last"))
         val game = Game(homeTeam, awayTeam, isNeutralCourt, 1, false)
         if (highScore == null) {
             highScore = game

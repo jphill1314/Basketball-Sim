@@ -34,7 +34,7 @@ data class RecruitDesireData(
 ) {
 
     fun createInterest(team: Team) = NewRecruitInterest(
-        team,
+        team.teamId,
         preferredPrestige,
         wantsClose,
         wantsFar,

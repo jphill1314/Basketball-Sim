@@ -65,8 +65,7 @@ object CoachFactory {
             teachPerimeterDefense,
             teachPositioning,
             teachRebounding,
-            teachConditioning,
-            mutableListOf()
+            teachConditioning
         )
     }
 

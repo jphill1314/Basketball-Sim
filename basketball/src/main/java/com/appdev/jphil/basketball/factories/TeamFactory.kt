@@ -2,9 +2,12 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
+import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 object TeamFactory {
@@ -23,10 +26,13 @@ object TeamFactory {
         teamRating: Int,
         conferenceId: Int,
         isUser: Boolean,
+        location: Location,
         firstNames: List<String>,
         lastNames: List<String>
     ): Team {
         // TODO: generate different kinds of teams: run and gun, press heavy, good offense, good defense, balances, etc
+        val prestige = max(0, min(100, teamRating + Random.nextInt(20) - 10))
+
         return Team(
             teamId,
             schoolName,
@@ -37,10 +43,11 @@ object TeamFactory {
             conferenceId,
             isUser,
             generateCoaches(teamId, teamRating, firstNames, lastNames),
-            0,
-            -1,
-            -1,
-            mutableListOf()
+            location,
+            prestige,
+            gamesPlayed = 0,
+            postSeasonTournamentId = -1,
+            postSeasonTournamentSeed = -1
         )
     }
 

@@ -8,6 +8,8 @@ import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.getCommitmentsIfPossible
+import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.updateRecruitingAssignments
 import java.util.Collections
 import kotlin.math.abs
 import kotlin.random.Random
@@ -22,15 +24,14 @@ class Team(
     val conferenceId: Int,
     val isUser: Boolean,
     val coaches: MutableList<Coach>,
+    val location: Location,
+    var prestige: Int,
     var gamesPlayed: Int,
     var postSeasonTournamentId: Int,
-    var postSeasonTournamentSeed: Int,
-    val commitments: MutableList<Recruit>
+    var postSeasonTournamentSeed: Int
 ) {
 
-    // TODO: move these later
-    val location: Location = Location.DC
-    val prestige: Int = 70
+    val commitments = mutableListOf<Recruit>()
 
     val name = "$schoolName $mascot"
     val roster = mutableListOf<Player>() // for use everywhere else
@@ -340,11 +341,20 @@ class Team(
         return 3 - nextYearsPlayers > 0
     }
 
-    fun doRecruitment(game: Game) {
-        coaches.filter { it.type != CoachType.HEAD_COACH }.forEach { coach ->
+    fun doRecruitment(game: Game, allRecruits: List<Recruit>) {
+        val assistants = coaches.filter { it.type != CoachType.HEAD_COACH }
+        if (!isUser) {
+            updateRecruitingAssignments(allRecruits)
+        }
+
+        assistants.forEach { coach ->
             coach.recruitingAssignments.forEach { recruit ->
-                recruit.updateRecruitment(teamId, game, coach)
+                recruit.updateRecruitment(this, game, coach)
             }
+        }
+
+        if (!isUser) {
+            getCommitmentsIfPossible(allRecruits)
         }
     }
 
@@ -352,5 +362,8 @@ class Team(
         postSeasonTournamentId = -1
         postSeasonTournamentSeed = -1
         gamesPlayed = 0
+
+        commitments.clear()
+        coaches.forEach { it.recruitingAssignments.clear() }
     }
 }

@@ -1,40 +1,23 @@
 package com.appdev.jphil.basketball
 
 import com.appdev.jphil.basketball.conference.Conference
+import com.appdev.jphil.basketball.factories.LocationGenerator
 import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketball.game.Game
-import com.appdev.jphil.basketball.location.getRegion
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
 import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import kotlin.random.Random
 
 
 fun main() {
-//    simulateXSeasons(20)
+    simulateXSeasons(20)
 //    distributionTest()
-//    testLocations()
-}
-
-private fun testLocations() {
-    val world = createTeams()
-
-    val recruits = RecruitFactory.generateRecruits(
-        listOf("first"),
-        listOf("last"),
-        600,
-        world.conferences.flatMap { it.teams }
-    )
-
-    recruits.groupBy { it.location.getRegion() }.forEach { t, u ->
-        println("Region: ${t.string}: ${u.size}")
-    }
 }
 
 private fun distributionTest() {
@@ -83,11 +66,9 @@ private fun simulateXSeasons(seasonsToSim: Int) {
         println("Original: $original - Final $final")
     }
 
-    basketballWorld.conferences.forEach { conference ->
-        conference.teams.forEach { team ->
-            val diff = team.calculateTeamRating() - teamRatings[team.teamId]!!
-            println("${team.name} - Players: ${team.players.size} - Start: ${teamRatings[team.teamId]} - Finish: ${team.calculateTeamRating()} - Diff: $diff")
-        }
+    basketballWorld.forEachTeam { team ->
+        val diff = team.calculateTeamRating() - teamRatings[team.teamId]!!
+        println("${team.name} - Players: ${team.players.size} - Start: ${teamRatings[team.teamId]} - Finish: ${team.calculateTeamRating()} - Diff: $diff")
     }
 }
 
@@ -109,17 +90,13 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     // Simulate every game
     schedule.forEach { game ->
         game.simulateFullGame()
-//        game.homeTeam.doScouting(basketballWorld.recruits)
-//        game.awayTeam.doScouting(basketballWorld.recruits)
-        TeamRecruitInteractor.interactWithRecruits(game.homeTeam, basketballWorld.recruits)
-        TeamRecruitInteractor.interactWithRecruits(game.awayTeam, basketballWorld.recruits)
+        game.homeTeam.doRecruitment(game, basketballWorld.recruits)
+        game.awayTeam.doRecruitment(game, basketballWorld.recruits)
     }
 
     // Start new season for each team
-    basketballWorld.conferences.forEach { conference ->
-        conference.teams.forEach { team ->
-            startNewSeasonForTeam(team, basketballWorld.recruits)
-        }
+    basketballWorld.forEachTeam { team ->
+        startNewSeasonForTeam(team, basketballWorld.recruits)
     }
 
     // Create new recruits
@@ -127,7 +104,7 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     val recruits = RecruitFactory.generateRecruits(
         firstNames = listOf("first"),
         lastNames = listOf("last"),
-        numberOfRecruits = 100,
+        numberOfRecruits = 200,
         allTeams = teams
     )
 
@@ -173,6 +150,7 @@ private fun createTeams(): BasketballWorld {
                 teamRating = 80 + 5 * index,
                 conferenceId = 1,
                 isUser = false,
+                location = LocationGenerator.getLocation(),
                 firstNames = listOf("first"),
                 lastNames = listOf("last")
             )
@@ -191,6 +169,7 @@ private fun createTeams(): BasketballWorld {
                 teamRating = 80 + 5 * index,
                 conferenceId = 1,
                 isUser = false,
+                location = LocationGenerator.getLocation(),
                 firstNames = listOf("first"),
                 lastNames = listOf("last")
             )
@@ -200,7 +179,7 @@ private fun createTeams(): BasketballWorld {
     val recruits = RecruitFactory.generateRecruits(
         firstNames = listOf("first"),
         lastNames = listOf("last"),
-        numberOfRecruits = 100,
+        numberOfRecruits = 200,
         allTeams = conferenceA.teams + conferenceB.teams
     )
 
@@ -222,6 +201,9 @@ private fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
     }
 
     // Add commits to team
+//    val p = team.players.size
+//    val c = team.commitments.size
+//    println("Returning players: $p \t Commits: $c \t Total: ${p+c}")
     recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.forEach { commit ->
         team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
     }
@@ -261,6 +243,15 @@ private fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
     team.players.sortBy { it.rosterIndex }
 
     team.startNewSeason()
+    team.teamRating = team.calculateTeamRating()
+}
+
+private fun BasketballWorld.forEachTeam(block: (Team) -> Unit) {
+    conferences.forEach { conference ->
+        conference.teams.forEach { team ->
+            block(team)
+        }
+    }
 }
 
 private const val PRACTICES = 50
