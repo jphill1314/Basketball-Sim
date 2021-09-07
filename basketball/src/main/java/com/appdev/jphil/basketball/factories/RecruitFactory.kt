@@ -2,6 +2,8 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.recruits.RecruitDesire
+import com.appdev.jphil.basketball.recruits.RecruitDesireData
+import com.appdev.jphil.basketball.teams.Team
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -11,53 +13,42 @@ object RecruitFactory {
     fun generateRecruits(
         firstNames: List<String>,
         lastNames: List<String>,
-        numberOfRecruits: Int
+        numberOfRecruits: Int,
+        allTeams: List<Team>
     ): List<Recruit> {
         val recruits = mutableListOf<Recruit>()
         val random = java.util.Random()
 
         for (i in 1..numberOfRecruits) {
-            recruits.add(
-                generateRecruit(
-                    i,
-                    firstNames[Random.nextInt(firstNames.size)],
-                    lastNames[Random.nextInt(lastNames.size)],
-                    (i % 5) + 1,
-                    generateRating(random),
-                    generateRating(random)
-                )
+            val recruit = generateRecruit(
+                i,
+                firstNames[Random.nextInt(firstNames.size)],
+                lastNames[Random.nextInt(lastNames.size)],
+                (i % 5) + 1,
+                generateRating(random),
+                generateRating(random)
             )
+
+            val desires = RecruitDesireData.from(generateDesires(), recruit)
+            recruit.generateInitialInterests(allTeams, desires)
+            recruits.add(recruit)
         }
 
         return recruits
     }
 
     fun generateRating(random: java.util.Random): Int {
-//        var rating = 25
-//        do {
-//            rating += Random.nextInt(26)
-//        } while (Random.nextDouble() > min(0.5, (rating / 200.0)) && rating < 75)
-//
-//        return rating
         val rating = (random.nextGaussian() * 15 + 65).toInt()
         return max(25, min(100, rating))
     }
 
-    private fun generateDesires(): List<RecruitDesire> {
-        val desires = mutableListOf<RecruitDesire>()
-        if (Random.nextBoolean()) {
-            desires.add(RecruitDesire.DEVELOP)
+    private fun generateDesires(): RecruitDesire {
+        val rand = Random.nextDouble()
+        return when {
+            rand < .25 -> RecruitDesire.DEVELOP
+            rand < .75 -> RecruitDesire.GOOD_FIT
+            else -> RecruitDesire.STAR
         }
-
-        if (Random.nextDouble() > 0.33) {
-            desires.add(RecruitDesire.COMPETE)
-        } else if (Random.nextDouble() > 0.33) {
-            desires.add(RecruitDesire.STAR)
-        } else {
-            desires.add(RecruitDesire.GOOD_FIT)
-        }
-
-        return desires
     }
 
     private fun generateRecruit(
@@ -74,11 +65,11 @@ object RecruitFactory {
             lastName,
             position,
             PlayerFactory.getPlayerType(position - 1),
-            generateDesires(),
             rating,
             potential,
             false,
             0,
+            LocationGenerator.getLocation(),
             mutableListOf()
         )
     }

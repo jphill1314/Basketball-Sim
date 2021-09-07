@@ -5,6 +5,7 @@ import com.appdev.jphil.basketball.factories.PlayerFactory
 import com.appdev.jphil.basketball.factories.RecruitFactory
 import com.appdev.jphil.basketball.factories.TeamFactory
 import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.location.getRegion
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
@@ -16,8 +17,24 @@ import kotlin.random.Random
 
 
 fun main() {
-    simulateXSeasons(20)
+//    simulateXSeasons(20)
 //    distributionTest()
+//    testLocations()
+}
+
+private fun testLocations() {
+    val world = createTeams()
+
+    val recruits = RecruitFactory.generateRecruits(
+        listOf("first"),
+        listOf("last"),
+        600,
+        world.conferences.flatMap { it.teams }
+    )
+
+    recruits.groupBy { it.location.getRegion() }.forEach { t, u ->
+        println("Region: ${t.string}: ${u.size}")
+    }
 }
 
 private fun distributionTest() {
@@ -92,8 +109,8 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     // Simulate every game
     schedule.forEach { game ->
         game.simulateFullGame()
-        game.homeTeam.doScouting(basketballWorld.recruits)
-        game.awayTeam.doScouting(basketballWorld.recruits)
+//        game.homeTeam.doScouting(basketballWorld.recruits)
+//        game.awayTeam.doScouting(basketballWorld.recruits)
         TeamRecruitInteractor.interactWithRecruits(game.homeTeam, basketballWorld.recruits)
         TeamRecruitInteractor.interactWithRecruits(game.awayTeam, basketballWorld.recruits)
     }
@@ -106,10 +123,12 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     }
 
     // Create new recruits
+    val teams = basketballWorld.conferences.flatMap { it.teams }
     val recruits = RecruitFactory.generateRecruits(
         firstNames = listOf("first"),
         lastNames = listOf("last"),
-        numberOfRecruits = 100
+        numberOfRecruits = 100,
+        allTeams = teams
     )
 
     // Return update work
@@ -181,7 +200,8 @@ private fun createTeams(): BasketballWorld {
     val recruits = RecruitFactory.generateRecruits(
         firstNames = listOf("first"),
         lastNames = listOf("last"),
-        numberOfRecruits = 100
+        numberOfRecruits = 100,
+        allTeams = conferenceA.teams + conferenceB.teams
     )
 
     return BasketballWorld(listOf(conferenceA, conferenceB), recruits)

@@ -2,8 +2,8 @@ package com.appdev.jphil.basketball.teams
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
-import com.appdev.jphil.basketball.coaches.ScoutingAssignmentHelper
 import com.appdev.jphil.basketball.game.CoachTalk
+import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
@@ -22,10 +22,10 @@ class Team(
     val conferenceId: Int,
     val isUser: Boolean,
     val coaches: MutableList<Coach>,
-    val knownRecruits: MutableList<Recruit>,
     var gamesPlayed: Int,
     var postSeasonTournamentId: Int,
-    var postSeasonTournamentSeed: Int
+    var postSeasonTournamentSeed: Int,
+    val commitments: MutableList<Recruit>
 ) {
 
     // TODO: move these later
@@ -334,32 +334,21 @@ class Team(
 
     fun getHeadCoach(): Coach = coaches.first { it.type == CoachType.HEAD_COACH }
 
-    fun doScouting(allRecruits: List<Recruit>) {
-        val unknownRecruits = mutableListOf<Recruit>()
-        unknownRecruits.addAll(allRecruits)
-        knownRecruits.forEach {
-            unknownRecruits.remove(it)
-        }
-        coaches.filter { it.type != CoachType.HEAD_COACH }.forEach { coach ->
-            if (!isUser) {
-                ScoutingAssignmentHelper.updateScoutingAssignment(this, coach.scoutingAssignment)
-            }
-            coach.doScouting(unknownRecruits).forEach { recruit ->
-                recruit.generateInitialInterest(this, coach.recruiting)
-                unknownRecruits.remove(recruit)
-                knownRecruits.add(recruit)
-            }
-        }
-    }
-
     fun hasNeedAtPosition(position: Int): Boolean {
         var nextYearsPlayers = roster.filter { it.position == position && it.year != 3 }.size
-        nextYearsPlayers += knownRecruits.filter { it.isCommitted && it.teamCommittedTo == teamId && it.position == position }.size
+        nextYearsPlayers += commitments.filter { it.position == position }.size
         return 3 - nextYearsPlayers > 0
     }
 
+    fun doRecruitment(game: Game) {
+        coaches.filter { it.type != CoachType.HEAD_COACH }.forEach { coach ->
+            coach.recruitingAssignments.forEach { recruit ->
+                recruit.updateRecruitment(teamId, game, coach)
+            }
+        }
+    }
+
     fun startNewSeason() {
-        knownRecruits.clear()
         postSeasonTournamentId = -1
         postSeasonTournamentSeed = -1
         gamesPlayed = 0

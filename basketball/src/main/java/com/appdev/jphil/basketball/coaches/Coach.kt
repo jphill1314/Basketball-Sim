@@ -33,7 +33,7 @@ class Coach(
     var teachPositioning: Int,
     var teachRebounding: Int,
     var teachConditioning: Int,
-    var scoutingAssignment: ScoutingAssignment
+    val recruitingAssignments: MutableList<Recruit>
 ) {
     // TODO: give coaches a sub frequency rating that impacts when subs are made
     // TODO: add functions to change a team's strategy based on who is on the court and the score
@@ -58,10 +58,6 @@ class Coach(
             teachShooting + teachPostMoves + teachBallControl + teachPostDefense + teachPerimeterDefense +
                 teachPositioning + teachRebounding + teachConditioning
             ) / 8
-    }
-
-    fun doScouting(unknownRecruits: MutableList<Recruit>): List<Recruit> {
-        return scoutingAssignment.doScouting(recruiting, unknownRecruits)
     }
 
     fun updateStrategy(teamScore: Int, opponentScore: Int, half: Int, timeRemaining: Int) {

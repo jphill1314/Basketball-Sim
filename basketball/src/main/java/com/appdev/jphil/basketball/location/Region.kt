@@ -11,6 +11,7 @@ enum class Region(val string: String) {
     WEST_COAST("WC"),
     HAWAII("HI"),
     ALASKA("AK"),
+    PUERTO_RICO("PR"),
     CANADA("CD")
 }
 
@@ -54,6 +55,7 @@ fun Location.getRegion() = when (this) {
     Location.OK -> Region.SOUTHWEST
     Location.OR -> Region.WEST_COAST
     Location.PA -> Region.MIDEAST
+    Location.PR -> Region.PUERTO_RICO
     Location.RI -> Region.NEW_ENGLAND
     Location.SC -> Region.SOUTHEAST
     Location.SD -> Region.PLAINS

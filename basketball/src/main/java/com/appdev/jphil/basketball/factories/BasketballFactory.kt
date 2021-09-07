@@ -34,7 +34,8 @@ object BasketballFactory {
         val recruits = RecruitFactory.generateRecruits(
             firstNames,
             lastNames,
-            numberOfRecruits
+            numberOfRecruits,
+            conferences.flatMap { it.teams }
         )
 
         return BasketballWorld(

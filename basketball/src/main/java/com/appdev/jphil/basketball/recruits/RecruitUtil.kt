@@ -9,7 +9,7 @@ object RecruitUtil {
     }
 
     fun getCommitsAtPosition(team: Team, position: Int): Int {
-        return team.knownRecruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId && it.position == position }.size
+        return team.commitments.filter { it.position == position }.size
     }
 
     fun teamHasOpenSpot(team: Team, position: Int): Boolean {
