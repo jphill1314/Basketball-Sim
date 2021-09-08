@@ -65,7 +65,9 @@
         android:id="@+id/recruiting_compose"
         android:name="com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment"
         android:label="@string/recruiting">
-
+        <action
+            android:id="@+id/toRecruitOverview"
+            app:destination="@id/recruitOverview" />
     </fragment>
     <fragment
         android:id="@+id/playerOverviewFragment"
@@ -96,6 +98,14 @@
     <fragment
         android:id="@+id/recruitOverviewFragment"
         android:name="com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment"
+        android:label="@string/recruit_overview">
+        <argument
+            android:name="recruitId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/recruitOverview"
+        android:name="com.appdev.jphil.basketballcoach.recruitoverviewcompose.RecruitOverviewComposeFragment"
         android:label="@string/recruit_overview">
         <argument
             android:name="recruitId"

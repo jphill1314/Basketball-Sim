@@ -5,19 +5,14 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -32,6 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.appdev.jphil.basketballcoach.HorizontalLine
+import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import kotlinx.coroutines.flow.StateFlow
 
@@ -50,19 +47,11 @@ private fun RecruitingView(
     interactor: RecruitingContract.Interactor
 ) {
     if (state.isLoading || state.team == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(modifier = Modifier.size(75.dp))
-        }
+        LoadingScreen()
     } else {
         Column {
             TeamStateView(state = state, interactor = interactor)
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.Gray))
+            HorizontalLine(color = Color.Gray)
             RecruitList(recruits = state.recruits, interactor = interactor)
         }
     }
@@ -92,13 +81,17 @@ private fun TeamStateView(
         Row {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).background(
-                    if (state.positionFilters.contains(1)) {
-                        Color.Gray
-                    } else {
-                        Color.White
-                    }
-                ).padding(4.dp).clickable { interactor.onPositionClicked(1) }
+                modifier = Modifier
+                    .weight(1f)
+                    .background(
+                        if (state.positionFilters.contains(1)) {
+                            Color.Gray
+                        } else {
+                            Color.White
+                        }
+                    )
+                    .padding(4.dp)
+                    .clickable { interactor.onPositionClicked(1) }
             ) {
                 Text(
                     text = stringResource(id = R.string.pg),
@@ -113,13 +106,17 @@ private fun TeamStateView(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).background(
-                    if (state.positionFilters.contains(2)) {
-                        Color.Gray
-                    } else {
-                        Color.White
-                    }
-                ).padding(4.dp).clickable { interactor.onPositionClicked(2) }
+                modifier = Modifier
+                    .weight(1f)
+                    .background(
+                        if (state.positionFilters.contains(2)) {
+                            Color.Gray
+                        } else {
+                            Color.White
+                        }
+                    )
+                    .padding(4.dp)
+                    .clickable { interactor.onPositionClicked(2) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sg),
@@ -134,13 +131,17 @@ private fun TeamStateView(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).background(
-                    if (state.positionFilters.contains(3)) {
-                        Color.Gray
-                    } else {
-                        Color.White
-                    }
-                ).padding(4.dp).clickable { interactor.onPositionClicked(3) }
+                modifier = Modifier
+                    .weight(1f)
+                    .background(
+                        if (state.positionFilters.contains(3)) {
+                            Color.Gray
+                        } else {
+                            Color.White
+                        }
+                    )
+                    .padding(4.dp)
+                    .clickable { interactor.onPositionClicked(3) }
             ) {
                 Text(
                     text = stringResource(id = R.string.sf),
@@ -155,13 +156,17 @@ private fun TeamStateView(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).background(
-                    if (state.positionFilters.contains(4)) {
-                        Color.Gray
-                    } else {
-                        Color.White
-                    }
-                ).padding(4.dp).clickable { interactor.onPositionClicked(4) }
+                modifier = Modifier
+                    .weight(1f)
+                    .background(
+                        if (state.positionFilters.contains(4)) {
+                            Color.Gray
+                        } else {
+                            Color.White
+                        }
+                    )
+                    .padding(4.dp)
+                    .clickable { interactor.onPositionClicked(4) }
             ) {
                 Text(
                     text = stringResource(id = R.string.pf),
@@ -176,13 +181,17 @@ private fun TeamStateView(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).background(
-                    if (state.positionFilters.contains(5)) {
-                        Color.Gray
-                    } else {
-                        Color.White
-                    }
-                ).padding(4.dp).clickable { interactor.onPositionClicked(5) }
+                modifier = Modifier
+                    .weight(1f)
+                    .background(
+                        if (state.positionFilters.contains(5)) {
+                            Color.Gray
+                        } else {
+                            Color.White
+                        }
+                    )
+                    .padding(4.dp)
+                    .clickable { interactor.onPositionClicked(5) }
             ) {
                 Text(
                     text = stringResource(id = R.string.c),
@@ -236,45 +245,53 @@ private fun RecruitItem(
             .fillMaxWidth()
             .clickable { interactor.onRecruitClicked(recruit.id) }
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)) {
+        Column {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)) {
+                Text(
+                    text = stringResource(id = recruit.position),
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(24.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = recruit.name,
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = typeArray[recruit.type],
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+                Column(
+                    modifier = Modifier.padding(8.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.rating_colon, recruit.rating),
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.End
+                    )
+                    Text(
+                        text = stringResource(id = R.string.interest_colon, recruit.interest),
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.End
+                    )
+                }
+            }
             Text(
-                text = stringResource(id = recruit.position),
+                text = stringResource(id = recruit.status),
                 style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .width(24.dp)
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
             )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = recruit.name,
-                    style = MaterialTheme.typography.body1
-                )
-                Text(
-                    text = typeArray[recruit.type],
-                    style = MaterialTheme.typography.body1
-                )
-            }
-            Column(
-                modifier = Modifier.padding(8.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(
-                    text = stringResource(id = R.string.rating_colon, recruit.rating),
-                    style = MaterialTheme.typography.body1,
-                    textAlign = TextAlign.End
-                )
-                Text(
-                    text = stringResource(id = R.string.interest_colon, recruit.interest),
-                    style = MaterialTheme.typography.body1,
-                    textAlign = TextAlign.End
-                )
-            }
         }
     }
 }
@@ -312,7 +329,7 @@ private fun recruitModel(index: Int) = RecruitModel(
     rating = 85,
     potential = 75,
     interest = 55,
-    status = ""
+    status = R.string.empty_string
 )
 
 private val state = RecruitingContract.ViewState(

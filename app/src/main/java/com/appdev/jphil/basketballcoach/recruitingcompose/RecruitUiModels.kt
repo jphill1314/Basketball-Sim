@@ -11,7 +11,7 @@ data class RecruitModel(
     val rating: Int,
     val potential: Int,
     val interest: Int,
-    val status: String
+    @StringRes val status: Int
 ) : UiModel {
 
     interface Interactor {

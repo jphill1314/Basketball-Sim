@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.recruitingcompose
 
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
+import com.appdev.jphil.basketballcoach.compose.arch.Event
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import kotlinx.coroutines.flow.collect
@@ -31,7 +32,7 @@ class RecruitingPresenter(
     }
 
     override fun onRecruitClicked(id: Int) {
-        // TODO
+        sendEvent(LaunchRecruitOverview(id))
     }
 
     fun sortRatingHigh() {
@@ -71,4 +72,6 @@ class RecruitingPresenter(
     override fun clearFilters() {
         updateState { copy(positionFilters = emptyList()) }
     }
+
+    data class LaunchRecruitOverview(val recruitId: Int) : Event
 }

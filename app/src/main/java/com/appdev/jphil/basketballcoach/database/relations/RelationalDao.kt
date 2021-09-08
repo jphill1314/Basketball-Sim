@@ -45,6 +45,6 @@ interface RelationalDao {
     fun loadAllRecruitsFlow(): Flow<List<RecruitRelations>>
 
     @Transaction
-    @Query("select * from RecruitEntity")
-    suspend fun loadRecruitById(): RecruitRelations
+    @Query("select * from RecruitEntity where id in (:recruitId)")
+    fun loadRecruitByIdFlow(recruitId: Int): Flow<RecruitRelations>
 }

@@ -1,13 +1,16 @@
 package com.appdev.jphil.basketballcoach.recruitingcompose
 
-import android.content.Context
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.compose.arch.ComposeFragment
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class RecruitingFragment : ComposeFragment() {
@@ -21,9 +24,17 @@ class RecruitingFragment : ComposeFragment() {
         RecruitingView(viewStateFlow = presenter.state, interactor = presenter)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        lifecycleScope.launchWhenCreated {
+            presenter.events.collect {
+                when (it) {
+                    is RecruitingPresenter.LaunchRecruitOverview -> launchRecruitOverview(it.recruitId)
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -40,5 +51,9 @@ class RecruitingFragment : ComposeFragment() {
             R.id.interaction_least -> presenter.sortInteractionsLeast()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun launchRecruitOverview(id: Int) {
+        findNavController().navigate(RecruitingFragmentDirections.toRecruitOverview(id))
     }
 }

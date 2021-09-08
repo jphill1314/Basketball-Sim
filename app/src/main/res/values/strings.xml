@@ -208,4 +208,52 @@
     <string name="sort_low_interest_first">Interest: Low to High</string>
     <string name="sort_most_interaction_first">Interactions: Most to Least</string>
     <string name="sort_least_interaction_first">Interactions: Least to Most</string>
+
+    <string name="recruit_to_see">More time recruiting is needed to gauge interest.</string>
+
+    <string name="prestige_match">I really like how good %1$s has been over the years!</string>
+    <string name="prestige_close">I\'d prefer to play somewhere that\'s had more success.</string>
+    <string name="prestige_miss">%1$s just doesn\'t match my level of ambition.</string>
+
+    <string name="location_match_near">I\'ve always wanted to go to a school near home!</string>
+    <string name="location_close_near">While I\'d prefer something closer to home, %1$s isn\'t that far away.</string>
+    <string name="location_miss_near">I\'d prefer to play somewhere closer to home.</string>
+    <string name="location_match_far">I\'ve always wanted to go to a school somewhere far from home!</string>
+    <string name="location_close_far">While I\'d prefer something further from home, %1$s isn\'t that close either.</string>
+    <string name="location_miss_far">I\'d prefer to play somewhere further from home.</string>
+    <string name="location_unimportant">Location just isn\'t that important to me</string>
+
+    <string name="team_ability_develop_hit">I would love to play for a team as good as %1$s!</string>
+    <string name="team_ability_develop_miss">%1$s just isn\'t a good enough team for my desires.</string>
+    <string name="team_ability_develop_close">While I\'d prefer to play for a better team, I suppose %1$s would be good enough.</string>
+    <string name="team_ability_star_hit">I want to be a star player and I could totally be that at %1$s!</string>
+    <string name="team_ability_star_miss">I would prefer to play somewhere that I can be their star.</string>
+    <string name="team_ability_unimportant">The team\'s ability isn\'t an important factor for me.</string>
+
+    <string name="play_style_hit">I love the way you play at %1$s!</string>
+    <string name="play_style_middle">I don\'t have strong feelings about the way you play at %1$s.</string>
+    <string name="play_style_miss">I hate the way you play at %1$s, so I can\'t see myself playing there.</string>
+
+    <string name="playing_time_start_hit">I want to start right away and I can do that at %1$s!</string>
+    <string name="playing_time_start_miss">I want to start right away and I don\'t see that happening at %1$s!</string>
+    <string name="playing_time_develop_hit">I\'m okay with not starting immediately!</string>
+    <string name="playing_time_develop_miss">I\'d prefer to have a chance to develop my skills without the pressure of starting right away.</string>
+    <string name="playing_time_unimportant">I don\'t really care if I start immediately or not.</string>
+
+    <string name="active_recruitment_positive">Based on your results, I cannot wait to join your team!</string>
+    <string name="active_recruitment_negative">Based on your results, I not really interested in joining your team.</string>
+
+    <string name="total_interest">Total interest: %1$d / %2$d</string>
+    <string name="get_commitment">Get Commitment</string>
+    <string name="start_recruiting">Start Recruiting</string>
+    <string name="stop_recruiting">Stop Recruiting</string>
+
+    <string name="coach_assignments">Total assignments: %1$d</string>
+    <string name="select_recruit_to_no_longer_recruit">Select a recruit to no longer recruit</string>
+    <string name="select_coach_to_recruit">Select coach to lead recruitment</string>
+
+    <string name="empty_string"/>
+    <string name="actively_recruiting">Actively Recruiting</string>
+    <string name="committed_to_you">Committed To You</string>
+    <string name="committed_elsewhere">Committed Elsewhere</string>
 </resources>

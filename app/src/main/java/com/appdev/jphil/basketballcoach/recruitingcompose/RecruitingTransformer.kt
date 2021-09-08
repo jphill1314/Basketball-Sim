@@ -25,7 +25,7 @@ class RecruitingTransformer @Inject constructor() :
                 recruits = dataState.recruits
                     .filter { filters.isEmpty() || filters.contains(it.position) }
                     .sortedWith(dataState.sortType.getComparable(teamId))
-                    .map { it.getModel(teamId) }
+                    .map { it.getModel(dataState.team) }
             )
         }
     }
@@ -43,7 +43,7 @@ class RecruitingTransformer @Inject constructor() :
         committedCs = getCommitsAtPosition(5),
     )
 
-    private fun Recruit.getModel(teamId: Int) = RecruitModel(
+    private fun Recruit.getModel(team: Team) = RecruitModel(
         id,
         fullName,
         position = when (position) {
@@ -56,8 +56,15 @@ class RecruitingTransformer @Inject constructor() :
         playerType.type,
         rating,
         potential,
-        getInterest(teamId),
-        status = ""
+        getInterest(team.teamId),
+        status = when {
+            isCommitted -> when (teamCommittedTo) {
+                team.teamId -> R.string.committed_to_you
+                else -> R.string.committed_elsewhere
+            }
+            isActiveRecruitment(team, this) -> R.string.recruiting
+            else -> R.string.empty_string
+        }
     )
 
     private fun SortType.getComparable(teamId: Int): Comparator<Recruit> = when (this) {
@@ -81,5 +88,14 @@ class RecruitingTransformer @Inject constructor() :
         )
         SortType.BEST_LAST -> compareBy { it.rating }
         else -> compareBy { -it.rating }
+    }
+
+    private fun isActiveRecruitment(team: Team, recruit: Recruit): Boolean {
+        team.coaches.forEach { coach ->
+            if (coach.recruitingAssignments.contains(recruit)) {
+                return true
+            }
+        }
+        return false
     }
 }
