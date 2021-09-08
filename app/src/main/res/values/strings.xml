@@ -201,4 +201,11 @@
     <string name="adj_eff">Adj Eff</string>
     <string name="adj_off">Adj Off</string>
     <string name="adj_def">Adj Def</string>
+
+    <string name="sort_high_rating_first">Rating: High to Low</string>
+    <string name="sort_low_rating_first">Rating: Low to High</string>
+    <string name="sort_high_interest_first">Interest: High to Low</string>
+    <string name="sort_low_interest_first">Interest: Low to High</string>
+    <string name="sort_most_interaction_first">Interactions: Most to Least</string>
+    <string name="sort_least_interaction_first">Interactions: Least to Most</string>
 </resources>

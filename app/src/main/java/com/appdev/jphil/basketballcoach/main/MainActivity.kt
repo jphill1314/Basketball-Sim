@@ -56,7 +56,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 R.id.compose_schedule,
                 R.id.standings,
                 R.id.rankings,
-                R.id.recruiting,
+                R.id.recruiting_compose,
                 R.id.strategy,
                 R.id.staff,
                 R.id.practice
@@ -123,7 +123,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         navBinding.navTeamPrestige.text = "Prestige: ${team.prestige}"
 
         binding.navView.menu.apply {
-            findItem(R.id.recruiting).isVisible = team.isUser
+            findItem(R.id.recruiting_compose).isVisible = team.isUser
             findItem(R.id.strategy).isVisible = team.isUser
             findItem(R.id.practice).isVisible = team.isUser
         }

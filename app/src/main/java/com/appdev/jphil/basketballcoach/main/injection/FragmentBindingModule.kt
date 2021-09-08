@@ -17,6 +17,7 @@ import com.appdev.jphil.basketballcoach.rankings.RankingsFragment
 import com.appdev.jphil.basketballcoach.rankings.RankingsModule
 import com.appdev.jphil.basketballcoach.recruiting.RecruitFragment
 import com.appdev.jphil.basketballcoach.recruiting.RecruitModule
+import com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewModule
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
@@ -98,4 +99,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun selectionShowFragment(): SelectionShowFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun recruitingComposeFragment(): RecruitingFragment
 }

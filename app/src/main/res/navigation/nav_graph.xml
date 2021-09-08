@@ -62,6 +62,12 @@
             app:destination="@id/recruitOverviewFragment" />
     </fragment>
     <fragment
+        android:id="@+id/recruiting_compose"
+        android:name="com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment"
+        android:label="@string/recruiting">
+
+    </fragment>
+    <fragment
         android:id="@+id/playerOverviewFragment"
         android:name="com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment"
         android:label="@string/player_overview">
