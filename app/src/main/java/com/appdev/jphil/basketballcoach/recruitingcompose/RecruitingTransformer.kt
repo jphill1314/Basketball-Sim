@@ -15,12 +15,17 @@ class RecruitingTransformer @Inject constructor() :
         return if (dataState.team == null) {
             RecruitingContract.ViewState(isLoading = true)
         } else {
+            val teamId = dataState.team.teamId
+            val filters = dataState.positionFilters
             RecruitingContract.ViewState(
                 isLoading = false,
+                showClearFilters = dataState.positionFilters.isNotEmpty(),
+                positionFilters = dataState.positionFilters,
                 team = dataState.team.getState(),
                 recruits = dataState.recruits
-                    .sortedWith(dataState.sortType.getComparable(dataState.team.teamId))
-                    .map { it.getModel(dataState.team.teamId) }
+                    .filter { filters.isEmpty() || filters.contains(it.position) }
+                    .sortedWith(dataState.sortType.getComparable(teamId))
+                    .map { it.getModel(teamId) }
             )
         }
     }

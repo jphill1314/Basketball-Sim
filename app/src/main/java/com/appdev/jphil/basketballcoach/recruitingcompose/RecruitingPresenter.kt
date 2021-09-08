@@ -57,4 +57,18 @@ class RecruitingPresenter(
     fun sortInteractionsLeast() {
         updateState { copy(sortType = SortType.LEAST_INTERACTION) }
     }
+
+    override fun onPositionClicked(pos: Int) {
+        val filters = dataState.value.positionFilters.toMutableList()
+        if (filters.contains(pos)) {
+            filters.remove(pos)
+        } else {
+            filters.add(pos)
+        }
+        updateState { copy(positionFilters = filters) }
+    }
+
+    override fun clearFilters() {
+        updateState { copy(positionFilters = emptyList()) }
+    }
 }

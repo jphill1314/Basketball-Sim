@@ -30,4 +30,10 @@ data class TeamStateModel(
     val committedPFs: Int,
     val returningCs: Int,
     val committedCs: Int
-) : UiModel
+) : UiModel {
+
+    interface Interactor {
+        fun onPositionClicked(pos: Int)
+        fun clearFilters()
+    }
+}
