@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
@@ -34,15 +35,21 @@ data class TeamEntity(
     val freeThrowMakes: Int,
     val isUser: Boolean,
     val lastScoreDif: Int,
-    val practiceType: Int,
-    val knownRecruits: MutableList<Int>,
+    val practiceType: PracticeType,
     val gamesPlayed: Int,
     val rating: Int,
     val postseasonTournamentId: Int,
-    val postseasonTournamentSeed: Int
+    val postseasonTournamentSeed: Int,
+    val prestige: Int,
+    val location: Location,
+    val commitments: List<Int>,
 ) {
 
-    fun createTeam(players: MutableList<Player>, coaches: MutableList<Coach>, knownRecruits: MutableList<Recruit>): Team {
+    fun createTeam(
+        players: MutableList<Player>,
+        coaches: MutableList<Coach>,
+        allRecruits: List<Recruit>
+    ): Team {
         val team = Team(
             teamId,
             schoolName,
@@ -53,12 +60,14 @@ data class TeamEntity(
             conferenceId,
             isUser,
             coaches,
-            knownRecruits,
+            location,
+            prestige,
             gamesPlayed,
             postseasonTournamentId,
             postseasonTournamentSeed
         )
 
+        team.commitments.addAll(commitments.map { cId -> allRecruits.first { it.id == cId } })
         team.twoPointAttempts = twoPointAttempts
         team.twoPointMakes = twoPointMakes
         team.threePointAttempts = threePointAttempts
@@ -71,21 +80,13 @@ data class TeamEntity(
         team.freeThrowShots = freeThrowShots
         team.freeThrowMakes = freeThrowMakes
         team.lastScoreDiff = lastScoreDif
-
-        team.practiceType = when (practiceType) {
-            PracticeType.OFFENSE.type -> PracticeType.OFFENSE
-            PracticeType.DEFENSE.type -> PracticeType.DEFENSE
-            PracticeType.CONDITIONING.type -> PracticeType.CONDITIONING
-            else -> PracticeType.NO_FOCUS
-        }
+        team.practiceType = practiceType
 
         return team
     }
 
     companion object {
         fun from(team: Team): TeamEntity {
-            val knownRecruits = mutableListOf<Int>()
-            team.knownRecruits.forEach { knownRecruits.add(it.id) }
             return TeamEntity(
                 team.teamId,
                 team.schoolName,
@@ -106,12 +107,14 @@ data class TeamEntity(
                 team.freeThrowMakes,
                 team.isUser,
                 team.lastScoreDiff,
-                team.practiceType.type,
-                knownRecruits,
+                team.practiceType,
                 team.gamesPlayed,
                 team.teamRating,
                 team.postSeasonTournamentId,
-                team.postSeasonTournamentSeed
+                team.postSeasonTournamentSeed,
+                team.prestige,
+                team.location,
+                team.commitments.map { it.id },
             )
         }
     }

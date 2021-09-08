@@ -109,7 +109,8 @@ class NewSeasonRepository @Inject constructor(
         val newRecruits = RecruitFactory.generateRecruits(
             firstNames,
             lastNames,
-            NewGameGenerator.NUM_RECRUITS
+            NewGameGenerator.NUM_RECRUITS,
+            teams
         )
         RecruitDatabaseHelper.saveRecruits(newRecruits, database)
 

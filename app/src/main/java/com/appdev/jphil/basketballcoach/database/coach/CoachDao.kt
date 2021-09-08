@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.coach
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,16 +19,4 @@ interface CoachDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCoaches(coachEntity: List<CoachEntity>)
-
-    @Query("SELECT * FROM ScoutingAssignmentEntity where coachId in (:coachId)")
-    suspend fun getScoutingAssignmentByCoachId(coachId: Int): ScoutingAssignmentEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveScoutingAssignment(scoutingAssignmentEntity: ScoutingAssignmentEntity?)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveScoutingAssignments(scoutingAssignmentEntity: List<ScoutingAssignmentEntity>)
-
-    @Delete
-    suspend fun deleteScoutingAssignment(scoutingAssignmentEntity: ScoutingAssignmentEntity?)
 }

@@ -2,7 +2,7 @@ package com.appdev.jphil.basketballcoach.database.recruit
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.appdev.jphil.basketball.recruits.RecruitInterest
+import com.appdev.jphil.basketball.recruits.NewRecruitInterest
 
 @Entity
 data class RecruitInterestEntity(
@@ -10,43 +10,69 @@ data class RecruitInterestEntity(
     val id: Int?,
     val recruitId: Int,
     val teamId: Int,
-    val teamName: String,
-    val interest: Int,
-    val ratingRange: Int,
-    val ratingOffset: Int,
-    val isOfferedScholarship: Boolean,
-    val lastInteractionGame: Int,
-    val isScholarshipRevoked: Boolean
+    val preferredPrestige: Int,
+    val wantsClose: Boolean,
+    val wantsFar: Boolean,
+    val wantsImmediateStart: Boolean,
+    val wantsToDevelop: Boolean,
+    val wantsThrees: Boolean,
+    val wantsPress: Boolean,
+    val wantsAggressive: Boolean,
+    val wantsToBeStar: Boolean,
+    val prestigeInterest: Int?,
+    val locationInterest: Int?,
+    val playingTimeInterest: Int?,
+    val playStyleInterest: Int?,
+    val teamAbilityInterest: Int?,
+    val recruitmentInterest: Int,
 ) {
 
-    fun create(): RecruitInterest {
-        return RecruitInterest(
+    fun create(): NewRecruitInterest {
+        return NewRecruitInterest(
             id,
-            recruitId,
             teamId,
-            teamName,
-            interest,
-            ratingRange,
-            ratingOffset,
-            isOfferedScholarship,
-            lastInteractionGame,
-            isScholarshipRevoked
+            preferredPrestige,
+            wantsClose,
+            wantsFar,
+            wantsImmediateStart,
+            wantsToDevelop,
+            wantsThrees,
+            wantsPress,
+            wantsAggressive,
+            wantsToBeStar,
+            prestigeInterest,
+            locationInterest,
+            playingTimeInterest,
+            playStyleInterest,
+            teamAbilityInterest,
+            recruitmentInterest
         )
     }
 
     companion object {
-        fun from(interest: RecruitInterest): RecruitInterestEntity {
+        fun from(
+            recruitId: Int,
+            interest: NewRecruitInterest
+        ): RecruitInterestEntity {
             return RecruitInterestEntity(
                 interest.id,
-                interest.recruitId,
+                recruitId,
                 interest.teamId,
-                interest.teamName,
-                interest.interest,
-                interest.ratingRange,
-                interest.ratingOffset,
-                interest.isOfferedScholarship,
-                interest.lastInteractionGame,
-                interest.isScholarshipRevoked
+                interest.preferredPrestige,
+                interest.wantsClose,
+                interest.wantsFar,
+                interest.wantsImmediateStart,
+                interest.wantsToDevelop,
+                interest.wantsThrees,
+                interest.wantsPress,
+                interest.wantsAggressive,
+                interest.wantsToBeStar,
+                interest.prestigeInterest,
+                interest.locationInterest,
+                interest.playingTimeInterest,
+                interest.playStyleInterest,
+                interest.teamAbilityInterest,
+                interest.recruitmentInterest
             )
         }
     }

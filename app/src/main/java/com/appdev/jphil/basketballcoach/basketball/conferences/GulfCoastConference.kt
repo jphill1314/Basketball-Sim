@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class GulfCoastConference(rating: Int) : ConferenceGeneratorDataModel(
     "Gulf Coast Conference",
@@ -9,52 +10,62 @@ class GulfCoastConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Tampa",
             "Crocodiles",
-            "TC"
+            "TC",
+            Location.FL
         ),
         TeamGeneratorDataModel(
             "Tallahassee",
             "Alligators",
-            "TA"
+            "TA",
+            Location.FL
         ),
         TeamGeneratorDataModel(
             "Mobile",
             "Shipbuilders",
-            "MSB"
+            "MSB",
+            Location.AL
         ),
         TeamGeneratorDataModel(
             "New Orleans",
             "Party",
-            "NOP"
+            "NOP",
+            Location.LA
         ),
         TeamGeneratorDataModel(
             "Houston",
             "Scientists",
-            "HOU"
+            "HOU",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "San Antonio",
             "Capybaras",
-            "SACB"
+            "SACB",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "Austin",
             "Camels",
-            "AUS"
+            "AUS",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "Orlando",
             "Beavers",
-            "ORL"
+            "ORL",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "Montgomery",
             "Riders",
-            "MONT"
+            "MONT",
+            Location.AL
         ),
         TeamGeneratorDataModel(
             "Baton Rouge",
             "Squirrels",
-            "BRS"
+            "BRS",
+            Location.LA
         )
     ),
     rating

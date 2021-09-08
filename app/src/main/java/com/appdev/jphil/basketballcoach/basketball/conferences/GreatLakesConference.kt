@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class GreatLakesConference(rating: Int) : ConferenceGeneratorDataModel(
     "Great Lakes Conference",
@@ -9,52 +10,62 @@ class GreatLakesConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Cleveland",
             "Rockers",
-            "CLE"
+            "CLE",
+            Location.OH
         ),
         TeamGeneratorDataModel(
             "Detroit",
             "Motors",
-            "DET"
+            "DET",
+            Location.MI
         ),
         TeamGeneratorDataModel(
             "Milwaukee",
             "Horses",
-            "MIL"
+            "MIL",
+            Location.WI
         ),
         TeamGeneratorDataModel(
             "Chicago",
             "Politicians",
-            "CHI"
+            "CHI",
+            Location.IL
         ),
         TeamGeneratorDataModel(
             "Green Bay",
             "Cheese",
-            "GB"
+            "GB",
+            Location.WI
         ),
         TeamGeneratorDataModel(
             "Indianapolis",
             "Racers",
-            "IND"
+            "IND",
+            Location.IN
         ),
         TeamGeneratorDataModel(
             "Cincinnati",
             "Log Drivers",
-            "CIN"
+            "CIN",
+            Location.OH
         ),
         TeamGeneratorDataModel(
             "Pittsburgh",
             "Forges",
-            "PIT"
+            "PIT",
+            Location.PA
         ),
         TeamGeneratorDataModel(
             "Duluth",
             "Bears",
-            "DUL"
+            "DUL",
+            Location.MN
         ),
         TeamGeneratorDataModel(
             "Toledo",
             "Chipmunks",
-            "TLD"
+            "TLD",
+            Location.OH
         )
     ),
     rating

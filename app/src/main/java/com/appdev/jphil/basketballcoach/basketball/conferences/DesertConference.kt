@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class DesertConference(rating: Int) : ConferenceGeneratorDataModel(
     "Desert Conference",
@@ -9,42 +10,50 @@ class DesertConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Las Vegas",
             "Gamblers",
-            "LVG"
+            "LVG",
+            Location.NV
         ),
         TeamGeneratorDataModel(
             "Reno",
             "Skiers",
-            "RENO"
+            "RENO",
+            Location.NV
         ),
         TeamGeneratorDataModel(
             "Phoenix",
             "Drought",
-            "PHX"
+            "PHX",
+            Location.AZ
         ),
         TeamGeneratorDataModel(
             "Tucson",
             "Oxen",
-            "TUC"
+            "TUC",
+            Location.AZ
         ),
         TeamGeneratorDataModel(
             "Albuquerque",
             "Ballons",
-            "ALQ"
+            "ALQ",
+            Location.NM
         ),
         TeamGeneratorDataModel(
             "El Paso",
             "Cowboys",
-            "EPC"
+            "EPC",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "Salt Lake City",
             "Saints",
-            "SLC"
+            "SLC",
+            Location.UT
         ),
         TeamGeneratorDataModel(
             "Amarillo",
             "Armadillos",
-            "AA"
+            "AA",
+            Location.TX
         )
     ),
     rating

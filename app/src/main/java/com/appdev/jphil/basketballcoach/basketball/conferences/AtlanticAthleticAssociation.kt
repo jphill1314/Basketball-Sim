@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class AtlanticAthleticAssociation(rating: Int) : ConferenceGeneratorDataModel(
     "Atlantic Athletic Association",
@@ -9,42 +10,50 @@ class AtlanticAthleticAssociation(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Miami",
             "Detectives",
-            "MIA"
+            "MIA",
+            Location.FL
         ),
         TeamGeneratorDataModel(
             "Jacksonville",
             "Swordfish",
-            "JS"
+            "JS",
+            Location.FL
         ),
         TeamGeneratorDataModel(
             "Philadelphia",
             "Founders",
-            "PHF"
+            "PHF",
+            Location.PA
         ),
         TeamGeneratorDataModel(
             "Wilmington",
             "Fear",
-            "WLM"
+            "WLM",
+            Location.DE
         ),
         TeamGeneratorDataModel(
             "Savannah",
             "Jellyfish",
-            "SJF"
+            "SJF",
+            Location.GA
         ),
         TeamGeneratorDataModel(
             "Norfolk",
             "Eagles",
-            "NE"
+            "NE",
+            Location.VA
         ),
         TeamGeneratorDataModel(
             "Dover",
             "Monsters",
-            "DM"
+            "DM",
+            Location.DE
         ),
         TeamGeneratorDataModel(
             "Newark",
             "Sea Bass",
-            "NSB"
+            "NSB",
+            Location.NJ
         )
     ),
     rating

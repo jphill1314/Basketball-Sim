@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class CaliforniaConference(rating: Int) : ConferenceGeneratorDataModel(
     "California Conference",
@@ -9,52 +10,62 @@ class CaliforniaConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Sacramento",
             "Panthers",
-            "SAC"
+            "SAC",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "San Francisco",
             "Seals",
-            "SFS"
+            "SFS",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "Los Angeles",
             "Celebrities",
-            "LAC"
+            "LAC",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "San Diego",
             "Captains",
-            "SDC"
+            "SDC",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "Anaheim",
             "Pufferfish",
-            "ANP"
+            "ANP",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "Long Beach",
             "Anglerfish",
-            "LBA"
+            "LBA",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "San Jose",
             "Nerds",
-            "SJN"
+            "SJN",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "Oakland",
             "Freighters",
-            "OAK"
+            "OAK",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "Redding",
             "Redwoods",
-            "RR"
+            "RR",
+            Location.CA
         ),
         TeamGeneratorDataModel(
             "Fresno",
             "Sequoias",
-            "FS"
+            "FS",
+            Location.CA
         )
     ),
     rating

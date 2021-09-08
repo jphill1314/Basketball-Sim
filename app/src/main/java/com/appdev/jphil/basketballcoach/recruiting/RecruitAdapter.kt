@@ -52,28 +52,15 @@ class RecruitAdapter(
             viewHolder.name.text = recruit.fullName
             viewHolder.playerType.text = playerTypes[recruit.playerType.type]
             // TODO: make sure to only show the range that the user knows about
-            val ratingMin = recruit.getRatingMinForTeam(teamId)
-            val ratingMax = recruit.getRatingMaxForTeam(teamId)
-            viewHolder.rating.text = if (ratingMax != ratingMin) {
-                resources.getString(R.string.rating_range, ratingMin, ratingMax)
-            } else {
-                resources.getString(R.string.rating_colon, ratingMax)
-            }
+            viewHolder.rating.text = resources.getString(R.string.rating_colon, recruit.rating)
 
-            val interestInTeam = recruit.interestInTeams.filter { it.teamId == teamId }
+            val interestInTeam = recruit.recruitInterests.filter { it.teamId == teamId }
             if (interestInTeam.isNotEmpty()) {
                 val interest = interestInTeam.first()
-                viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.interest.toString())
-                val interaction = when {
-                    interest.isScholarshipRevoked -> 4
-                    interest.isOfferedScholarship -> 2
-                    else -> -1
-                }
+                viewHolder.interest.text = resources.getString(R.string.interest_colon, interest.getInterest().toString())
                 if (recruit.isCommitted) {
                     viewHolder.interaction.text =
                         if (recruit.teamCommittedTo == teamId) "Committed to you" else "Committed elsewhere"
-                } else {
-                    viewHolder.interaction.text = if (interaction == -1) "" else interactions[interaction]
                 }
             } else {
                 viewHolder.interest.text =

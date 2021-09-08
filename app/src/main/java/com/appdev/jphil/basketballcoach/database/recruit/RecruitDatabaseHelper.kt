@@ -11,8 +11,8 @@ object RecruitDatabaseHelper {
 
         recruits.forEach { recruit ->
             recruitEntities.add(RecruitEntity.from(recruit))
-            recruit.interestInTeams.forEach { interest ->
-                interestEntities.add(RecruitInterestEntity.from(interest))
+            recruit.recruitInterests.forEach { interest ->
+                interestEntities.add(RecruitInterestEntity.from(recruit.id, interest))
             }
         }
 

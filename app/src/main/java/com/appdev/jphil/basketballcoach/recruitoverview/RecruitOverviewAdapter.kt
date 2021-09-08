@@ -14,8 +14,6 @@ class RecruitOverviewAdapter(
     private val resources: Resources
 ) : RecyclerView.Adapter<RecruitOverviewAdapter.ViewHolder>() {
 
-    private val interactions = resources.getStringArray(R.array.interactions)
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val team: TextView = view.findViewById(R.id.team_name)
         val interaction: TextView = view.findViewById(R.id.interaction)
@@ -27,21 +25,13 @@ class RecruitOverviewAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = recruit.interestInTeams.size
+    override fun getItemCount(): Int = recruit.recruitInterests.size
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val teamInterest = recruit.interestInTeams[position]
+        val teamInterest = recruit.recruitInterests[position]
 
         with(viewHolder) {
-            team.text = teamInterest.teamName
-
-            val index = when {
-                teamInterest.isScholarshipRevoked -> 4
-                teamInterest.isOfferedScholarship -> 2
-                else -> -1
-            }
-
-            interaction.text = if (index == -1) "" else interactions[index]
+//            team.text = teamInterest.teamName
 
             if (recruit.isCommitted) {
                 if (recruit.teamCommittedTo == teamInterest.teamId) {
@@ -49,7 +39,7 @@ class RecruitOverviewAdapter(
                 }
             }
 
-            interest.text = resources.getString(R.string.interest_colon, teamInterest.interest.toString())
+            interest.text = resources.getString(R.string.interest_colon, teamInterest.getInterest().toString())
         }
     }
 }
