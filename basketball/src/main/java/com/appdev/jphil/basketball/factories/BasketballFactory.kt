@@ -34,7 +34,8 @@ object BasketballFactory {
         val recruits = RecruitFactory.generateRecruits(
             firstNames,
             lastNames,
-            numberOfRecruits
+            numberOfRecruits,
+            conferences.flatMap { it.teams }
         )
 
         return BasketballWorld(
@@ -64,6 +65,7 @@ object BasketballFactory {
                     minRating + Random.nextInt(15) + dataModel.ratingVariance,
                     conferenceId,
                     index == 1 && conferenceId == 0, // TODO: make this not bad
+                    dataModel.location,
                     firstNames,
                     lastNames
                 )

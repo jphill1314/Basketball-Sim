@@ -2,16 +2,20 @@ package com.appdev.jphil.basketballcoach.database.coach
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
-import com.appdev.jphil.basketball.coaches.ScoutingAssignment
+import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketballcoach.database.relations.RecruitRelations
+import com.appdev.jphil.basketballcoach.database.typeconverters.IntListTypeConverter
 
 @Entity
+@TypeConverters(IntListTypeConverter::class)
 data class CoachEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     val teamId: Int,
-    val type: Int,
+    val type: CoachType,
     val firstName: String,
     val lastName: String,
     val recruiting: Int,
@@ -37,19 +41,17 @@ data class CoachEntity(
     val teachPerimeterDefense: Int,
     val teachPositioning: Int,
     val teachRebounding: Int,
-    val teachConditioning: Int
+    val teachConditioning: Int,
+    val recruitIds: List<Int>
 ) {
 
-    fun createCoach(scoutingAssignmentEntity: ScoutingAssignmentEntity?): Coach {
-        val coachType = when (type) {
-            CoachType.HEAD_COACH.type -> CoachType.HEAD_COACH
-            else -> CoachType.ASSISTANT_COACH
-        }
+    fun createCoachWithRecruits(allRecruits: List<Recruit>): Coach {
+        val recruits = allRecruits.filter { recruitIds.contains(it.id) }
 
         return Coach(
             id,
             teamId,
-            coachType,
+            type,
             firstName,
             lastName,
             recruiting,
@@ -76,8 +78,49 @@ data class CoachEntity(
             teachPositioning,
             teachRebounding,
             teachConditioning,
-            scoutingAssignmentEntity?.create() ?: ScoutingAssignment()
-        )
+        ).apply {
+            recruitingAssignments.addAll(recruits)
+        }
+    }
+
+    fun createCoach(allRecruits: List<RecruitRelations>): Coach {
+        val recruits = allRecruits.filter { recruitIds.contains(it.recruitEntity.id) }.map {
+            it.recruitEntity.createRecruit(it.recruitInterestEntities)
+        }
+
+        return Coach(
+            id,
+            teamId,
+            type,
+            firstName,
+            lastName,
+            recruiting,
+            offenseFavorsThrees,
+            pace,
+            aggression,
+            defenseFavorsThrees,
+            pressFrequency,
+            pressAggression,
+            offenseFavorsThreesGame,
+            paceGame,
+            aggressionGame,
+            defenseFavorsThreesGame,
+            pressFrequencyGame,
+            pressAggressionGame,
+            intentionallyFoul,
+            shouldHurry,
+            shouldWasteTime,
+            teachShooting,
+            teachPostMoves,
+            teachBallControl,
+            teachPostDefense,
+            teachPerimeterDefense,
+            teachPositioning,
+            teachRebounding,
+            teachConditioning,
+        ).apply {
+            recruitingAssignments.addAll(recruits)
+        }
     }
 
     companion object {
@@ -85,7 +128,7 @@ data class CoachEntity(
             return CoachEntity(
                 coach.id,
                 coach.teamId,
-                coach.type.type,
+                coach.type,
                 coach.firstName,
                 coach.lastName,
                 coach.recruiting,
@@ -111,7 +154,8 @@ data class CoachEntity(
                 coach.teachPerimeterDefense,
                 coach.teachPositioning,
                 coach.teachRebounding,
-                coach.teachConditioning
+                coach.teachConditioning,
+                coach.recruitingAssignments.map { it.id }
             )
         }
     }

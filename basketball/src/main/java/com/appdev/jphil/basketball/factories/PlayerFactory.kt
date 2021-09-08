@@ -52,6 +52,7 @@ object PlayerFactory {
         rating: Int,
         index: Int,
         type: PlayerType,
+        isOnScholarship: Boolean = true, // TODO: allow this to be false
         recruitPotential: Int = 0
     ): Player {
         val newRating = rating + 10
@@ -89,6 +90,7 @@ object PlayerFactory {
             position,
             year,
             type,
+            isOnScholarship,
             closeRangeShot,
             midRangeShot,
             longRangeShot,

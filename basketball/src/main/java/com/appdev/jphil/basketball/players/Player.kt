@@ -10,6 +10,7 @@ class Player(
     val position: Int,
     var year: Int,
     val type: PlayerType,
+    val isOnScholarship: Boolean,
     closeRangeShot: Int,
     midRangeShot: Int,
     longRangeShot: Int,

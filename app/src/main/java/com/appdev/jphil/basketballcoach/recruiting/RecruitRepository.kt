@@ -15,10 +15,16 @@ class RecruitRepository @Inject constructor(
 
     private lateinit var presenter: RecruitContract.Presenter
 
-    override suspend fun loadRecruits(): Team {
+    override suspend fun loadTeam(): Team {
         return TeamDatabaseHelper.loadTeamById(teamId, database) ?: throw IllegalStateException(
             "No team exists with teamId = $teamId"
         )
+    }
+
+    override suspend fun loadRecruits(): List<Recruit> {
+        return database.relationalDao().loadAllRecruits().map {
+            it.recruitEntity.createRecruit(it.recruitInterestEntities)
+        }
     }
 
     override suspend fun saveRecruits(recruits: List<Recruit>) {

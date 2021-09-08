@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class MiddleAmericaConference(rating: Int) : ConferenceGeneratorDataModel(
     "Middle America Conference",
@@ -9,52 +10,62 @@ class MiddleAmericaConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Dallas",
             "Engineers",
-            "DE"
+            "DE",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "Ft. Worth",
             "Planes",
-            "FWP"
+            "FWP",
+            Location.TX
         ),
         TeamGeneratorDataModel(
             "Oklahoma City",
             "Lemurs",
-            "OKC"
+            "OKC",
+            Location.OK
         ),
         TeamGeneratorDataModel(
             "Kansas City",
             "Wagon Riders",
-            "KCWR"
+            "KCWR",
+            Location.KS
         ),
         TeamGeneratorDataModel(
             "St. Louis",
             "Explorers",
-            "STL"
+            "STL",
+            Location.MO
         ),
         TeamGeneratorDataModel(
             "Iowa City",
             "Iowians",
-            "ICI"
+            "ICI",
+            Location.IA
         ),
         TeamGeneratorDataModel(
             "Omaha",
             "Ballers",
-            "OB"
+            "OB",
+            Location.NE
         ),
         TeamGeneratorDataModel(
             "Minneapolis",
             "Koalas",
-            "MNK"
+            "MNK",
+            Location.MN
         ),
         TeamGeneratorDataModel(
             "Wichita",
             "Wombats",
-            "WW"
+            "WW",
+            Location.KS
         ),
         TeamGeneratorDataModel(
             "Des Moines",
             "Harvesters",
-            "DMH"
+            "DMH",
+            Location.IA
         )
     ),
     rating

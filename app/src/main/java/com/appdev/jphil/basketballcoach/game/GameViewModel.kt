@@ -7,7 +7,6 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
 import com.appdev.jphil.basketball.game.helpers.TimeoutHelper
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEventEntity
@@ -191,17 +190,8 @@ class GameViewModel(
 
     private suspend fun updateRecruitsAfterGame(game: Game) {
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
-        recruits.forEach { recruit -> recruit.updateInterestAfterGame(game) }
-        game.homeTeam.doScouting(recruits)
-        game.awayTeam.doScouting(recruits)
-
-        if (!game.homeTeam.isUser) {
-            TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits)
-        }
-
-        if (!game.awayTeam.isUser) {
-            TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
-        }
+        game.homeTeam.doRecruitment(game, recruits)
+        game.awayTeam.doRecruitment(game, recruits)
         RecruitDatabaseHelper.saveRecruits(recruits, database)
     }
 }

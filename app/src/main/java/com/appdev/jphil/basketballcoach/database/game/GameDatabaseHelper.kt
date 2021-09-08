@@ -147,11 +147,9 @@ object GameDatabaseHelper {
                 }
             }.toMutableList(),
             coaches = teamRelations.coachEntities.map { relation ->
-                relation.coachRelations.createCoach(relation.assignmentEntity)
+                relation.coachRelations.createCoachWithRecruits(allRecruits)
             }.toMutableList(),
-            knownRecruits = teamRelations.teamEntity.knownRecruits.map { id ->
-                allRecruits.first { it.id == id }
-            }.toMutableList()
+            allRecruits
         )
     }
 }

@@ -68,7 +68,7 @@ class ScheduleTransformer @Inject constructor() :
                     "Conference Tournament",
                     true
                 ),
-                NationalChampionshipUiModel(dataState.nationalChampExists) // TODO: add logic for this
+                NationalChampionshipUiModel(dataState.nationalChampExists)
             )
             dataState.isTournamentExisting -> listOf(
                 TournamentUiModel(
@@ -82,16 +82,14 @@ class ScheduleTransformer @Inject constructor() :
                     false
                 )
             )
-            else -> emptyList<UiModel>()
+            else -> emptyList()
         }
 
-//        val seasonOverModels = if (dataState.isSeasonOver) {
-//            listOf(FinishSeasonUiModel)
-//        } else {
-//            emptyList()
-//        }
-
-        val seasonOverModels = listOf(FinishSeasonUiModel)
+        val seasonOverModels = if (dataState.isSeasonOver) {
+            listOf(FinishSeasonUiModel)
+        } else {
+            emptyList()
+        }
 
         return scheduleModels + tournamentModels + seasonOverModels
     }

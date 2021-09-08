@@ -28,11 +28,9 @@ data class ConferenceRelations(
                     }
                 }.toMutableList(),
                 coaches = entity.coachEntities.map { relation ->
-                    relation.coachRelations.createCoach(relation.assignmentEntity)
+                    relation.coachRelations.createCoachWithRecruits(allRecruits)
                 }.toMutableList(),
-                knownRecruits = entity.teamEntity.knownRecruits.map { id ->
-                    allRecruits.first { it.id == id }
-                }.toMutableList()
+                allRecruits
             )
         }
 

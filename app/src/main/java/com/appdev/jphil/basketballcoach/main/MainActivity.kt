@@ -69,6 +69,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         if (savedInstanceState != null) {
             navBinding.navTeamName.text = savedInstanceState.getString(TEAM_NAME)
             navBinding.navTeamRating.text = savedInstanceState.getString(TEAM_RATING)
+            navBinding.navTeamPrestige.text = savedInstanceState.getString(TEAM_PRESTIGE)
 
             teamViewModel?.changeTeamAndConference(
                 savedInstanceState.getInt(TEAM_ID),
@@ -119,6 +120,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         val oldName = navBinding.navTeamName.text
         navBinding.navTeamName.text = team.name
         navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.teamRating)
+        navBinding.navTeamPrestige.text = "Prestige: ${team.prestige}"
 
         binding.navView.menu.apply {
             findItem(R.id.recruiting).isVisible = team.isUser
@@ -136,6 +138,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(TEAM_NAME, navBinding.navTeamName.text.toString())
         outState.putString(TEAM_RATING, navBinding.navTeamRating.text.toString())
+        outState.putString(TEAM_PRESTIGE, navBinding.navTeamPrestige.text.toString())
         outState.putInt(TEAM_ID, teamViewModel?.teamId ?: -1)
         outState.putInt(CONF_ID, teamViewModel?.conferenceId ?: 0)
         outState.putInt(TEAM_COLOR, teamTheme.type)
@@ -146,6 +149,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     private companion object {
         const val TEAM_NAME = "team name"
         const val TEAM_RATING = "team rating"
+        const val TEAM_PRESTIGE = "team prestige"
         const val TEAM_COLOR = "team color"
         const val TEAM_ID = "team id"
         const val CONF_ID = "conf id"

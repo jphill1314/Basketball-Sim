@@ -62,14 +62,7 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
             findViewById<TextView>(R.id.position).text = resources.getStringArray(R.array.position_abbreviation)[recruit.position - 1]
             findViewById<TextView>(R.id.player_name).text = recruit.fullName
 
-            val teamId = teamManager?.teamId ?: -1
-            val ratingMin = recruit.getRatingMinForTeam(teamId)
-            val ratingMax = recruit.getRatingMaxForTeam(teamId)
-            findViewById<TextView>(R.id.rating).text = if (ratingMax != ratingMin) {
-                resources.getString(R.string.rating_range, ratingMin, ratingMax)
-            } else {
-                resources.getString(R.string.rating_colon, ratingMax)
-            }
+            findViewById<TextView>(R.id.rating).text = resources.getString(R.string.rating_colon, recruit.rating)
 
             findViewById<TextView>(R.id.potential).text = resources.getString(R.string.potential_color, recruit.potential)
             findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[recruit.playerType.type]
@@ -89,6 +82,6 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
     }
 
     override fun showToast(message: String) {
-        Toast.makeText(context!!, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 }
