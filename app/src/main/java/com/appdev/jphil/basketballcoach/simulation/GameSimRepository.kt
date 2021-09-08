@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.simulation
 
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor
 import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDao
@@ -67,17 +66,9 @@ class GameSimRepository @Inject constructor(
                 val game = GameDatabaseHelper.getGameById(gameId, recruits, relationalDao)
 
                 game.simulateFullGame()
-                recruits.forEach { it.updateInterestAfterGame(game) }
 
-                game.homeTeam.doScouting(recruits)
-                game.awayTeam.doScouting(recruits)
-
-                if (!game.homeTeam.isUser) {
-                    TeamRecruitInteractor.interactWithRecruits(game.homeTeam, recruits)
-                }
-                if (!game.awayTeam.isUser) {
-                    TeamRecruitInteractor.interactWithRecruits(game.awayTeam, recruits)
-                }
+                game.homeTeam.doRecruitment(game, recruits)
+                game.awayTeam.doRecruitment(game, recruits)
 
                 GameDatabaseHelper.saveGameAndStats(game, database)
                 TeamDatabaseHelper.saveTeam(game.homeTeam, database)

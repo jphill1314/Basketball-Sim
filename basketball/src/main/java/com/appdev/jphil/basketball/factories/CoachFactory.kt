@@ -2,7 +2,6 @@ package com.appdev.jphil.basketball.factories
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
-import com.appdev.jphil.basketball.coaches.ScoutingAssignment
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -66,8 +65,7 @@ object CoachFactory {
             teachPerimeterDefense,
             teachPositioning,
             teachRebounding,
-            teachConditioning,
-            ScoutingAssignment()
+            teachConditioning
         )
     }
 

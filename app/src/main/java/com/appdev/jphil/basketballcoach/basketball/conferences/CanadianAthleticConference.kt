@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class CanadianAthleticConference(rating: Int) : ConferenceGeneratorDataModel(
     "Canadian Athletic Conference",
@@ -9,52 +10,62 @@ class CanadianAthleticConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Calgary",
             "Polar Bears",
-            "CPB"
+            "CPB",
+            Location.AB
         ),
         TeamGeneratorDataModel(
             "Edmonton",
             "Caribou",
-            "EDC"
+            "EDC",
+            Location.AB
         ),
         TeamGeneratorDataModel(
             "Winnipeg",
             "Wolves",
-            "WW"
+            "WW",
+            Location.MB
         ),
         TeamGeneratorDataModel(
             "Toronto",
             "Lions",
-            "TL"
+            "TL",
+            Location.ON
         ),
         TeamGeneratorDataModel(
             "Ottawa",
             "Unicorns",
-            "OU"
+            "OU",
+            Location.ON
         ),
         TeamGeneratorDataModel(
             "Montreal",
             "Narwhals",
-            "MN"
+            "MN",
+            Location.QC
         ),
         TeamGeneratorDataModel(
             "Quebec City",
             "Revolution",
-            "QCR"
+            "QCR",
+            Location.QC
         ),
         TeamGeneratorDataModel(
             "Moncton",
             "Chameleons",
-            "MC"
+            "MC",
+            Location.NB
         ),
         TeamGeneratorDataModel(
             "Saskatchewan",
             "Black Bears",
-            "SBB"
+            "SBB",
+            Location.SK
         ),
         TeamGeneratorDataModel(
             "Vancouver",
             "Tigers",
-            "VAN"
+            "VAN",
+            Location.BC
         )
     ),
     rating

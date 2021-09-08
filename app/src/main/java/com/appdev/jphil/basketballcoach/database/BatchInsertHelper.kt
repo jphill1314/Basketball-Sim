@@ -5,7 +5,6 @@ import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
-import com.appdev.jphil.basketballcoach.database.coach.ScoutingAssignmentEntity
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
@@ -28,7 +27,6 @@ object BatchInsertHelper {
         val players = mutableListOf<PlayerEntity>()
         val progress = mutableListOf<PlayerProgressionEntity>()
         val coaches = mutableListOf<CoachEntity>()
-        val assignments = mutableListOf<ScoutingAssignmentEntity>()
         val teamEntities = mutableListOf<TeamEntity>()
         teams.forEach { team ->
             team.roster.forEach { player ->
@@ -36,7 +34,6 @@ object BatchInsertHelper {
                 players.add(PlayerEntity.from(player))
             }
             team.coaches.forEach { coach ->
-                assignments.add(ScoutingAssignmentEntity.from(coach.id!!, coach.scoutingAssignment))
                 coaches.add(CoachEntity.from(coach))
             }
             teamEntities.add(TeamEntity.from(team))
@@ -44,7 +41,6 @@ object BatchInsertHelper {
 
         database.playerDao().insertPlayers(players)
         database.playerDao().insertPlayerProgressions(progress)
-        database.coachDao().saveScoutingAssignments(assignments)
         database.coachDao().saveCoaches(coaches)
         database.teamDao().insertTeams(teamEntities)
     }

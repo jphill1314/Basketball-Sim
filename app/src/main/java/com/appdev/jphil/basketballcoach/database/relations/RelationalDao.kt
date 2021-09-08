@@ -30,4 +30,12 @@ interface RelationalDao {
     @Transaction
     @Query("select * from ConferenceEntity where id in (:id)")
     suspend fun loadConferenceTournamentData(id: Int): ConferenceTournamentRelations
+
+    @Transaction
+    @Query("select * from RecruitEntity")
+    suspend fun loadAllRecruits(): List<RecruitRelations>
+
+    @Transaction
+    @Query("select * from RecruitEntity")
+    suspend fun loadRecruitById(): RecruitRelations
 }

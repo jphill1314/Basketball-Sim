@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class WesternConference(rating: Int) : ConferenceGeneratorDataModel(
     "Western Conference",
@@ -9,42 +10,50 @@ class WesternConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "Portland",
             "Hipsters",
-            "PTL"
+            "PTL",
+            Location.OR
         ),
         TeamGeneratorDataModel(
             "Seattle",
             "Coffeemakers",
-            "SCM"
+            "SCM",
+            Location.WA
         ),
         TeamGeneratorDataModel(
             "Salem",
             "Sharks",
-            "SLM"
+            "SLM",
+            Location.OR
         ),
         TeamGeneratorDataModel(
             "Olympia",
             "Olympians",
-            "OO"
+            "OO",
+            Location.WA
         ),
         TeamGeneratorDataModel(
             "Anchorage",
             "Mushers",
-            "AM"
+            "AM",
+            Location.AK
         ),
         TeamGeneratorDataModel(
             "Tacoma",
             "Crabs",
-            "TC"
+            "TC",
+            Location.WA
         ),
         TeamGeneratorDataModel(
             "Honolulu",
             "Wave Riders",
-            "HWR"
+            "HWR",
+            Location.HI
         ),
         TeamGeneratorDataModel(
             "Yakima",
             "Yaks",
-            "YY"
+            "YY",
+            Location.WA
         )
     ),
     rating

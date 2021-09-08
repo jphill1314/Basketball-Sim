@@ -109,7 +109,8 @@ class NewSeasonRepository @Inject constructor(
         val newRecruits = RecruitFactory.generateRecruits(
             firstNames,
             lastNames,
-            NewGameGenerator.NUM_RECRUITS
+            NewGameGenerator.NUM_RECRUITS,
+            teams
         )
         RecruitDatabaseHelper.saveRecruits(newRecruits, database)
 
@@ -143,9 +144,6 @@ class NewSeasonRepository @Inject constructor(
         recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.forEach { commit ->
             team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
         }
-
-        // Remove list of known recruits
-        team.knownRecruits.clear()
 
         for (position in 1..5) {
             // Fill empty spots in roster
@@ -181,9 +179,7 @@ class NewSeasonRepository @Inject constructor(
 
         team.players.sortBy { it.rosterIndex }
 
-        // Remove post season tournament info
-        team.postSeasonTournamentId = -1
-        team.postSeasonTournamentSeed = -1
+        team.startNewSeason()
     }
 
     companion object {

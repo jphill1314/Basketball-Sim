@@ -15,7 +15,6 @@ abstract class DatabaseModule {
         fun providesDatabase(application: Application): BasketballDatabase {
             return Room
                 .databaseBuilder(application, BasketballDatabase::class.java, "basketball-db")
-                .addMigrations(TempMigration())
                 .build()
         }
 

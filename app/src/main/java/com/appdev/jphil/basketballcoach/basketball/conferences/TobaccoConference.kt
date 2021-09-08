@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
+import com.appdev.jphil.basketball.location.Location
 
 class TobaccoConference(rating: Int) : ConferenceGeneratorDataModel(
     "Tobacco Conference",
@@ -9,52 +10,62 @@ class TobaccoConference(rating: Int) : ConferenceGeneratorDataModel(
         TeamGeneratorDataModel(
             "DC",
             "Lobbyists",
-            "DCL"
+            "DCL",
+            Location.DC
         ),
         TeamGeneratorDataModel(
             "Richmond",
             "Bulls",
-            "RCH"
+            "RCH",
+            Location.VA
         ),
         TeamGeneratorDataModel(
             "Charlotte",
             "Bankers",
-            "CTL"
+            "CTL",
+            Location.NC
         ),
         TeamGeneratorDataModel(
             "Columbia",
             "Cows",
-            "CC"
+            "CC",
+            Location.SC
         ),
         TeamGeneratorDataModel(
             "Atlanta",
             "News",
-            "ATL"
+            "ATL",
+            Location.GA
         ),
         TeamGeneratorDataModel(
             "Baltimore",
             "Fishers",
-            "BTL"
+            "BTL",
+            Location.MD
         ),
         TeamGeneratorDataModel(
             "Nashville",
             "Musicians",
-            "NSH"
+            "NSH",
+            Location.TN
         ),
         TeamGeneratorDataModel(
             "Raleigh",
             "Hogs",
-            "RH"
+            "RH",
+            Location.NC
         ),
         TeamGeneratorDataModel(
             "Charleston",
             "Plane Builders",
-            "CPB"
+            "CPB",
+            Location.SC
         ),
         TeamGeneratorDataModel(
             "Birmingham",
             "Letters",
-            "BL"
+            "BL",
+            Location.AL
         )
     ),
     rating

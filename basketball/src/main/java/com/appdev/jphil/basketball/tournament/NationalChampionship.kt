@@ -100,7 +100,7 @@ class NationalChampionship(
         val newGames = mutableListOf<Game>()
         val finalGamesSize = games.filter { it.isFinal }.size
         val gamesSize = games.size
-        when  {
+        when {
             // Game 16
             finalGamesSize == 2 && gamesSize < 17 ->
                 newGames.add(NewGameHelper.newGame(games[0].winner, games[1].winner, season, id))
@@ -114,7 +114,7 @@ class NationalChampionship(
             finalGamesSize == 8 && gamesSize < 20 ->
                 newGames.add(NewGameHelper.newGame(games[6].winner, games[7].winner, season, id))
             // Game 20
-            finalGamesSize == 10 && gamesSize < 21  ->
+            finalGamesSize == 10 && gamesSize < 21 ->
                 newGames.add(NewGameHelper.newGame(games[8].winner, games[9].winner, season, id))
             // Game 21
             finalGamesSize == 12 && gamesSize < 22 ->

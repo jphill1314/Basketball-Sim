@@ -20,7 +20,8 @@ interface RecruitContract {
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        suspend fun loadRecruits(): Team
+        suspend fun loadRecruits(): List<Recruit>
+        suspend fun loadTeam(): Team
         suspend fun saveRecruits(recruits: List<Recruit>)
     }
 }

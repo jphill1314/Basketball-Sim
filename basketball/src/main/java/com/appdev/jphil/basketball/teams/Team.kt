@@ -2,11 +2,14 @@ package com.appdev.jphil.basketball.teams
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
-import com.appdev.jphil.basketball.coaches.ScoutingAssignmentHelper
 import com.appdev.jphil.basketball.game.CoachTalk
+import com.appdev.jphil.basketball.game.Game
+import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.getCommitmentsIfPossible
+import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.updateRecruitingAssignments
 import java.util.Collections
 import kotlin.math.abs
 import kotlin.random.Random
@@ -21,11 +24,14 @@ class Team(
     val conferenceId: Int,
     val isUser: Boolean,
     val coaches: MutableList<Coach>,
-    val knownRecruits: MutableList<Recruit>,
+    val location: Location,
+    var prestige: Int,
     var gamesPlayed: Int,
     var postSeasonTournamentId: Int,
     var postSeasonTournamentSeed: Int
 ) {
+
+    val commitments = mutableListOf<Recruit>()
 
     val name = "$schoolName $mascot"
     val roster = mutableListOf<Player>() // for use everywhere else
@@ -319,7 +325,7 @@ class Team(
         return indexOfBest
     }
 
-    private fun calculateTeamRating(): Int {
+    fun calculateTeamRating(): Int {
         var rating = 0
         for (p in roster) {
             rating += p.getOverallRating()
@@ -329,27 +335,41 @@ class Team(
 
     fun getHeadCoach(): Coach = coaches.first { it.type == CoachType.HEAD_COACH }
 
-    fun doScouting(allRecruits: List<Recruit>) {
-        val unknownRecruits = mutableListOf<Recruit>()
-        unknownRecruits.addAll(allRecruits)
-        knownRecruits.forEach {
-            unknownRecruits.remove(it)
+    fun hasNeedAtPosition(position: Int): Boolean {
+        var nextYearsPlayers = roster.filter { it.position == position && it.year != 3 }.size
+        nextYearsPlayers += commitments.filter { it.position == position }.size
+        return 3 - nextYearsPlayers > 0
+    }
+
+    fun doRecruitment(game: Game, allRecruits: List<Recruit>) {
+        val assistants = coaches.filter { it.type != CoachType.HEAD_COACH }
+        if (!isUser) {
+            updateRecruitingAssignments(allRecruits)
         }
-        coaches.filter { it.type != CoachType.HEAD_COACH }.forEach { coach ->
-            if (!isUser) {
-                ScoutingAssignmentHelper.updateScoutingAssignment(this, coach.scoutingAssignment)
+
+        val activeRecruits = mutableListOf<Recruit>()
+        assistants.forEach { coach ->
+            coach.recruitingAssignments.forEach { recruit ->
+                recruit.updateRecruitment(this, game, coach)
+                activeRecruits.add(recruit)
             }
-            coach.doScouting(unknownRecruits).forEach { recruit ->
-                recruit.generateInitialInterest(this, coach.recruiting)
-                unknownRecruits.remove(recruit)
-                knownRecruits.add(recruit)
-            }
+        }
+
+        allRecruits.filter { !activeRecruits.contains(it) }.forEach { recruit ->
+            recruit.updateRecruitment(this, game, null)
+        }
+
+        if (!isUser) {
+            getCommitmentsIfPossible(allRecruits)
         }
     }
 
-    fun hasNeedAtPosition(position: Int): Boolean {
-        var nextYearsPlayers = roster.filter { it.position == position && it.year != 3 }.size
-        nextYearsPlayers += knownRecruits.filter { it.isCommitted && it.teamCommittedTo == teamId && it.position == position }.size
-        return 3 - nextYearsPlayers > 0
+    fun startNewSeason() {
+        postSeasonTournamentId = -1
+        postSeasonTournamentSeed = -1
+        gamesPlayed = 0
+
+        commitments.clear()
+        coaches.forEach { it.recruitingAssignments.clear() }
     }
 }

@@ -24,9 +24,10 @@ class RecruitPresenter @Inject constructor(
 
     override fun fetchData() {
         coroutineScope.launch {
-            team = repository.loadRecruits()
+            val recruits = repository.loadRecruits()
+            team = repository.loadTeam()
             sortedRecruits.clear()
-            sortedRecruits.addAll(team.knownRecruits.sortedBy { -it.rating })
+            sortedRecruits.addAll(recruits)
             view?.displayRecruits(getRecruits(), team)
         }
     }
@@ -48,9 +49,9 @@ class RecruitPresenter @Inject constructor(
     private fun getSortedList(list: List<Recruit>): List<Recruit> {
         val id = team.teamId
         return if (sortHighToLow) {
-            list.sortedBy { -it.getRatingMaxForTeam(id) }
+            list.sortedBy { -it.rating }
         } else {
-            list.sortedBy { it.getRatingMaxForTeam(id) }
+            list.sortedBy { it.rating }
         }
     }
 
