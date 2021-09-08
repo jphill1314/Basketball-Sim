@@ -13,4 +13,7 @@ class RecruitRelations(
         entityColumn = "recruitId"
     )
     val recruitInterestEntities: List<RecruitInterestEntity>
-)
+) {
+
+    fun create() = recruitEntity.createRecruit(recruitInterestEntities)
+}

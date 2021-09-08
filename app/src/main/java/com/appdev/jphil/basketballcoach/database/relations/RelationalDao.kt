@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.database.relations
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RelationalDao {
@@ -10,6 +11,10 @@ interface RelationalDao {
     @Transaction
     @Query("select * from TeamEntity where teamId in (:id)")
     suspend fun loadTeamById(id: Int): TeamRelations
+
+    @Transaction
+    @Query("select * from TeamEntity where teamId in (:id)")
+    fun loadTeamByIdFlow(id: Int): Flow<TeamRelations>
 
     @Transaction
     @Query("select * from TeamEntity where postseasonTournamentId in (:tournamentId)")
@@ -37,5 +42,9 @@ interface RelationalDao {
 
     @Transaction
     @Query("select * from RecruitEntity")
-    suspend fun loadRecruitById(): RecruitRelations
+    fun loadAllRecruitsFlow(): Flow<List<RecruitRelations>>
+
+    @Transaction
+    @Query("select * from RecruitEntity where id in (:recruitId)")
+    fun loadRecruitByIdFlow(recruitId: Int): Flow<RecruitRelations>
 }

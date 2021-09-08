@@ -28,7 +28,7 @@ class NewRecruitInterest(
     var recruitmentInterest: Int = 0,
 ) {
 
-    private companion object {
+    companion object {
         const val MAX_DESIRE = 20
         const val MAX_CHANGE_FROM_RECRUITMENT = 10
     }
