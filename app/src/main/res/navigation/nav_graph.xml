@@ -54,14 +54,6 @@
             app:destination="@id/coachOverviewFragment" />
     </fragment>
     <fragment
-        android:id="@+id/recruiting"
-        android:name="com.appdev.jphil.basketballcoach.recruiting.RecruitFragment"
-        android:label="@string/recruiting">
-        <action
-            android:id="@+id/action_recruitFragment_to_recruitOverviewFragment"
-            app:destination="@id/recruitOverviewFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/recruiting_compose"
         android:name="com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment"
         android:label="@string/recruiting">
@@ -94,14 +86,6 @@
         <argument
             android:name="isUserHomeTeam"
             app:argType="boolean" />
-    </fragment>
-    <fragment
-        android:id="@+id/recruitOverviewFragment"
-        android:name="com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment"
-        android:label="@string/recruit_overview">
-        <argument
-            android:name="recruitId"
-            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/recruitOverview"
