@@ -64,7 +64,6 @@ class RecruitOverviewFragment : Fragment(), RecruitOverviewContract.View {
 
             findViewById<TextView>(R.id.rating).text = resources.getString(R.string.rating_colon, recruit.rating)
 
-
             findViewById<TextView>(R.id.potential).text = resources.getString(R.string.potential_color, recruit.potential)
             findViewById<TextView>(R.id.type).text = resources.getStringArray(R.array.player_types)[recruit.playerType.type]
 

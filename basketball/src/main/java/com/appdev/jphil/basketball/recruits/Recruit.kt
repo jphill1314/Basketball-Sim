@@ -31,7 +31,7 @@ class Recruit(
         return recruitInterests.first { it.teamId == teamId }.getRecruitmentLevel()
     }
 
-    fun updateRecruitment(team: Team, game: Game, coach: Coach) {
+    fun updateRecruitment(team: Team, game: Game, coach: Coach?) {
         if (!isCommitted) {
             recruitInterests.first { it.teamId == team.teamId }.doActiveRecruitment(
                 team,

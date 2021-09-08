@@ -14,7 +14,6 @@ import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import kotlin.random.Random
 
-
 fun main() {
     simulateXSeasons(20)
 //    distributionTest()
@@ -24,7 +23,7 @@ private fun distributionTest() {
     val random = java.util.Random()
     random.nextGaussian()
 
-    val distribution = (0..600).map { random.nextGaussian() * 15 + 65 }
+    val distribution = (0..600).map { random.nextGaussian() * 20 + 60 }
     println("Ave: ${distribution.average()}")
     println("Max: ${distribution.maxOrNull()}")
     println("Min: ${distribution.minOrNull()}")
@@ -68,7 +67,10 @@ private fun simulateXSeasons(seasonsToSim: Int) {
 
     basketballWorld.forEachTeam { team ->
         val diff = team.calculateTeamRating() - teamRatings[team.teamId]!!
-        println("${team.name} - Players: ${team.players.size} - Start: ${teamRatings[team.teamId]} - Finish: ${team.calculateTeamRating()} - Diff: $diff")
+        println(
+            "${team.name} - Players: ${team.players.size} - Prestige: ${team.prestige} -" +
+                " Start: ${teamRatings[team.teamId]} - Finish: ${team.calculateTeamRating()} - Diff: $diff"
+        )
     }
 }
 
@@ -86,7 +88,6 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     nonCon.smartShuffleList(16)
     val schedule = nonCon + conferenceSchedule
 
-
     // Simulate every game
     schedule.forEach { game ->
         game.simulateFullGame()
@@ -98,6 +99,11 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     basketballWorld.forEachTeam { team ->
         startNewSeasonForTeam(team, basketballWorld.recruits)
     }
+
+    val commits = basketballWorld.recruits.filter { it.isCommitted }
+    println("Commits: ${commits.size} -- Rating > 90: ${commits.filter { it.rating > 90 }.size}")
+    val nonCommits = basketballWorld.recruits.filter { !it.isCommitted }
+    println("Noncommits: ${nonCommits.size} -- Rating > 90: ${nonCommits.filter { it.rating > 90 }.size}")
 
     // Create new recruits
     val teams = basketballWorld.conferences.flatMap { it.teams }
@@ -147,7 +153,7 @@ private fun createTeams(): BasketballWorld {
                 mascot = pair.second,
                 color = TeamColor.Red,
                 teamAbbreviation = pair.second,
-                teamRating = 80 + 5 * index,
+                teamRating = 50 + 5 * index,
                 conferenceId = 1,
                 isUser = false,
                 location = LocationGenerator.getLocation(),
@@ -166,7 +172,7 @@ private fun createTeams(): BasketballWorld {
                 mascot = pair.second,
                 color = TeamColor.Red,
                 teamAbbreviation = pair.second,
-                teamRating = 80 + 5 * index,
+                teamRating = 70 + 5 * index,
                 conferenceId = 1,
                 isUser = false,
                 location = LocationGenerator.getLocation(),
@@ -201,9 +207,6 @@ private fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
     }
 
     // Add commits to team
-//    val p = team.players.size
-//    val c = team.commitments.size
-//    println("Returning players: $p \t Commits: $c \t Total: ${p+c}")
     recruits.filter { it.isCommitted && it.teamCommittedTo == team.teamId }.forEach { commit ->
         team.addNewPlayer(commit.generatePlayer(team.teamId, team.roster.size))
     }

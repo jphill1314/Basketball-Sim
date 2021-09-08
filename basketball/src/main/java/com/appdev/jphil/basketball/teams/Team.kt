@@ -347,10 +347,16 @@ class Team(
             updateRecruitingAssignments(allRecruits)
         }
 
+        val activeRecruits = mutableListOf<Recruit>()
         assistants.forEach { coach ->
             coach.recruitingAssignments.forEach { recruit ->
                 recruit.updateRecruitment(this, game, coach)
+                activeRecruits.add(recruit)
             }
+        }
+
+        allRecruits.filter { !activeRecruits.contains(it) }.forEach { recruit ->
+            recruit.updateRecruitment(this, game, null)
         }
 
         if (!isUser) {

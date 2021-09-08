@@ -5,8 +5,6 @@ import com.appdev.jphil.basketball.recruits.Recruit
 
 object TeamRecruitInteractor {
 
-    const val GAMES_BETWEEN_INTERACTIONS = 1
-
     fun Team.updateRecruitingAssignments(allRecruits: List<Recruit>) {
         val positionalNeeds = List(5) { hasNeedAtPosition(it + 1) }
         val positionsWithNeed = positionalNeeds.map { if (it) 1 else 0 }.sum()
@@ -96,10 +94,10 @@ object TeamRecruitInteractor {
         return when (getRecruitmentLevel(teamId)) {
             0 -> true
             1 -> getInterest(teamId) >= 0
-            2 -> getInterest(teamId) >= 15
-            3 -> getInterest(teamId) >= 35
-            4 -> getInterest(teamId) >= 55
-            5 -> getInterest(teamId) >= 75
+            2 -> getInterest(teamId) >= 10
+            3 -> getInterest(teamId) >= 30
+            4 -> getInterest(teamId) >= 50
+            5 -> getInterest(teamId) >= 70
             else -> false
         }
     }

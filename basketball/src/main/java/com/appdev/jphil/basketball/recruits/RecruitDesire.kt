@@ -2,6 +2,8 @@ package com.appdev.jphil.basketball.recruits
 
 import com.appdev.jphil.basketball.players.PlayerType
 import com.appdev.jphil.basketball.teams.Team
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 enum class RecruitDesire(val type: Int) {
@@ -70,7 +72,7 @@ data class RecruitDesireData(
             }
 
             return RecruitDesireData(
-                preferredPrestige = prestige,
+                preferredPrestige = max(0, min(90, prestige)),
                 wantsClose = locationMatters == 0,
                 wantsFar = locationMatters == 1,
                 wantsImmediateStart = desire == RecruitDesire.STAR,

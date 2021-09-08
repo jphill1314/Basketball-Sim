@@ -38,7 +38,7 @@ data class RecruitEntity(
 
     companion object {
         fun from(recruit: Recruit): RecruitEntity {
-           return RecruitEntity(
+            return RecruitEntity(
                 recruit.id,
                 recruit.firstName,
                 recruit.lastName,

@@ -37,11 +37,9 @@ class RecruitOverviewPresenter @Inject constructor(
     }
 
     override fun onScoutClicked() {
-
     }
 
     override fun onOfferScholarshipClicked() {
-
     }
 
     override fun onViewAttached(view: RecruitOverviewContract.View) {

@@ -19,11 +19,11 @@ object LocationGenerator {
             location <= .1 -> Location.NU
             location <= .21 -> Location.YT
             location <= .33 -> Location.NT
-            location <= .75 ->  Location.PE
+            location <= .75 -> Location.PE
             location <= 2.12 -> Location.NL
-            location <= 4.18 ->  Location.NB
+            location <= 4.18 -> Location.NB
             location <= 6.75 -> Location.NS
-            location <= 9.85 ->  Location.SK
+            location <= 9.85 -> Location.SK
             location <= 13.48 -> Location.MB
             location <= 25.14 -> Location.AB
             location <= 38.68 -> Location.BC

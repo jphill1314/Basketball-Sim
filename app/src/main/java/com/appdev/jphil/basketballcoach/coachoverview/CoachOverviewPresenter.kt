@@ -26,23 +26,18 @@ class CoachOverviewPresenter @Inject constructor(
     }
 
     override fun positionToggled(position: Int) {
-
     }
 
     override fun setMinRating(minRating: Int) {
-
     }
 
     override fun setMaxRating(maxRating: Int) {
-
     }
 
     override fun setMinPotential(minPotential: Int) {
-
     }
 
     override fun setMaxPotential(maxPotential: Int) {
-
     }
 
     override fun onViewAttached(view: CoachOverviewContract.View) {

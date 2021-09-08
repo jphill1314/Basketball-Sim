@@ -35,11 +35,11 @@ class NewRecruitInterest(
 
     fun getInterest(): Int {
         return (prestigeInterest ?: 0) +
-                (locationInterest ?: 0) +
-                (playingTimeInterest ?: 0) +
-                (playStyleInterest ?: 0) +
-                (teamAbilityInterest ?: 0) +
-                recruitmentInterest
+            (locationInterest ?: 0) +
+            (playingTimeInterest ?: 0) +
+            (playStyleInterest ?: 0) +
+            (teamAbilityInterest ?: 0) +
+            recruitmentInterest
     }
 
     fun getRecruitmentLevel(): Int {
@@ -55,10 +55,8 @@ class NewRecruitInterest(
     }
 
     fun createInitialInterest(team: Team, recruit: Recruit) {
-        if (team.prestige > 75) {
-            prestigeInterest = getInterestFromPrestige(team)
-        }
-        if (team.location == recruit.location) {
+        prestigeInterest = getInterestFromPrestige(team)
+        if (team.location == recruit.location || team.prestige > 70) {
             locationInterest = getInterestFromLocation(team, recruit)
         }
     }
@@ -148,7 +146,7 @@ class NewRecruitInterest(
         }
     }
 
-    private fun getInterestFromPrestige(team: Team, ): Int {
+    private fun getInterestFromPrestige(team: Team): Int {
         return max(0, min(MAX_DESIRE, team.prestige - preferredPrestige + MAX_DESIRE))
     }
 
