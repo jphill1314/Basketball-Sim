@@ -15,10 +15,9 @@ import com.appdev.jphil.basketballcoach.practice.PracticeFragment
 import com.appdev.jphil.basketballcoach.practice.PracticeModule
 import com.appdev.jphil.basketballcoach.rankings.RankingsFragment
 import com.appdev.jphil.basketballcoach.rankings.RankingsModule
-import com.appdev.jphil.basketballcoach.recruiting.RecruitFragment
-import com.appdev.jphil.basketballcoach.recruiting.RecruitModule
-import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewFragment
-import com.appdev.jphil.basketballcoach.recruitoverview.RecruitOverviewModule
+import com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment
+import com.appdev.jphil.basketballcoach.recruitoverviewcompose.RecruitOverviewComposeFragment
+import com.appdev.jphil.basketballcoach.recruitoverviewcompose.RecruitOverviewComposeModule
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.roster.RosterModule
 import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
@@ -64,14 +63,6 @@ abstract class FragmentBindingModule {
     abstract fun practiceFragment(): PracticeFragment
 
     @PerFragment
-    @ContributesAndroidInjector(modules = [RecruitModule::class])
-    abstract fun recruitFragment(): RecruitFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [RecruitOverviewModule::class])
-    abstract fun recruitOverviewFragment(): RecruitOverviewFragment
-
-    @PerFragment
     @ContributesAndroidInjector(modules = [CoachOverviewModule::class])
     abstract fun coachOverviewFragment(): CoachOverviewFragment
 
@@ -98,4 +89,12 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun selectionShowFragment(): SelectionShowFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun recruitingComposeFragment(): RecruitingFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [RecruitOverviewComposeModule::class])
+    abstract fun recruitOverviewComposeFragment(): RecruitOverviewComposeFragment
 }

@@ -14,7 +14,7 @@
             android:id="@+id/rankings"
             android:title="@string/rankings"/>
         <item
-            android:id="@+id/recruiting"
+            android:id="@+id/recruiting_compose"
             android:title="@string/recruiting" />
         <item
             android:id="@+id/strategy"
