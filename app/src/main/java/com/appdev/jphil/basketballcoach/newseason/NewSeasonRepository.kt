@@ -21,6 +21,7 @@ import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -217,12 +218,12 @@ class NewSeasonRepository @Inject constructor(
             return
         }
         var prestigeToAdd = 0
-        // From regular season wins - 15%
+        // From regular season wins
         val regularSeasonGames = games.filter { it.tournamentId == null }
         val wins = team.countWins(regularSeasonGames)
-        prestigeToAdd += ((wins.toDouble() / regularSeasonGames.size) * 25).toInt()
+        prestigeToAdd += ((wins.toDouble() / regularSeasonGames.size) * 25).roundToInt()
 
-        // From conf tournament wins - 25%
+        // From conf tournament wins
         if (conference.championId == team.teamId) {
             prestigeToAdd += 25
         } else {
@@ -233,7 +234,7 @@ class NewSeasonRepository @Inject constructor(
             }
         }
 
-        // From national championship wins - 60%
+        // From national championship wins
         val champGames = games.filter { it.tournamentId == NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID }
         when (champGames.size) {
             1 -> prestigeToAdd += 5
@@ -248,7 +249,7 @@ class NewSeasonRepository @Inject constructor(
     }
 
     private fun Team.addToPrestige(valueToAdd: Int) {
-        prestige = (prestige * 9 + valueToAdd) / 10
+        prestige = ((prestige * 9.0 + valueToAdd) / 10).roundToInt()
     }
 
     private fun Team.countWins(games: List<GameEntity>): Int {
