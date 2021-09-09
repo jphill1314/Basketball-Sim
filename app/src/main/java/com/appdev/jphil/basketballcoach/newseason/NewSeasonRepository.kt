@@ -10,21 +10,27 @@ import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
 import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.BatchInsertHelper
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceEntity
+import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
+import kotlin.math.min
+import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-import kotlin.random.Random
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
     private val relationalDao: RelationalDao,
+    private val gameDao: GameDao,
     resources: Resources
 ) {
     data class NewSeasonState(
@@ -50,24 +56,39 @@ class NewSeasonRepository @Inject constructor(
             )
         }
 
-        GameDatabaseHelper.deleteAllGames(database)
         val recruits = RecruitDatabaseHelper.loadAllRecruits(database)
-        val conferences = relationalDao.loadAllConferenceData().map {
+        val oldGames = gameDao.getAllGames()
+        val nationalChampionshipWinner = oldGames.last().let {
+            if (it.homeScore > it.awayScore) it.homeTeamId else it.awayTeamId
+        }
+        val conferenceRelations = relationalDao.loadAllConferenceData()
+        val conferences = conferenceRelations.map {
             it.createConference(recruits)
         }
+        val conferenceEntities = conferenceRelations.map { it.conferenceEntity }
+
+        gameDao.deleteAllGameEvents()
+        gameDao.deleteAllGames()
+
         _state.update {
             _state.value.copy(
                 stepNumber = 2,
                 isDeletingOldGames = false,
-                totalTeams = conferences.map { it.teams.size }.sum()
+                totalTeams = conferences.sumOf { it.teams.size }
             )
         }
         val games = mutableListOf<Game>()
         val teams = mutableListOf<Team>()
         var numberOfTeams = 0
         conferences.forEach { conference ->
-            conference.teams.forEach {
-                startNewSeasonForTeam(it, recruits)
+            conference.teams.forEach { team ->
+                updateTeamPrestige(
+                    team,
+                    oldGames.filter { it.homeTeamId == team.teamId || it.awayTeamId == team.teamId },
+                    conferenceEntities.first { it.id == team.conferenceId },
+                    nationalChampionshipWinner
+                )
+                startNewSeasonForTeam(team, recruits)
                 _state.update {
                     _state.value.copy(
                         teamsUpdated = _state.value.teamsUpdated + 1
@@ -122,7 +143,10 @@ class NewSeasonRepository @Inject constructor(
         }
     }
 
-    private suspend fun startNewSeasonForTeam(team: Team, recruits: List<Recruit>) {
+    private suspend fun startNewSeasonForTeam(
+        team: Team,
+        recruits: List<Recruit>
+    ) {
         // Make each player a year older
         team.players.forEach { player ->
             player.year++
@@ -180,6 +204,63 @@ class NewSeasonRepository @Inject constructor(
         team.players.sortBy { it.rosterIndex }
 
         team.startNewSeason()
+    }
+
+    private fun updateTeamPrestige(
+        team: Team,
+        games: List<GameEntity>,
+        conference: ConferenceEntity,
+        championshipWinner: Int
+    ) {
+        if (championshipWinner == team.teamId) {
+            team.addToPrestige(100)
+            return
+        }
+        var prestigeToAdd = 0
+        // From regular season wins - 15%
+        val regularSeasonGames = games.filter { it.tournamentId == null }
+        val wins = team.countWins(regularSeasonGames)
+        prestigeToAdd += ((wins.toDouble() / regularSeasonGames.size) * 25).toInt()
+
+        // From conf tournament wins - 25%
+        if (conference.championId == team.teamId) {
+            prestigeToAdd += 25
+        } else {
+            when (games.filter { it.tournamentId == conference.id }.size) {
+                2 -> prestigeToAdd += 8
+                3 -> prestigeToAdd += 16
+                else -> { /* no prestige gain */  }
+            }
+        }
+
+        // From national championship wins - 60%
+        val champGames = games.filter { it.tournamentId == NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID }
+        when (champGames.size) {
+            1 -> prestigeToAdd += 5
+            2 -> prestigeToAdd += 15
+            3 -> prestigeToAdd += 30
+            4 -> prestigeToAdd += 40
+            5 -> prestigeToAdd += 50
+            else -> { /* no prestige gain */ }
+        }
+
+        team.addToPrestige(min(100, prestigeToAdd))
+    }
+
+    private fun Team.addToPrestige(valueToAdd: Int) {
+        prestige = (prestige * 9 + valueToAdd) / 10
+    }
+
+    private fun Team.countWins(games: List<GameEntity>): Int {
+        var wins = 0
+        games.forEach { game ->
+            if (game.homeTeamId == teamId && game.homeScore > game.awayScore) {
+                wins++
+            } else if (game.awayTeamId == teamId && game.awayScore > game.homeScore) {
+                wins++
+            }
+        }
+        return wins
     }
 
     companion object {

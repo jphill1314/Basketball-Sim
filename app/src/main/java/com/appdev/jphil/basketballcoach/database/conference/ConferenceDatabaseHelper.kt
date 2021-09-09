@@ -13,7 +13,8 @@ object ConferenceDatabaseHelper {
                 conference.id,
                 conference.name,
                 conference.tournament?.getWinnerOfTournament() != null,
-                conference.tournament?.getWinnerOfTournament()?.teamId ?: -1
+                conference.tournament?.getWinnerOfTournament()?.teamId ?: -1,
+                conference.tournamentType
             )
         )
     }
@@ -29,7 +30,8 @@ object ConferenceDatabaseHelper {
                     it.id,
                     it.name,
                     it.tournament?.getWinnerOfTournament() != null,
-                    it.tournament?.getWinnerOfTournament()?.teamId ?: -1
+                    it.tournament?.getWinnerOfTournament()?.teamId ?: -1,
+                    it.tournamentType
                 )
             }
         )
