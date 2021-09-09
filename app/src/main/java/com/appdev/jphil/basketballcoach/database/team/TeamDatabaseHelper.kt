@@ -1,16 +1,11 @@
 package com.appdev.jphil.basketballcoach.database.team
 
-import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.coach.CoachDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 
 object TeamDatabaseHelper {
-
-    suspend fun loadAllTeams(database: BasketballDatabase): List<TeamEntity> {
-        return database.teamDao().getAllTeams()
-    }
 
     suspend fun loadTeamById(teamId: Int, database: BasketballDatabase): Team? {
         return createTeam(database.teamDao().getTeamWithId(teamId), database)
@@ -24,7 +19,7 @@ object TeamDatabaseHelper {
         return teamEntity?.let {
             val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(it.teamId, database)
             val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(it.teamId, database)
-            val recruits = mutableListOf<Recruit>()
+            val recruits = database.relationalDao().loadAllRecruits().map { r -> r.create() }
             it.createTeam(players, coaches, recruits)
         }
     }

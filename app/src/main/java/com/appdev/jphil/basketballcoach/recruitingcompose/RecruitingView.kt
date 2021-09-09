@@ -103,6 +103,11 @@ private fun TeamStateView(
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
+                Text(
+                    text = model.recruitingPGs.toString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -125,6 +130,11 @@ private fun TeamStateView(
                 )
                 Text(
                     text = stringResource(id = R.string.number_and_parens, model.returningSGs, model.committedSGs),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = model.recruitingSGs.toString(),
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
@@ -153,6 +163,11 @@ private fun TeamStateView(
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
+                Text(
+                    text = model.recruitingSFs.toString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -178,6 +193,11 @@ private fun TeamStateView(
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
+                Text(
+                    text = model.recruitingPFs.toString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -200,6 +220,11 @@ private fun TeamStateView(
                 )
                 Text(
                     text = stringResource(id = R.string.number_and_parens, model.returningCs, model.committedCs),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = model.recruitingCs.toString(),
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
@@ -269,6 +294,11 @@ private fun RecruitItem(
                         text = typeArray[recruit.type],
                         style = MaterialTheme.typography.body1
                     )
+                    Text(
+                        text = stringResource(id = R.string.recruitment_level, recruit.recruitmentLevel),
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.End
+                    )
                 }
                 Column(
                     modifier = Modifier.padding(8.dp),
@@ -276,6 +306,11 @@ private fun RecruitItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.rating_colon, recruit.rating),
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.End
+                    )
+                    Text(
+                        text = stringResource(id = R.string.potential_color, recruit.potential),
                         style = MaterialTheme.typography.body1,
                         textAlign = TextAlign.End
                     )
@@ -305,14 +340,19 @@ private fun PreviewRecruitingView() {
 private val teamModel = TeamStateModel(
     returningPGs = 2,
     committedPGs = 1,
+    recruitingPGs = 1,
     returningSGs = 3,
     committedSGs = 0,
+    recruitingSGs = 5,
     returningSFs = 1,
     committedSFs = 1,
+    recruitingSFs = 3,
     returningPFs = 2,
     committedPFs = 0,
+    recruitingPFs = 0,
     returningCs = 2,
-    committedCs = 0
+    committedCs = 0,
+    recruitingCs = 3
 )
 
 private fun recruitModel(index: Int) = RecruitModel(
@@ -329,6 +369,7 @@ private fun recruitModel(index: Int) = RecruitModel(
     rating = 85,
     potential = 75,
     interest = 55,
+    recruitmentLevel = 4,
     status = R.string.empty_string
 )
 

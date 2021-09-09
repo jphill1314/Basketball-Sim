@@ -52,7 +52,7 @@ class GameSimRepository @Inject constructor(
         simJob?.cancel()
         simJob = repositoryScope.launch {
             _simState.update { it?.copy(isSimActive = true) }
-            val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database)
+            val firstGameId = gameDao.getFirstGameWithIsFinal(false)
             if (firstGameId == null || firstGameId >= lastGameId) {
                 _simState.update { it?.copy(isSimActive = false) }
                 return@launch
@@ -63,7 +63,7 @@ class GameSimRepository @Inject constructor(
             _simState.update { it?.copy(numberOfGamesToSim = lastGameId - firstGameId + 1) }
 
             for (gameId in firstGameId..lastGameId) {
-                val game = GameDatabaseHelper.getGameById(gameId, recruits, relationalDao)
+                val game = relationalDao.loadGameWithTeams(gameId).create(recruits)
 
                 game.simulateFullGame()
 

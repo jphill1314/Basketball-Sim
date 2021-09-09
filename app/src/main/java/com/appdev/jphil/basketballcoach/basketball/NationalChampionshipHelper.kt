@@ -5,7 +5,6 @@ import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
-import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
@@ -83,8 +82,7 @@ class NationalChampionshipHelper @Inject constructor(
 
         val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
         val allTeams = (autoTeams + atLargeTeams).sortedByDescending { it.getAdjEff() }.map { dataModel ->
-            val teamRelations = relationalDao.loadTeamById(dataModel.teamId)
-            GameDatabaseHelper.createTeam(teamRelations, allRecruits)
+            relationalDao.loadTeamById(dataModel.teamId).create(allRecruits)
         }
 
         // TODO: this is by far the longest part

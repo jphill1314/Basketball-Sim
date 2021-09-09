@@ -1,13 +1,13 @@
 package com.appdev.jphil.basketballcoach.rankings
 
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
-import com.appdev.jphil.basketballcoach.database.BasketballDatabase
-import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.game.GameDao
+import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import javax.inject.Inject
 
 class RankingsRepository @Inject constructor(
-    private val database: BasketballDatabase
+    private val gameDao: GameDao,
+    private val teamDao: TeamDao
 ) : RankingsContract.Repository {
 
     lateinit var presenter: RankingsContract.Presenter
@@ -15,11 +15,11 @@ class RankingsRepository @Inject constructor(
     override suspend fun fetchData(): List<TeamStatsDataModel> {
         val teams = mutableMapOf<Int, TeamStatsDataModel>()
         val dataModels = mutableListOf<TeamStatsDataModel>()
-        TeamDatabaseHelper.loadAllTeams(database).forEach { team ->
+        teamDao.getAllTeams().forEach { team ->
             dataModels.add(TeamStatsDataModel(team))
             teams[team.teamId] = dataModels.last()
         }
-        val games = GameDatabaseHelper.loadAllGameEntities(database)
+        val games = gameDao.getAllGames()
 
         var totalTempo = 0.0
         var totalOffEff = 0.0

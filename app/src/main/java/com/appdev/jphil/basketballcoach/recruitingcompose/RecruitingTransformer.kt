@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.recruitingcompose
 
 import com.appdev.jphil.basketball.recruits.Recruit
+import com.appdev.jphil.basketball.recruits.getActiveRecruitmentsAtPosition
 import com.appdev.jphil.basketball.recruits.getCommitsAtPosition
 import com.appdev.jphil.basketball.recruits.getReturningPlayersAtPosition
 import com.appdev.jphil.basketball.teams.Team
@@ -33,14 +34,19 @@ class RecruitingTransformer @Inject constructor() :
     private fun Team.getState() = TeamStateModel(
         returningPGs = getReturningPlayersAtPosition(1),
         committedPGs = getCommitsAtPosition(1),
+        recruitingPGs = getActiveRecruitmentsAtPosition(1),
         returningSGs = getReturningPlayersAtPosition(2),
         committedSGs = getCommitsAtPosition(2),
+        recruitingSGs = getActiveRecruitmentsAtPosition(2),
         returningSFs = getReturningPlayersAtPosition(3),
         committedSFs = getCommitsAtPosition(3),
+        recruitingSFs = getActiveRecruitmentsAtPosition(3),
         returningPFs = getReturningPlayersAtPosition(4),
         committedPFs = getCommitsAtPosition(4),
+        recruitingPFs = getActiveRecruitmentsAtPosition(4),
         returningCs = getReturningPlayersAtPosition(5),
         committedCs = getCommitsAtPosition(5),
+        recruitingCs = getActiveRecruitmentsAtPosition(5),
     )
 
     private fun Recruit.getModel(team: Team) = RecruitModel(
@@ -57,6 +63,7 @@ class RecruitingTransformer @Inject constructor() :
         rating,
         potential,
         getInterest(team.teamId),
+        getRecruitmentLevel(team.teamId),
         status = when {
             isCommitted -> when (teamCommittedTo) {
                 team.teamId -> R.string.committed_to_you

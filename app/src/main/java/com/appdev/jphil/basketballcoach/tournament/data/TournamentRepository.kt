@@ -6,7 +6,6 @@ import com.appdev.jphil.basketball.tournament.TournamentType
 import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDao
-import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentRelations
@@ -15,10 +14,10 @@ import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.util.RecordUtil
+import timber.log.Timber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 
 class TournamentRepository @Inject constructor(
@@ -51,9 +50,7 @@ class TournamentRepository @Inject constructor(
             val conference = Conference(
                 conferenceRelation.conferenceEntity.id,
                 conferenceRelation.conferenceEntity.name,
-                conferenceRelation.teamEntities.map {
-                    GameDatabaseHelper.createTeam(it, allRecruits)
-                }
+                conferenceRelation.teamEntities.map { it.create(allRecruits) }
             )
             conference.tournamentType
         } else {
@@ -115,9 +112,7 @@ class TournamentRepository @Inject constructor(
         val conference = Conference(
             conferenceRelation.conferenceEntity.id,
             conferenceRelation.conferenceEntity.name,
-            conferenceRelation.teamEntities.map {
-                GameDatabaseHelper.createTeam(it, allRecruits)
-            }
+            conferenceRelation.teamEntities.map { it.create(allRecruits) }
         )
 
         conference.generateTournament(conference.teams.map { RecordUtil.getRecord(games, it) })
