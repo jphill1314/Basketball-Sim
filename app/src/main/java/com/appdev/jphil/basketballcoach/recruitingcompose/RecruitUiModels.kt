@@ -40,6 +40,7 @@ data class TeamStateModel(
 
     interface Interactor {
         fun onPositionClicked(pos: Int)
+        fun onShowRecruitingClicked()
         fun clearFilters()
     }
 }

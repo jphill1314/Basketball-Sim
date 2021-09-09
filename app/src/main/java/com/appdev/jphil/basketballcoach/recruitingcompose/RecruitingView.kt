@@ -77,6 +77,7 @@ private fun TeamStateView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
+                .clickable { interactor.onShowRecruitingClicked() }
         )
         Row {
             Column(
@@ -230,7 +231,7 @@ private fun TeamStateView(
                 )
             }
         }
-        AnimatedVisibility(visible = state.showClearFilters) {
+        AnimatedVisibility(visible = state.showClearFilters || state.onlyShowRecruiting) {
             TextButton(
                 onClick = { interactor.clearFilters() },
                 modifier = Modifier.padding(top = 16.dp)
@@ -377,6 +378,7 @@ private val state = RecruitingContract.ViewState(
     isLoading = false,
     showClearFilters = true,
     positionFilters = listOf(2),
+    onlyShowRecruiting = false,
     team = teamModel,
     recruits = List(5) { recruitModel(it) }
 )
@@ -385,4 +387,5 @@ private val interactor = object : RecruitingContract.Interactor {
     override fun onRecruitClicked(id: Int) {}
     override fun onPositionClicked(pos: Int) {}
     override fun clearFilters() {}
+    override fun onShowRecruitingClicked() {}
 }

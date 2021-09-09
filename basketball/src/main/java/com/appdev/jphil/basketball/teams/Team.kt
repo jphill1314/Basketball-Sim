@@ -326,11 +326,7 @@ class Team(
     }
 
     fun calculateTeamRating(): Int {
-        var rating = 0
-        for (p in roster) {
-            rating += p.getOverallRating()
-        }
-        return rating / roster.size
+        return roster.map { it.getOverallRating() }.average().toInt()
     }
 
     fun getHeadCoach(): Coach = coaches.first { it.type == CoachType.HEAD_COACH }

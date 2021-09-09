@@ -69,8 +69,19 @@ class RecruitingPresenter(
         updateState { copy(positionFilters = filters) }
     }
 
+    override fun onShowRecruitingClicked() {
+        updateState {
+            copy(onlyShowRecruiting = !onlyShowRecruiting)
+        }
+    }
+
     override fun clearFilters() {
-        updateState { copy(positionFilters = emptyList()) }
+        updateState {
+            copy(
+                positionFilters = emptyList(),
+                onlyShowRecruiting = false
+            )
+        }
     }
 
     data class LaunchRecruitOverview(val recruitId: Int) : Event

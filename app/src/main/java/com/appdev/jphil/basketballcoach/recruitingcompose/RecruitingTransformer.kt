@@ -22,9 +22,11 @@ class RecruitingTransformer @Inject constructor() :
                 isLoading = false,
                 showClearFilters = dataState.positionFilters.isNotEmpty(),
                 positionFilters = dataState.positionFilters,
+                onlyShowRecruiting = dataState.onlyShowRecruiting,
                 team = dataState.team.getState(),
                 recruits = dataState.recruits
                     .filter { filters.isEmpty() || filters.contains(it.position) }
+                    .filter { !dataState.onlyShowRecruiting || isActiveRecruitment(dataState.team, it) }
                     .sortedWith(dataState.sortType.getComparable(teamId))
                     .map { it.getModel(dataState.team) }
             )

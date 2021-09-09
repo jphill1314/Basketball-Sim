@@ -162,7 +162,7 @@ private fun RecruitInterestLevel(
             subtitle = when (interest) {
                 null -> stringResource(id = R.string.recruit_to_see)
                 0 -> stringResource(id = R.string.prestige_miss)
-                NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.prestige_match, teamName)
+                in NewRecruitInterest.MAX_DESIRE..NewRecruitInterest.MAX_DESIRE_FROM_PRESTIGE -> stringResource(id = R.string.prestige_match, teamName)
                 else -> stringResource(id = R.string.prestige_close)
             }
         }
@@ -229,7 +229,7 @@ private fun RecruitInterestLevel(
                 false -> when (recruitInterest.wantsToDevelop) {
                     true -> when (interest) {
                         null -> stringResource(id = R.string.recruit_to_see)
-                        0 -> stringResource(id = R.string.team_ability_develop_miss)
+                        0 -> stringResource(id = R.string.team_ability_develop_miss, teamName)
                         NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.team_ability_develop_hit, teamName)
                         else -> stringResource(id = R.string.team_ability_develop_close, teamName)
                     }
@@ -294,7 +294,7 @@ private fun TotalInterest(
 
 private fun Int?.getColorForInterest() = when (this) {
     // TODO: pick less offensive colors lol
-    NewRecruitInterest.MAX_DESIRE -> Color.Green
+    in NewRecruitInterest.MAX_DESIRE..NewRecruitInterest.MAX_DESIRE_FROM_PRESTIGE -> Color.Green
     0 -> Color.Red
     null -> Color.LightGray
     else -> Color.Yellow
