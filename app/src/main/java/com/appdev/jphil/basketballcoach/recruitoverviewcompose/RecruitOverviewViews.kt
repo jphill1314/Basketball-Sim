@@ -122,10 +122,17 @@ private fun RecruitTopper(
                 text = recruit.fullName,
                 style = MaterialTheme.typography.body1
             )
-            Text(
-                text = types[recruit.playerType.type],
-                style = MaterialTheme.typography.body1
-            )
+            Row {
+                Text(
+                    text = types[recruit.playerType.type],
+                    style = MaterialTheme.typography.body1
+                )
+                Text(
+                    text = stringResource(id = R.string.home, recruit.location.value),
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
         Column(
             modifier = Modifier.padding(8.dp),
@@ -158,7 +165,7 @@ private fun RecruitInterestLevel(
     when (level) {
         1 -> {
             interest = recruitInterest.prestigeInterest
-            title = "Team Prestige ($interest) - ${recruitInterest.preferredPrestige}"
+            title = stringResource(id = R.string.team_prestige)
             subtitle = when (interest) {
                 null -> stringResource(id = R.string.recruit_to_see)
                 0 -> stringResource(id = R.string.prestige_miss, teamName)
@@ -168,7 +175,7 @@ private fun RecruitInterestLevel(
         }
         2 -> {
             interest = recruitInterest.locationInterest
-            title = "Location ($interest)"
+            title = stringResource(id = R.string.location)
             subtitle = when (recruitInterest.wantsClose) {
                 true -> when (interest) {
                     null -> stringResource(id = R.string.recruit_to_see)
@@ -192,7 +199,7 @@ private fun RecruitInterestLevel(
         }
         3 -> {
             interest = recruitInterest.playingTimeInterest
-            title = "Playing Time ($interest)"
+            title = stringResource(id = R.string.playing_time)
             subtitle = when (recruitInterest.wantsImmediateStart) {
                 true -> when (interest) {
                     null -> stringResource(id = R.string.recruit_to_see)
@@ -214,7 +221,7 @@ private fun RecruitInterestLevel(
         }
         4 -> {
             interest = recruitInterest.playStyleInterest
-            title = "Play Style ($interest)"
+            title = stringResource(id = R.string.play_style)
             subtitle = when (interest) {
                 null -> stringResource(id = R.string.recruit_to_see)
                 in 0..NewRecruitInterest.MAX_DESIRE / 4 -> stringResource(id = R.string.play_style_miss, teamName)
@@ -225,7 +232,7 @@ private fun RecruitInterestLevel(
         }
         5 -> {
             interest = recruitInterest.teamAbilityInterest
-            title = "Team Ability ($interest)"
+            title = stringResource(id = R.string.team_ability)
             subtitle = when (recruitInterest.wantsToBeStar) {
                 true -> when (interest) {
                     null -> stringResource(id = R.string.recruit_to_see)
@@ -248,7 +255,7 @@ private fun RecruitInterestLevel(
         }
         else -> {
             interest = recruitInterest.recruitmentInterest
-            title = "Recruiting Pitch ($interest)"
+            title = stringResource(id = R.string.recruiting_pitch)
             subtitle = when  {
                 interest > 0 -> stringResource(id = R.string.active_recruitment_positive)
                 interest < 0 -> stringResource(id = R.string.active_recruitment_negative)
@@ -438,6 +445,7 @@ private fun RecruitRow(
     coach: Coach,
     interactor: RecruitOverviewContract.Interactor
 ) {
+    val types = LocalContext.current.resources.getStringArray(R.array.player_types).toList()
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -450,18 +458,46 @@ private fun RecruitRow(
             }
         ) {
             Text(
-                text = recruit.fullName,
+                text = recruit.position.toPositionString(),
                 style = MaterialTheme.typography.body1,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .padding(8.dp)
+                    .width(24.dp)
             )
-            Column(horizontalAlignment = Alignment.End) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = recruit.fullName,
+                    style = MaterialTheme.typography.body1
+                )
+                Row {
+                    Text(
+                        text = types[recruit.playerType.type],
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = stringResource(id = R.string.home, recruit.location.value),
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.End
+            ) {
                 Text(
                     text = stringResource(id = R.string.rating_colon, recruit.rating),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.End
                 )
                 Text(
                     text = stringResource(id = R.string.interest_colon, recruit.getInterest(coach.teamId)),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.End
                 )
             }
         }

@@ -64,6 +64,7 @@ class ScheduleRepository @Inject constructor(
         bottomTeamName = homeTeamName,
         topTeamScore = awayScore,
         bottomTeamScore = homeScore,
+        isConferenceGame = isConferenceGame,
         isInProgress = inProgress,
         isFinal = isFinal,
         isHomeTeamUser = homeTeamId == userTeamId,

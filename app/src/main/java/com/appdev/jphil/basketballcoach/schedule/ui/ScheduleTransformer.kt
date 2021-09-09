@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketballcoach.schedule.ui
 
+import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import com.appdev.jphil.basketballcoach.schedule.data.ScheduleDataModel
@@ -30,10 +31,15 @@ class ScheduleTransformer @Inject constructor() :
 
         val scheduleModels = teamGames.filter {
             it.tournamentId == null
-        }.mapIndexed { index, model ->
+        }.map { model ->
             ScheduleUiModel(
                 id = model.gameId,
-                gameNumber = index + 1,
+                gameStatus = when {
+                    model.isFinal -> R.string.game_final
+                    model.isInProgress -> R.string.in_progress
+                    model.isConferenceGame -> R.string.conference_game
+                    else -> R.string.non_conference_game
+                },
                 topTeamName = model.topTeamName,
                 bottomTeamName = model.bottomTeamName,
                 topTeamScore = when {
@@ -133,7 +139,7 @@ class ScheduleTransformer @Inject constructor() :
         return dataModels.reversed().map { model ->
             ScheduleUiModel(
                 id = model.gameId,
-                gameNumber = 1,
+                gameStatus = R.string.empty_string,
                 topTeamName = model.topTeamName,
                 bottomTeamName = model.bottomTeamName,
                 topTeamScore = model.topTeamScore.toString(),

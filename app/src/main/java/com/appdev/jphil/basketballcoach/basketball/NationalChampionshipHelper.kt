@@ -9,7 +9,7 @@ import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -113,7 +113,7 @@ class NationalChampionshipHelper @Inject constructor(
                 3, 7, 11 -> startNextStep()
                 in 15..31 -> startNextStep()
             }
-            TeamDatabaseHelper.saveTeam(team, database)
+            teamDao.insertTeam(TeamEntity.from(team))
         }
 
         _state.update { _state.value.copy(isFinished = true) }
