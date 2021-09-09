@@ -65,7 +65,7 @@ data class RecruitDesireData(
             }
 
             return RecruitDesireData(
-                preferredPrestige = max(0, min(90, prestige)),
+                preferredPrestige = max(0, min(75, prestige)),
                 wantsClose = locationMatters == 0,
                 wantsFar = locationMatters == 1,
                 wantsImmediateStart = desire == RecruitDesire.STAR,

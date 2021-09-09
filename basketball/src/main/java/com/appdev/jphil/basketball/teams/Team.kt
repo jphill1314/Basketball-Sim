@@ -8,8 +8,6 @@ import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.getCommitmentsIfPossible
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.updateRecruitingAssignments
 import java.util.Collections
 import kotlin.math.abs
 import kotlin.random.Random

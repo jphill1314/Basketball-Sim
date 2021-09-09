@@ -238,10 +238,24 @@ class NewRecruitInterest(
     }
 
     private fun getInterestFromTeamAbility(team: Team, recruit: Recruit): Int {
+        val recruitRating = recruit.rating
+        val teamRating = team.teamRating
         return when {
-            wantsToBeStar -> max(0, min(MAX_DESIRE, recruit.rating - min(70, team.teamRating) + MAX_DESIRE))
-            wantsToDevelop -> max(0, min(MAX_DESIRE, team.teamRating - min(70, recruit.rating) + MAX_DESIRE))
-            else -> MAX_DESIRE / 2
+            wantsToBeStar -> when {
+                // max acceptable = rating == team rating
+                // min acceptable = rating - 10 == team rating
+                recruitRating - 10 > teamRating -> max(0, MAX_DESIRE - (recruitRating - teamRating))
+                recruitRating >= teamRating -> MAX_DESIRE
+                else -> max(0, MAX_DESIRE - (teamRating - recruitRating))
+            }
+            wantsToDevelop -> when {
+                teamRating - 10 > recruitRating -> max(0, MAX_DESIRE - (teamRating - recruitRating))
+                teamRating >= recruitRating -> MAX_DESIRE
+                else -> max(0, MAX_DESIRE - (recruitRating - teamRating))
+            }
+            else -> {
+                MAX_DESIRE / 2
+            }
         }
     }
 }

@@ -158,17 +158,17 @@ private fun RecruitInterestLevel(
     when (level) {
         1 -> {
             interest = recruitInterest.prestigeInterest
-            title = "Team Prestige"
+            title = "Team Prestige ($interest) - ${recruitInterest.preferredPrestige}"
             subtitle = when (interest) {
                 null -> stringResource(id = R.string.recruit_to_see)
-                0 -> stringResource(id = R.string.prestige_miss)
+                0 -> stringResource(id = R.string.prestige_miss, teamName)
                 in NewRecruitInterest.MAX_DESIRE..NewRecruitInterest.MAX_DESIRE_FROM_PRESTIGE -> stringResource(id = R.string.prestige_match, teamName)
                 else -> stringResource(id = R.string.prestige_close)
             }
         }
         2 -> {
             interest = recruitInterest.locationInterest
-            title = "Location"
+            title = "Location ($interest)"
             subtitle = when (recruitInterest.wantsClose) {
                 true -> when (interest) {
                     null -> stringResource(id = R.string.recruit_to_see)
@@ -183,13 +183,16 @@ private fun RecruitInterestLevel(
                         NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.location_match_far)
                         else -> stringResource(id = R.string.location_close_far, teamName)
                     }
-                    false -> stringResource(id = R.string.location_unimportant)
+                    false -> when (interest) {
+                        null -> stringResource(id = R.string.recruit_to_see)
+                        else -> stringResource(id = R.string.location_unimportant)
+                    }
                 }
             }
         }
         3 -> {
             interest = recruitInterest.playingTimeInterest
-            title = "Playing Time"
+            title = "Playing Time ($interest)"
             subtitle = when (recruitInterest.wantsImmediateStart) {
                 true -> when (interest) {
                     null -> stringResource(id = R.string.recruit_to_see)
@@ -202,13 +205,16 @@ private fun RecruitInterestLevel(
                         NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.playing_time_develop_hit)
                         else -> stringResource(id = R.string.playing_time_develop_miss)
                     }
-                    false -> stringResource(id = R.string.playing_time_unimportant)
+                    false -> when (interest) {
+                        null -> stringResource(id = R.string.recruit_to_see)
+                        else -> stringResource(id = R.string.playing_time_unimportant)
+                    }
                 }
             }
         }
         4 -> {
             interest = recruitInterest.playStyleInterest
-            title = "Play Style"
+            title = "Play Style ($interest)"
             subtitle = when (interest) {
                 null -> stringResource(id = R.string.recruit_to_see)
                 in 0..NewRecruitInterest.MAX_DESIRE / 4 -> stringResource(id = R.string.play_style_miss, teamName)
@@ -219,7 +225,7 @@ private fun RecruitInterestLevel(
         }
         5 -> {
             interest = recruitInterest.teamAbilityInterest
-            title = "Team Ability"
+            title = "Team Ability ($interest)"
             subtitle = when (recruitInterest.wantsToBeStar) {
                 true -> when (interest) {
                     null -> stringResource(id = R.string.recruit_to_see)
@@ -242,7 +248,7 @@ private fun RecruitInterestLevel(
         }
         else -> {
             interest = recruitInterest.recruitmentInterest
-            title = "Recruiting Pitch"
+            title = "Recruiting Pitch ($interest)"
             subtitle = when  {
                 interest > 0 -> stringResource(id = R.string.active_recruitment_positive)
                 interest < 0 -> stringResource(id = R.string.active_recruitment_negative)
