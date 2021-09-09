@@ -131,11 +131,11 @@ class GameViewModel(
                         _gameState.postValue(GameState(game, getNewPlayEvents(game)))
                         updateRecruitsAfterGame(game)
                     }
-                    // save game to db
-                    GameDatabaseHelper.saveGames(listOf(game), database)
-                    GameDatabaseHelper.saveGameEvents(gameEvents, database)
                 }
                 gameSim?.join()
+                // save game to db
+                GameDatabaseHelper.saveGames(listOf(game), database)
+                GameDatabaseHelper.saveGameEvents(gameEvents, database)
             }
         }
     }

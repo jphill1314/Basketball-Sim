@@ -22,11 +22,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.appdev.jphil.basketballcoach.LoadingScreen
+import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 import kotlinx.coroutines.flow.StateFlow
 
@@ -101,7 +103,7 @@ fun ScheduleItem(
                 isTextFaded = uiModel.isFinal && uiModel.bottomTeamScore < uiModel.topTeamScore
             )
             Text(
-                text = "Game ${uiModel.gameNumber}",
+                text = stringResource(id = uiModel.gameStatus),
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -363,7 +365,7 @@ fun PreviewDialog() {
 
 private val previewUiModel = ScheduleUiModel(
     id = 1,
-    gameNumber = 1,
+    gameStatus = R.string.non_conference_game,
     topTeamName = "Team A",
     bottomTeamName = "Team B",
     topTeamScore = " 90",

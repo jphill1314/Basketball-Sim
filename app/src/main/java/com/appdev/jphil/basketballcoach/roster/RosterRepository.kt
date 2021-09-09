@@ -3,7 +3,9 @@ package com.appdev.jphil.basketballcoach.roster
 import android.content.res.Resources
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.player.PlayerDao
+import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
+import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.newseason.NewGameGenerator
 import dagger.Lazy
@@ -12,6 +14,8 @@ import javax.inject.Inject
 class RosterRepository @Inject constructor(
     @TeamId private val lazyTeamId: Lazy<Int>,
     private val database: BasketballDatabase,
+    private val relationalDao: RelationalDao,
+    private val playerDao: PlayerDao,
     private val resources: Resources
 ) : RosterContract.Repository {
 
@@ -19,21 +23,22 @@ class RosterRepository @Inject constructor(
 
     override suspend fun fetchData(): Team {
         val teamId = lazyTeamId.get()
+
         var team = if (teamId == -1) {
-            TeamDatabaseHelper.loadUserTeam(database)
+            relationalDao.loadUserTeamNullable()
         } else {
-            TeamDatabaseHelper.loadTeamById(teamId, database)
+            relationalDao.loadTeamById(teamId)
         }
 
         if (team == null) {
             NewGameGenerator.generateNewGame(resources, database)
-            team = TeamDatabaseHelper.loadUserTeam(database)
+            team = relationalDao.loadUserTeam()
         }
-        return team!!
+        return team.create(emptyList())
     }
 
     override suspend fun saveTeam(team: Team) {
-        TeamDatabaseHelper.saveTeam(team, database)
+        playerDao.insertPlayers(team.players.map { PlayerEntity.from(it) })
     }
 
     override fun attachPresenter(presenter: RosterContract.Presenter) {

@@ -77,6 +77,7 @@ private fun TeamStateView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
+                .clickable { interactor.onShowRecruitingClicked() }
         )
         Row {
             Column(
@@ -100,6 +101,11 @@ private fun TeamStateView(
                 )
                 Text(
                     text = stringResource(id = R.string.number_and_parens, model.returningPGs, model.committedPGs),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = model.recruitingPGs.toString(),
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
@@ -128,6 +134,11 @@ private fun TeamStateView(
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
+                Text(
+                    text = model.recruitingSGs.toString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -150,6 +161,11 @@ private fun TeamStateView(
                 )
                 Text(
                     text = stringResource(id = R.string.number_and_parens, model.returningSFs, model.committedSFs),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = model.recruitingSFs.toString(),
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
@@ -178,6 +194,11 @@ private fun TeamStateView(
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
+                Text(
+                    text = model.recruitingPFs.toString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -203,9 +224,14 @@ private fun TeamStateView(
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                 )
+                Text(
+                    text = model.recruitingCs.toString(),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                )
             }
         }
-        AnimatedVisibility(visible = state.showClearFilters) {
+        AnimatedVisibility(visible = state.showClearFilters || state.onlyShowRecruiting) {
             TextButton(
                 onClick = { interactor.clearFilters() },
                 modifier = Modifier.padding(top = 16.dp)
@@ -269,6 +295,11 @@ private fun RecruitItem(
                         text = typeArray[recruit.type],
                         style = MaterialTheme.typography.body1
                     )
+                    Text(
+                        text = stringResource(id = R.string.recruitment_level, recruit.recruitmentLevel),
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.End
+                    )
                 }
                 Column(
                     modifier = Modifier.padding(8.dp),
@@ -276,6 +307,11 @@ private fun RecruitItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.rating_colon, recruit.rating),
+                        style = MaterialTheme.typography.body1,
+                        textAlign = TextAlign.End
+                    )
+                    Text(
+                        text = stringResource(id = R.string.potential_color, recruit.potential),
                         style = MaterialTheme.typography.body1,
                         textAlign = TextAlign.End
                     )
@@ -305,14 +341,19 @@ private fun PreviewRecruitingView() {
 private val teamModel = TeamStateModel(
     returningPGs = 2,
     committedPGs = 1,
+    recruitingPGs = 1,
     returningSGs = 3,
     committedSGs = 0,
+    recruitingSGs = 5,
     returningSFs = 1,
     committedSFs = 1,
+    recruitingSFs = 3,
     returningPFs = 2,
     committedPFs = 0,
+    recruitingPFs = 0,
     returningCs = 2,
-    committedCs = 0
+    committedCs = 0,
+    recruitingCs = 3
 )
 
 private fun recruitModel(index: Int) = RecruitModel(
@@ -329,6 +370,7 @@ private fun recruitModel(index: Int) = RecruitModel(
     rating = 85,
     potential = 75,
     interest = 55,
+    recruitmentLevel = 4,
     status = R.string.empty_string
 )
 
@@ -336,6 +378,7 @@ private val state = RecruitingContract.ViewState(
     isLoading = false,
     showClearFilters = true,
     positionFilters = listOf(2),
+    onlyShowRecruiting = false,
     team = teamModel,
     recruits = List(5) { recruitModel(it) }
 )
@@ -344,4 +387,5 @@ private val interactor = object : RecruitingContract.Interactor {
     override fun onRecruitClicked(id: Int) {}
     override fun onPositionClicked(pos: Int) {}
     override fun clearFilters() {}
+    override fun onShowRecruitingClicked() {}
 }

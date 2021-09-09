@@ -10,17 +10,6 @@ enum class RecruitDesire(val type: Int) {
     STAR(0),
     DEVELOP(1),
     GOOD_FIT(3);
-
-    companion object {
-        fun fromType(type: Int): RecruitDesire {
-            return when (type) {
-                STAR.type -> STAR
-                DEVELOP.type -> DEVELOP
-                GOOD_FIT.type -> GOOD_FIT
-                else -> throw IllegalArgumentException("Cannot create desire from type: $type")
-            }
-        }
-    }
 }
 
 data class RecruitDesireData(
@@ -51,7 +40,11 @@ data class RecruitDesireData(
 
     companion object {
         fun from(desire: RecruitDesire, recruit: Recruit): RecruitDesireData {
-            val prestige = ((recruit.rating + recruit.potential) / 2.0).toInt() + Random.nextInt(40) - 20
+            val prestige = when (desire) {
+                RecruitDesire.STAR -> min(90, recruit.rating) - Random.nextInt(20)
+                RecruitDesire.GOOD_FIT -> min(90, ((recruit.rating + recruit.potential) / 2.0).toInt())
+                RecruitDesire.DEVELOP -> min(80, recruit.potential) + Random.nextInt(20)
+            }
             val locationMatters = Random.nextInt(3)
 
             val wantsThrees = when (recruit.playerType) {
@@ -72,7 +65,7 @@ data class RecruitDesireData(
             }
 
             return RecruitDesireData(
-                preferredPrestige = max(0, min(90, prestige)),
+                preferredPrestige = max(0, min(75, prestige)),
                 wantsClose = locationMatters == 0,
                 wantsFar = locationMatters == 1,
                 wantsImmediateStart = desire == RecruitDesire.STAR,

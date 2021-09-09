@@ -46,7 +46,9 @@ data class CoachEntity(
 ) {
 
     fun createCoachWithRecruits(allRecruits: List<Recruit>): Coach {
-        val recruits = allRecruits.filter { recruitIds.contains(it.id) }
+        val recruits = allRecruits.filter {
+            !it.isCommitted && recruitIds.contains(it.id)
+        }
 
         return Coach(
             id,

@@ -5,12 +5,11 @@ import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
-import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -83,8 +82,7 @@ class NationalChampionshipHelper @Inject constructor(
 
         val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
         val allTeams = (autoTeams + atLargeTeams).sortedByDescending { it.getAdjEff() }.map { dataModel ->
-            val teamRelations = relationalDao.loadTeamById(dataModel.teamId)
-            GameDatabaseHelper.createTeam(teamRelations, allRecruits)
+            relationalDao.loadTeamById(dataModel.teamId).create(allRecruits)
         }
 
         // TODO: this is by far the longest part
@@ -115,7 +113,7 @@ class NationalChampionshipHelper @Inject constructor(
                 3, 7, 11 -> startNextStep()
                 in 15..31 -> startNextStep()
             }
-            TeamDatabaseHelper.saveTeam(team, database)
+            teamDao.insertTeam(TeamEntity.from(team))
         }
 
         _state.update { _state.value.copy(isFinished = true) }

@@ -64,7 +64,7 @@ class TournamentSimRepository @Inject constructor(
             } else {
                 listOf(loadNationalChampionship(allRecruits))
             }
-            val firstGameId = GameDatabaseHelper.getFirstGameWithIsFinal(false, database) ?: run {
+            val firstGameId = gameDao.getFirstGameWithIsFinal(false) ?: run {
                 _simState.update { it?.copy(isSimActive = false) }
                 return@launch
             }
@@ -74,7 +74,7 @@ class TournamentSimRepository @Inject constructor(
             }
             // sim games -> user's conference last
             for (gameId in firstGameId..lastGameId) {
-                val game = GameDatabaseHelper.getGameById(gameId, allRecruits, relationalDao)
+                val game = relationalDao.loadGameWithTeams(gameId).create(allRecruits)
 
                 game.simulateFullGame()
 
@@ -145,9 +145,7 @@ class TournamentSimRepository @Inject constructor(
         val conference = Conference(
             conferenceRelation.conferenceEntity.id,
             conferenceRelation.conferenceEntity.name,
-            conferenceRelation.teamEntities.map {
-                GameDatabaseHelper.createTeam(it, allRecruits)
-            }
+            conferenceRelation.teamEntities.map { it.create(allRecruits) }
         )
 
         conference.generateTournament(conference.teams.map { RecordUtil.getRecord(games, it) })
@@ -203,9 +201,7 @@ class TournamentSimRepository @Inject constructor(
         allRecruits: List<Recruit>
     ): NationalChampionship {
         val tournamentId = NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID
-        val teams = relationalDao.loadTeamsByTournamentId(tournamentId).map {
-            GameDatabaseHelper.createTeam(it, allRecruits)
-        }
+        val teams = relationalDao.loadTeamsByTournamentId(tournamentId).map { it.create(allRecruits) }
         val games = gameDao.getGamesWithTournamentId(tournamentId).map { game ->
             game.createGame(
                 homeTeam = teams.first { it.teamId == game.homeTeamId },

@@ -8,8 +8,6 @@ import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.recruits.Recruit
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.getCommitmentsIfPossible
-import com.appdev.jphil.basketball.teams.TeamRecruitInteractor.updateRecruitingAssignments
 import java.util.Collections
 import kotlin.math.abs
 import kotlin.random.Random
@@ -326,11 +324,7 @@ class Team(
     }
 
     fun calculateTeamRating(): Int {
-        var rating = 0
-        for (p in roster) {
-            rating += p.getOverallRating()
-        }
-        return rating / roster.size
+        return roster.map { it.getOverallRating() }.average().toInt()
     }
 
     fun getHeadCoach(): Coach = coaches.first { it.type == CoachType.HEAD_COACH }

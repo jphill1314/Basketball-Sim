@@ -8,6 +8,7 @@ import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 object TeamFactory {
@@ -31,7 +32,9 @@ object TeamFactory {
         lastNames: List<String>
     ): Team {
         // TODO: generate different kinds of teams: run and gun, press heavy, good offense, good defense, balances, etc
-        val prestige = max(0, min(100, teamRating + Random.nextInt(20) - 10))
+        val players = generatePlayers(teamId, 15, teamRating, firstNames, lastNames)
+        val newRating = players.map { it.getOverallRating() }.average().roundToInt()
+        val prestige = max(0, min(100, newRating + Random.nextInt(20) - 10))
 
         return Team(
             teamId,
@@ -39,7 +42,7 @@ object TeamFactory {
             mascot,
             teamAbbreviation,
             color,
-            generatePlayers(teamId, 15, teamRating, firstNames, lastNames),
+            players,
             conferenceId,
             isUser,
             generateCoaches(teamId, teamRating, firstNames, lastNames),
