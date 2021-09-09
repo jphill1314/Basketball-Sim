@@ -110,7 +110,7 @@ private fun simulateSeason(basketballWorld: BasketballWorld, year: Int): Basketb
     val recruits = RecruitFactory.generateRecruits(
         firstNames = listOf("first"),
         lastNames = listOf("last"),
-        numberOfRecruits = 200,
+        numberOfRecruits = RECRUITS,
         allTeams = teams
     )
 
@@ -185,7 +185,7 @@ private fun createTeams(): BasketballWorld {
     val recruits = RecruitFactory.generateRecruits(
         firstNames = listOf("first"),
         lastNames = listOf("last"),
-        numberOfRecruits = 200,
+        numberOfRecruits = RECRUITS,
         allTeams = conferenceA.teams + conferenceB.teams
     )
 
@@ -260,3 +260,4 @@ private fun BasketballWorld.forEachTeam(block: (Team) -> Unit) {
 private const val PRACTICES = 50
 private const val WALK_ON_VARIATION = 15
 private const val WALK_ON_MIN = 20
+private const val RECRUITS = 100

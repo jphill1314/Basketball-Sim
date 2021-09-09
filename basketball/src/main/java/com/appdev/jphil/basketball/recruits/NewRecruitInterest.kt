@@ -30,7 +30,8 @@ class NewRecruitInterest(
 
     companion object {
         const val MAX_DESIRE = 20
-        const val MAX_CHANGE_FROM_RECRUITMENT = 10
+        const val MAX_DESIRE_FROM_PRESTIGE = 50
+        const val MAX_CHANGE_FROM_RECRUITMENT = 20
     }
 
     fun getInterest(): Int {
@@ -147,7 +148,7 @@ class NewRecruitInterest(
     }
 
     private fun getInterestFromPrestige(team: Team): Int {
-        return max(0, min(MAX_DESIRE, team.prestige - preferredPrestige + MAX_DESIRE))
+        return max(0, min(MAX_DESIRE_FROM_PRESTIGE, team.prestige - preferredPrestige + MAX_DESIRE))
     }
 
     private fun getInterestFromLocation(team: Team, recruit: Recruit): Int {
@@ -237,18 +238,24 @@ class NewRecruitInterest(
     }
 
     private fun getInterestFromTeamAbility(team: Team, recruit: Recruit): Int {
+        val recruitRating = recruit.rating
+        val teamRating = team.teamRating
         return when {
             wantsToBeStar -> when {
-                recruit.rating > team.teamRating + 10 -> MAX_DESIRE
-                recruit.rating >= team.teamRating -> MAX_DESIRE / 2
-                else -> 0
+                // max acceptable = rating == team rating
+                // min acceptable = rating - 10 == team rating
+                recruitRating - 10 > teamRating -> max(0, MAX_DESIRE - (recruitRating - teamRating))
+                recruitRating >= teamRating -> MAX_DESIRE
+                else -> max(0, MAX_DESIRE - (teamRating - recruitRating))
             }
             wantsToDevelop -> when {
-                recruit.rating > team.teamRating -> 0
-                recruit.rating >= team.teamRating - 10 -> MAX_DESIRE / 2
-                else -> MAX_DESIRE
+                teamRating - 10 > recruitRating -> max(0, MAX_DESIRE - (teamRating - recruitRating))
+                teamRating >= recruitRating -> MAX_DESIRE
+                else -> max(0, MAX_DESIRE - (recruitRating - teamRating))
             }
-            else -> MAX_DESIRE / 2
+            else -> {
+                MAX_DESIRE / 2
+            }
         }
     }
 }

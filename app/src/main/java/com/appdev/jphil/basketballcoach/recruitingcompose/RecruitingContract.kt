@@ -13,6 +13,7 @@ interface RecruitingContract {
         val team: Team? = null,
         val sortType: SortType = SortType.BEST_FIRST,
         val positionFilters: List<Int> = emptyList(),
+        val onlyShowRecruiting: Boolean = false,
         val recruits: List<Recruit> = emptyList()
     ) : com.appdev.jphil.basketballcoach.compose.arch.DataState
 
@@ -20,6 +21,7 @@ interface RecruitingContract {
         val isLoading: Boolean,
         val showClearFilters: Boolean = false,
         val positionFilters: List<Int> = emptyList(),
+        val onlyShowRecruiting: Boolean = false,
         val team: TeamStateModel? = null,
         val recruits: List<RecruitModel> = emptyList()
     ) : com.appdev.jphil.basketballcoach.compose.arch.ViewState

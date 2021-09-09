@@ -13,6 +13,14 @@ interface RelationalDao {
     suspend fun loadTeamById(id: Int): TeamRelations
 
     @Transaction
+    @Query("select * from TeamEntity where isUser in (:isUser)")
+    suspend fun loadUserTeam(isUser: Boolean = true): TeamRelations
+
+    @Transaction
+    @Query("select * from TeamEntity where isUser in (:isUser)")
+    suspend fun loadUserTeamNullable(isUser: Boolean = true): TeamRelations?
+
+    @Transaction
     @Query("select * from TeamEntity where teamId in (:id)")
     fun loadTeamByIdFlow(id: Int): Flow<TeamRelations>
 
@@ -31,6 +39,10 @@ interface RelationalDao {
     @Transaction
     @Query("select * from ConferenceEntity")
     suspend fun loadAllConferenceData(): List<ConferenceRelations>
+
+    @Transaction
+    @Query("select * from ConferenceEntity where id in (:confId)")
+    suspend fun loadConferenceDataById(confId: Int): ConferenceRelations
 
     @Transaction
     @Query("select * from ConferenceEntity where id in (:id)")

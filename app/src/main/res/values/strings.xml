@@ -15,6 +15,8 @@
     <string name="on_the_floor">On the floor</string>
 
     <string name="game_number">Game %d</string>
+    <string name="non_conference_game">Non-conference Game</string>
+    <string name="conference_game">Conference Game</string>
     <string name="in_progress">In progress</string>
     <string name="game_final">Final</string>
     <string name="play_game">Play game</string>
@@ -121,6 +123,7 @@
     <string name="rating_colon">Rating: %d</string>
     <string name="rating_range">Rating: %1$d-%2$d</string>
     <string name="potential_color">Potential: %d</string>
+    <string name="recruitment_level">Recruitment Level: %1$d</string>
     <string name="unknown">Unknown</string>
     <string name="returning_players_plus_commits">Returning Players (Commitments)</string>
 
@@ -256,4 +259,12 @@
     <string name="actively_recruiting">Actively Recruiting</string>
     <string name="committed_to_you">Committed To You</string>
     <string name="committed_elsewhere">Committed Elsewhere</string>
+    <string name="team_prestige">Team Prestige</string>
+    <string name="location">Location</string>
+    <string name="playing_time">Playing Time</string>
+    <string name="play_style">Play Style</string>
+    <string name="team_ability">Team Ability</string>
+    <string name="recruiting_pitch">Recruiting Pitch</string>
+
+    <string name="home">Home: %1$s</string>
 </resources>

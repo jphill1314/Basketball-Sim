@@ -29,7 +29,10 @@ object RecruitFactory {
                 generateRating(random)
             )
 
-            val desires = RecruitDesireData.from(generateDesires(), recruit)
+            val desires = RecruitDesireData.from(
+                generateDesires(recruit.rating, recruit.potential),
+                recruit
+            )
             recruit.generateInitialInterests(allTeams, desires)
             recruits.add(recruit)
         }
@@ -42,12 +45,22 @@ object RecruitFactory {
         return max(25, min(100, rating))
     }
 
-    private fun generateDesires(): RecruitDesire {
+    private fun generateDesires(rating: Int, potential: Int): RecruitDesire {
         val rand = Random.nextDouble()
         return when {
-            rand < .25 -> RecruitDesire.DEVELOP
-            rand < .75 -> RecruitDesire.GOOD_FIT
-            else -> RecruitDesire.STAR
+            rating > 75 -> when {
+                rand > .65 -> RecruitDesire.STAR
+                else -> RecruitDesire.GOOD_FIT
+            }
+            potential > 75 -> when {
+                rand > .65 -> RecruitDesire.GOOD_FIT
+                else -> RecruitDesire.DEVELOP
+            }
+            else -> when {
+                rand < .25 -> RecruitDesire.DEVELOP
+                rand < .75 -> RecruitDesire.GOOD_FIT
+                else -> RecruitDesire.STAR
+            }
         }
     }
 

@@ -1,10 +1,11 @@
 package com.appdev.jphil.basketballcoach.schedule.ui
 
+import androidx.annotation.StringRes
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel
 
 data class ScheduleUiModel(
     val id: Int,
-    val gameNumber: Int,
+    @StringRes val gameStatus: Int,
     val topTeamName: String,
     val bottomTeamName: String,
     val topTeamScore: String,
