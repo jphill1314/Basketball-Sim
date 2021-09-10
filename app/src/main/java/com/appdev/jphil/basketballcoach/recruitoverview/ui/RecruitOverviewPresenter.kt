@@ -99,26 +99,22 @@ class RecruitOverviewPresenter(
 
     override fun gainCommitment() {
         runIfPossible { team, recruit ->
-            if (recruit.getInterest(params.teamId) >= 100) {
-                recruit.apply {
-                    isCommitted = true
-                    teamCommittedTo = params.teamId
-                }
-                viewModelScope.launch {
-                    recruitRepository.updateRecruit(recruit)
+            recruit.apply {
+                isCommitted = true
+                teamCommittedTo = params.teamId
+            }
+            viewModelScope.launch {
+                recruitRepository.updateRecruit(recruit)
 
-                    team.commitments.add(recruit)
-                    recruitRepository.updateTeam(team)
+                team.commitments.add(recruit)
+                recruitRepository.updateTeam(team)
 
-                    team.coaches.forEach { coach ->
-                        if (coach.recruitingAssignments.contains(recruit)) {
-                            coach.recruitingAssignments.remove(recruit)
-                            recruitRepository.updateCoach(coach)
-                        }
+                team.coaches.forEach { coach ->
+                    if (coach.recruitingAssignments.contains(recruit)) {
+                        coach.recruitingAssignments.remove(recruit)
+                        recruitRepository.updateCoach(coach)
                     }
                 }
-            } else {
-                // TODO: notify user that nothing happened
             }
         }
     }

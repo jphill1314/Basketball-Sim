@@ -27,6 +27,8 @@ interface RecruitOverviewContract {
         val isLoading: Boolean = true,
         val teamName: String = "",
         val teamRating: Int = 0,
+        val isRecruitEnabled: Boolean = true,
+        val isCommitEnabled: Boolean = false,
         val isActivelyRecruited: Boolean = false,
         val recruit: Recruit? = null,
         val recruitInterest: NewRecruitInterest? = null,

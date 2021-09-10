@@ -55,6 +55,8 @@ fun RecruitOverview(
             state.teamName,
             state.teamRating,
             state.isActivelyRecruited,
+            state.isRecruitEnabled,
+            state.isCommitEnabled,
             recruit,
             interest,
             interactor
@@ -74,6 +76,8 @@ private fun RecruitOverview(
     teamName: String,
     teamRating: Int,
     isActivelyRecruited: Boolean,
+    isRecruitEnabled: Boolean,
+    isCommitEnabled: Boolean,
     recruit: Recruit,
     recruitInterest: NewRecruitInterest,
     interactor: RecruitOverviewContract.Interactor
@@ -132,7 +136,12 @@ private fun RecruitOverview(
             HorizontalLine(color = Color.Gray)
         }
         TotalInterest(totalInterest = recruitInterest.getInterest())
-        RecruitInteractions(isActivelyRecruited = isActivelyRecruited, interactor = interactor)
+        RecruitInteractions(
+            isActivelyRecruited = isActivelyRecruited,
+            isRecruitEnabled = isRecruitEnabled,
+            isCommitEnabled = isCommitEnabled,
+            interactor = interactor
+        )
     }
 }
 
@@ -366,6 +375,8 @@ private fun Int.getColorForPitch() = when {
 @Composable
 private fun RecruitInteractions(
     isActivelyRecruited: Boolean,
+    isRecruitEnabled: Boolean,
+    isCommitEnabled: Boolean,
     interactor: RecruitOverviewContract.Interactor
 ) {
     Row(
@@ -375,6 +386,7 @@ private fun RecruitInteractions(
         if (isActivelyRecruited) {
             TextButton(
                 onClick = { interactor.stopActiveRecruitment() },
+                enabled = isRecruitEnabled,
                 modifier = Modifier
                     .padding(8.dp)
                     .weight(1f)
@@ -387,6 +399,7 @@ private fun RecruitInteractions(
         } else {
             TextButton(
                 onClick = { interactor.startActiveRecruitment() },
+                enabled = isRecruitEnabled,
                 modifier = Modifier
                     .padding(8.dp)
                     .weight(1f)
@@ -399,6 +412,7 @@ private fun RecruitInteractions(
         }
         TextButton(
             onClick = { interactor.gainCommitment() },
+            enabled = isCommitEnabled,
             modifier = Modifier
                 .padding(8.dp)
                 .weight(1f)
@@ -551,7 +565,16 @@ private fun RecruitRow(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRecruitOverview() {
-    RecruitOverview(viewState.teamName, viewState.teamRating, viewState.isActivelyRecruited, recruit, recruitInterest, interactor)
+    RecruitOverview(
+        viewState.teamName,
+        viewState.teamRating,
+        viewState.isActivelyRecruited,
+        viewState.isRecruitEnabled,
+        viewState.isCommitEnabled,
+        recruit,
+        recruitInterest,
+        interactor
+    )
 }
 
 private val recruitInterest = NewRecruitInterest(

@@ -31,6 +31,10 @@ class Recruit(
         return recruitInterests.first { it.teamId == teamId }.getRecruitmentLevel()
     }
 
+    fun canCommitToTeam(teamId: Int): Boolean {
+        return getInterest(teamId) >= 100
+    }
+
     fun updateRecruitment(team: Team, game: Game, coach: Coach?) {
         if (!isCommitted) {
             recruitInterests.first { it.teamId == team.teamId }.doActiveRecruitment(

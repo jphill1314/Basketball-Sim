@@ -23,6 +23,8 @@ class RecruitOverviewTransformer @Inject constructor() :
                 teamName = team.schoolName,
                 teamRating = team.teamRating,
                 isActivelyRecruited = isActiveRecruitment(team, recruit),
+                isRecruitEnabled = !recruit.isCommitted,
+                isCommitEnabled = recruit.canCommitToTeam(team.teamId),
                 recruit = recruit,
                 recruitInterest = recruit.recruitInterests.first { it.teamId == team.teamId },
                 coaches = if (dataState.showDialog) {
