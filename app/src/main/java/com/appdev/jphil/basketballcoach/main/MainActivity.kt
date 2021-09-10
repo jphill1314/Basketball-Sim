@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -16,7 +15,6 @@ import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
 import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
-import com.appdev.jphil.basketballcoach.util.getStyle
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -35,12 +33,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         teamViewModel = getTeamViewModel(viewModelFactory)
-        teamViewModel?.currentTeam?.observe(this, Observer<Team> { setTeamNameAndRating(it) })
-
-        savedInstanceState?.let {
-            teamTheme = TeamColor.fromInt(savedInstanceState.getInt(TEAM_COLOR))
-            setTheme(teamTheme.getStyle())
-        }
+        teamViewModel?.currentTeam?.observe(this) { setTeamNameAndRating(it) }
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         navBinding = NavigationHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -123,7 +116,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         outState.putString(TEAM_PRESTIGE, navBinding.navTeamPrestige.text.toString())
         outState.putInt(TEAM_ID, teamViewModel?.teamId ?: -1)
         outState.putInt(CONF_ID, teamViewModel?.conferenceId ?: 0)
-        outState.putInt(TEAM_COLOR, teamTheme.type)
         super.onSaveInstanceState(outState)
     }
 
@@ -131,7 +123,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         const val TEAM_NAME = "team name"
         const val TEAM_RATING = "team rating"
         const val TEAM_PRESTIGE = "team prestige"
-        const val TEAM_COLOR = "team color"
         const val TEAM_ID = "team id"
         const val CONF_ID = "conf id"
     }
