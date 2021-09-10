@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
 import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
-import com.appdev.jphil.basketballcoach.util.getStyle
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -31,17 +29,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     var teamViewModel: TeamManagerViewModel? = null
 
     private var teamTheme = TeamColor.Red
-    private var navToRoster = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         teamViewModel = getTeamViewModel(viewModelFactory)
-        teamViewModel?.currentTeam?.observe(this, Observer<Team> { setTeamNameAndRating(it) })
-
-        savedInstanceState?.let {
-            teamTheme = TeamColor.fromInt(savedInstanceState.getInt(TEAM_COLOR))
-            setTheme(teamTheme.getStyle())
-        }
+        teamViewModel?.currentTeam?.observe(this) { setTeamNameAndRating(it) }
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         navBinding = NavigationHeaderBinding.bind(binding.navView.getHeaderView(0))
@@ -59,7 +51,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 R.id.recruiting_compose,
                 R.id.strategy,
                 R.id.staff,
-                R.id.practice
             ),
             binding.drawerLayout
         )
@@ -75,11 +66,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 savedInstanceState.getInt(TEAM_ID),
                 savedInstanceState.getInt(CONF_ID)
             )
-
-            if (savedInstanceState.getBoolean(NAV_TO_ROSTER, false)) {
-                navigateToHomePage()
-            }
-            navToRoster = false
         }
     }
 
@@ -111,27 +97,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
-    private fun navigateToHomePage() {
-        findNavController(R.id.frame_layout).popBackStack(R.id.roster, false)
-        binding.navView.post { binding.navView.setCheckedItem(R.id.roster) }
-    }
-
-    private fun setTeamNameAndRating(team: Team) {
-        val oldName = navBinding.navTeamName.text
-        navBinding.navTeamName.text = team.name
-        navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.teamRating)
+    private fun setTeamNameAndRating(team: TeamEntity) {
+        navBinding.navTeamName.text = team.schoolName + " " + team.mascot
+        navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.rating)
         navBinding.navTeamPrestige.text = "Prestige: ${team.prestige}"
 
         binding.navView.menu.apply {
             findItem(R.id.recruiting_compose).isVisible = team.isUser
             findItem(R.id.strategy).isVisible = team.isUser
-            findItem(R.id.practice).isVisible = team.isUser
-        }
-
-        if (teamTheme != team.color || team.name != oldName) {
-            teamTheme = team.color
-            navToRoster = true
-            recreate()
         }
     }
 
@@ -141,8 +114,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         outState.putString(TEAM_PRESTIGE, navBinding.navTeamPrestige.text.toString())
         outState.putInt(TEAM_ID, teamViewModel?.teamId ?: -1)
         outState.putInt(CONF_ID, teamViewModel?.conferenceId ?: 0)
-        outState.putInt(TEAM_COLOR, teamTheme.type)
-        outState.putBoolean(NAV_TO_ROSTER, navToRoster)
         super.onSaveInstanceState(outState)
     }
 
@@ -150,9 +121,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         const val TEAM_NAME = "team name"
         const val TEAM_RATING = "team rating"
         const val TEAM_PRESTIGE = "team prestige"
-        const val TEAM_COLOR = "team color"
         const val TEAM_ID = "team id"
         const val CONF_ID = "conf id"
-        const val NAV_TO_ROSTER = "nav to roster"
     }
 }

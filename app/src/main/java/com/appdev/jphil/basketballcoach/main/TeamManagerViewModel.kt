@@ -3,11 +3,9 @@ package com.appdev.jphil.basketballcoach.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.appdev.jphil.basketball.teams.Team
+import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import kotlinx.coroutines.launch
 
 class TeamManagerViewModel(private val database: BasketballDatabase) : ViewModel() {
@@ -21,20 +19,17 @@ class TeamManagerViewModel(private val database: BasketballDatabase) : ViewModel
         loadTeam()
     }
 
-    private val team = MutableLiveData<Team>()
-    val currentTeam: LiveData<Team> = team
+    private val team = MutableLiveData<TeamEntity>()
+    val currentTeam: LiveData<TeamEntity> = team
 
     private fun loadTeam() {
-        GlobalScope.launch(Dispatchers.Main) {
-            var team: Team? = null
-            launch(Dispatchers.IO) {
-                team = if (teamId == -1) {
-                    TeamDatabaseHelper.loadUserTeam(database)
-                } else {
-                    TeamDatabaseHelper.loadTeamById(teamId, database)
-                }
-            }.join()
-            team?.let { this@TeamManagerViewModel.team.value = team }
+        viewModelScope.launch {
+            val tempTeam = if (teamId == -1) {
+                database.teamDao().getTeamIsUser(true)
+            } else {
+                database.teamDao().getTeamWithId(teamId)
+            }
+            tempTeam?.let { team.value = it }
         }
     }
 }

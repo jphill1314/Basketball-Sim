@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/roster">
-
-    <fragment
-        android:id="@+id/practice"
-        android:name="com.appdev.jphil.basketballcoach.practice.PracticeFragment"
-        android:label="@string/practice" />
     <fragment
         android:id="@+id/standings"
         android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"
-        android:label="@string/standings" />
+        android:label="@string/standings" >
+        <action
+            android:id="@+id/toNewTeamRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/roster"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/strategy"
         android:name="com.appdev.jphil.basketballcoach.strategy.StrategyFragment"
@@ -55,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/recruiting_compose"
-        android:name="com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment"
+        android:name="com.appdev.jphil.basketballcoach.recruiting.ui.RecruitingFragment"
         android:label="@string/recruiting">
         <action
             android:id="@+id/toRecruitOverview"
@@ -89,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/recruitOverview"
-        android:name="com.appdev.jphil.basketballcoach.recruitoverviewcompose.RecruitOverviewComposeFragment"
+        android:name="com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewFragment"
         android:label="@string/recruit_overview">
         <argument
             android:name="recruitId"
@@ -142,7 +143,13 @@
     <fragment
         android:id="@+id/rankings"
         android:name="com.appdev.jphil.basketballcoach.rankings.RankingsFragment"
-        android:label="@string/rankings" />
+        android:label="@string/rankings" >
+        <action
+            android:id="@+id/toNewTeamRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/roster"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/new_season"
         android:name="com.appdev.jphil.basketballcoach.newseason.ui.NewSeasonFragment"

@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitoverviewcompose
+package com.appdev.jphil.basketballcoach.recruitoverview.ui
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.recruits.NewRecruitInterest
@@ -26,6 +26,9 @@ interface RecruitOverviewContract {
     data class ViewState(
         val isLoading: Boolean = true,
         val teamName: String = "",
+        val teamRating: Int = 0,
+        val isRecruitEnabled: Boolean = true,
+        val isCommitEnabled: Boolean = false,
         val isActivelyRecruited: Boolean = false,
         val recruit: Recruit? = null,
         val recruitInterest: NewRecruitInterest? = null,

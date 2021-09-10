@@ -11,13 +11,11 @@ import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
 import com.appdev.jphil.basketballcoach.newseason.ui.NewSeasonFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
-import com.appdev.jphil.basketballcoach.practice.PracticeFragment
-import com.appdev.jphil.basketballcoach.practice.PracticeModule
 import com.appdev.jphil.basketballcoach.rankings.RankingsFragment
 import com.appdev.jphil.basketballcoach.rankings.RankingsModule
-import com.appdev.jphil.basketballcoach.recruitingcompose.RecruitingFragment
-import com.appdev.jphil.basketballcoach.recruitoverviewcompose.RecruitOverviewComposeFragment
-import com.appdev.jphil.basketballcoach.recruitoverviewcompose.RecruitOverviewComposeModule
+import com.appdev.jphil.basketballcoach.recruiting.ui.RecruitingFragment
+import com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewFragment
+import com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewModule
 import com.appdev.jphil.basketballcoach.roster.RosterFragment
 import com.appdev.jphil.basketballcoach.roster.RosterModule
 import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
@@ -59,10 +57,6 @@ abstract class FragmentBindingModule {
     abstract fun coachesFragment(): CoachesFragment
 
     @PerFragment
-    @ContributesAndroidInjector(modules = [PracticeModule::class])
-    abstract fun practiceFragment(): PracticeFragment
-
-    @PerFragment
     @ContributesAndroidInjector(modules = [CoachOverviewModule::class])
     abstract fun coachOverviewFragment(): CoachOverviewFragment
 
@@ -95,6 +89,6 @@ abstract class FragmentBindingModule {
     abstract fun recruitingComposeFragment(): RecruitingFragment
 
     @PerFragment
-    @ContributesAndroidInjector(modules = [RecruitOverviewComposeModule::class])
-    abstract fun recruitOverviewComposeFragment(): RecruitOverviewComposeFragment
+    @ContributesAndroidInjector(modules = [RecruitOverviewModule::class])
+    abstract fun recruitOverviewComposeFragment(): RecruitOverviewFragment
 }

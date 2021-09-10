@@ -67,7 +67,9 @@ data class TeamEntity(
             postseasonTournamentSeed
         )
 
-        team.commitments.addAll(commitments.map { cId -> allRecruits.first { it.id == cId } })
+        if (allRecruits.isNotEmpty()) {
+            team.commitments.addAll(commitments.map { cId -> allRecruits.first { it.id == cId } })
+        }
         team.twoPointAttempts = twoPointAttempts
         team.twoPointMakes = twoPointMakes
         team.threePointAttempts = threePointAttempts
