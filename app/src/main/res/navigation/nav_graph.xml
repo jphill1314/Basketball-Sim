@@ -12,7 +12,13 @@
     <fragment
         android:id="@+id/standings"
         android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"
-        android:label="@string/standings" />
+        android:label="@string/standings" >
+        <action
+            android:id="@+id/toNewTeamRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/roster"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/strategy"
         android:name="com.appdev.jphil.basketballcoach.strategy.StrategyFragment"
@@ -142,7 +148,13 @@
     <fragment
         android:id="@+id/rankings"
         android:name="com.appdev.jphil.basketballcoach.rankings.RankingsFragment"
-        android:label="@string/rankings" />
+        android:label="@string/rankings" >
+        <action
+            android:id="@+id/toNewTeamRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/roster"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/new_season"
         android:name="com.appdev.jphil.basketballcoach.newseason.ui.NewSeasonFragment"

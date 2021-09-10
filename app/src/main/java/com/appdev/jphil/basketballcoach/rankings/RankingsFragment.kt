@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.advancedmetrics.TeamStatsDataModel
@@ -56,6 +57,7 @@ class RankingsFragment : Fragment(), RankingsContract.View {
             layoutManager = LinearLayoutManager(context)
             adapter = RankingsAdapter(teams, teamViewModel?.teamId ?: 0, resources) { teamId, confId ->
                 teamViewModel?.changeTeamAndConference(teamId, confId)
+                findNavController().navigate(RankingsFragmentDirections.toNewTeamRoster())
             }
         }
         binding.header.apply {
