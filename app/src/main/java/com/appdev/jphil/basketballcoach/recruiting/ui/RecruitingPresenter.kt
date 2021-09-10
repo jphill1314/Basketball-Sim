@@ -1,10 +1,11 @@
-package com.appdev.jphil.basketballcoach.recruitingcompose
+package com.appdev.jphil.basketballcoach.recruiting.ui
 
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Event
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
+import com.appdev.jphil.basketballcoach.recruiting.data.RecruitingRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -11,10 +11,6 @@ object TeamDatabaseHelper {
         return createTeam(database.teamDao().getTeamWithId(teamId), database)
     }
 
-    suspend fun loadUserTeam(database: BasketballDatabase): Team? {
-        return createTeam(database.teamDao().getTeamIsUser(true), database)
-    }
-
     suspend fun createTeam(teamEntity: TeamEntity?, database: BasketballDatabase): Team? {
         return teamEntity?.let {
             val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(it.teamId, database)

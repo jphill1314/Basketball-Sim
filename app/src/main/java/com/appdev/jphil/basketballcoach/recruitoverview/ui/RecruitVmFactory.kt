@@ -1,7 +1,8 @@
-package com.appdev.jphil.basketballcoach.recruitoverviewcompose
+package com.appdev.jphil.basketballcoach.recruitoverview.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.appdev.jphil.basketballcoach.recruitoverview.data.RecruitRepository
 import javax.inject.Inject
 
 class RecruitVmFactory @Inject constructor(

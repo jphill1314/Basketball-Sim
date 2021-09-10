@@ -47,7 +47,7 @@ fun Team.updateRecruitingAssignments(allRecruits: List<Recruit>) {
 
 fun Team.getCommitmentsIfPossible(allRecruits: List<Recruit>) {
     val interestedRecruits = allRecruits.filter {
-        !it.isCommitted && it.getInterest(teamId) >= 100 && isInterestedInCommitment(it)
+        !it.isCommitted && it.canCommitToTeam(teamId) && isInterestedInCommitment(it)
     }.sortedWith(compareBy { it.rating })
 
     for (position in 1..5) {

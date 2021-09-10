@@ -1,11 +1,10 @@
 package com.appdev.jphil.basketballcoach.schedule.data
 
 import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
-import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
-import com.appdev.jphil.basketballcoach.database.team.TeamDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
@@ -14,7 +13,7 @@ import javax.inject.Inject
 class ScheduleRepository @Inject constructor(
     private val gameDao: GameDao,
     private val conferenceDao: ConferenceDao,
-    private val database: BasketballDatabase
+    private val teamDao: TeamDao
 ) {
 
     fun doesTournamentExistForConference(conferenceId: Int): Flow<Boolean> {
@@ -38,7 +37,7 @@ class ScheduleRepository @Inject constructor(
     }
 
     suspend fun getGames(): Flow<List<ScheduleDataModel>> {
-        val userTeam = TeamDatabaseHelper.loadUserTeam(database)!!.teamId
+        val userTeam = teamDao.getUserTeamId(true)
         return gameDao.getAllGamesFlow()
             .map { entities ->
                 entities.map { entity ->
@@ -48,7 +47,7 @@ class ScheduleRepository @Inject constructor(
     }
 
     suspend fun getGamesForDialog(): Flow<List<ScheduleDataModel>> {
-        val userTeam = TeamDatabaseHelper.loadUserTeam(database)!!.teamId
+        val userTeam = teamDao.getUserTeamId(true)
         val firstGameId = gameDao.getFirstGameWithIsFinal(false) ?: return emptyFlow()
         val firstId = firstGameId - 1
         return gameDao.getAllGamesWithIsFinalFlow(true, firstId).map { entities ->

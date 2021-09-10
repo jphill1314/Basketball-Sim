@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitoverviewcompose
+package com.appdev.jphil.basketballcoach.recruitoverview.ui
 
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketball.coaches.Coach
@@ -8,6 +8,7 @@ import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.RecruitId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
+import com.appdev.jphil.basketballcoach.recruitoverview.data.RecruitRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -98,25 +99,22 @@ class RecruitOverviewPresenter(
 
     override fun gainCommitment() {
         runIfPossible { team, recruit ->
-            if (recruit.getInterest(params.teamId) >= 100) {
-                recruit.apply {
-                    isCommitted = true
-                    teamCommittedTo = params.teamId
-                }
-                team.commitments.add(recruit)
-                viewModelScope.launch {
-                    recruitRepository.updateRecruit(recruit)
-                    recruitRepository.updateTeam(team)
+            recruit.apply {
+                isCommitted = true
+                teamCommittedTo = params.teamId
+            }
+            viewModelScope.launch {
+                recruitRepository.updateRecruit(recruit)
 
-                    team.coaches.forEach { coach ->
-                        if (coach.recruitingAssignments.contains(recruit)) {
-                            coach.recruitingAssignments.remove(recruit)
-                            recruitRepository.updateCoach(coach)
-                        }
+                team.commitments.add(recruit)
+                recruitRepository.updateTeam(team)
+
+                team.coaches.forEach { coach ->
+                    if (coach.recruitingAssignments.contains(recruit)) {
+                        coach.recruitingAssignments.remove(recruit)
+                        recruitRepository.updateCoach(coach)
                     }
                 }
-            } else {
-                // TODO: notify user that nothing happened
             }
         }
     }

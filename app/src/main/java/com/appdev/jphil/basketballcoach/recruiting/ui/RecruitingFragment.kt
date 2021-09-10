@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitingcompose
+package com.appdev.jphil.basketballcoach.recruiting.ui
 
 import android.os.Bundle
 import android.view.Menu

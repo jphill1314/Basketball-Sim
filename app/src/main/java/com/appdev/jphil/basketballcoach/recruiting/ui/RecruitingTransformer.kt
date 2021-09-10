@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitingcompose
+package com.appdev.jphil.basketballcoach.recruiting.ui
 
 import com.appdev.jphil.basketball.recruits.Recruit
 import com.appdev.jphil.basketball.recruits.getActiveRecruitmentsAtPosition
@@ -26,7 +26,12 @@ class RecruitingTransformer @Inject constructor() :
                 team = dataState.team.getState(),
                 recruits = dataState.recruits
                     .filter { filters.isEmpty() || filters.contains(it.position) }
-                    .filter { !dataState.onlyShowRecruiting || isActiveRecruitment(dataState.team, it) }
+                    .filter {
+                        !dataState.onlyShowRecruiting || isActiveRecruitment(
+                            dataState.team,
+                            it
+                        )
+                    }
                     .sortedWith(dataState.sortType.getComparable(teamId))
                     .map { it.getModel(dataState.team) }
             )

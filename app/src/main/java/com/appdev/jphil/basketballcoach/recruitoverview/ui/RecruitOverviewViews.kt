@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitoverviewcompose
+package com.appdev.jphil.basketballcoach.recruitoverview.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,7 +51,16 @@ fun RecruitOverview(
     if (state.isLoading || recruit == null || interest == null) {
         LoadingScreen()
     } else {
-        RecruitOverview(state.teamName, state.isActivelyRecruited, recruit, interest, interactor)
+        RecruitOverview(
+            state.teamName,
+            state.teamRating,
+            state.isActivelyRecruited,
+            state.isRecruitEnabled,
+            state.isCommitEnabled,
+            recruit,
+            interest,
+            interactor
+        )
         if (state.coaches.isNotEmpty()) {
             CoachDialog(
                 coaches = state.coaches,
@@ -65,7 +74,10 @@ fun RecruitOverview(
 @Composable
 private fun RecruitOverview(
     teamName: String,
+    teamRating: Int,
     isActivelyRecruited: Boolean,
+    isRecruitEnabled: Boolean,
+    isCommitEnabled: Boolean,
     recruit: Recruit,
     recruitInterest: NewRecruitInterest,
     interactor: RecruitOverviewContract.Interactor
@@ -80,21 +92,56 @@ private fun RecruitOverview(
                 .verticalScroll(rememberScrollState())
         ) {
             HorizontalLine(color = Color.Gray)
-            RecruitInterestLevel(teamName = teamName, level = 1, recruitInterest = recruitInterest)
+            RecruitInterestLevel(
+                teamRating = teamRating,
+                teamName = teamName,
+                level = 1,
+                recruitInterest = recruitInterest
+            )
             HorizontalLine(color = Color.Gray)
-            RecruitInterestLevel(teamName = teamName, level = 2, recruitInterest = recruitInterest)
+            RecruitInterestLevel(
+                teamRating = teamRating,
+                teamName = teamName,
+                level = 2,
+                recruitInterest = recruitInterest
+            )
             HorizontalLine(color = Color.Gray)
-            RecruitInterestLevel(teamName = teamName, level = 3, recruitInterest = recruitInterest)
+            RecruitInterestLevel(
+                teamRating = teamRating,
+                teamName = teamName,
+                level = 3,
+                recruitInterest = recruitInterest
+            )
             HorizontalLine(color = Color.Gray)
-            RecruitInterestLevel(teamName = teamName, level = 4, recruitInterest = recruitInterest)
+            RecruitInterestLevel(
+                teamRating = teamRating,
+                teamName = teamName,
+                level = 4,
+                recruitInterest = recruitInterest
+            )
             HorizontalLine(color = Color.Gray)
-            RecruitInterestLevel(teamName = teamName, level = 5, recruitInterest = recruitInterest)
+            RecruitInterestLevel(
+                teamRating = teamRating,
+                teamName = teamName,
+                level = 5,
+                recruitInterest = recruitInterest
+            )
             HorizontalLine(color = Color.Gray)
-            RecruitInterestLevel(teamName = teamName, level = 0, recruitInterest = recruitInterest)
+            RecruitInterestLevel(
+                teamRating = teamRating,
+                teamName = teamName,
+                level = 0,
+                recruitInterest = recruitInterest
+            )
             HorizontalLine(color = Color.Gray)
         }
         TotalInterest(totalInterest = recruitInterest.getInterest())
-        RecruitInteractions(isActivelyRecruited = isActivelyRecruited, interactor = interactor)
+        RecruitInteractions(
+            isActivelyRecruited = isActivelyRecruited,
+            isRecruitEnabled = isRecruitEnabled,
+            isCommitEnabled = isCommitEnabled,
+            interactor = interactor
+        )
     }
 }
 
@@ -154,6 +201,7 @@ private fun RecruitTopper(
 
 @Composable
 private fun RecruitInterestLevel(
+    teamRating: Int,
     teamName: String,
     level: Int,
     recruitInterest: NewRecruitInterest
@@ -234,16 +282,21 @@ private fun RecruitInterestLevel(
             interest = recruitInterest.teamAbilityInterest
             title = stringResource(id = R.string.team_ability)
             subtitle = when (recruitInterest.wantsToBeStar) {
-                true -> when (interest) {
-                    null -> stringResource(id = R.string.recruit_to_see)
-                    NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.team_ability_star_hit, teamName)
+                true -> when {
+                    interest == null -> stringResource(id = R.string.recruit_to_see)
+                    interest == NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.team_ability_star_hit, teamName)
+                    recruit.rating > teamRating -> stringResource(id = R.string.team_ability_star_overshoot, teamName)
                     else -> stringResource(id = R.string.team_ability_star_miss)
                 }
                 false -> when (recruitInterest.wantsToDevelop) {
-                    true -> when (interest) {
-                        null -> stringResource(id = R.string.recruit_to_see)
-                        0 -> stringResource(id = R.string.team_ability_develop_miss, teamName)
-                        NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.team_ability_develop_hit, teamName)
+                    true -> when {
+                        interest == null -> stringResource(id = R.string.recruit_to_see)
+                        teamRating > recruit.rating && interest != NewRecruitInterest.MAX_DESIRE -> stringResource(
+                            id = R.string.team_ability_develop_overshoot,
+                            teamName
+                        )
+                        interest == 0 -> stringResource(id = R.string.team_ability_develop_miss, teamName)
+                        interest == NewRecruitInterest.MAX_DESIRE -> stringResource(id = R.string.team_ability_develop_hit, teamName)
                         else -> stringResource(id = R.string.team_ability_develop_close, teamName)
                     }
                     false -> when (interest) {
@@ -322,6 +375,8 @@ private fun Int.getColorForPitch() = when {
 @Composable
 private fun RecruitInteractions(
     isActivelyRecruited: Boolean,
+    isRecruitEnabled: Boolean,
+    isCommitEnabled: Boolean,
     interactor: RecruitOverviewContract.Interactor
 ) {
     Row(
@@ -331,6 +386,7 @@ private fun RecruitInteractions(
         if (isActivelyRecruited) {
             TextButton(
                 onClick = { interactor.stopActiveRecruitment() },
+                enabled = isRecruitEnabled,
                 modifier = Modifier
                     .padding(8.dp)
                     .weight(1f)
@@ -343,6 +399,7 @@ private fun RecruitInteractions(
         } else {
             TextButton(
                 onClick = { interactor.startActiveRecruitment() },
+                enabled = isRecruitEnabled,
                 modifier = Modifier
                     .padding(8.dp)
                     .weight(1f)
@@ -355,6 +412,7 @@ private fun RecruitInteractions(
         }
         TextButton(
             onClick = { interactor.gainCommitment() },
+            enabled = isCommitEnabled,
             modifier = Modifier
                 .padding(8.dp)
                 .weight(1f)
@@ -507,7 +565,16 @@ private fun RecruitRow(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRecruitOverview() {
-    RecruitOverview(viewState.teamName, viewState.isActivelyRecruited, recruit, recruitInterest, interactor)
+    RecruitOverview(
+        viewState.teamName,
+        viewState.teamRating,
+        viewState.isActivelyRecruited,
+        viewState.isRecruitEnabled,
+        viewState.isCommitEnabled,
+        recruit,
+        recruitInterest,
+        interactor
+    )
 }
 
 private val recruitInterest = NewRecruitInterest(
@@ -546,6 +613,7 @@ private val recruit = Recruit(
 
 private val viewState = RecruitOverviewContract.ViewState(
     isLoading = false,
+    teamRating = 75,
     teamName = "Boston",
     recruit = recruit,
     recruitInterest = recruitInterest
