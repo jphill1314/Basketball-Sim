@@ -11,8 +11,6 @@ import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
 import com.appdev.jphil.basketballcoach.newseason.ui.NewSeasonFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
-import com.appdev.jphil.basketballcoach.practice.PracticeFragment
-import com.appdev.jphil.basketballcoach.practice.PracticeModule
 import com.appdev.jphil.basketballcoach.rankings.RankingsFragment
 import com.appdev.jphil.basketballcoach.rankings.RankingsModule
 import com.appdev.jphil.basketballcoach.recruiting.ui.RecruitingFragment
@@ -57,10 +55,6 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [CoachesModule::class])
     abstract fun coachesFragment(): CoachesFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [PracticeModule::class])
-    abstract fun practiceFragment(): PracticeFragment
 
     @PerFragment
     @ContributesAndroidInjector(modules = [CoachOverviewModule::class])

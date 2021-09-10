@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/roster">
-
-    <fragment
-        android:id="@+id/practice"
-        android:name="com.appdev.jphil.basketballcoach.practice.PracticeFragment"
-        android:label="@string/practice" />
     <fragment
         android:id="@+id/standings"
         android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"

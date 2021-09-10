@@ -10,9 +10,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
 import com.appdev.jphil.basketballcoach.databinding.NavigationHeaderBinding
 import dagger.android.support.DaggerAppCompatActivity
@@ -51,7 +51,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 R.id.recruiting_compose,
                 R.id.strategy,
                 R.id.staff,
-                R.id.practice
             ),
             binding.drawerLayout
         )
@@ -98,15 +97,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
-    private fun setTeamNameAndRating(team: Team) {
-        navBinding.navTeamName.text = team.name
-        navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.teamRating)
+    private fun setTeamNameAndRating(team: TeamEntity) {
+        navBinding.navTeamName.text = team.schoolName + " " + team.mascot
+        navBinding.navTeamRating.text = resources.getString(R.string.rating_colon, team.rating)
         navBinding.navTeamPrestige.text = "Prestige: ${team.prestige}"
 
         binding.navView.menu.apply {
             findItem(R.id.recruiting_compose).isVisible = team.isUser
             findItem(R.id.strategy).isVisible = team.isUser
-            findItem(R.id.practice).isVisible = team.isUser
         }
     }
 
