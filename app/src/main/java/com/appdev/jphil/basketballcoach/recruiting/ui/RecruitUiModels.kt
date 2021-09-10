@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitingcompose
+package com.appdev.jphil.basketballcoach.recruiting.ui
 
 import androidx.annotation.StringRes
 import com.appdev.jphil.basketballcoach.compose.arch.UiModel

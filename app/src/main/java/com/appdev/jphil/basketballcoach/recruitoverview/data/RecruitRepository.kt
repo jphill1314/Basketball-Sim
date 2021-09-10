@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitoverviewcompose
+package com.appdev.jphil.basketballcoach.recruitoverview.data
 
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.recruits.Recruit

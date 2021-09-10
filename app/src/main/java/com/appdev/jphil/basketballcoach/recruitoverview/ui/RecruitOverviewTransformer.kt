@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.recruitoverviewcompose
+package com.appdev.jphil.basketballcoach.recruitoverview.ui
 
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.recruits.Recruit
@@ -21,6 +21,7 @@ class RecruitOverviewTransformer @Inject constructor() :
             RecruitOverviewContract.ViewState(
                 isLoading = false,
                 teamName = team.schoolName,
+                teamRating = team.teamRating,
                 isActivelyRecruited = isActiveRecruitment(team, recruit),
                 recruit = recruit,
                 recruitInterest = recruit.recruitInterests.first { it.teamId == team.teamId },

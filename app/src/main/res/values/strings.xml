@@ -229,8 +229,10 @@
     <string name="team_ability_develop_hit">I would love to play for a team as good as %1$s!</string>
     <string name="team_ability_develop_miss">%1$s just isn\'t a good enough team for my desires.</string>
     <string name="team_ability_develop_close">While I\'d prefer to play for a better team, I suppose %1$s would be good enough.</string>
+    <string name="team_ability_develop_overshoot">While I want to develop my game, I think %1$s is just too good for me to ever have a chance to play.</string>
     <string name="team_ability_star_hit">I want to be a star player and I could totally be that at %1$s!</string>
     <string name="team_ability_star_miss">I would prefer to play somewhere that I can be their star.</string>
+    <string name="team_ability_star_overshoot">While I want to be a star right away, I think %1$s just isn\'t good enough for me to achieve my goals.</string>
     <string name="team_ability_unimportant">The team\'s ability isn\'t an important factor for me.</string>
 
     <string name="play_style_hit">I love the way you play at %1$s!</string>
