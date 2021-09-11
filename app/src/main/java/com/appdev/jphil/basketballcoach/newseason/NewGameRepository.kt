@@ -21,13 +21,19 @@ import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import javax.inject.Inject
 
-object NewGameGenerator {
+class NewGameRepository @Inject constructor(
+    private val resources: Resources,
+    private val database: BasketballDatabase
+) {
 
-    const val NON_CON_GAMES = 10
-    const val NUM_RECRUITS = 600
+    companion object {
+        const val NON_CON_GAMES = 10
+        const val NUM_RECRUITS = 600
+    }
 
-    suspend fun generateNewGame(resources: Resources, database: BasketballDatabase) {
+    suspend fun generateNewGame() {
         val world = BasketballFactory.setupWholeBasketballWorld(
             listOf(
                 NortheasternAthleticAssociation(70),

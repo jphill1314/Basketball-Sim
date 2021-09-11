@@ -12,19 +12,16 @@ interface TeamDao {
     suspend fun getAllTeams(): List<TeamEntity>
 
     @Query("SELECT * FROM TeamEntity where teamId in (:teamId)")
-    suspend fun getTeamWithId(teamId: Int): TeamEntity?
-
-    @Query("SELECT * FROM TeamEntity where conferenceId in (:conferenceId)")
-    suspend fun getTeamsInConference(conferenceId: Int): List<TeamEntity>
-
-    @Query("select * from TeamEntity where postseasonTournamentId in (:tournamentId)")
-    suspend fun getTeamsInTournament(tournamentId: Int): List<TeamEntity>
+    suspend fun getTeamWithId(teamId: Int): TeamEntity
 
     @Query("SELECT * FROM TeamEntity where isUser in (:isUser)")
-    suspend fun getTeamIsUser(isUser: Boolean): TeamEntity?
+    suspend fun getTeamIsUser(isUser: Boolean = true): TeamEntity
 
     @Query("SELECT teamId FROM TeamEntity where isUser in (:isUser)")
-    suspend fun getUserTeamId(isUser: Boolean): Int
+    suspend fun getUserTeamId(isUser: Boolean = true): Int
+
+    @Query("SELECT teamId FROM TeamEntity where isUser in (:isUser)")
+    suspend fun getNullableUserTeamId(isUser: Boolean = true): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTeams(teams: List<TeamEntity>)

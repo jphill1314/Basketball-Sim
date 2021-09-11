@@ -10,7 +10,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
@@ -27,8 +26,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     var teamViewModel: TeamManagerViewModel? = null
-
-    private var teamTheme = TeamColor.Red
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

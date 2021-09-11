@@ -269,4 +269,8 @@
     <string name="recruiting_pitch">Recruiting Pitch</string>
 
     <string name="home">Home: %1$s</string>
+
+    <string name="college_basketball_coach">College Basketball Coach</string>
+    <string name="start_new_game">Start New Game</string>
+    <string name="load_game">Load Game</string>
 </resources>

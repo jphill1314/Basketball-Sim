@@ -3,7 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/roster">
+    app:startDestination="@id/start_screen">
+    <fragment
+        android:id="@+id/start_screen"
+        android:name="com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment"
+        android:label="Start Screen">
+        <action
+            android:id="@+id/toRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/start_screen"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/standings"
         android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"
