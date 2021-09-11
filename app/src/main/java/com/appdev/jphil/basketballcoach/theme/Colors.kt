@@ -12,7 +12,7 @@ val rust = Color(0xffb54213)
 val rustLight = Color(0xffed713f)
 val rustDark = Color(0xff7f0d00)
 
-val lightColors = lightColors(
+val appLightColors = lightColors(
     primary = orange,
     primaryVariant = orangeDark,
     secondary = rust,
@@ -21,7 +21,7 @@ val lightColors = lightColors(
     onSecondary = Color.White
 )
 
-val darkColors = darkColors(
+val appDarkColors = darkColors(
     primary = orange,
     primaryVariant = orangeDark,
     secondary = rust,

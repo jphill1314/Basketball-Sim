@@ -175,6 +175,7 @@
 
     <string name="no_known_recruits">Recruits that your assistants discover will appear here. You can fine tune their scouting assignments on the Staff screen.</string>
 
+    <string name="coaches">Coaches</string>
     <string name="coach_overview">Coach Overview</string>
     <string name="player_overview">Player Overview</string>
     <string name="recruit_overview">Recruit Overview</string>
