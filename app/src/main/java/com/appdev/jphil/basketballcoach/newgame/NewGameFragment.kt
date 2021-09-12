@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.startscreen
+package com.appdev.jphil.basketballcoach.newgame
 
 import android.os.Bundle
 import androidx.compose.runtime.Composable
@@ -6,46 +6,38 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketballcoach.compose.arch.ComposeFragment
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.main.getTeamViewModel
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
-class StartScreenFragment : ComposeFragment() {
+class NewGameFragment : ComposeFragment() {
 
     @Inject
     lateinit var otherVmFactory: ViewModelFactory
-    @Inject
-    lateinit var navigationManager: NavigationManager
 
     @Inject
-    lateinit var vmFactory: StartScreenVMFactory
-    override val presenter: StartScreenPresenter by viewModels { vmFactory }
+    lateinit var vmFactory: NewGameVMFactory
+    override val presenter: NewGamePresenter by viewModels { vmFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         lifecycleScope.launchWhenCreated {
             presenter.events.collect { event ->
                 when (event) {
-                    is StartScreenPresenter.StartGameEvent -> launchRosterScreen(
-                        userId = event.userId,
+                    is NewGamePresenter.StartNewGame -> launchRosterScreen(
+                        userId = event.teamId,
                         conferenceId = event.conferenceId
                     )
-                    is StartScreenPresenter.CreateNewGameEvent -> launchNewGameScreen()
                 }
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        navigationManager.hideToolbar()
-    }
-
     @Composable
     override fun SetContent() {
-        StartScreen(stateFlow = presenter.state, interactor = presenter)
+        NewGameScreen(viewStateFlow = presenter.state, interactor = presenter)
     }
 
     private fun launchRosterScreen(userId: Int, conferenceId: Int) {
@@ -53,10 +45,6 @@ class StartScreenFragment : ComposeFragment() {
             teamId = userId,
             conferenceId = conferenceId
         )
-        findNavController().navigate(StartScreenFragmentDirections.toRoster())
-    }
-
-    private fun launchNewGameScreen() {
-        findNavController().navigate(StartScreenFragmentDirections.toNewGame())
+        findNavController().navigate(NewGameFragmentDirections.toRoster())
     }
 }

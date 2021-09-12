@@ -8,12 +8,10 @@ interface StartScreenContract {
     }
 
     data class DataState(
-        val showLoadingScreen: Boolean = false,
         val showLoadGame: Boolean = false
     ) : com.appdev.jphil.basketballcoach.compose.arch.DataState
 
     data class ViewState(
-        val showLoadingScreen: Boolean = false,
         val showLoadGame: Boolean = false
     ) : com.appdev.jphil.basketballcoach.compose.arch.ViewState
 }

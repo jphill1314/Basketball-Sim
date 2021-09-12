@@ -20,6 +20,7 @@ import com.appdev.jphil.basketballcoach.database.game.GameEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
+import com.appdev.jphil.basketballcoach.newgame.NewGameRepository
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -110,7 +111,7 @@ class NewSeasonRepository @Inject constructor(
         BatchInsertHelper.saveConferences(conferences, database)
         val nonConGames = NonConferenceScheduleGen.generateNonConferenceSchedule(
             conferences,
-            NewGameGenerator.NON_CON_GAMES,
+            NewGameRepository.NON_CON_GAMES,
             2018
         )
         nonConGames.smartShuffleList(numberOfTeams)
@@ -131,7 +132,7 @@ class NewSeasonRepository @Inject constructor(
         val newRecruits = RecruitFactory.generateRecruits(
             firstNames,
             lastNames,
-            NewGameGenerator.NUM_RECRUITS,
+            NewGameRepository.NUM_RECRUITS,
             teams
         )
         RecruitDatabaseHelper.saveRecruits(newRecruits, database)

@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.team
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -29,6 +28,6 @@ interface TeamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTeam(teams: TeamEntity)
 
-    @Delete
-    suspend fun deleteTeam(team: TeamEntity)
+    @Query("delete from TeamEntity")
+    suspend fun deleteAllTeams()
 }

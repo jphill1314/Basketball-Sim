@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.theme.lightColors
 import kotlinx.coroutines.flow.StateFlow
@@ -26,11 +25,7 @@ fun StartScreen(
     interactor: StartScreenContract.Interactor
 ) {
     val state by stateFlow.collectAsState()
-    if (state.showLoadingScreen) {
-        LoadingScreen()
-    } else {
-        StartScreenView(state = state, interactor = interactor)
-    }
+    StartScreenView(state = state, interactor = interactor)
 }
 
 @Composable
@@ -93,5 +88,4 @@ private val interactor = object : StartScreenContract.Interactor {
 
 private val viewState = StartScreenContract.ViewState(
     showLoadGame = true,
-    showLoadingScreen = false,
 )

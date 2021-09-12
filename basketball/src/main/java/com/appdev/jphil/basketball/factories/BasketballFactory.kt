@@ -4,7 +4,6 @@ import com.appdev.jphil.basketball.BasketballWorld
 import com.appdev.jphil.basketball.conference.Conference
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.teams.TeamColor
-import kotlin.random.Random
 
 object BasketballFactory {
 
@@ -21,7 +20,6 @@ object BasketballFactory {
                 createConference(
                     teams,
                     index,
-                    dataModel.minRating,
                     dataModel.name,
                     dataModel.teams,
                     firstNames,
@@ -47,7 +45,6 @@ object BasketballFactory {
     private fun createConference(
         startId: Int,
         conferenceId: Int,
-        minRating: Int,
         conferenceName: String,
         teamDataModels: List<TeamGeneratorDataModel>,
         firstNames: List<String>,
@@ -62,9 +59,9 @@ object BasketballFactory {
                     dataModel.mascot,
                     TeamColor.random(),
                     dataModel.abbreviation,
-                    minRating + Random.nextInt(15) + dataModel.ratingVariance,
+                    dataModel.rating + 20,
                     conferenceId,
-                    index == 1 && conferenceId == 0, // TODO: make this not bad
+                    dataModel.isUser,
                     dataModel.location,
                     firstNames,
                     lastNames

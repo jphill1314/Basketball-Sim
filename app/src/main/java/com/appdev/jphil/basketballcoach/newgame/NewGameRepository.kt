@@ -1,31 +1,31 @@
-package com.appdev.jphil.basketballcoach.newseason
+package com.appdev.jphil.basketballcoach.newgame
 
 import android.content.res.Resources
 import com.appdev.jphil.basketball.factories.BasketballFactory
+import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.schedule.NonConferenceScheduleGen
 import com.appdev.jphil.basketball.schedule.smartShuffleList
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.basketball.conferences.AtlanticAthleticAssociation
-import com.appdev.jphil.basketballcoach.basketball.conferences.CaliforniaConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.CanadianAthleticConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.DesertConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.GreatLakesConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.GulfCoastConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.MiddleAmericaConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.MountainAthleticAssociation
-import com.appdev.jphil.basketballcoach.basketball.conferences.NortheasternAthleticAssociation
-import com.appdev.jphil.basketballcoach.basketball.conferences.TobaccoConference
-import com.appdev.jphil.basketballcoach.basketball.conferences.WesternConference
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
+import com.appdev.jphil.basketballcoach.database.coach.CoachDao
+import com.appdev.jphil.basketballcoach.database.conference.ConferenceDao
 import com.appdev.jphil.basketballcoach.database.conference.ConferenceDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.game.GameDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.player.PlayerDao
+import com.appdev.jphil.basketballcoach.database.recruit.RecruitDao
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
+import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import javax.inject.Inject
 
 class NewGameRepository @Inject constructor(
     private val resources: Resources,
-    private val database: BasketballDatabase
+    private val database: BasketballDatabase,
+    private val teamDao: TeamDao,
+    private val coachDao: CoachDao,
+    private val conferenceDao: ConferenceDao,
+    private val playerDao: PlayerDao,
+    private val recruitDao: RecruitDao
 ) {
 
     companion object {
@@ -33,21 +33,26 @@ class NewGameRepository @Inject constructor(
         const val NUM_RECRUITS = 600
     }
 
-    suspend fun generateNewGame() {
+    suspend fun getUserTeamEntity() = teamDao.getTeamIsUser()
+
+    suspend fun deleteExistingGame() {
+        recruitDao.deleteAllRecruitInterests()
+        recruitDao.deleteAllRecruits()
+
+        playerDao.deleteAllPlayerProgress()
+        playerDao.deleteAllGameStats()
+        playerDao.deleteAllPlayers()
+
+        coachDao.deleteAllCoaches()
+
+        teamDao.deleteAllTeams()
+
+        conferenceDao.deleteAllConferences()
+    }
+
+    suspend fun generateNewGame(conferences: List<ConferenceGeneratorDataModel>) {
         val world = BasketballFactory.setupWholeBasketballWorld(
-            listOf(
-                NortheasternAthleticAssociation(70),
-                GreatLakesConference(75),
-                GulfCoastConference(70),
-                TobaccoConference(55),
-                AtlanticAthleticAssociation(75),
-                MountainAthleticAssociation(60),
-                MiddleAmericaConference(55),
-                CaliforniaConference(65),
-                DesertConference(60),
-                WesternConference(55),
-                CanadianAthleticConference(50)
-            ),
+            conferences,
             resources.getStringArray(R.array.first_names).asList(),
             resources.getStringArray(R.array.last_names).asList(),
             NUM_RECRUITS

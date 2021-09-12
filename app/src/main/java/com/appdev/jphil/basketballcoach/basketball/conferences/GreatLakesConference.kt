@@ -3,69 +3,80 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
+import kotlin.random.Random
 
 class GreatLakesConference(rating: Int) : ConferenceGeneratorDataModel(
     "Great Lakes Conference",
-    listOf(
+    mutableListOf(
         TeamGeneratorDataModel(
             "Cleveland",
             "Rockers",
             "CLE",
-            Location.OH
+            Location.OH,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Detroit",
             "Motors",
             "DET",
-            Location.MI
+            Location.MI,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Milwaukee",
             "Horses",
             "MIL",
-            Location.WI
+            Location.WI,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Chicago",
             "Politicians",
             "CHI",
-            Location.IL
+            Location.IL,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Green Bay",
             "Cheese",
             "GB",
-            Location.WI
+            Location.WI,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Indianapolis",
             "Racers",
             "IND",
-            Location.IN
+            Location.IN,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Cincinnati",
             "Log Drivers",
             "CIN",
-            Location.OH
+            Location.OH,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Pittsburgh",
             "Forges",
             "PIT",
-            Location.PA
+            Location.PA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Duluth",
             "Bears",
             "DUL",
-            Location.MN
+            Location.MN,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Toledo",
             "Chipmunks",
             "TLD",
-            Location.OH
+            Location.OH,
+            rating = Random.nextInt(20) + rating - 10
         )
     ),
     rating

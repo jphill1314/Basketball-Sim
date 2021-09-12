@@ -13,6 +13,19 @@
             app:destination="@id/roster"
             app:popUpTo="@id/start_screen"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/toNewGame"
+            app:destination="@id/new_game"/>
+    </fragment>
+    <fragment
+        android:id="@+id/new_game"
+        android:name="com.appdev.jphil.basketballcoach.newgame.NewGameFragment"
+        android:label="New Game">
+        <action
+            android:id="@+id/toRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/start_screen"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/standings"

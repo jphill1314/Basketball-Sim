@@ -273,4 +273,6 @@
     <string name="college_basketball_coach">College Basketball Coach</string>
     <string name="start_new_game">Start New Game</string>
     <string name="load_game">Load Game</string>
+    <string name="select_team_title">Select Your Team</string>
+    <string name="select_team_subtitle">(You can customize your team later)</string>
 </resources>

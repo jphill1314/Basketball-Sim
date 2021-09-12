@@ -3,12 +3,10 @@ package com.appdev.jphil.basketballcoach.startscreen
 import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Event
-import com.appdev.jphil.basketballcoach.newseason.NewGameRepository
 import kotlinx.coroutines.launch
 
 class StartScreenPresenter(
-    private val startScreenRepository: StartScreenRepository,
-    private val newGameRepository: NewGameRepository
+    private val startScreenRepository: StartScreenRepository
 ) : ComposePresenter<StartScreenContract.DataState, StartScreenContract.ViewState>(),
     StartScreenContract.Interactor {
 
@@ -22,17 +20,11 @@ class StartScreenPresenter(
     }
 
     override fun transform(dataState: StartScreenContract.DataState) = StartScreenContract.ViewState(
-        showLoadGame = dataState.showLoadGame,
-        showLoadingScreen = dataState.showLoadingScreen
+        showLoadGame = dataState.showLoadGame
     )
 
     override fun onStartNewGame() {
-        updateState { copy(showLoadingScreen = true) }
-        viewModelScope.launch {
-            newGameRepository.generateNewGame()
-            val userTeam = startScreenRepository.getUserTeamEntity()
-            sendEvent(StartGameEvent(userTeam.teamId, userTeam.conferenceId))
-        }
+        sendEvent(CreateNewGameEvent)
     }
 
     override fun onLoadGame() {
@@ -46,4 +38,6 @@ class StartScreenPresenter(
         val userId: Int,
         val conferenceId: Int
     ) : Event
+
+    object CreateNewGameEvent : Event
 }
