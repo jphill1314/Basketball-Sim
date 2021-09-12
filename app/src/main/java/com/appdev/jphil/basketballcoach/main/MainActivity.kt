@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.main
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -92,6 +93,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     override fun disableDrawer() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    override fun hideToolbar() {
+        binding.toolbar.visibility = View.GONE
+    }
+
+    override fun showToolbar() {
+        binding.toolbar.visibility = View.VISIBLE
     }
 
     private fun setTeamNameAndRating(team: TeamEntity) {
