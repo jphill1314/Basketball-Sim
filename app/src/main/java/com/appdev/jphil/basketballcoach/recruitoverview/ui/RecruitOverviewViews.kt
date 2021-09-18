@@ -273,7 +273,7 @@ private fun RecruitInterestLevel(
             subtitle = when (interest) {
                 null -> stringResource(id = R.string.recruit_to_see)
                 in 0..NewRecruitInterest.MAX_DESIRE / 4 -> stringResource(id = R.string.play_style_miss, teamName)
-                in NewRecruitInterest.MAX_DESIRE / 4 * 3 .. NewRecruitInterest.MAX_DESIRE ->
+                in NewRecruitInterest.MAX_DESIRE / 4 * 3..NewRecruitInterest.MAX_DESIRE ->
                     stringResource(id = R.string.play_style_hit, teamName)
                 else -> stringResource(id = R.string.play_style_middle, teamName)
             }
@@ -309,7 +309,7 @@ private fun RecruitInterestLevel(
         else -> {
             interest = recruitInterest.recruitmentInterest
             title = stringResource(id = R.string.recruiting_pitch)
-            subtitle = when  {
+            subtitle = when {
                 interest > 0 -> stringResource(id = R.string.active_recruitment_positive)
                 interest < 0 -> stringResource(id = R.string.active_recruitment_negative)
                 else -> stringResource(id = R.string.recruit_to_see)
@@ -473,10 +473,11 @@ private fun CoachRow(
     interactor: RecruitOverviewContract.Interactor?
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { interactor?.selectCoachForRecruitment(coach) }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable { interactor?.selectCoachForRecruitment(coach) }
         ) {
             Text(
                 text = coach.fullName,
@@ -505,15 +506,16 @@ private fun RecruitRow(
 ) {
     val types = LocalContext.current.resources.getStringArray(R.array.player_types).toList()
     Card(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                interactor.startRecruitmentWithCoach(
-                    coach = coach,
-                    recruitToRemove = recruit
-                )
-            }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable {
+                    interactor.startRecruitmentWithCoach(
+                        coach = coach,
+                        recruitToRemove = recruit
+                    )
+                }
         ) {
             Text(
                 text = recruit.position.toPositionString(),

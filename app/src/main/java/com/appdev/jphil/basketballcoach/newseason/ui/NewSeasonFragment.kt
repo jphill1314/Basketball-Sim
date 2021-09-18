@@ -32,6 +32,6 @@ class NewSeasonFragment : ComposeFragment() {
 
     @Composable
     override fun SetContent() {
-        NewSeasonLoadingView(viewStateFlow = presenter.state, interactor = presenter)
+        NewSeasonLoadingView(viewStateFlow = presenter.viewState, interactor = presenter)
     }
 }

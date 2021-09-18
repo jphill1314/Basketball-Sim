@@ -7,17 +7,15 @@ import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 
 object TeamDatabaseHelper {
 
-    suspend fun loadTeamById(teamId: Int, database: BasketballDatabase): Team? {
+    suspend fun loadTeamById(teamId: Int, database: BasketballDatabase): Team {
         return createTeam(database.teamDao().getTeamWithId(teamId), database)
     }
 
-    suspend fun createTeam(teamEntity: TeamEntity?, database: BasketballDatabase): Team? {
-        return teamEntity?.let {
-            val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(it.teamId, database)
-            val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(it.teamId, database)
-            val recruits = database.relationalDao().loadAllRecruits().map { r -> r.create() }
-            it.createTeam(players, coaches, recruits)
-        }
+    suspend fun createTeam(teamEntity: TeamEntity, database: BasketballDatabase): Team {
+        val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(teamEntity.teamId, database)
+        val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(teamEntity.teamId, database)
+        val recruits = database.relationalDao().loadAllRecruits().map { r -> r.create() }
+        return teamEntity.createTeam(players, coaches, recruits)
     }
 
     suspend fun saveTeam(team: Team, database: BasketballDatabase) {

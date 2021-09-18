@@ -3,69 +3,80 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
+import kotlin.random.Random
 
 class TobaccoConference(rating: Int) : ConferenceGeneratorDataModel(
     "Tobacco Conference",
-    listOf(
+    mutableListOf(
         TeamGeneratorDataModel(
             "DC",
             "Lobbyists",
             "DCL",
-            Location.DC
+            Location.DC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Richmond",
             "Bulls",
             "RCH",
-            Location.VA
+            Location.VA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Charlotte",
             "Bankers",
             "CTL",
-            Location.NC
+            Location.NC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Columbia",
             "Cows",
             "CC",
-            Location.SC
+            Location.SC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Atlanta",
             "News",
             "ATL",
-            Location.GA
+            Location.GA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Baltimore",
             "Fishers",
             "BTL",
-            Location.MD
+            Location.MD,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Nashville",
             "Musicians",
             "NSH",
-            Location.TN
+            Location.TN,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Raleigh",
             "Hogs",
             "RH",
-            Location.NC
+            Location.NC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Charleston",
             "Plane Builders",
             "CPB",
-            Location.SC
+            Location.SC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Birmingham",
             "Letters",
             "BL",
-            Location.AL
+            Location.AL,
+            rating = Random.nextInt(20) + rating - 10
         )
     ),
     rating

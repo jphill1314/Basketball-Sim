@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.coaches
 
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.game.CoachTalk
 import com.appdev.jphil.basketball.recruits.Recruit
 
@@ -9,6 +10,7 @@ class Coach(
     var type: CoachType,
     val firstName: String,
     val lastName: String,
+    val pronouns: Pronouns,
     var recruiting: Int,
     var offenseFavorsThrees: Int,
     var pace: Int,

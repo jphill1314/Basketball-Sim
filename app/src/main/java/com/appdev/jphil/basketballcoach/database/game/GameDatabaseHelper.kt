@@ -28,8 +28,8 @@ object GameDatabaseHelper {
     }
 
     private suspend fun createGame(entity: GameEntity, database: BasketballDatabase): Game {
-        val homeTeam = TeamDatabaseHelper.loadTeamById(entity.homeTeamId, database)!!
-        val awayTeam = TeamDatabaseHelper.loadTeamById(entity.awayTeamId, database)!!
+        val homeTeam = TeamDatabaseHelper.loadTeamById(entity.homeTeamId, database)
+        val awayTeam = TeamDatabaseHelper.loadTeamById(entity.awayTeamId, database)
         return entity.createGame(homeTeam, awayTeam)
     }
 

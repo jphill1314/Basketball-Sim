@@ -3,7 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/roster">
+    app:startDestination="@id/start_screen">
+    <fragment
+        android:id="@+id/start_screen"
+        android:name="com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment"
+        android:label="Start Screen">
+        <action
+            android:id="@+id/toRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/start_screen"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/toNewGame"
+            app:destination="@id/new_game"/>
+    </fragment>
+    <fragment
+        android:id="@+id/new_game"
+        android:name="com.appdev.jphil.basketballcoach.newgame.NewGameFragment"
+        android:label="New Game">
+        <action
+            android:id="@+id/toCustomize"
+            app:destination="@id/customize"/>
+    </fragment>
+    <fragment
+        android:id="@+id/customize"
+        android:name="com.appdev.jphil.basketballcoach.customizeteam.CustomizeFragment"
+        android:label="Customize Team">
+        <argument
+            android:name="initialTeam"
+            app:argType="com.appdev.jphil.basketball.factories.TeamGeneratorDataModel"/>
+        <argument
+            android:name="conferences"
+            app:argType="com.appdev.jphil.basketballcoach.customizeteam.AllConferences"/>
+        <action
+            android:id="@+id/toRoster"
+            app:destination="@id/roster"
+            app:popUpTo="@id/start_screen"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/standings"
         android:name="com.appdev.jphil.basketballcoach.standings.StandingsFragment"

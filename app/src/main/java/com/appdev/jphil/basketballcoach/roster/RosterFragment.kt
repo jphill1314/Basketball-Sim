@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.databinding.FragmentRosterBinding
+import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.TeamManagerViewModel
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.main.getTeamViewModel
@@ -18,6 +19,8 @@ import javax.inject.Inject
 
 class RosterFragment : Fragment(), RosterContract.View {
 
+    @Inject
+    lateinit var navManager: NavigationManager
     @Inject
     lateinit var presenter: RosterContract.Presenter
     @Inject
@@ -30,6 +33,7 @@ class RosterFragment : Fragment(), RosterContract.View {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         teamManager = activity?.getTeamViewModel(viewModelFactory)
+        navManager.showToolbar()
     }
 
     override fun onResume() {

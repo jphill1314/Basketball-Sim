@@ -27,16 +27,13 @@ abstract class MainActivityModule {
 
     @Binds
     @PerActivity
-    abstract fun bindsDispatcherProdiver(dispatcherProvider: DispatcherProviderImpl): DispatcherProvider
+    abstract fun bindsDispatcherProvider(dispatcherProvider: DispatcherProviderImpl): DispatcherProvider
 
-    @Module
     companion object {
-        @JvmStatic
         @Provides
         @ConferenceId
         fun providesConferenceId(activity: MainActivity): Int = activity.teamViewModel?.conferenceId ?: 0
 
-        @JvmStatic
         @Provides
         @TeamId
         fun providesTeamId(activity: MainActivity): Int = activity.teamViewModel?.teamId ?: -1

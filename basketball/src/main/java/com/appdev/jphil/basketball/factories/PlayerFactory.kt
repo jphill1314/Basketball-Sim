@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.factories
 
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.ballWeight
 import com.appdev.jphil.basketball.players.PlayerPositionWeights.closeWeight
@@ -109,7 +110,8 @@ object PlayerFactory {
             aggressiveness,
             if (recruitPotential == 0) potential else recruitPotential,
             index,
-            index
+            index,
+            Pronouns.HE
         )
     }
 

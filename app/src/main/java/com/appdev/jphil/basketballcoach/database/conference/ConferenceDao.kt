@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.conference
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -27,6 +26,6 @@ interface ConferenceDao {
     @Query("SELECT * FROM ConferenceEntity")
     fun getAllConferenceEntitiesFlow(): Flow<List<ConferenceEntity>>
 
-    @Delete
-    suspend fun deleteConference(conference: ConferenceEntity)
+    @Query("delete from ConferenceEntity")
+    suspend fun deleteAllConferences()
 }
