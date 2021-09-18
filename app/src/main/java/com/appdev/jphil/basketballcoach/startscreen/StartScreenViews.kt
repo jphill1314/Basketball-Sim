@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun StartScreen(
-    stateFlow: StateFlow<StartScreenContract.ViewState>,
+    stateFlow: StateFlow<StartScreenContract.DataState>,
     interactor: StartScreenContract.Interactor
 ) {
     val state by stateFlow.collectAsState()
@@ -30,7 +30,7 @@ fun StartScreen(
 
 @Composable
 private fun StartScreenView(
-    state: StartScreenContract.ViewState,
+    state: StartScreenContract.DataState,
     interactor: StartScreenContract.Interactor
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -43,10 +43,11 @@ private fun StartScreenView(
         StartScreenButton(text = stringResource(id = R.string.start_new_game)) {
             interactor.onStartNewGame()
         }
-        if (state.showLoadGame) {
-            StartScreenButton(text = stringResource(id = R.string.load_game)) {
-                interactor.onLoadGame()
-            }
+        StartScreenButton(
+            text = stringResource(id = R.string.load_game),
+            enabled = state.showLoadGame
+        ) {
+            interactor.onLoadGame()
         }
     }
 }
@@ -54,19 +55,21 @@ private fun StartScreenView(
 @Composable
 private fun StartScreenButton(
     text: String,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.padding(8.dp)
+        enabled = enabled,
+        modifier = Modifier.padding(16.dp)
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h5,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(8.dp)
-                .width(136.dp)
+                .padding(16.dp)
+                .width(250.dp)
         )
     }
 }
@@ -86,6 +89,6 @@ private val interactor = object : StartScreenContract.Interactor {
     override fun onStartNewGame() {}
 }
 
-private val viewState = StartScreenContract.ViewState(
+private val viewState = StartScreenContract.DataState(
     showLoadGame = true,
 )

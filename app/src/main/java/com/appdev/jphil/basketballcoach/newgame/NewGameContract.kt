@@ -10,12 +10,6 @@ interface NewGameContract {
     }
 
     data class DataState(
-        val showLoadingScreen: Boolean = false,
         val conferences: List<ConferenceGeneratorDataModel>
     ) : com.appdev.jphil.basketballcoach.compose.arch.DataState
-
-    data class ViewState(
-        val showLoadingScreen: Boolean,
-        val conferences: List<ConferenceGeneratorDataModel>
-    ) : com.appdev.jphil.basketballcoach.compose.arch.ViewState
 }

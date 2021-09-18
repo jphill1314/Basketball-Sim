@@ -22,6 +22,20 @@
         android:name="com.appdev.jphil.basketballcoach.newgame.NewGameFragment"
         android:label="New Game">
         <action
+            android:id="@+id/toCustomize"
+            app:destination="@id/customize"/>
+    </fragment>
+    <fragment
+        android:id="@+id/customize"
+        android:name="com.appdev.jphil.basketballcoach.customizeteam.CustomizeFragment"
+        android:label="Customize Team">
+        <argument
+            android:name="initialTeam"
+            app:argType="com.appdev.jphil.basketball.factories.TeamGeneratorDataModel"/>
+        <argument
+            android:name="conferences"
+            app:argType="com.appdev.jphil.basketballcoach.customizeteam.AllConferences"/>
+        <action
             android:id="@+id/toRoster"
             app:destination="@id/roster"
             app:popUpTo="@id/start_screen"

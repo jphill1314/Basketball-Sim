@@ -38,7 +38,7 @@ class ScheduleFragment : ComposeFragment() {
     @Composable
     override fun SetContent() {
         ScheduleScreen(
-            viewStateFlow = presenter.state,
+            viewStateFlow = presenter.viewState,
             interactor = presenter
         )
     }

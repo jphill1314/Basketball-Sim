@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.factories
 
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.location.Location
@@ -29,7 +30,10 @@ object TeamFactory {
         isUser: Boolean,
         location: Location,
         firstNames: List<String>,
-        lastNames: List<String>
+        lastNames: List<String>,
+        headCoachFirstName: String? = null,
+        headCoachLastName: String? = null,
+        headCoachPronouns: Pronouns = Pronouns.HE
     ): Team {
         // TODO: generate different kinds of teams: run and gun, press heavy, good offense, good defense, balances, etc
         val players = generatePlayers(teamId, 15, teamRating, firstNames, lastNames)
@@ -45,7 +49,15 @@ object TeamFactory {
             players,
             conferenceId,
             isUser,
-            generateCoaches(teamId, teamRating, firstNames, lastNames),
+            generateCoaches(
+                teamId,
+                teamRating,
+                firstNames,
+                lastNames,
+                headCoachFirstName,
+                headCoachLastName,
+                headCoachPronouns
+            ),
             location,
             prestige,
             gamesPlayed = 0,
@@ -108,10 +120,45 @@ object TeamFactory {
         return players
     }
 
-    private fun generateCoaches(teamId: Int, rating: Int, firstNames: List<String>, lastNames: List<String>): MutableList<Coach> {
-        val coaches = mutableListOf(generateCoach(teamId, CoachType.HEAD_COACH, rating, firstNames, lastNames))
+    private fun generateCoaches(
+        teamId: Int,
+        rating: Int,
+        firstNames: List<String>,
+        lastNames: List<String>,
+        headCoachFirstName: String?,
+        headCoachLastName: String?,
+        headCoachPronouns: Pronouns
+    ): MutableList<Coach> {
+        val coaches = mutableListOf(
+            if (headCoachFirstName == null || headCoachLastName == null) {
+                generateCoach(
+                    teamId,
+                    CoachType.HEAD_COACH,
+                    rating,
+                    firstNames,
+                    lastNames
+                )
+            } else {
+                CoachFactory.generateCoach(
+                    teamId,
+                    CoachType.HEAD_COACH,
+                    headCoachFirstName,
+                    headCoachLastName,
+                    rating,
+                    headCoachPronouns
+                )
+            }
+        )
         for (i in 1..3) {
-            coaches.add(generateCoach(teamId, CoachType.ASSISTANT_COACH, rating - Random.nextInt(5 * i), firstNames, lastNames))
+            coaches.add(
+                generateCoach(
+                    teamId,
+                    CoachType.ASSISTANT_COACH,
+                    rating - Random.nextInt(5 * i),
+                    firstNames,
+                    lastNames
+                )
+            )
         }
         return coaches
     }

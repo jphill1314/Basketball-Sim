@@ -21,7 +21,7 @@ class RecruitingFragment : ComposeFragment() {
 
     @Composable
     override fun SetContent() {
-        RecruitingView(viewStateFlow = presenter.state, interactor = presenter)
+        RecruitingView(viewStateFlow = presenter.viewState, interactor = presenter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

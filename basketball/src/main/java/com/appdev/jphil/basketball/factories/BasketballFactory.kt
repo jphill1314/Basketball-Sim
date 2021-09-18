@@ -64,7 +64,10 @@ object BasketballFactory {
                     dataModel.isUser,
                     dataModel.location,
                     firstNames,
-                    lastNames
+                    lastNames,
+                    dataModel.headCoachFirstName,
+                    dataModel.headCoachLastName,
+                    dataModel.headCoachPronouns
                 )
             )
         }

@@ -6,19 +6,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketballcoach.compose.arch.ComposeFragment
-import com.appdev.jphil.basketballcoach.main.ViewModelFactory
-import com.appdev.jphil.basketballcoach.main.getTeamViewModel
+import com.appdev.jphil.basketballcoach.customizeteam.AllConferences
 import kotlinx.coroutines.flow.collect
-import javax.inject.Inject
 
 class NewGameFragment : ComposeFragment() {
 
-    @Inject
-    lateinit var otherVmFactory: ViewModelFactory
-
-    @Inject
-    lateinit var vmFactory: NewGameVMFactory
-    override val presenter: NewGamePresenter by viewModels { vmFactory }
+    override val presenter: NewGamePresenter by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +19,15 @@ class NewGameFragment : ComposeFragment() {
         lifecycleScope.launchWhenCreated {
             presenter.events.collect { event ->
                 when (event) {
-                    is NewGamePresenter.StartNewGame -> launchRosterScreen(
-                        userId = event.teamId,
-                        conferenceId = event.conferenceId
-                    )
+                    is NewGamePresenter.StartCustomize -> launchRosterScreen(event)
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navManager.showToolbar()
     }
 
     @Composable
@@ -40,11 +35,12 @@ class NewGameFragment : ComposeFragment() {
         NewGameScreen(viewStateFlow = presenter.state, interactor = presenter)
     }
 
-    private fun launchRosterScreen(userId: Int, conferenceId: Int) {
-        requireActivity().getTeamViewModel(otherVmFactory).changeTeamAndConference(
-            teamId = userId,
-            conferenceId = conferenceId
+    private fun launchRosterScreen(event: NewGamePresenter.StartCustomize) {
+        findNavController().navigate(
+            NewGameFragmentDirections.toCustomize(
+                initialTeam = event.userTeam,
+                conferences = AllConferences(event.conferences)
+            )
         )
-        findNavController().navigate(NewGameFragmentDirections.toRoster())
     }
 }

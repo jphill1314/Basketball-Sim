@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
-import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.theme.lightColors
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,32 +33,28 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun NewGameScreen(
-    viewStateFlow: StateFlow<NewGameContract.ViewState>,
+    viewStateFlow: StateFlow<NewGameContract.DataState>,
     interactor: NewGameContract.Interactor
 ) {
     val state by viewStateFlow.collectAsState()
-    if (state.showLoadingScreen) {
-        LoadingScreen()
-    } else {
-        Column {
-            Text(
-                text = stringResource(id = R.string.select_team_title),
-                style = MaterialTheme.typography.h4,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.select_team_subtitle),
-                style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-            SelectTeamList(conferences = state.conferences, interactor = interactor)
-        }
+    Column {
+        Text(
+            text = stringResource(id = R.string.select_team_title),
+            style = MaterialTheme.typography.h4,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.select_team_subtitle),
+            style = MaterialTheme.typography.h6,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+        SelectTeamList(conferences = state.conferences, interactor = interactor)
     }
 }
 
@@ -143,8 +138,7 @@ private fun PreviewNewGameScreen() {
     MaterialTheme(colors = lightColors) {
         NewGameScreen(
             viewStateFlow = MutableStateFlow(
-                NewGameContract.ViewState(
-                    false,
+                NewGameContract.DataState(
                     listOf(conferenceDataModel, conferenceDataModel)
                 )
             ),

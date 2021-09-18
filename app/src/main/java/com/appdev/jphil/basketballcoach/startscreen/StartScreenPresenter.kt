@@ -1,13 +1,13 @@
 package com.appdev.jphil.basketballcoach.startscreen
 
 import androidx.lifecycle.viewModelScope
-import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
+import com.appdev.jphil.basketballcoach.compose.arch.BasicComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Event
 import kotlinx.coroutines.launch
 
 class StartScreenPresenter(
     private val startScreenRepository: StartScreenRepository
-) : ComposePresenter<StartScreenContract.DataState, StartScreenContract.ViewState>(),
+) : BasicComposePresenter<StartScreenContract.DataState>(),
     StartScreenContract.Interactor {
 
     override val initialDataState = StartScreenContract.DataState()
@@ -18,10 +18,6 @@ class StartScreenPresenter(
             updateState { copy(showLoadGame = doesGameExist) }
         }
     }
-
-    override fun transform(dataState: StartScreenContract.DataState) = StartScreenContract.ViewState(
-        showLoadGame = dataState.showLoadGame
-    )
 
     override fun onStartNewGame() {
         sendEvent(CreateNewGameEvent)

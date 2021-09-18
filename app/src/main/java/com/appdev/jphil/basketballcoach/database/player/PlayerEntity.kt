@@ -2,6 +2,7 @@ package com.appdev.jphil.basketballcoach.database.player
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerType
 
@@ -51,7 +52,8 @@ data class PlayerEntity(
     val freeThrowMakes: Int,
     val potential: Int,
     val rosterIndex: Int,
-    val courtIndex: Int
+    val courtIndex: Int,
+    val pronouns: Pronouns
 ) {
 
     fun createPlayer(): Player {
@@ -90,7 +92,8 @@ data class PlayerEntity(
             aggressiveness,
             potential,
             rosterIndex,
-            courtIndex
+            courtIndex,
+            pronouns
         )
 
         player.offensiveStatMod = offensiveStatMod
@@ -160,7 +163,8 @@ data class PlayerEntity(
                 player.freeThrowMakes,
                 player.potential,
                 player.rosterIndex,
-                player.courtIndex
+                player.courtIndex,
+                player.pronouns
             )
         }
     }

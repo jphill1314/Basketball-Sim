@@ -4,6 +4,8 @@ import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewModule
+import com.appdev.jphil.basketballcoach.customizeteam.CustomizeFragment
+import com.appdev.jphil.basketballcoach.customizeteam.CustomizeModule
 import com.appdev.jphil.basketballcoach.game.preview.GamePreviewFragment
 import com.appdev.jphil.basketballcoach.game.sim.GameFragment
 import com.appdev.jphil.basketballcoach.game.sim.GameModule
@@ -101,4 +103,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun newGameFragment(): NewGameFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [CustomizeModule::class])
+    abstract fun customizeFragment(): CustomizeFragment
 }

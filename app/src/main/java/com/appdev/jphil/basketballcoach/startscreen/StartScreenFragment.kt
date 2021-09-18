@@ -6,7 +6,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketballcoach.compose.arch.ComposeFragment
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.main.getTeamViewModel
 import kotlinx.coroutines.flow.collect
@@ -16,8 +15,6 @@ class StartScreenFragment : ComposeFragment() {
 
     @Inject
     lateinit var otherVmFactory: ViewModelFactory
-    @Inject
-    lateinit var navigationManager: NavigationManager
 
     @Inject
     lateinit var vmFactory: StartScreenVMFactory
@@ -40,7 +37,7 @@ class StartScreenFragment : ComposeFragment() {
 
     override fun onResume() {
         super.onResume()
-        navigationManager.hideToolbar()
+        navManager.hideToolbar()
     }
 
     @Composable

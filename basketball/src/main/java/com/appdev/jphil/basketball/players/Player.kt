@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.players
 
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.coaches.Coach
 
 class Player(
@@ -29,7 +30,8 @@ class Player(
     var aggressiveness: Int,
     val potential: Int,
     var rosterIndex: Int,
-    var courtIndex: Int
+    var courtIndex: Int,
+    val pronouns: Pronouns
 ) {
 
     var offensiveStatMod = 0

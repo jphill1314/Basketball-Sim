@@ -37,6 +37,6 @@ class SelectionShowFragment : ComposeFragment() {
 
     @Composable
     override fun SetContent() {
-        SelectionShowView(viewStateFlow = presenter.state, interactor = presenter)
+        SelectionShowView(viewStateFlow = presenter.viewState, interactor = presenter)
     }
 }
