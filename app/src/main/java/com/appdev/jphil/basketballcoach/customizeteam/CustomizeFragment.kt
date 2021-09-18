@@ -33,6 +33,13 @@ class CustomizeFragment : ComposeFragment() {
                 }
             }
         }
+        lifecycleScope.launchWhenCreated {
+            presenter.state.collect {
+                if (it.showSpinner) {
+                    navManager.hideToolbar()
+                }
+            }
+        }
     }
 
     @Composable
