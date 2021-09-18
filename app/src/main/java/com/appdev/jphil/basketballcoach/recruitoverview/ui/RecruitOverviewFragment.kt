@@ -16,6 +16,6 @@ class RecruitOverviewFragment : ComposeFragment() {
 
     @Composable
     override fun SetContent() {
-        RecruitOverview(stateFlow = presenter.state, interactor = presenter)
+        RecruitOverview(stateFlow = presenter.viewState, interactor = presenter)
     }
 }

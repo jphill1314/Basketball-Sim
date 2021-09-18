@@ -4,10 +4,13 @@ import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
 import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewModule
+import com.appdev.jphil.basketballcoach.customizeteam.CustomizeFragment
+import com.appdev.jphil.basketballcoach.customizeteam.CustomizeModule
 import com.appdev.jphil.basketballcoach.game.preview.GamePreviewFragment
 import com.appdev.jphil.basketballcoach.game.sim.GameFragment
 import com.appdev.jphil.basketballcoach.game.sim.GameModule
 import com.appdev.jphil.basketballcoach.main.injection.scopes.PerFragment
+import com.appdev.jphil.basketballcoach.newgame.NewGameFragment
 import com.appdev.jphil.basketballcoach.newseason.ui.NewSeasonFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
@@ -22,6 +25,7 @@ import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
 import com.appdev.jphil.basketballcoach.selectionshow.SelectionShowFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
+import com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyModule
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
@@ -91,4 +95,16 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [RecruitOverviewModule::class])
     abstract fun recruitOverviewComposeFragment(): RecruitOverviewFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun startScreenFragment(): StartScreenFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun newGameFragment(): NewGameFragment
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = [CustomizeModule::class])
+    abstract fun customizeFragment(): CustomizeFragment
 }

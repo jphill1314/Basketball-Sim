@@ -27,6 +27,9 @@ interface PlayerDao {
     @Delete
     suspend fun deletePlayer(playerEntity: PlayerEntity)
 
+    @Query("delete from PlayerEntity")
+    suspend fun deleteAllPlayers()
+
     // Game Stats Entity
     @Query("SELECT * FROM GameStatsEntity where playerId in (:playerId)")
     suspend fun getAllGamesForPlayer(playerId: Int): List<GameStatsEntity>
@@ -43,6 +46,9 @@ interface PlayerDao {
     @Delete
     suspend fun deleteGameStats(gameStats: List<GameStatsEntity>)
 
+    @Query("delete from GameStatsEntity")
+    suspend fun deleteAllGameStats()
+
     // Player Progression Entity
     @Query("SELECT * FROM PlayerProgressionEntity where playerId in (:playerId)")
     suspend fun getProgressForPlayer(playerId: Int): List<PlayerProgressionEntity>
@@ -55,4 +61,7 @@ interface PlayerDao {
 
     @Query("DELETE FROM PlayerProgressionEntity where playerId in (:playerId)")
     suspend fun deleteProgressionForPlayer(playerId: Int)
+
+    @Query("delete from PlayerProgressionEntity")
+    suspend fun deleteAllPlayerProgress()
 }

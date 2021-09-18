@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.factories
 
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import kotlin.math.min
@@ -14,7 +15,8 @@ object CoachFactory {
         type: CoachType,
         firstName: String,
         lastName: String,
-        rating: Int
+        rating: Int,
+        pronouns: Pronouns = Pronouns.HE
     ): Coach {
         val offenseFavorsThrees = Random.nextInt(100)
         val pace = Random.nextInt(30) + Coach.minimumPace
@@ -42,6 +44,7 @@ object CoachFactory {
             type,
             firstName,
             lastName,
+            pronouns,
             recruiting,
             offenseFavorsThrees,
             pace,

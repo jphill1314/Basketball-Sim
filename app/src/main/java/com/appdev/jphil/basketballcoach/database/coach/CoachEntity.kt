@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.database.coach
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.recruits.Recruit
@@ -18,6 +19,7 @@ data class CoachEntity(
     val type: CoachType,
     val firstName: String,
     val lastName: String,
+    val pronouns: Pronouns,
     val recruiting: Int,
     val offenseFavorsThrees: Int,
     val pace: Int,
@@ -56,6 +58,7 @@ data class CoachEntity(
             type,
             firstName,
             lastName,
+            pronouns,
             recruiting,
             offenseFavorsThrees,
             pace,
@@ -96,6 +99,7 @@ data class CoachEntity(
             type,
             firstName,
             lastName,
+            pronouns,
             recruiting,
             offenseFavorsThrees,
             pace,
@@ -133,6 +137,7 @@ data class CoachEntity(
                 coach.type,
                 coach.firstName,
                 coach.lastName,
+                coach.pronouns,
                 coach.recruiting,
                 coach.offenseFavorsThrees,
                 coach.pace,

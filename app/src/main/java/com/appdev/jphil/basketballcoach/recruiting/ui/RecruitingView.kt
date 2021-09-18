@@ -272,9 +272,11 @@ private fun RecruitItem(
             .clickable { interactor.onRecruitClicked(recruit.id) }
     ) {
         Column {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
                 Text(
                     text = stringResource(id = recruit.position),
                     style = MaterialTheme.typography.body1,

@@ -3,69 +3,80 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
+import kotlin.random.Random
 
 class CanadianAthleticConference(rating: Int) : ConferenceGeneratorDataModel(
     "Canadian Athletic Conference",
-    listOf(
+    mutableListOf(
         TeamGeneratorDataModel(
             "Calgary",
             "Polar Bears",
             "CPB",
-            Location.AB
+            Location.AB,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Edmonton",
             "Caribou",
             "EDC",
-            Location.AB
+            Location.AB,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Winnipeg",
             "Wolves",
             "WW",
-            Location.MB
+            Location.MB,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Toronto",
             "Lions",
             "TL",
-            Location.ON
+            Location.ON,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Ottawa",
             "Unicorns",
             "OU",
-            Location.ON
+            Location.ON,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Montreal",
             "Narwhals",
             "MN",
-            Location.QC
+            Location.QC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
-            "Quebec City",
+            "Quebec",
             "Revolution",
             "QCR",
-            Location.QC
+            Location.QC,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Moncton",
             "Chameleons",
             "MC",
-            Location.NB
+            Location.NB,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Saskatchewan",
             "Black Bears",
             "SBB",
-            Location.SK
+            Location.SK,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Vancouver",
             "Tigers",
             "VAN",
-            Location.BC
+            Location.BC,
+            rating = Random.nextInt(20) + rating - 10
         )
     ),
     rating

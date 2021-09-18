@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.database.team
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,19 +11,16 @@ interface TeamDao {
     suspend fun getAllTeams(): List<TeamEntity>
 
     @Query("SELECT * FROM TeamEntity where teamId in (:teamId)")
-    suspend fun getTeamWithId(teamId: Int): TeamEntity?
-
-    @Query("SELECT * FROM TeamEntity where conferenceId in (:conferenceId)")
-    suspend fun getTeamsInConference(conferenceId: Int): List<TeamEntity>
-
-    @Query("select * from TeamEntity where postseasonTournamentId in (:tournamentId)")
-    suspend fun getTeamsInTournament(tournamentId: Int): List<TeamEntity>
+    suspend fun getTeamWithId(teamId: Int): TeamEntity
 
     @Query("SELECT * FROM TeamEntity where isUser in (:isUser)")
-    suspend fun getTeamIsUser(isUser: Boolean): TeamEntity?
+    suspend fun getTeamIsUser(isUser: Boolean = true): TeamEntity
 
     @Query("SELECT teamId FROM TeamEntity where isUser in (:isUser)")
-    suspend fun getUserTeamId(isUser: Boolean): Int
+    suspend fun getUserTeamId(isUser: Boolean = true): Int
+
+    @Query("SELECT teamId FROM TeamEntity where isUser in (:isUser)")
+    suspend fun getNullableUserTeamId(isUser: Boolean = true): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTeams(teams: List<TeamEntity>)
@@ -32,6 +28,6 @@ interface TeamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTeam(teams: TeamEntity)
 
-    @Delete
-    suspend fun deleteTeam(team: TeamEntity)
+    @Query("delete from TeamEntity")
+    suspend fun deleteAllTeams()
 }

@@ -24,12 +24,11 @@ class TeamManagerViewModel(private val database: BasketballDatabase) : ViewModel
 
     private fun loadTeam() {
         viewModelScope.launch {
-            val tempTeam = if (teamId == -1) {
+            team.value = if (teamId == -1) {
                 database.teamDao().getTeamIsUser(true)
             } else {
                 database.teamDao().getTeamWithId(teamId)
             }
-            tempTeam?.let { team.value = it }
         }
     }
 }

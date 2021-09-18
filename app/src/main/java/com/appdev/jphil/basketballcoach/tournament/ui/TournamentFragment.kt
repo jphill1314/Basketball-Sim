@@ -19,7 +19,7 @@ class TournamentFragment : ComposeFragment() {
     @Composable
     override fun SetContent() {
         TournamentScreen(
-            viewStateFlow = presenter.state,
+            viewStateFlow = presenter.viewState,
             interactor = presenter
         )
     }

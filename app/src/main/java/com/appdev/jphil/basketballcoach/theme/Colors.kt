@@ -12,7 +12,6 @@ val rust = Color(0xffb54213)
 val rustLight = Color(0xffed713f)
 val rustDark = Color(0xff7f0d00)
 
-
 val lightColors = lightColors(
     primary = orange,
     primaryVariant = orangeDark,

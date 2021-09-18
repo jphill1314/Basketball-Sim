@@ -19,4 +19,7 @@ interface CoachDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCoaches(coachEntity: List<CoachEntity>)
+
+    @Query("delete from CoachEntity")
+    suspend fun deleteAllCoaches()
 }

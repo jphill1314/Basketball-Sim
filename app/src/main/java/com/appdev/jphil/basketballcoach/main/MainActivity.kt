@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.main
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -10,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
@@ -27,8 +27,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     var teamViewModel: TeamManagerViewModel? = null
-
-    private var teamTheme = TeamColor.Red
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +93,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     override fun disableDrawer() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    override fun hideToolbar() {
+        binding.toolbar.visibility = View.GONE
+    }
+
+    override fun showToolbar() {
+        binding.toolbar.visibility = View.VISIBLE
     }
 
     private fun setTeamNameAndRating(team: TeamEntity) {

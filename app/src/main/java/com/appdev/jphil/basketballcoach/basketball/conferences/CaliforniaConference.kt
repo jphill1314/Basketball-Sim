@@ -3,69 +3,80 @@ package com.appdev.jphil.basketballcoach.basketball.conferences
 import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
+import kotlin.random.Random
 
 class CaliforniaConference(rating: Int) : ConferenceGeneratorDataModel(
     "California Conference",
-    listOf(
+    mutableListOf(
         TeamGeneratorDataModel(
             "Sacramento",
             "Panthers",
             "SAC",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "San Francisco",
             "Seals",
             "SFS",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Los Angeles",
             "Celebrities",
             "LAC",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "San Diego",
             "Captains",
             "SDC",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Anaheim",
             "Pufferfish",
             "ANP",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Long Beach",
             "Anglerfish",
             "LBA",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "San Jose",
             "Nerds",
             "SJN",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Oakland",
             "Freighters",
             "OAK",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Redding",
             "Redwoods",
             "RR",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         ),
         TeamGeneratorDataModel(
             "Fresno",
             "Sequoias",
             "FS",
-            Location.CA
+            Location.CA,
+            rating = Random.nextInt(20) + rating - 10
         )
     ),
     rating
