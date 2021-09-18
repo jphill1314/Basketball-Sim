@@ -5,6 +5,7 @@ import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Transformer
 import com.appdev.jphil.basketballcoach.simulation.TournamentSimRepository
 import com.appdev.jphil.basketballcoach.tournament.data.TournamentRepository
+import timber.log.Timber
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -37,6 +38,7 @@ class TournamentPresenter(
 
     private fun collectData() {
         viewModelScope.launch {
+            Timber.d("Tournament exists: ${params.isTournamentExisting}")
             if (!params.isTournamentExisting) {
                 tournamentRepository.generateTournaments(params.conferenceId)
             }

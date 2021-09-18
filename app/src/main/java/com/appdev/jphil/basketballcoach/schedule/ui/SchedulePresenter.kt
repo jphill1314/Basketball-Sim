@@ -142,7 +142,7 @@ class SchedulePresenter(
 
     override fun openTournament(isExisting: Boolean) {
         if (isExisting || dataState.value.areAllGamesFinal) {
-            sendEvent(NavigateToTournament(true, params.conferenceId))
+            sendEvent(NavigateToTournament(isExisting, params.conferenceId))
         } else {
             launchDialog()
             gameSimRepository.simulateUntilConferenceTournaments()

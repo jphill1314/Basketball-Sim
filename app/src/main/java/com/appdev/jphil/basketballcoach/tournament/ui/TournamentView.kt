@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,21 @@ fun TournamentScreen(
         TournamentView(viewState = viewState) {
             viewState.uiModels.forEach { item ->
                 when (item) {
-                    is TournamentGameUiModel -> GameItem(uiModel = item, interactor = interactor)
+                    is TournamentGameUiModel -> GameItem(
+                        uiModel = item,
+                        interactor = interactor,
+                        modifier = when (viewState.tournamentType) {
+                            TournamentType.TEN -> Modifier.scale(
+                                scaleX = 1f,
+                                scaleY = when (item.gameNumber) {
+                                    in 1..6 -> 1f
+                                    in 7..8 -> 2f
+                                    else -> 3f
+                                }
+                            )
+                            else -> Modifier
+                        }
+                    )
                 }
             }
         }
@@ -71,10 +86,11 @@ fun TournamentView(
 @Composable
 fun GameItem(
     uiModel: TournamentGameUiModel,
-    interactor: TournamentGameUiModel.Interactor
+    interactor: TournamentGameUiModel.Interactor,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 8.dp, top = 8.dp)
             .clickable { interactor.toggleShowButtons(uiModel) }
     ) {

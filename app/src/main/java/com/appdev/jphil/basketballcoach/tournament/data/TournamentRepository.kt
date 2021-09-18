@@ -7,14 +7,12 @@ import com.appdev.jphil.basketballcoach.basketball.NationalChampionshipHelper
 import com.appdev.jphil.basketballcoach.database.BasketballDatabase
 import com.appdev.jphil.basketballcoach.database.game.GameDao
 import com.appdev.jphil.basketballcoach.database.game.GameEntity
-import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.ConferenceTournamentRelations
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.database.team.TeamDao
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.ConferenceId
 import com.appdev.jphil.basketballcoach.main.injection.qualifiers.TeamId
 import com.appdev.jphil.basketballcoach.util.RecordUtil
-import timber.log.Timber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
@@ -32,13 +30,12 @@ class TournamentRepository @Inject constructor(
 
     suspend fun generateTournaments(tournamentId: Int) {
         if (tournamentId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
-            val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
+            val allRecruits = relationalDao.loadAllRecruits().map { it.create() }
             loadTournaments(
                 userConferenceId, // TODO: make sure this is always the user's conference
                 allRecruits
             )
         } else {
-            Timber.d("Creating national championship")
             championshipHelper.createNationalChampionship()
         }
     }
@@ -46,7 +43,7 @@ class TournamentRepository @Inject constructor(
     suspend fun getTournamentType(tournamentId: Int): TournamentType {
         return if (tournamentId != NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID) {
             val conferenceRelation = relationalDao.loadConferenceTournamentData(tournamentId)
-            val allRecruits = RecruitDatabaseHelper.loadAllRecruits(database)
+            val allRecruits = relationalDao.loadAllRecruits().map { it.create() }
             val conference = Conference(
                 conferenceRelation.conferenceEntity.id,
                 conferenceRelation.conferenceEntity.name,

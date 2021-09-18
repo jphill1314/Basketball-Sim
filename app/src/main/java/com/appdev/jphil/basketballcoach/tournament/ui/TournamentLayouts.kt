@@ -1,66 +1,119 @@
 package com.appdev.jphil.basketballcoach.tournament.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 @Composable
 fun TenTeamTournamentView(
     modifier: Modifier = Modifier,
     contents: @Composable () -> Unit
 ) {
+    var offsetX by remember { mutableStateOf(0f) }
+    var maxOffset by remember { mutableStateOf(0f) }
+    var maxWidth by remember { mutableStateOf(0) }
+
+    val scrollPercentage = when {
+        abs(offsetX) in 0f..maxWidth.toFloat() -> 1f
+        else -> max(1f - ((offsetX + maxWidth) / maxOffset), 0.25f)
+    }
+
     Layout(
         modifier = modifier
             .background(Color.LightGray)
-            .horizontalScroll(rememberScrollState())
-            .verticalScroll(rememberScrollState()),
+            .scale(scaleX = 1f, scaleY = scrollPercentage)
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    change.consumeAllChanges()
+                    val dx = dragAmount.x
+                    if (offsetX + dx in maxOffset..0f) {
+                        offsetX += dx
+                    }
+                }
+            },
         content = contents
     ) { measurables, constraints ->
-        var maxHeight = 0
-        var maxWidth = 0
-
         val itemConstraints = constraints.copy(
             maxWidth = (constraints.minWidth * 0.8).toInt(),
             minWidth = 0,
             minHeight = 0
         )
+        var maxHeight = 0
 
-        val placeables = measurables.map {
-            it.measure(itemConstraints).also { placeable ->
-                if (placeable.height > maxHeight) {
-                    maxHeight = placeable.height
-                }
-                if (placeable.width > maxWidth) {
-                    maxWidth = placeable.width
-                }
+        val playIn = measurables.take(2).map { measureable ->
+            measureable.measure(itemConstraints).also {
+                maxHeight = it.height
+                maxWidth = it.width
             }
         }
+        val firstRound = measurables.drop(2).take(4).map { it.measure(itemConstraints) }
+        val secondRound = measurables.drop(6).take(2).map { it.measure(itemConstraints) }
+        val thirdRound = measurables.last().measure(itemConstraints)
 
-        layout((maxWidth * 4.25).toInt(), maxHeight * 5) {
-            placeables.forEachIndexed { index, placeable ->
-                // TODO: prevent user from scrolling everything off screen
-                // TODO: animate item size?
+        val xOffset = offsetX.roundToInt()
+        val newOffset = maxWidth * -3f
+        if (maxOffset != newOffset) {
+            maxOffset = newOffset
+        }
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            playIn.forEachIndexed { index, placeable ->
                 when (index) {
-                    // Play in round
-                    0 -> placeable.placeRelative(x = 0, y = 0)
-                    1 -> placeable.placeRelative(x = 0, y = maxHeight * 3)
-                    // 1st round
-                    2 -> placeable.placeRelative(x = maxWidth, y = 0)
-                    3 -> placeable.placeRelative(x = maxWidth, y = maxHeight)
-                    4 -> placeable.placeRelative(x = maxWidth, y = maxHeight * 2)
-                    5 -> placeable.placeRelative(x = maxWidth, y = maxHeight * 3)
-                    // 2nd round
-                    6 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 0.5).toInt())
-                    7 -> placeable.placeRelative(x = 2 * maxWidth, y = (maxHeight * 2.5).toInt())
-                    // 3rd round
-                    8 -> placeable.placeRelative(x = 3 * maxWidth, y = (maxHeight * 1.5).toInt())
+                    0 -> placeable.placeRelative(x = xOffset , y = 0)
+                    1 -> placeable.placeRelative(x = xOffset, y = maxHeight * 3)
                 }
             }
+            firstRound.forEachIndexed { index, placeable ->
+                when (index) {
+                    0 -> placeable.placeRelative(
+                        x = maxWidth + xOffset,
+                        y = 0
+                    )
+                    1 -> placeable.placeRelative(
+                        x = maxWidth + xOffset,
+                        y = maxHeight
+                    )
+                    2 -> placeable.placeRelative(
+                        x = maxWidth + xOffset,
+                        y = maxHeight * 2
+                    )
+                    3 -> placeable.placeRelative(
+                        x = maxWidth + xOffset,
+                        y = maxHeight * 3
+                    )
+                }
+            }
+            secondRound.forEachIndexed { index, placeable ->
+                when (index) {
+                    0 -> placeable.placeRelative(
+                        x = 2 * maxWidth + xOffset,
+                        y = maxHeight / 2
+                    )
+                    1 -> placeable.placeRelative(
+                        x = 2 * maxWidth + xOffset,
+                        y = (maxHeight * 2.5).toInt()
+                    )
+                }
+            }
+            thirdRound.placeRelative(
+                x = 3 * maxWidth + xOffset,
+                y = 2 * maxHeight
+            )
         }
     }
 }
