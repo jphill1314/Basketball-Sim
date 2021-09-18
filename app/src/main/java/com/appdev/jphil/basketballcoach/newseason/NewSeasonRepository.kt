@@ -21,13 +21,13 @@ import com.appdev.jphil.basketballcoach.database.player.PlayerDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.recruit.RecruitDatabaseHelper
 import com.appdev.jphil.basketballcoach.database.relations.RelationalDao
 import com.appdev.jphil.basketballcoach.newgame.NewGameRepository
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 class NewSeasonRepository @Inject constructor(
     private val database: BasketballDatabase,
@@ -231,7 +231,7 @@ class NewSeasonRepository @Inject constructor(
             when (games.filter { it.tournamentId == conference.id }.size) {
                 2 -> prestigeToAdd += 8
                 3 -> prestigeToAdd += 16
-                else -> { /* no prestige gain */  }
+                else -> { /* no prestige gain */ }
             }
         }
 

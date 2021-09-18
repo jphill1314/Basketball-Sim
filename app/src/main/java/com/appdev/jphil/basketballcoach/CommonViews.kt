@@ -26,10 +26,11 @@ fun LoadingScreen() {
 
 @Composable
 fun HorizontalLine(color: Color) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(1.dp)
-        .background(color)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(color)
     )
 }
 

@@ -16,7 +16,8 @@ import com.appdev.jphil.basketballcoach.basketball.conferences.WesternConference
 import com.appdev.jphil.basketballcoach.compose.arch.BasicComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Event
 
-class NewGamePresenter : BasicComposePresenter<NewGameContract.DataState>(),
+class NewGamePresenter :
+    BasicComposePresenter<NewGameContract.DataState>(),
     NewGameContract.Interactor {
 
     override val initialDataState = NewGameContract.DataState(

@@ -71,7 +71,7 @@ private fun CustomizeScreen(
         )
         TextField(
             value = state.team.schoolName,
-            label =  { TextFieldLabel(textResId = R.string.school_name) },
+            label = { TextFieldLabel(textResId = R.string.school_name) },
             onValueChange = { interactor.onUpdateSchoolName(it) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -79,7 +79,7 @@ private fun CustomizeScreen(
         )
         TextField(
             value = state.team.mascot,
-            label =  { TextFieldLabel(textResId = R.string.school_mascot) },
+            label = { TextFieldLabel(textResId = R.string.school_mascot) },
             onValueChange = { interactor.onUpdateMascot(it) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,7 +87,7 @@ private fun CustomizeScreen(
         )
         TextField(
             value = state.team.abbreviation,
-            label =  { TextFieldLabel(textResId = R.string.school_abbreviation) },
+            label = { TextFieldLabel(textResId = R.string.school_abbreviation) },
             onValueChange = { interactor.onUpdateAbbreviation(it) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -154,7 +154,7 @@ private fun CustomizeScreen(
         )
         TextField(
             value = state.team.headCoachFirstName.orEmpty(),
-            label =  { TextFieldLabel(textResId = R.string.first_name) },
+            label = { TextFieldLabel(textResId = R.string.first_name) },
             onValueChange = { interactor.onUpdateCoachFirstName(it) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -162,7 +162,7 @@ private fun CustomizeScreen(
         )
         TextField(
             value = state.team.headCoachLastName.orEmpty(),
-            label =  { TextFieldLabel(textResId = R.string.last_name) },
+            label = { TextFieldLabel(textResId = R.string.last_name) },
             onValueChange = { interactor.onUpdateCoachLastName(it) },
             modifier = Modifier
                 .fillMaxWidth()
