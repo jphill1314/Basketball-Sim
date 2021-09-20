@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.theme.appLightColors
-import java.util.Locale
 import kotlinx.coroutines.flow.StateFlow
+import java.util.Locale
 
 @Composable
 fun StatsView(
@@ -277,11 +277,13 @@ private fun TeamRankingItem(
     interactor: StatsContract.Interactor
 ) {
     Column(modifier = Modifier.clickable { interactor.onTeamClicked(team.teamId) }) {
-        Row(modifier = Modifier
-            .padding(vertical = 16.dp)
-            .padding(end = 8.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .padding(end = 8.dp)
+        ) {
             Text(
-                text = index .toString(),
+                text = index.toString(),
                 color = Color.LightGray,
                 style = MaterialTheme.typography.caption,
                 textAlign = TextAlign.End,
