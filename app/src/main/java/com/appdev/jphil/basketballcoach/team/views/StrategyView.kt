@@ -134,9 +134,11 @@ private fun StrategySlider(
             style = MaterialTheme.typography.h5,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 16.dp)
+        ) {
             Text(
                 text = lower,
                 style = MaterialTheme.typography.h6

@@ -12,7 +12,7 @@ import javax.inject.Inject
 class TeamPresenter(
     private val params: Params,
     private val teamRepository: TeamRepository
-): BasicComposePresenter<TeamContract.DataState>(), TeamContract.Interactor {
+) : BasicComposePresenter<TeamContract.DataState>(), TeamContract.Interactor {
 
     data class Params @Inject constructor(
         @TeamId val teamId: Int
@@ -124,5 +124,5 @@ class TeamPresenter(
     private fun getHeadCoach() = state.value.coaches.first { it.type == CoachType.HEAD_COACH }
 
     data class LaunchPlayerDetail(val playerId: Int) : Event
-    data class LaunchCoachDetail(val coachId: Int): Event
+    data class LaunchCoachDetail(val coachId: Int) : Event
 }

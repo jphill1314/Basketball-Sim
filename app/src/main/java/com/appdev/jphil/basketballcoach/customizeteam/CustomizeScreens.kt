@@ -38,8 +38,8 @@ import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.theme.appLightColors
-import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.math.roundToInt
 
 @Composable
 fun CustomizeScreen(

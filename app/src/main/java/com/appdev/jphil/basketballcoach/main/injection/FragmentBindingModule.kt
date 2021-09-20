@@ -1,7 +1,5 @@
 package com.appdev.jphil.basketballcoach.main.injection
 
-import com.appdev.jphil.basketballcoach.coaches.CoachesFragment
-import com.appdev.jphil.basketballcoach.coaches.CoachesModule
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewFragment
 import com.appdev.jphil.basketballcoach.coachoverview.CoachOverviewModule
 import com.appdev.jphil.basketballcoach.customizeteam.CustomizeFragment
@@ -19,15 +17,11 @@ import com.appdev.jphil.basketballcoach.rankings.RankingsModule
 import com.appdev.jphil.basketballcoach.recruiting.ui.RecruitingFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewModule
-import com.appdev.jphil.basketballcoach.roster.RosterFragment
-import com.appdev.jphil.basketballcoach.roster.RosterModule
 import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
 import com.appdev.jphil.basketballcoach.selectionshow.SelectionShowFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment
-import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
-import com.appdev.jphil.basketballcoach.strategy.StrategyModule
 import com.appdev.jphil.basketballcoach.team.TeamFragment
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
 import com.appdev.jphil.basketballcoach.tournament.ui.TournamentFragment
@@ -38,16 +32,8 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentBindingModule {
 
     @PerFragment
-    @ContributesAndroidInjector(modules = [RosterModule::class])
-    abstract fun rosterFragment(): RosterFragment
-
-    @PerFragment
     @ContributesAndroidInjector(modules = [GameModule::class])
     abstract fun gameFragment(): GameFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [StrategyModule::class])
-    abstract fun strategyFragment(): StrategyFragment
 
     @PerFragment
     @ContributesAndroidInjector(modules = [StandingsModule::class])
@@ -56,10 +42,6 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [PlayerOverviewModule::class])
     abstract fun playerOverviewFragment(): PlayerOverviewFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [CoachesModule::class])
-    abstract fun coachesFragment(): CoachesFragment
 
     @PerFragment
     @ContributesAndroidInjector(modules = [CoachOverviewModule::class])
