@@ -44,8 +44,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
             setOf(
                 R.id.team,
                 R.id.compose_schedule,
-                R.id.standings,
-                R.id.rankings,
+                R.id.stats,
                 R.id.recruiting_compose,
             ),
             binding.drawerLayout

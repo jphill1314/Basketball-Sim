@@ -8,11 +8,8 @@
             android:id="@+id/compose_schedule"
             android:title="@string/schedule" />
         <item
-            android:id="@+id/standings"
-            android:title="@string/standings" />
-        <item
-            android:id="@+id/rankings"
-            android:title="@string/rankings"/>
+            android:id="@+id/stats"
+            android:title="Stats" />
         <item
             android:id="@+id/recruiting_compose"
             android:title="@string/recruiting" />

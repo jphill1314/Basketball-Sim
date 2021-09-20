@@ -22,6 +22,7 @@ import com.appdev.jphil.basketballcoach.selectionshow.SelectionShowFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsFragment
 import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment
+import com.appdev.jphil.basketballcoach.stats.StatsFragment
 import com.appdev.jphil.basketballcoach.team.TeamFragment
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
 import com.appdev.jphil.basketballcoach.tournament.ui.TournamentFragment
@@ -94,4 +95,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun teamFragment(): TeamFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun statsFragment(): StatsFragment
 }

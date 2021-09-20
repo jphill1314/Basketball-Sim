@@ -202,9 +202,9 @@
     <string name="resume">Resume</string>
     <string name="pause">Pause</string>
 
-    <string name="adj_eff">Adj Eff</string>
-    <string name="adj_off">Adj Off</string>
-    <string name="adj_def">Adj Def</string>
+    <string name="adj_eff">Adj. Eff</string>
+    <string name="adj_off">Adj. Off</string>
+    <string name="adj_def">Adj. Def</string>
 
     <string name="sort_high_rating_first">Rating: High to Low</string>
     <string name="sort_low_rating_first">Rating: Low to High</string>
