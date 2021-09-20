@@ -32,11 +32,10 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
-            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            style="@style/Widget.MaterialComponents.BottomNavigationView"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             app:labelVisibilityMode="labeled"
-            app:itemTextColor="@color/bottom_nav_text_color"
             app:menu="@menu/drawer_menu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -28,4 +28,6 @@
     <color name="orange">#fb8c00</color>
     <color name="deepOrange">#f4511e</color>
     <color name="blueGrey">#607d8b</color>
+
+    <color name="text_color">@color/black</color>
 </resources>

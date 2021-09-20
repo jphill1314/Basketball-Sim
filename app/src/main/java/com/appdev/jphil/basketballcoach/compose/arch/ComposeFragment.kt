@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.appdev.jphil.basketballcoach.main.NavigationManager
+import com.appdev.jphil.basketballcoach.theme.appDarkColors
 import com.appdev.jphil.basketballcoach.theme.appLightColors
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -35,7 +37,7 @@ abstract class ComposeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 MaterialTheme(
-                    colors = appLightColors
+                    colors = if (isSystemInDarkTheme()) appDarkColors else appLightColors
                 ) {
                     SetContent()
                 }
