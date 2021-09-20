@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/roster"
-            android:title="@string/roster" />
+            android:id="@+id/team"
+            android:title="@string/team" />
         <item
             android:id="@+id/compose_schedule"
             android:title="@string/schedule" />
@@ -16,11 +16,5 @@
         <item
             android:id="@+id/recruiting_compose"
             android:title="@string/recruiting" />
-        <item
-            android:id="@+id/strategy"
-            android:title="@string/strategy" />
-        <item
-            android:id="@+id/staff"
-            android:title="@string/staff" />
     </group>
 </menu>

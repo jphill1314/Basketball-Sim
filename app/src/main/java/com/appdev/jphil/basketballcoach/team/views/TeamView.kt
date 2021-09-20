@@ -1,39 +1,43 @@
 package com.appdev.jphil.basketballcoach.team
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.appdev.jphil.basketball.coaches.Coach
+import com.appdev.jphil.basketball.Pronouns
 import com.appdev.jphil.basketball.coaches.CoachType
 import com.appdev.jphil.basketball.location.Location
-import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.players.PlayerType
-import com.appdev.jphil.basketball.teams.Team
+import com.appdev.jphil.basketball.players.PracticeType
 import com.appdev.jphil.basketball.teams.TeamColor
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
+import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
+import com.appdev.jphil.basketballcoach.database.team.TeamEntity
 import com.appdev.jphil.basketballcoach.theme.appLightColors
+import kotlinx.coroutines.flow.StateFlow
+
+@Composable
+fun TeamView(
+    stateFlow: StateFlow<TeamContract.DataState>,
+    interactor: TeamContract.Interactor
+) {
+    val state by stateFlow.collectAsState()
+    TeamView(state, interactor)
+}
 
 @Composable
 private fun TeamView(
-    state: TeamContract.ViewState,
+    state: TeamContract.DataState,
     interactor: TeamContract.Interactor
 ) {
     var selectedTab by remember { mutableStateOf(0) }
@@ -57,57 +61,25 @@ private fun TeamView(
         if (state.team != null) {
             when (selectedTab) {
                 0 -> RosterView(
-                    team = state.team,
+                    players = state.players,
                     selectedPlayerIndex = state.selectedPlayerIndex,
                     interactor = interactor
+                )
+                1 -> CoachesView(
+                    coaches = state.coaches,
+                    interactor = interactor
+                )
+                2 -> StrategyView(
+                    headCoach = state.coaches.first { it.type == CoachType.HEAD_COACH },
+                    interactor = interactor,
+                    isInGame = false
                 )
             }
         }
     }
 }
 
-@Composable
-private fun RosterView(
-    team: Team,
-    selectedPlayerIndex: Int,
-    interactor: TeamContract.Interactor
-) {
-    LazyColumn {
-        item {
-            RosterTitle(title = stringResource(id = R.string.starting_lineup))
-        }
-        items(team.roster.take(5)) { player ->
-
-        }
-        item {
-            RosterTitle(title = stringResource(id = R.string.bench))
-        }
-        items(team.roster.drop(5)) { player ->
-
-        }
-    }
-}
-
-@Composable
-private fun RosterTitle(title: String) {
-    Card(shape = RoundedCornerShape(0.dp)) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.h5,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-private fun RosterPlayer(player: Player, isSelected: Boolean) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-
-    }
-}
-
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PreviewTeamView() {
     MaterialTheme(colors = appLightColors) {
@@ -118,14 +90,15 @@ private fun PreviewTeamView() {
     }
 }
 
-private fun getPlayer(index: Int) = Player(
+private fun getPlayer(index: Int) = PlayerEntity(
     id = index,
     teamId = 0,
     firstName = "Player",
     lastName = index.toString(),
     position = index % 5 + 1,
+    rating = 90,
     year = index % 4,
-    type = PlayerType.SHOOTER,
+    type = PlayerType.SHOOTER.type,
     isOnScholarship = true,
     closeRangeShot = 90,
     midRangeShot = 90,
@@ -145,15 +118,34 @@ private fun getPlayer(index: Int) = Player(
     aggressiveness = 90,
     potential = 90,
     rosterIndex = index,
-    courtIndex = index
+    courtIndex = index,
+    pronouns = Pronouns.HE,
+    offensiveStatMod = 0,
+    defensiveStatMod = 0,
+    fatigue = 0.0,
+    timePlayed = 0,
+    inGame = false,
+    twoPointAttempts = 0,
+    twoPointMakes = 0,
+    threePointAttempts = 0,
+    threePointMakes = 0,
+    assists = 0,
+    offensiveRebounds = 0,
+    defensiveRebounds = 0,
+    turnovers = 0,
+    steals = 0,
+    fouls = 0,
+    freeThrowShots = 0,
+    freeThrowMakes = 0,
 )
 
-private fun getCoach(index: Int) = Coach(
+private fun getCoach(index: Int) = CoachEntity(
     id = index,
     teamId = 0,
     type = if (index == 0) CoachType.HEAD_COACH else CoachType.ASSISTANT_COACH,
     firstName = "Coach",
     lastName = index.toString(),
+    rating = 90,
     recruiting = 90,
     offenseFavorsThrees = 90,
     pace = 90,
@@ -177,29 +169,57 @@ private fun getCoach(index: Int) = Coach(
     teachPositioning = 90,
     teachPostDefense = 90,
     teachPostMoves = 90,
-    teachRebounding = 90
+    teachRebounding = 90,
+    recruitIds = emptyList(),
+    pronouns = Pronouns.HE
 )
 
 private val interactor = object : TeamContract.Interactor {
     override fun onPlayerSelected(index: Int) {}
+    override fun onPlayerLongPressed(playerId: Int) {}
+    override fun onCoachSelected(coachId: Int) {}
+    override fun onPaceChanged(pace: Int) {}
+    override fun onOffenseFavorsThreesChanged(favorsThrees: Int) {}
+    override fun onAggressionChanged(aggression: Int) {}
+    override fun onDefenseFavorsThreesChanged(favorsThrees: Int) {}
+    override fun onPressFrequencyChanged(frequency: Int) {}
+    override fun onPressAggressionChanged(aggression: Int) {}
+    override fun onIntentionallyFoulToggled(isChecked: Boolean) {}
+    override fun onMoveQuicklyToggled(isChecked: Boolean) {}
+    override fun onWasteTimeToggled(isChecked: Boolean) {}
 }
 
-private val state = TeamContract.ViewState(
-    team = Team(
+private val state = TeamContract.DataState(
+    team = TeamEntity(
         teamId = 0,
         schoolName = "Wofford",
         mascot = "Terriers",
         abbreviation = "Wof",
-        color = TeamColor.Yellow,
-        players = MutableList(15) { getPlayer(it) },
+        color = TeamColor.Yellow.type,
         conferenceId = 1,
         isUser = true,
-        coaches = MutableList(4) { getCoach(it) },
         location = Location.SC,
         prestige = 80,
         gamesPlayed = 1,
-        postSeasonTournamentId = -1,
-        postSeasonTournamentSeed = -1
+        postseasonTournamentId = -1,
+        postseasonTournamentSeed = -1,
+        twoPointAttempts = 0,
+        twoPointMakes = 0,
+        threePointAttempts = 0,
+        threePointMakes = 0,
+        offensiveRebounds = 0,
+        defensiveRebounds = 0,
+        turnovers = 0,
+        offensiveFouls = 0,
+        defensiveFouls = 0,
+        freeThrowShots = 0,
+        freeThrowMakes = 0,
+        lastScoreDif = 0,
+        practiceType = PracticeType.NO_FOCUS,
+        rating = 80,
+        commitments = emptyList()
     ),
-    selectedPlayerIndex = 0
+    players = List(15) { getPlayer(it) },
+    coaches = List(4) { getCoach(it) },
+    selectedPlayerIndex = 8
 )

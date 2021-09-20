@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketballcoach.databinding.FragmentRosterBinding
@@ -67,8 +66,6 @@ class RosterFragment : Fragment(), RosterContract.View {
     }
 
     override fun gotoPlayerOverview(playerId: Int) {
-        findNavController().navigate(
-            RosterFragmentDirections.actionRosterFragmentToPlayerOverviewFragment(playerId)
-        )
+
     }
 }

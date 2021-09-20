@@ -37,7 +37,7 @@ import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.theme.lightColors
+import com.appdev.jphil.basketballcoach.theme.appLightColors
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.StateFlow
 
@@ -261,7 +261,7 @@ private fun TextFieldLabel(textResId: Int) {
 @Preview(showBackground = true)
 @Composable
 private fun CustomizePreview() {
-    MaterialTheme(colors = lightColors) {
+    MaterialTheme(colors = appLightColors) {
         CustomizeScreen(
             state = state,
             interactor = interactor

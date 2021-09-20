@@ -28,6 +28,7 @@ import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyFragment
 import com.appdev.jphil.basketballcoach.strategy.StrategyModule
+import com.appdev.jphil.basketballcoach.team.TeamFragment
 import com.appdev.jphil.basketballcoach.tournament.TournamentModule
 import com.appdev.jphil.basketballcoach.tournament.ui.TournamentFragment
 import dagger.Module
@@ -107,4 +108,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = [CustomizeModule::class])
     abstract fun customizeFragment(): CustomizeFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun teamFragment(): TeamFragment
 }

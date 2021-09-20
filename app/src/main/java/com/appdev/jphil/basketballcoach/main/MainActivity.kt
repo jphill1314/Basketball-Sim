@@ -42,13 +42,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         val navController = findNavController(R.id.frame_layout)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.roster,
+                R.id.team,
                 R.id.compose_schedule,
                 R.id.standings,
                 R.id.rankings,
                 R.id.recruiting_compose,
-                R.id.strategy,
-                R.id.staff,
             ),
             binding.drawerLayout
         )
@@ -110,7 +108,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
         binding.navView.menu.apply {
             findItem(R.id.recruiting_compose).isVisible = team.isUser
-            findItem(R.id.strategy).isVisible = team.isUser
         }
     }
 
