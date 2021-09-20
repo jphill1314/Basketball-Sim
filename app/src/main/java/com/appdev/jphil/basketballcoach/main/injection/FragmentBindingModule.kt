@@ -12,15 +12,11 @@ import com.appdev.jphil.basketballcoach.newgame.NewGameFragment
 import com.appdev.jphil.basketballcoach.newseason.ui.NewSeasonFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewFragment
 import com.appdev.jphil.basketballcoach.playeroverview.PlayerOverviewModule
-import com.appdev.jphil.basketballcoach.rankings.RankingsFragment
-import com.appdev.jphil.basketballcoach.rankings.RankingsModule
 import com.appdev.jphil.basketballcoach.recruiting.ui.RecruitingFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewFragment
 import com.appdev.jphil.basketballcoach.recruitoverview.ui.RecruitOverviewModule
 import com.appdev.jphil.basketballcoach.schedule.ui.ScheduleFragment
 import com.appdev.jphil.basketballcoach.selectionshow.SelectionShowFragment
-import com.appdev.jphil.basketballcoach.standings.StandingsFragment
-import com.appdev.jphil.basketballcoach.standings.StandingsModule
 import com.appdev.jphil.basketballcoach.startscreen.StartScreenFragment
 import com.appdev.jphil.basketballcoach.stats.StatsFragment
 import com.appdev.jphil.basketballcoach.team.TeamFragment
@@ -37,10 +33,6 @@ abstract class FragmentBindingModule {
     abstract fun gameFragment(): GameFragment
 
     @PerFragment
-    @ContributesAndroidInjector(modules = [StandingsModule::class])
-    abstract fun standingsFragment(): StandingsFragment
-
-    @PerFragment
     @ContributesAndroidInjector(modules = [PlayerOverviewModule::class])
     abstract fun playerOverviewFragment(): PlayerOverviewFragment
 
@@ -51,10 +43,6 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun gamePreviewFragment(): GamePreviewFragment
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = [RankingsModule::class])
-    abstract fun rankingFragment(): RankingsFragment
 
     @PerFragment
     @ContributesAndroidInjector
