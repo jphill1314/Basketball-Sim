@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.team
+package com.appdev.jphil.basketballcoach.team.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
+import com.appdev.jphil.basketballcoach.team.TeamContract
 
 @Composable
 fun RosterView(

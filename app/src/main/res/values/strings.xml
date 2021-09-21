@@ -290,4 +290,6 @@
     <string name="he_him">He/Him</string>
     <string name="she_her">She/Her</string>
     <string name="they_their">They/Their</string>
+
+    <string name="stats">Stats</string>
 </resources>

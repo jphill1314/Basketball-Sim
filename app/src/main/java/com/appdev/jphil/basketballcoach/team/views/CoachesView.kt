@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.team
+package com.appdev.jphil.basketballcoach.team.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
+import com.appdev.jphil.basketballcoach.team.TeamContract
 
 @Composable
 fun CoachesView(

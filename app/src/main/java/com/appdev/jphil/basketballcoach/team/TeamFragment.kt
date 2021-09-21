@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.compose.arch.ComposeFragment
+import com.appdev.jphil.basketballcoach.team.views.TeamView
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
@@ -23,6 +25,15 @@ class TeamFragment : ComposeFragment() {
                 when (event) {
                     is TeamPresenter.LaunchPlayerDetail -> launchPlayerOverview(event.playerId)
                     is TeamPresenter.LaunchCoachDetail -> launchCoachOverview(event.coachId)
+                }
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            presenter.state.collect { state ->
+                state.team?.let { team ->
+                    setToolbarTitle(
+                        resources.getString(R.string.two_strings, team.schoolName, team.mascot)
+                    )
                 }
             }
         }

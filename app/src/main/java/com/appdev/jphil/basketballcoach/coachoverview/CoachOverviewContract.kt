@@ -1,25 +1,19 @@
 package com.appdev.jphil.basketballcoach.coachoverview
 
-import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.MVPContract
+import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 
 interface CoachOverviewContract {
 
     interface View : MVPContract.View {
-        fun displayCoach(coach: Coach)
+        fun displayCoach(coach: CoachEntity)
     }
 
     interface Presenter : MVPContract.Presenter<View> {
         fun fetchData()
-        fun positionToggled(position: Int)
-        fun setMinRating(minRating: Int)
-        fun setMaxRating(maxRating: Int)
-        fun setMinPotential(minPotential: Int)
-        fun setMaxPotential(maxPotential: Int)
     }
 
     interface Repository : MVPContract.Repository<Presenter> {
-        suspend fun loadCoach(): Coach
-        suspend fun saveCoach(coach: Coach)
+        suspend fun loadCoach(): CoachEntity
     }
 }

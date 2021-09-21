@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.team
+package com.appdev.jphil.basketballcoach.team.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
+import com.appdev.jphil.basketballcoach.team.StrategyInteractor
 import com.appdev.jphil.basketballcoach.theme.appLightColors
 import kotlin.math.roundToInt
 

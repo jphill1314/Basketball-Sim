@@ -45,11 +45,6 @@ object GameDatabaseHelper {
         return database.gameDao().getAllGameEventsForGame(gameId)
     }
 
-    suspend fun deleteAllGames(database: BasketballDatabase) {
-        database.gameDao().deleteAllGames()
-        database.gameDao().deleteAllGameEvents()
-    }
-
     fun getStats(game: Game): List<GameStatsEntity> {
         val stats = mutableListOf<GameStatsEntity>()
         if (game.isFinal) {

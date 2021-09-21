@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.databinding.ActivityMainBinding
@@ -33,6 +34,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as NavHostFragment
         val navController = navHostFragment.navController
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -43,6 +46,13 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
                 R.id.new_season -> binding.bottomNav.visibility = View.GONE
                 R.id.gameFragment -> binding.bottomNav.visibility = View.GONE
                 else -> binding.bottomNav.visibility = View.VISIBLE
+            }
+
+            when (destination.id) {
+                R.id.team -> binding.toolbar.navigationIcon = null
+                R.id.stats -> binding.toolbar.navigationIcon = null
+                R.id.compose_schedule -> binding.toolbar.navigationIcon = null
+                R.id.recruiting_compose -> binding.toolbar.navigationIcon = null
             }
         }
 
@@ -59,11 +69,21 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onBackPressed() {
+        val navController = findNavController(R.id.frame_layout)
+        when (navController.currentDestination?.id) {
+            R.id.team -> finish()
+            R.id.stats -> navController.popBackStack(R.id.team, false)
+            R.id.compose_schedule -> navController.popBackStack(R.id.team, false)
+            R.id.recruiting_compose -> navController.popBackStack(R.id.team, false)
+            else -> super.onBackPressed()
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                val nav = findNavController(R.id.frame_layout)
-                nav.popBackStack()
+                onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)

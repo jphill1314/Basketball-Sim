@@ -44,7 +44,7 @@
     <fragment
         android:id="@+id/team"
         android:name="com.appdev.jphil.basketballcoach.team.TeamFragment"
-        android:label="Team">
+        android:label="">
         <action
             android:id="@+id/toPlayerOverview"
             app:destination="@id/playerOverviewFragment"/>

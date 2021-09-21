@@ -1,4 +1,4 @@
-package com.appdev.jphil.basketballcoach.team
+package com.appdev.jphil.basketballcoach.team.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +23,7 @@ import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 import com.appdev.jphil.basketballcoach.database.player.PlayerEntity
 import com.appdev.jphil.basketballcoach.database.team.TeamEntity
+import com.appdev.jphil.basketballcoach.team.TeamContract
 import com.appdev.jphil.basketballcoach.theme.appLightColors
 import kotlinx.coroutines.flow.StateFlow
 
@@ -40,11 +41,11 @@ private fun TeamView(
     state: TeamContract.DataState,
     interactor: TeamContract.Interactor
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
-    val tabs = listOf(
+    var selectedTab by rememberSaveable { mutableStateOf(0) }
+    val tabs = listOfNotNull(
         stringResource(id = R.string.roster),
         stringResource(id = R.string.coaches),
-        stringResource(id = R.string.strategy)
+        if (state.team?.isUser == true) stringResource(id = R.string.strategy) else null
     )
     Column {
         TabRow(
