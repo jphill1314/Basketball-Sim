@@ -27,7 +27,6 @@ import com.appdev.jphil.basketballcoach.game.dialogs.teamtalk.TeamTalkDialog
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameAdapter
 import com.appdev.jphil.basketballcoach.game.sim.adapters.GameTeamStatsAdapter
 import com.appdev.jphil.basketballcoach.game.sim.boxscore.BoxScoreAdapter
-import com.appdev.jphil.basketballcoach.main.NavigationManager
 import com.appdev.jphil.basketballcoach.main.ViewModelFactory
 import com.appdev.jphil.basketballcoach.strategy.StrategyAdapter
 import com.appdev.jphil.basketballcoach.strategy.StrategyDataModel
@@ -54,9 +53,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     private lateinit var binding: FragmentGameBinding
 
     private var nullGame: Game? = null
-
-    @Inject
-    lateinit var navManager: NavigationManager
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -141,7 +137,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
     override fun onResume() {
         super.onResume()
-        navManager.disableDrawer()
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
@@ -219,7 +214,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onPause() {
         super.onPause()
         viewModel.pauseSim()
-        navManager.enableDrawer()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

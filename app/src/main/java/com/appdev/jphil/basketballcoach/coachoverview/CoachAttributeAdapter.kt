@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.R
+import com.appdev.jphil.basketballcoach.database.coach.CoachEntity
 
 class CoachAttributeAdapter(
-    private val coach: Coach,
+    private val coach: CoachEntity,
     private val resources: Resources
 ) : RecyclerView.Adapter<CoachAttributeAdapter.ViewHolder>() {
 

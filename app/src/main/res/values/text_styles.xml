@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="NormalTextBlack" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -10,7 +10,7 @@
     </style>
 
     <style name="HeaderTextBlack" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:textSize">20sp</item>
     </style>
 
@@ -27,7 +27,7 @@
     </style>
 
     <style name="SmallTextBlack" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:textSize">12sp</item>
     </style>
 

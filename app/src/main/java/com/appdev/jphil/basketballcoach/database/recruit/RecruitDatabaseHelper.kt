@@ -27,13 +27,6 @@ object RecruitDatabaseHelper {
         }
         return recruits
     }
-
-    suspend fun loadRecruitWithId(recruitId: Int, database: BasketballDatabase): Recruit {
-        val recruit = database.recruitDao().getRecruitWithId(recruitId)
-        val interests = database.recruitDao().getAllInterestsWithRecruitID(recruitId)
-        return recruit.createRecruit(interests)
-    }
-
     suspend fun deleteAllRecruits(database: BasketballDatabase) {
         database.recruitDao().deleteAllRecruitInterests()
         database.recruitDao().deleteAllRecruits()

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.theme.lightColors
+import com.appdev.jphil.basketballcoach.theme.appLightColors
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -78,7 +78,7 @@ private fun StartScreenButton(
 @Composable
 private fun PreviewStartScreen() {
     MaterialTheme(
-        colors = lightColors
+        colors = appLightColors
     ) {
         StartScreenView(state = viewState, interactor = interactor)
     }
