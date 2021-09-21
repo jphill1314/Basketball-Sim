@@ -280,7 +280,7 @@ private fun TeamRankingItem(
     interactor: StatsContract.Interactor,
     modifier: Modifier
 ) {
-    Column(modifier = Modifier.clickable { interactor.onTeamClicked(team.teamId) }) {
+    Column {
         Row(
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -301,6 +301,7 @@ private fun TeamRankingItem(
                 modifier = Modifier
                     .width(150.dp)
                     .padding(end = 8.dp)
+                    .clickable { interactor.onTeamClicked(team.teamId) }
             )
             Row(modifier = modifier) {
                 Text(
