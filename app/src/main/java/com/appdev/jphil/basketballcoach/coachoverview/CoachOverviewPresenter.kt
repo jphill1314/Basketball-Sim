@@ -1,6 +1,5 @@
 package com.appdev.jphil.basketballcoach.coachoverview
 
-import com.appdev.jphil.basketball.coaches.Coach
 import com.appdev.jphil.basketballcoach.arch.BasePresenter
 import com.appdev.jphil.basketballcoach.arch.DispatcherProvider
 import kotlinx.coroutines.launch
@@ -16,28 +15,11 @@ class CoachOverviewPresenter @Inject constructor(
     }
 
     private var view: CoachOverviewContract.View? = null
-    private lateinit var coach: Coach
 
     override fun fetchData() {
         coroutineScope.launch {
-            coach = repository.loadCoach()
-            view?.displayCoach(coach)
+            view?.displayCoach(repository.loadCoach())
         }
-    }
-
-    override fun positionToggled(position: Int) {
-    }
-
-    override fun setMinRating(minRating: Int) {
-    }
-
-    override fun setMaxRating(maxRating: Int) {
-    }
-
-    override fun setMinPotential(minPotential: Int) {
-    }
-
-    override fun setMaxPotential(maxPotential: Int) {
     }
 
     override fun onViewAttached(view: CoachOverviewContract.View) {
@@ -46,8 +28,5 @@ class CoachOverviewPresenter @Inject constructor(
 
     override fun onViewDetached() {
         view = null
-        coroutineScope.launch {
-            repository.saveCoach(coach)
-        }
     }
 }

@@ -175,6 +175,7 @@
 
     <string name="no_known_recruits">Recruits that your assistants discover will appear here. You can fine tune their scouting assignments on the Staff screen.</string>
 
+    <string name="coaches">Coaches</string>
     <string name="coach_overview">Coach Overview</string>
     <string name="player_overview">Player Overview</string>
     <string name="recruit_overview">Recruit Overview</string>
@@ -201,9 +202,9 @@
     <string name="resume">Resume</string>
     <string name="pause">Pause</string>
 
-    <string name="adj_eff">Adj Eff</string>
-    <string name="adj_off">Adj Off</string>
-    <string name="adj_def">Adj Def</string>
+    <string name="adj_eff">Adj. Eff</string>
+    <string name="adj_off">Adj. Off</string>
+    <string name="adj_def">Adj. Def</string>
 
     <string name="sort_high_rating_first">Rating: High to Low</string>
     <string name="sort_low_rating_first">Rating: Low to High</string>
@@ -289,4 +290,6 @@
     <string name="he_him">He/Him</string>
     <string name="she_her">She/Her</string>
     <string name="they_their">They/Their</string>
+
+    <string name="stats">Stats</string>
 </resources>

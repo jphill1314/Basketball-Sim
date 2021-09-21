@@ -27,7 +27,7 @@ import com.appdev.jphil.basketball.factories.ConferenceGeneratorDataModel
 import com.appdev.jphil.basketball.factories.TeamGeneratorDataModel
 import com.appdev.jphil.basketball.location.Location
 import com.appdev.jphil.basketballcoach.R
-import com.appdev.jphil.basketballcoach.theme.lightColors
+import com.appdev.jphil.basketballcoach.theme.appLightColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -135,7 +135,7 @@ private fun TeamItem(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewNewGameScreen() {
-    MaterialTheme(colors = lightColors) {
+    MaterialTheme(colors = appLightColors) {
         NewGameScreen(
             viewStateFlow = MutableStateFlow(
                 NewGameContract.DataState(

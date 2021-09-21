@@ -19,10 +19,6 @@ object ConferenceDatabaseHelper {
         )
     }
 
-    suspend fun loadAllConferenceEntities(database: BasketballDatabase): List<ConferenceEntity> {
-        return database.conferenceDao().getAllConferenceEntities()
-    }
-
     suspend fun saveOnlyConferences(conferences: List<Conference>, database: BasketballDatabase) {
         database.conferenceDao().insertConferences(
             conferences.map {

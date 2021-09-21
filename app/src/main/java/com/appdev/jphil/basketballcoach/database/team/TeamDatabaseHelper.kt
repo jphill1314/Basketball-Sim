@@ -11,7 +11,7 @@ object TeamDatabaseHelper {
         return createTeam(database.teamDao().getTeamWithId(teamId), database)
     }
 
-    suspend fun createTeam(teamEntity: TeamEntity, database: BasketballDatabase): Team {
+    private suspend fun createTeam(teamEntity: TeamEntity, database: BasketballDatabase): Team {
         val players = PlayerDatabaseHelper.loadAllPlayersOnTeam(teamEntity.teamId, database)
         val coaches = CoachDatabaseHelper.loadAllCoachesByTeamId(teamEntity.teamId, database)
         val recruits = database.relationalDao().loadAllRecruits().map { r -> r.create() }
