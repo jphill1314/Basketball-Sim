@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.stats
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -39,8 +41,8 @@ import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.theme.appLightColors
-import kotlinx.coroutines.flow.StateFlow
 import java.util.Locale
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun StatsView(
@@ -118,6 +120,7 @@ private fun StatsView(
                 }
             }
         }
+        val horizontalScrollState = rememberScrollState()
         LazyColumn {
             itemsIndexed(state.uiModels) { index, item ->
                 when (item) {
@@ -127,11 +130,12 @@ private fun StatsView(
                         team = item,
                         interactor = interactor
                     )
-                    is RankingsHeader -> RankingsHeader()
+                    is RankingsHeader -> RankingsHeader(Modifier.horizontalScroll(horizontalScrollState))
                     is TeamRankingModel -> TeamRankingItem(
                         team = item,
                         index = index,
-                        interactor = interactor
+                        interactor = interactor,
+                        modifier = Modifier.horizontalScroll(horizontalScrollState)
                     )
                 }
             }
@@ -218,53 +222,52 @@ private fun TeamStandingItem(
 }
 
 @Composable
-private fun RankingsHeader() {
+private fun RankingsHeader(
+    modifier: Modifier
+) {
     Column {
         Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)) {
             Text(
                 text = stringResource(id = R.string.team),
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier
-                    .align(Alignment.Bottom)
+                    .width(170.dp)
                     .padding(start = 20.dp, end = 8.dp)
-                    .weight(4f)
             )
-            Text(
-                text = stringResource(id = R.string.adj_eff),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
-            Text(
-                text = stringResource(id = R.string.pace),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
-            Text(
-                text = stringResource(id = R.string.adj_off),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
-            Text(
-                text = stringResource(id = R.string.adj_def),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
+            Row(modifier = modifier) {
+                Text(
+                    text = stringResource(id = R.string.adj_eff),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.pace),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.adj_off),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.adj_def),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+            }
         }
         Divider()
     }
@@ -274,7 +277,8 @@ private fun RankingsHeader() {
 private fun TeamRankingItem(
     team: TeamRankingModel,
     index: Int,
-    interactor: StatsContract.Interactor
+    interactor: StatsContract.Interactor,
+    modifier: Modifier
 ) {
     Column(modifier = Modifier.clickable { interactor.onTeamClicked(team.teamId) }) {
         Row(
@@ -289,48 +293,49 @@ private fun TeamRankingItem(
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .width(28.dp)
-                    .padding(end = 2.dp)
                     .align(Alignment.CenterVertically)
             )
             Text(
                 text = team.teamName,
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier
+                    .width(150.dp)
                     .padding(end = 8.dp)
-                    .weight(4f)
             )
-            Text(
-                text = formatDouble(team.eff),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
-            Text(
-                text = formatDouble(team.pace),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
-            Text(
-                text = formatDouble(team.offEff),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
-            Text(
-                text = formatDouble(team.defEff),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .weight(3f)
-            )
+            Row(modifier = modifier) {
+                Text(
+                    text = formatDouble(team.eff),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = formatDouble(team.pace),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = formatDouble(team.offEff),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = formatDouble(team.defEff),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .width(100.dp)
+                        .padding(end = 8.dp)
+                )
+            }
         }
         Divider()
     }
