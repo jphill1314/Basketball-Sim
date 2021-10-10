@@ -48,4 +48,22 @@ class PassPlayText : PassTextContract {
     override fun justDribbling(player: Player): String {
         return "${player.fullName} is dribbling the ball."
     }
+
+    override fun fiveSecondViolation(player: Player): String {
+        return "${player.fullName} cannot find an open teammate and get called for a five second violation!"
+    }
+
+    override fun inboundTippedOutOfBounds(
+        passer: Player,
+        target: Player,
+        defender: Player
+    ): String {
+        return "${passer.fullName} inbounds the ball to ${target.fullName}, but it is tipped out of " +
+            "bounds by ${defender.fullName}."
+    }
+
+    override fun passTippedOutOfBound(passer: Player, target: Player, defender: Player): String {
+        return "${passer.fullName} passes the ball to ${target.fullName}, but it is tipped out of " +
+            "bounds by ${defender.fullName}."
+    }
 }

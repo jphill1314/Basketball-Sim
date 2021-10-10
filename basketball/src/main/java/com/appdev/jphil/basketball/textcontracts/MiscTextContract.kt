@@ -1,5 +1,6 @@
 package com.appdev.jphil.basketball.textcontracts
 
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 
 interface MiscTextContract {
@@ -9,6 +10,8 @@ interface MiscTextContract {
     fun mediaTimeOut(): String
     fun timeOut(team: Team, extendsToFull: Boolean): String
     fun endOfHalf(half: Int, gameOver: Boolean): String
+
+    fun turnoverLeadsToFastBreak(playerOnFastBreak: Player): String
 
     fun conjunction(canBeNegative: Boolean): String
 }

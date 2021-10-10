@@ -34,14 +34,16 @@ class StatsTransformer @Inject constructor() :
             uiModels = listOf(StandingsHeader) + dataState.teams
                 .filter { it.conferenceId == dataState.conferenceIndex }
                 .map { RecordUtil.getTeamRecord(dataState.games, it) }
-                .sortedWith(compareBy(
-                    { -it.confWins.toDouble() / (it.confWins + it.confLoses) },
-                    { -it.confWins },
-                    { it.confLoses },
-                    { -it.wins.toDouble() / (it.wins + it.loses) },
-                    { -it.wins },
-                    { it.loses }
-                )),
+                .sortedWith(
+                    compareBy(
+                        { -it.confWins.toDouble() / (it.confWins + it.confLoses) },
+                        { -it.confWins },
+                        { it.confLoses },
+                        { -it.wins.toDouble() / (it.wins + it.loses) },
+                        { -it.wins },
+                        { it.loses }
+                    )
+                ),
             conferenceName = dataState.conferences.first { it.id == dataState.conferenceIndex }.name,
             dropdownOptions = dataState.conferences.map { it.name }
         )
