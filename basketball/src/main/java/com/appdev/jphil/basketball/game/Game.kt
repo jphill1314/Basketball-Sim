@@ -146,6 +146,9 @@ class Game(
         if (location != 0) {
             location = -location
         }
+        if (shootFreeThrows) {
+            location = 1
+        }
         possessions++
 
         updateStrategy()

@@ -42,6 +42,7 @@ object MiscPlays {
     fun getFreeThrows(game: Game): MutableList<BasketballPlay> {
         with(game) {
             shootFreeThrows = false
+            location = 1
             val plays = mutableListOf<BasketballPlay>()
             val freeThrows = FreeThrows(game, freeThrowType)
             if (homeTeamHasBall) {

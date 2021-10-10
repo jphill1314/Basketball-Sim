@@ -36,6 +36,10 @@ object BackCourtPlays {
             location = play.location
             deadball = false
 
+            if (homeTeamHasBall != play.homeTeamHasBall) {
+                changePossession()
+            }
+
             FoulHelper.manageFoul(game, play.foul)
             ClockViolationHelper.getBackCourtViolation(game, play)
             ClockViolationHelper.getShotClockViolation(game, play)
