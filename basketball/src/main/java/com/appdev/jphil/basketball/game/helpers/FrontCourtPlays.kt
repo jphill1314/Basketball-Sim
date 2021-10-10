@@ -95,7 +95,7 @@ object FrontCourtPlays {
             playerWithBall = pass.playerWithBall
             lastPassWasGreat = pass.isGreatPass
             location = pass.location
-            deadball = false
+            deadball = pass.deadBall
 
             if (pass.homeTeamHasBall != pass.homeTeamStartsWithBall) {
                 changePossession()

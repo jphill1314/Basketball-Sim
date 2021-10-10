@@ -7,7 +7,7 @@ import com.appdev.jphil.basketball.plays.enums.Plays
 
 class Pass(game: Game) : BasketballPlay(game) {
 
-    private val deadBall = game.deadball
+    var deadBall = game.deadball
     private val passingUtils = game.passingUtils
     private val playText = game.passText
     private val miscText = game.miscText
@@ -36,10 +36,13 @@ class Pass(game: Game) : BasketballPlay(game) {
         val passSuccess = (passer.passing + target.offBallMovement) / (r.nextInt(randomBound / 2) + 1)
 
         val (maxChange, minChange) = when {
+            coach.shouldWasteTime && r.nextInt(100) > 30 && !deadBall -> justDribbling()
             isSuccessfulPass(passSuccess) -> successfulPass(passSuccess)
             isBadPass(passSuccess) -> badPass()
             isStolenPass() -> stolenPass()
-            else -> justDribbling() // TODO: increase chance of this when wasting time
+            !deadBall -> justDribbling()
+            r.nextInt(100) > 75 -> fiveSecondViolation()
+            else -> successfulPass(passSuccess)
         }
 
         if (foul.foulType == FoulType.CLEAN && defense.intentionallyFoul && timeChange < timeRemaining) {
@@ -82,7 +85,6 @@ class Pass(game: Game) : BasketballPlay(game) {
     }
 
     private fun successfulPass(passSuccess: Int): Pair<Int, Int> {
-        // TODO: add chance to have the ball knocked out of bounds
         playerWithBall = targetPos
         if (location < 1) {
             // the ball was inbounded in the backcourt so more time needs to come off the clock
@@ -92,19 +94,28 @@ class Pass(game: Game) : BasketballPlay(game) {
                 playText.successfulPassBackcourt(passer, target)
             }
             location = 1
+            deadBall = false
             return when {
                 coach.shouldHurry -> Pair(5, 1)
                 coach.shouldWasteTime -> Pair(10, 5)
                 else -> Pair(9, 3)
             }
         } else {
-            // TODO: add pass leading to a shot / post move / etc
             isGreatPass = passSuccess > 25
-            playAsString = if (deadBall) {
-                playText.successfulInbound(passer, target)
+
+            val isTipped = if (!isGreatPass) {
+                r.nextInt(100) > 95
             } else {
-                playText.successfulPass(passer, target)
+                false
             }
+
+            playAsString = when {
+                isTipped && deadBall -> playText.inboundTippedOutOfBounds(passer, target, getTipper())
+                isTipped && !deadBall -> playText.passTippedOutOfBound(passer, target, getTipper())
+                deadBall -> playText.successfulInbound(passer, target)
+                else -> playText.successfulPass(passer, target)
+            }
+            deadBall = isTipped
             return when {
                 coach.shouldHurry -> Pair(3, 1)
                 coach.shouldWasteTime -> Pair(20, 5)
@@ -112,6 +123,8 @@ class Pass(game: Game) : BasketballPlay(game) {
             }
         }
     }
+
+    private fun getTipper() = if (r.nextBoolean()) passDefender else targetDefender
 
     private fun badPass(): Pair<Int, Int> {
         if (r.nextInt(100) > 60) {
@@ -134,8 +147,15 @@ class Pass(game: Game) : BasketballPlay(game) {
                 playText.badPass(passer, target)
             }
         }
+
+        leadToFastBreak = r.nextInt(100) > 80
+        if (leadToFastBreak) {
+            playAsString += miscText.turnoverLeadsToFastBreak(offense.getPlayerAtPosition(playerWithBall))
+        }
+
         offense.turnovers++
         homeTeamHasBall = !homeTeamHasBall
+        deadBall = false
         return when {
             coach.shouldHurry -> Pair(3, 1)
             coach.shouldWasteTime -> Pair(20, 5)
@@ -174,9 +194,15 @@ class Pass(game: Game) : BasketballPlay(game) {
         if (foul.foulType == FoulType.CLEAN) {
             offense.turnovers++
             homeTeamHasBall = !homeTeamHasBall
+            leadToFastBreak = r.nextInt(100) > 70
+            if (leadToFastBreak) {
+                playAsString += miscText.turnoverLeadsToFastBreak(offense.getPlayerAtPosition(playerWithBall))
+            }
         } else {
             playAsString += " ${miscText.conjunction(true)}${foul.playAsString}"
         }
+
+        deadBall = false
         return when {
             coach.shouldHurry -> Pair(3, 1)
             coach.shouldWasteTime -> Pair(20, 5)
@@ -204,5 +230,13 @@ class Pass(game: Game) : BasketballPlay(game) {
             coach.shouldWasteTime -> Pair(20, 5)
             else -> Pair(4, 1)
         }
+    }
+
+    private fun fiveSecondViolation(): Pair<Int, Int> {
+        playAsString = playText.fiveSecondViolation(offense.getPlayerAtPosition(playerWithBall))
+        offense.turnovers++
+        offense.getPlayerAtPosition(playerWithBall).turnovers++
+        homeTeamHasBall = !homeTeamHasBall
+        return Pair(0, 0)
     }
 }

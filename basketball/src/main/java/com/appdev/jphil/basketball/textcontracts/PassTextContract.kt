@@ -18,4 +18,8 @@ interface PassTextContract {
     fun stolenInbound(passer: Player, target: Player, stealer: Player): String
 
     fun justDribbling(player: Player): String
+    fun fiveSecondViolation(player: Player): String
+
+    fun inboundTippedOutOfBounds(passer: Player, target: Player, defender: Player): String
+    fun passTippedOutOfBound(passer: Player, target: Player, defender: Player): String
 }

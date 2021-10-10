@@ -1,12 +1,13 @@
 package com.appdev.jphil.basketball.playtext
 
+import com.appdev.jphil.basketball.players.Player
 import com.appdev.jphil.basketball.teams.Team
 import com.appdev.jphil.basketball.textcontracts.MiscTextContract
 
 class MiscPlayText : MiscTextContract {
 
     override fun tenSecondViolation(team: Team): String {
-        return "\n${team.name} have turned the ball over on a 10 second violation!\""
+        return "\n${team.name} have turned the ball over on a 10 second violation!"
     }
 
     override fun shotClockViolation(team: Team): String {
@@ -30,6 +31,10 @@ class MiscPlayText : MiscTextContract {
             half > 2 && gameOver -> "And that will finally bring this game to an end after ${half - 2} overtimes!"
             else -> "And that's the end of overtime number ${half - 2}, but we're going to need another one to decide a winner tonight!"
         }
+    }
+
+    override fun turnoverLeadsToFastBreak(playerOnFastBreak: Player): String {
+        return " And now ${playerOnFastBreak.firstName} finds himself charging ahead with a clear path to the basket!"
     }
 
     override fun conjunction(canBeNegative: Boolean): String {

@@ -23,6 +23,7 @@ object FoulHelper {
 
             when (foul.foulType) {
                 FoulType.SHOOTING_LONG, FoulType.SHOOTING_CLOSE, FoulType.SHOOTING_MID -> resetShotClock(game)
+                FoulType.FAST_BREAK -> resetShotClock()
                 else -> handleNonShootingFoul(game, foul, isOnHomeTeam)
             }
 

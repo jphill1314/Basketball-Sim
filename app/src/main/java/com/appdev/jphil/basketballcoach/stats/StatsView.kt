@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.dp
 import com.appdev.jphil.basketballcoach.LoadingScreen
 import com.appdev.jphil.basketballcoach.R
 import com.appdev.jphil.basketballcoach.theme.appLightColors
-import java.util.Locale
 import kotlinx.coroutines.flow.StateFlow
+import java.util.Locale
 
 @Composable
 fun StatsView(
