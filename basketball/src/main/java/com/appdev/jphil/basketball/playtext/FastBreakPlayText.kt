@@ -11,8 +11,8 @@ class FastBreakPlayText : FastBreakTextContract {
 
     override fun madeLayupWithFoul(shooter: Player, fouler: Player): String {
         return "${shooter.fullName} goes up for the layout, draws a foul, and makes the shot! " +
-                "${fouler.fullName} tried to stop ${shooter.firstName}, but was only able to muster " +
-                "some weak contact."
+            "${fouler.fullName} tried to stop ${shooter.firstName}, but was only able to muster " +
+            "some weak contact."
     }
 
     override fun missedLayup(shooter: Player): String {
@@ -21,12 +21,12 @@ class FastBreakPlayText : FastBreakTextContract {
 
     override fun missedLayupWithFoul(shooter: Player, fouler: Player): String {
         return "${shooter.fullName} goes up for the layup, but is fouled hard by " +
-                "${fouler.fullName} and is unable to convert."
+            "${fouler.fullName} and is unable to convert."
     }
 
     override fun blockedLayup(shooter: Player, blocker: Player): String {
         return "${shooter.fullName} goes up for the layup and is blocked by ${blocker.fullName}! " +
-                "What a spectacular play to deny the easy layup!"
+            "What a spectacular play to deny the easy layup!"
     }
 
     override fun madeThree(shooter: Player): String {

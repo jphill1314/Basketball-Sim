@@ -59,11 +59,11 @@ class PassPlayText : PassTextContract {
         defender: Player
     ): String {
         return "${passer.fullName} inbounds the ball to ${target.fullName}, but it is tipped out of " +
-                "bounds by ${defender.fullName}."
+            "bounds by ${defender.fullName}."
     }
 
     override fun passTippedOutOfBound(passer: Player, target: Player, defender: Player): String {
         return "${passer.fullName} passes the ball to ${target.fullName}, but it is tipped out of " +
-                "bounds by ${defender.fullName}."
+            "bounds by ${defender.fullName}."
     }
 }

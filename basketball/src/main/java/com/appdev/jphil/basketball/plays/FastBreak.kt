@@ -25,7 +25,7 @@ class FastBreak(game: Game) : BasketballPlay(game) {
             shooter.longRangeShot > 60 && r.nextInt(shooter.longRangeShot) < 10 -> getThreePointShot(shooter)
             r.nextInt(100) > 66 -> getFoul(shooter)
             r.nextInt(100) > 95 -> getBlock(shooter)
-            else  -> getLayup(shooter)
+            else -> getLayup(shooter)
         }
     }
 
