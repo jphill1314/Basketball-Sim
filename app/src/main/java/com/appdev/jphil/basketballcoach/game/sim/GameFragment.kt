@@ -1,6 +1,7 @@
 package com.appdev.jphil.basketballcoach.game.sim
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -93,7 +94,13 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
         runBlocking {
             val game = viewModel.getGame()
-            gameAdapter = GameAdapter(resources, game.homeTeam.color.getColor(), game.awayTeam.color.getColor())
+            val homeColor = game.homeTeam.color.getColor()
+            val awayColor = if (game.homeTeam.color == game.awayTeam.color) {
+                R.color.white
+            } else {
+                game.awayTeam.color.getColor()
+            }
+            gameAdapter = GameAdapter(resources, homeColor, awayColor)
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 

@@ -34,7 +34,7 @@ object BackCourtPlays {
 
             playerWithBall = play.playerWithBall
             location = play.location
-            deadball = false
+            deadball = if (play is Pass) play.deadBall else false
 
             if (homeTeamHasBall != play.homeTeamHasBall) {
                 changePossession()

@@ -36,6 +36,7 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
             FoulType.OFF_BALL -> getFloorFoul()
             FoulType.REBOUNDING -> getReboundingFoul()
             FoulType.INTENTIONAL -> getIntentionalFoul()
+            FoulType.FAST_BREAK -> getFastBreakFoul()
             FoulType.CLEAN -> 0
             else -> getShootingFoul()
         }
@@ -181,6 +182,14 @@ class Foul(game: Game, var foulType: FoulType) : BasketballPlay(game) {
         isOnDefense = true
         fouler = defense.getPlayerAtPosition(playerWithBall)
         playAsString = foulText.intentionalFoul(fouler!!, offense.getPlayerAtPosition(playerWithBall))
+        fouler!!.fouls++
+        return 1
+    }
+
+    private fun getFastBreakFoul(): Int {
+        positionOfPlayerFouled = playerWithBall
+        isOnDefense = true
+        fouler = defense.getPlayerAtPosition(r.nextInt(5) + 1)
         fouler!!.fouls++
         return 1
     }
