@@ -145,37 +145,37 @@ class Player(
         return when (position) {
             1 -> when (currentPosition) {
                 1 -> 0
-                2 -> 5
-                3 -> 10
-                4 -> 20
-                else -> 20
+                2 -> 10
+                3 -> 15
+                4 -> 25
+                else -> 25
             }
             2 -> when (currentPosition) {
-                1 -> 5
+                1 -> 10
                 2 -> 0
-                3 -> 5
-                4 -> 20
-                else -> 20
+                3 -> 10
+                4 -> 25
+                else -> 25
             }
             3 -> when (currentPosition) {
-                1 -> 10
-                2 -> 5
+                1 -> 15
+                2 -> 10
                 3 -> 0
-                4 -> 10
-                else -> 20
+                4 -> 15
+                else -> 25
             }
             4 -> when (currentPosition) {
-                1 -> 20
-                2 -> 15
-                3 -> 10
-                4 -> 0
-                else -> 5
-            }
-            else -> when (currentPosition) {
-                1 -> 20
+                1 -> 25
                 2 -> 20
                 3 -> 15
-                4 -> 5
+                4 -> 0
+                else -> 10
+            }
+            else -> when (currentPosition) {
+                1 -> 25
+                2 -> 25
+                3 -> 20
+                4 -> 10
                 else -> 0
             }
         }

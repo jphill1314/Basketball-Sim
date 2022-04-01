@@ -232,20 +232,20 @@ class Team(
     }
 
     fun aiMakeSubs(freeThrowShooter: Int, half: Int, timeRemaining: Int) {
-        for (index in 0..4) {
-            if (index != freeThrowShooter) {
-                val sub = getBestPlayerForPosition(index + 1)
-                if (index != sub && (Random.nextDouble() > .6 || players[index].isInFoulTrouble(half, timeRemaining))) {
+        for (pIndex in 0..4) {
+            if (pIndex != freeThrowShooter) {
+                val sub = getBestPlayerForPosition(pIndex + 1, half, timeRemaining)
+                if (pIndex != sub && (Random.nextDouble() > .6 || players[pIndex].isInFoulTrouble(half, timeRemaining))) {
                     // TODO: add coach's tendency to sub here
-                    Collections.swap(players, index, sub)
-                    players[index].courtIndex = index
+                    Collections.swap(players, pIndex, sub)
+                    players[pIndex].courtIndex = pIndex
                     players[sub].courtIndex = sub
                 }
 
-                if (!players[index].isEligible()) {
-                    val forceSub = getSubForIneligiblePlayer(index + 1)
-                    Collections.swap(players, index, forceSub)
-                    players[index].courtIndex = index
+                if (!players[pIndex].isEligible()) {
+                    val forceSub = getSubForIneligiblePlayer(pIndex + 1)
+                    Collections.swap(players, pIndex, forceSub)
+                    players[pIndex].courtIndex = pIndex
                     players[forceSub].courtIndex = forceSub
                 }
             }
@@ -296,19 +296,13 @@ class Team(
         roster.addAll(returningPlayers)
     }
 
-    private fun getBestPlayerForPosition(position: Int): Int {
-        var player = players[position - 1]
-        var indexOfBest = position - 1
-        for (index in players.indices) {
-            if ((player.getRatingAtPositionNoFatigue(position) - player.fatigue) <
-                (players[index].getRatingAtPositionNoFatigue(position) - players[index].fatigue) &&
-                players[index].isEligible()
-            ) {
-                player = players[index]
-                indexOfBest = index
-            }
+    private fun getBestPlayerForPosition(position: Int, half: Int, timeRemaining: Int): Int {
+        val bestPlayer = players.filter { it.isEligible() }.maxByOrNull {
+            val initRating = it.getRatingAtPositionNoFatigue(position) - it.fatigue
+            val adjustment = if (it.isInFoulTrouble(half, timeRemaining)) 25 else 0
+            initRating - adjustment
         }
-        return indexOfBest
+        return bestPlayer?.let { players.indexOf(it) } ?: position - 1
     }
 
     private fun getSubForIneligiblePlayer(position: Int): Int {

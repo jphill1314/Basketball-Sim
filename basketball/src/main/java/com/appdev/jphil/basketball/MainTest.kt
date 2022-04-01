@@ -41,6 +41,10 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
     var turnovers = 0
     var defFouls = 0
     var offFouls = 0
+
+    var foulOuts = 0
+    var gamesWithFoulOuts = 0
+
     var highScore: Game? = null
     var lowScore: Game? = null
     var maxMargin: Game? = null
@@ -80,6 +84,14 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
 
         if (abs(game.homeScore - game.awayScore) < abs(minMargin!!.homeScore - minMargin.awayScore)) {
             minMargin = game
+        }
+
+        val gameFoulOuts = game.homeTeam.players.count { !it.isEligible() } +
+                game.awayTeam.players.count { !it.isEligible() }
+
+        foulOuts += gameFoulOuts
+        if (gameFoulOuts > 0) {
+            gamesWithFoulOuts++
         }
 
         totalMargin += abs(game.homeScore - game.awayScore)
@@ -141,4 +153,6 @@ private fun simulateGames(isNeutralCourt: Boolean, totalGames: Int = 500) {
     println("Def Fouls: ${defFouls / doubleGames}")
     println("TO: ${turnovers / doubleGames}")
     println("TO%: ${turnovers / (possessions * 2.0)}")
+    println("Foul Outs: ${foulOuts / doubleGames}")
+    println("Games with foul outs: $gamesWithFoulOuts")
 }
