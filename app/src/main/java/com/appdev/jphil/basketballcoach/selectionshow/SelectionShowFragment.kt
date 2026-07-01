@@ -25,8 +25,8 @@ class SelectionShowFragment : ComposeFragment() {
                     is SelectionShowPresenter.EnterTournamentEvent -> {
                         findNavController().navigate(
                             SelectionShowFragmentDirections.selectionShowToTournament(
-                                tournamentId = NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID,
-                                doesTournamentExist = true
+                                true,
+                                NationalChampionshipHelper.NATIONAL_CHAMPIONSHIP_ID,
                             )
                         )
                     }

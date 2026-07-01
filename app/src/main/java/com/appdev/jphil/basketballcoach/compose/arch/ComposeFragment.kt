@@ -22,7 +22,7 @@ abstract class ComposeFragment : Fragment() {
     protected abstract val presenter: BasicComposePresenter<*>
 
     @Inject
-    protected lateinit var navManager: NavigationManager
+    lateinit var navManager: NavigationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

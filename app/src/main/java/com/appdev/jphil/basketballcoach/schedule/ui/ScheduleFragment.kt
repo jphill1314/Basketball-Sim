@@ -46,10 +46,10 @@ class ScheduleFragment : ComposeFragment() {
     private fun navigateToGame(gameModel: ScheduleUiModel) {
         findNavController().navigate(
             ScheduleFragmentDirections.toGamePreviewFragment(
-                gameId = gameModel.id,
-                homeTeamName = gameModel.bottomTeamName,
-                awayTeamName = gameModel.topTeamName,
-                isUserHomeTeam = gameModel.isHomeTeamUser
+                gameModel.id,
+                gameModel.bottomTeamName,
+                gameModel.topTeamName,
+                gameModel.isHomeTeamUser
             )
         )
     }

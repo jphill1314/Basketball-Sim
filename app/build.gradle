@@ -1,20 +1,22 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: "org.jlleitschuh.gradle.ktlint"
+plugins {
+    id 'com.google.devtools.ksp'
+    id 'com.android.application'
+    id 'org.jlleitschuh.gradle.ktlint'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'androidx.navigation.safeargs'
+}
 
 android {
-
+    namespace "com.appdev.jphil.basketballcoach"
     buildFeatures {
         viewBinding true
         compose true
     }
-    compileSdkVersion 30
+    compileSdkVersion 37
     defaultConfig {
         applicationId "com.appdev.jphil.basketballcoach"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion 23
+        targetSdkVersion 37
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,7 +24,6 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             applicationIdSuffix ".debug"
@@ -32,9 +33,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.0.0'
@@ -52,10 +50,10 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.core:core-ktx:1.7.0-alpha01'
 
-    def room_version= "2.3.0"
+    def room_version= "2.8.4"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
@@ -68,8 +66,8 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    ksp "com.google.dagger:dagger-compiler:$dagger_version"
+    ksp "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // GSON
     implementation "com.google.code.gson:gson:2.8.6"
@@ -80,15 +78,15 @@ dependencies {
 
     // Compose
     // Integration with activities
-    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation 'androidx.activity:activity-compose:1.13.0'
     // Compose Material Design
-    implementation 'androidx.compose.material:material:1.0.1'
+    implementation 'androidx.compose.material:material:1.11.3'
     // Animations
-    implementation 'androidx.compose.animation:animation:1.0.1'
+    implementation 'androidx.compose.animation:animation:1.11.3'
     // Tooling support (Previews, etc.)
-    implementation 'androidx.compose.ui:ui-tooling:1.0.1'
+    implementation 'androidx.compose.ui:ui-tooling:1.11.3'
     // Integration with ViewModels
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0'
     implementation "com.google.accompanist:accompanist-appcompat-theme:0.15.0"
 
     // Basketball Sim

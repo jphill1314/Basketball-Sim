@@ -22,8 +22,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -103,7 +101,7 @@ private fun StatsView(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.size(48.dp)
                     ) {
-                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+//                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                     }
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {

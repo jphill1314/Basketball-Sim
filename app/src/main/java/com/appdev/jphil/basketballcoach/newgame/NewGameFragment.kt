@@ -38,8 +38,8 @@ class NewGameFragment : ComposeFragment() {
     private fun launchRosterScreen(event: NewGamePresenter.StartCustomize) {
         findNavController().navigate(
             NewGameFragmentDirections.toCustomize(
-                initialTeam = event.userTeam,
-                conferences = AllConferences(event.conferences)
+                event.userTeam,
+                AllConferences(event.conferences)
             )
         )
     }

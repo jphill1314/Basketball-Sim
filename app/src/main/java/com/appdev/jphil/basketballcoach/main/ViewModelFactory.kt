@@ -11,7 +11,7 @@ class ViewModelFactory @Inject constructor(
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(GameViewModel::class.java) -> GameViewModel(database) as T
             modelClass.isAssignableFrom(TeamManagerViewModel::class.java) -> TeamManagerViewModel(database) as T

@@ -64,6 +64,7 @@ fun TournamentView(
         TournamentType.TEN -> TenTeamTournamentView(contents = contents)
         TournamentType.EIGHT -> EightTeamTournamentView(contents = contents)
         TournamentType.NATIONAL_CHAMPIONSHIP -> NationalChampionshipView(contents = contents)
+        null -> Unit
     }
 }
 

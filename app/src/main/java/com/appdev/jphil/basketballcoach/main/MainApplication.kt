@@ -1,7 +1,6 @@
 package com.appdev.jphil.basketballcoach.main
 
 import android.app.Application
-import com.appdev.jphil.basketballcoach.BuildConfig
 import com.appdev.jphil.basketballcoach.main.injection.AppComponent
 import com.appdev.jphil.basketballcoach.main.injection.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -19,9 +18,9 @@ class MainApplication @Inject constructor() : Application(), HasAndroidInjector 
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) {
+//        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }
+//        }
 
         component = DaggerAppComponent.builder()
             .application(this)
