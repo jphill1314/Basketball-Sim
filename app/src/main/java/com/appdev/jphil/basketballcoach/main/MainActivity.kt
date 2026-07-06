@@ -17,6 +17,16 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
+    /*
+    * TODO:
+    * - Deal with edge to edge requirements
+    * - Integrate hilt?
+    * - Remove or replace deprecated lifecycle observer in presenter
+    * - Fix missing icon in StatsView
+    * - Write a couple unit tests as examples?
+    * - Speed up mass game sim? (Only go to db at the very end?)
+    * */
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 

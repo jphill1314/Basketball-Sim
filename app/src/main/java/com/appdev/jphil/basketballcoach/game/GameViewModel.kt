@@ -3,6 +3,7 @@ package com.appdev.jphil.basketballcoach.game
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketball.game.Game
 import com.appdev.jphil.basketball.game.extensions.makeUserSubsIfPossible
 import com.appdev.jphil.basketball.game.helpers.HalfTimeHelper
@@ -42,14 +43,14 @@ class GameViewModel(
         if (nullGame != null) {
             return nullGame!!
         }
-        GlobalScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             nullGame = GameDatabaseHelper.loadGameById(gameId, database)
         }.join()
         return nullGame!!
     }
 
     fun simulateGame() {
-        GlobalScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             if (nullGame == null) {
                 if (saveGame?.isCompleted == false) {
                     saveGame?.join()
@@ -141,7 +142,7 @@ class GameViewModel(
     }
 
     fun pauseSim() {
-        saveGame = GlobalScope.launch(Dispatchers.IO) {
+        saveGame = viewModelScope.launch(Dispatchers.IO) {
             if (gameSim?.isActive == true) {
                 val pause = pauseGame
                 pauseGame = false
