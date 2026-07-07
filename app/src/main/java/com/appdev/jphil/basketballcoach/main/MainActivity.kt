@@ -19,7 +19,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationManager {
 
     /*
     * TODO:
-    * - Deal with edge to edge requirements
     * - Integrate hilt?
     * - Remove or replace deprecated lifecycle observer in presenter
     * - Fix missing icon in StatsView

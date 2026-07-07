@@ -51,6 +51,6 @@ abstract class ComposeFragment : Fragment() {
     abstract fun SetContent()
 
     protected fun setToolbarTitle(text: String) {
-        requireActivity().findViewById<Toolbar>(R.id.toolbar).title = text
+        requireActivity().findViewById<Toolbar?>(R.id.toolbar)?.title = text
     }
 }

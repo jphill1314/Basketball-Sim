@@ -9,6 +9,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -84,6 +87,18 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGameBinding.inflate(inflater)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = insets.bottom
+                leftMargin = insets.left
+                rightMargin = insets.right
+            }
+
+            WindowInsetsCompat.CONSUMED
+        }
+
         savedInstanceState?.let {
             viewId = it.getInt("viewId", 0)
             rosterViewId = it.getInt("rosterViewId", 0)
@@ -140,9 +155,6 @@ class GameFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         }
 
         return binding.root
-    }
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun updateGame(game: Game, newEvents: List<GameEventEntity>) {
