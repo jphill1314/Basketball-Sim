@@ -16,17 +16,17 @@ interface ScheduleContract {
         FinishSeasonUiModel.Interactor
 
     data class ScheduleDataState(
-        val teamId: Int,
-        val isLoading: Boolean,
-        val selectedGameId: Int,
-        val isTournamentExisting: Boolean,
-        val nationalChampExists: Boolean,
+        val teamId: Int = -1,
+        val isLoading: Boolean = true,
+        val selectedGameId: Int = -1,
+        val isTournamentExisting: Boolean = false,
+        val nationalChampExists: Boolean = false,
         val areAllGamesFinal: Boolean = false,
         val isSeasonOver: Boolean = false,
         val gameToPlay: ScheduleUiModel? = null,
-        val simState: SimulationState?,
-        val dataModels: List<ScheduleDataModel>,
-        val dialogDataModels: List<ScheduleDataModel>
+        val simState: SimulationState? = null,
+        val dataModels: List<ScheduleDataModel> = emptyList(),
+        val dialogDataModels: List<ScheduleDataModel> = emptyList(),
     ) : DataState
 
     data class ScheduleViewState(

@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.appdev.jphil.basketballcoach.compose.arch.ComposePresenter
 import com.appdev.jphil.basketballcoach.compose.arch.Event
 import com.appdev.jphil.basketballcoach.newseason.NewSeasonRepository
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewSeasonPresenter(
@@ -58,8 +57,8 @@ class NewSeasonPresenter(
     }
 
     override fun startNewSeason() {
-        sendEvent(StatNewSeasonEvent)
+        sendEvent(StartNewSeasonEvent)
     }
 
-    object StatNewSeasonEvent : Event
+    object StartNewSeasonEvent : Event
 }

@@ -29,14 +29,7 @@ class SchedulePresenter(
     )
 
     override val initialDataState = ScheduleContract.ScheduleDataState(
-        isLoading = true,
-        selectedGameId = -1,
-        isTournamentExisting = false,
-        nationalChampExists = false,
-        simState = null,
         teamId = params.teamId,
-        dataModels = emptyList(),
-        dialogDataModels = emptyList()
     )
 
     private var dialogJob: Job? = null

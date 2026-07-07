@@ -6,7 +6,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.appdev.jphil.basketballcoach.compose.arch.ComposeFragment
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class NewSeasonFragment : ComposeFragment() {
@@ -20,7 +19,7 @@ class NewSeasonFragment : ComposeFragment() {
         lifecycleScope.launchWhenCreated {
             presenter.events.collect {
                 when (it) {
-                    is NewSeasonPresenter.StatNewSeasonEvent -> {
+                    is NewSeasonPresenter.StartNewSeasonEvent -> {
                         findNavController().navigate(
                             NewSeasonFragmentDirections.newSeasonToRoster()
                         )
